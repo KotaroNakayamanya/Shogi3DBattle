@@ -1,5 +1,5 @@
 ﻿#include"DX12.h"
-#include"Command.h"
+#include"Draw.h"
 
 #include<algorithm>
 #include<string>
@@ -15,14 +15,17 @@ namespace {
     void EnableDebugLayer()
     {
         ComPtr<ID3D12Debug> debugLayer = nullptr;
+
         D3D12GetDebugInterface(
             IID_PPV_ARGS(debugLayer.ReleaseAndGetAddressOf()));
+
         debugLayer->EnableDebugLayer();
     }
 }
 
+
 // DirectX12初期設定
-bool DX12::CreateDX12BasicObject()
+bool DX12::CreateDX12Object()
 {
     // DXGIファクトリー作成
     if (FAILED(CreateFactory()))
@@ -40,13 +43,8 @@ bool DX12::CreateDX12BasicObject()
         assert(false); return false;
     }  
 
-    // コマンドアロケータ、リスト、キュー作成
-    if (FAILED(_command->CreateCommandObject(_device.Get())))
-    {
-        assert(false); return false;
-    }
-    // スワップチェーン作成
-    if (FAILED(CreateSwapChain()))
+    // 描画オブジェクト作成
+    if (FAILED(CreateDrawObject()))
     {
         assert(false); return false;
     }
@@ -61,19 +59,13 @@ bool DX12::CreateDX12BasicObject()
         assert(false); return false;
     }
 
-    // フェンス作成
-    if (FAILED(CreateFence()))
-    {
-        assert(false); return false;
-    }
-
     return true;
 }
 
-// DXGIファクトリー作成
 HRESULT DX12::CreateFactory()
 {
     HRESULT result;
+    // デバッグモードのときは詳細を表示させるものを使用する
 #ifdef _DEBUG
     result = CreateDXGIFactory2(
         DXGI_CREATE_FACTORY_DEBUG,
@@ -86,10 +78,9 @@ HRESULT DX12::CreateFactory()
     return result;
 }
 
-// 使用されているアダプター（グラフィックボード等）を取得する
+// 使われているアダプタ（GPU）を動的配列に入れる
 void DX12::CreateUsedAdapterLists()
 {
-    // アダプターが見つからなくなるまでループする
     ComPtr<IDXGIAdapter> tmpAdapter;
     int i = 0;
     while (_dxgiFactory->EnumAdapters(i, tmpAdapter.ReleaseAndGetAddressOf())
@@ -132,72 +123,20 @@ HRESULT DX12::CreateDevice()
                 featureLevel,
                 IID_PPV_ARGS(_device.ReleaseAndGetAddressOf()));
 
-            return result == S_OK;
+            return result == S_OK; // 作成できたら戻る
         });
 
     return result;
 }
 
-// コマンドオブジェクト作成
-HRESULT DX12::CreateCommandObject()
+// 描画オブジェクト（コマンド、スワップチェーン、フェンス）を作成
+HRESULT DX12::CreateDrawObject()
 {
-    return _command->CreateCommandObject(
-               _device.Get());
+    return _draw->CreateDrawObject(
+        _device.Get(),
+        _dxgiFactory.Get(),
+        _hwnd);
 }
-
-// スワップチェーン作成
-HRESULT DX12::CreateSwapChain()
-{
-    ID3D12CommandQueue* commandQueue =
-        _command->GetCommandQueue();
-    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = GetSwapChainDesc();
-
-    return _dxgiFactory->CreateSwapChainForHwnd(
-        commandQueue,
-        _hwnd,
-        &swapChainDesc,
-        nullptr,
-        nullptr,
-        (IDXGISwapChain1**)_swapChain.ReleaseAndGetAddressOf());
-}
-
-// スワップチェーンディスクリプタを返す
-DXGI_SWAP_CHAIN_DESC1 DX12::GetSwapChainDesc()
-{
-    DXGI_SWAP_CHAIN_DESC1 desc = {};
-
-    desc.Width =
-        300;
-    desc.Height =
-        500;
-    desc.Format =
-        DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.Stereo =
-        false;
-
-    desc.SampleDesc.Count =
-        1;
-    desc.SampleDesc.Quality =
-        0;
-    desc.BufferUsage =
-        DXGI_USAGE_BACK_BUFFER;
-    desc.BufferCount =
-        _bufferNum;
-
-    desc.Scaling =
-        DXGI_SCALING_STRETCH;
-    desc.SwapEffect =
-        DXGI_SWAP_EFFECT_FLIP_DISCARD;
-    desc.AlphaMode =
-        DXGI_ALPHA_MODE_UNSPECIFIED;
-
-    desc.Flags =
-        DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-
-
-    return desc;
-}
-
 
 // レンダーターゲットビューヒープ作成
 HRESULT DX12::CreateRTVHeap()
@@ -255,63 +194,48 @@ HRESULT DX12::CreateRTV()
     return S_OK;
 }
 
-HRESULT DX12::SetBufferToRTV(int i)
+// 各RTVにバッファを対応させる
+HRESULT DX12::SetBufferToRTV(UINT i)
 {
-    return _swapChain->GetBuffer(
-        i, IID_PPV_ARGS(_rtvs[i].ReleaseAndGetAddressOf()));
+    return _draw->SetBufferToRTV(
+        i, _rtvs[i].ReleaseAndGetAddressOf());
 }
-
-
 
 
 
 
 // コマンド実行
-void DX12::RunDX12()
+void DX12::ExecuteDX12()
 {
-    // 現在のバックバッファのインデックスを取得
-    auto currentBackBufferIdx =
-        _swapChain->GetCurrentBackBufferIndex();
+    // 現在のバックバッファのインデックス、ハンドルを取得
+    auto backBufferIdx = GetBackBufferIdx();
+    auto rtvHandle = GetRTVHandle(backBufferIdx);
 
-    // レンダーターゲットハンドルを取得
-    auto rtvHandle = GetRTVHandle(currentBackBufferIdx);
-
-    // RTVをレンダーターゲット
-    ChangeRTVToRenderTarget(currentBackBufferIdx);
-    
-    // レンダーターゲット設定
+    // バックバッファに対応するRTVをレンダーターゲットに設定
+    ChangeRTVToRenderTarget(_rtvs[backBufferIdx].Get());
     SetRenderTarget(rtvHandle);
 
     // レンダーターゲットクリア
     ClearRenderTarget(rtvHandle);
 
-    // 表示画面に設定
-    ChangeRTVToPresent(currentBackBufferIdx);
+    // バックバッファに対応するRTVを表示画面に設定
+    ChangeRTVToPresent(_rtvs[backBufferIdx].Get());
 
-    CommandClose();
-
-    // コマンド実行
+    // コマンド実行および同期処理
+    CloseCommand();
     ExecuteCommand();
-
-    // フェンスによる同期制御
     WaitProcessWithFence();
-
-    // コマンドリセット
-    CommandReset();
+    ResetCommand();
     
     // 画面スワップ
-    _swapChain->Present(1, 0);
+    DisplaySwap();
 
     return;
 }
 
-// レンダーターゲットに対応したRTVを設定
-void DX12::ChangeRTVToRenderTarget(UINT idx)
-{
-    _command->ChangeRTVToRenderTarget(_rtvs[idx].Get(), _bufferNum - 1);
-}
 
-// レンダーターゲットハンドルを返す
+UINT DX12::GetBackBufferIdx(){return _draw->GetBackBufferIdx();}
+
 D3D12_CPU_DESCRIPTOR_HANDLE DX12::GetRTVHandle(UINT idx)
 {
     auto handle =
@@ -324,82 +248,22 @@ D3D12_CPU_DESCRIPTOR_HANDLE DX12::GetRTVHandle(UINT idx)
     return handle;
 }
 
-void DX12::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
-{
-    _command->ClearRenderTarget(handle);
-}
 
-// RTVを表示画面に設定
-void DX12::ChangeRTVToPresent(
-    UINT idx)
-{
-    _command->ChangeRTVToPresent(_rtvs[idx].Get(), _bufferNum - 1);
-}
+void DX12::ChangeRTVToRenderTarget(ID3D12Resource* rtv){_draw->ChangeRTVToRenderTarget(rtv);}
+void DX12::ChangeRTVToPresent     (ID3D12Resource* rtv){_draw->ChangeRTVToPresent     (rtv);}
 
-void DX12::CommandClose()
-{
-    _command->CommandClose();
-}
+void DX12::SetRenderTarget  (D3D12_CPU_DESCRIPTOR_HANDLE handle){_draw->SetRenderTarget  (handle);}
+void DX12::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle){_draw->ClearRenderTarget(handle);}
 
+void DX12::CloseCommand()  {_draw->CloseCommand();  }
+void DX12::ExecuteCommand(){_draw->ExecuteCommand();}
+void DX12::ResetCommand()  {_draw->ResetCommand();  }
 
-// フェンス作成
-HRESULT DX12::CreateFence()
-{
-    return _device->CreateFence(
-        _fenceVal,
-        D3D12_FENCE_FLAG_NONE,
-        IID_PPV_ARGS(_fence.ReleaseAndGetAddressOf()));
-}
+void DX12::WaitProcessWithFence(){_draw->WaitProcessWithFence();}
+void DX12::DisplaySwap(){_draw->DisplaySwap();}
 
 
 
-
-
-
-
-// フェンスによる同期制御
-void DX12::WaitProcessWithFence()
-{
-    ID3D12CommandQueue* commandQueue =
-        GetCommandQueue();
-    // GPU処理完了後のフェンスの値を設定
-    commandQueue->Signal(_fence.Get(), ++_fenceVal);
-
-    while (_fence->GetCompletedValue() != _fenceVal)
-    {
-        auto event = CreateEvent(nullptr, false, false, nullptr);
-        _fence->SetEventOnCompletion(_fenceVal, event);
-        WaitForSingleObject(event, INFINITE);
-        CloseHandle(event);
-    }
-}
-
-ID3D12CommandQueue* DX12::GetCommandQueue()
-{
-    return _command->GetCommandQueue();
-}
-
-
-
-
-
-
-void DX12::CommandReset()
-{
-    _command->CommandReset();
-}
-
-void DX12::ExecuteCommand()
-{
-    _command->ExecuteCommand();
-}
-
-void DX12::SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
-{
-    _command->SetRenderTarget(handle);
-}
-
-DX12::DX12(){}
 
 DX12::DX12(HWND hwnd)
 {
@@ -408,5 +272,5 @@ DX12::DX12(HWND hwnd)
 #endif
 
     _hwnd = hwnd;
-    _command.reset(new Command());
+    _draw.reset(new Draw(_bufferNum));
 }

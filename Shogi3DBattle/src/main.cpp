@@ -2,7 +2,7 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
 {
-    Application& app = Application::Instance();
+    Application& app = Application::GetInstance();
 
     if(app.Init() == false) return -1;
 

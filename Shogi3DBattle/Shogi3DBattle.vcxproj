@@ -19,14 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="header\src\Command.cpp" />
+    <ClCompile Include="header\src\Draw.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\DX12.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h" />
-    <ClInclude Include="header\Command.h" />
+    <ClInclude Include="header\Draw.h" />
     <ClInclude Include="header\DX12.h" />
     <ClInclude Include="header\Piece.h" />
   </ItemGroup>

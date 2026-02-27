@@ -7,7 +7,7 @@
 #include<vector>
 #include<array>
 
-class Command;
+class Draw;
 
 class DX12
 {
@@ -17,37 +17,18 @@ private:
     HWND _hwnd;
     const int _bufferNum = 2;
 
-    ComPtr<ID3D12Device>    _device;
-    ComPtr<IDXGIFactory6>   _dxgiFactory;
-    ComPtr<IDXGISwapChain4> _swapChain;
-    ComPtr<ID3D12Fence> _fence;
+    ComPtr<ID3D12Device>  _device;
+    ComPtr<IDXGIFactory6> _dxgiFactory;
 
-    UINT64 _fenceVal = 0;
-
-    ComPtr<ID3D12DescriptorHeap> _rtvHeap;
+    ComPtr<ID3D12DescriptorHeap>        _rtvHeap;
     std::vector<ComPtr<ID3D12Resource>> _rtvs;
 
  
     HRESULT CreateFactory();
     HRESULT CreateDevice();
-    HRESULT CreateSwapChain();
+    
     HRESULT CreateRTVHeap();
     HRESULT CreateRTV();
-    HRESULT SetBufferToRTV(int i);
-    HRESULT CreateFence();
-
-    
-    DXGI_SWAP_CHAIN_DESC1
-        GetSwapChainDesc();
-    D3D12_DESCRIPTOR_HEAP_DESC
-        GetRTVHeapDesc();
-
-    D3D12_CPU_DESCRIPTOR_HANDLE
-        GetRTVHandle(UINT idx);
-
-    void WaitProcessWithFence();
-    void CommandReset();
-        
 
     // GPU機能レベル一覧
     std::array<D3D_FEATURE_LEVEL, 5> _featureLevels =
@@ -58,35 +39,54 @@ private:
         D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0
     };
+
     std::vector<ComPtr<IDXGIAdapter>> _adapters;
-    ComPtr<IDXGIAdapter> _usingAdapter;
+    ComPtr<IDXGIAdapter>              _usingAdapter;
+
     void CreateUsedAdapterLists();
     void DecisionUsingAdapter();
-    
+
+
+    HRESULT SetBufferToRTV(UINT);
+
+
+    D3D12_DESCRIPTOR_HEAP_DESC
+        GetRTVHeapDesc();
+
+    D3D12_CPU_DESCRIPTOR_HANDLE
+        GetRTVHandle(UINT idx);
 
     
-
     
+    // 描画オブジェクト
+    std::shared_ptr<Draw> _draw; 
 
-    // コマンドオブジェクト
-    std::shared_ptr<Command> _command;
-    ID3D12CommandQueue* GetCommandQueue();
-    HRESULT CreateCommandObject();
-    void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle);
-    void ChangeRTVToRenderTarget(UINT idx);
-    void ChangeRTVToPresent(UINT idx);
+    HRESULT CreateDrawObject();
 
-    void CommandClose();
+    UINT GetBackBufferIdx();
+
+    void ChangeRTVToRenderTarget(ID3D12Resource* rtv);
+    void ChangeRTVToPresent     (ID3D12Resource* rtv);
+
+    void SetRenderTarget  (D3D12_CPU_DESCRIPTOR_HANDLE handle);
+    void ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle);
+
+    void CloseCommand();
     void ExecuteCommand();
-    void ClearRenderTarget(
-        D3D12_CPU_DESCRIPTOR_HANDLE handle);
+    void ResetCommand();
+
+    void WaitProcessWithFence();
+
+    void DisplaySwap();
+    
+
+
 
 public:
-    DX12();
     DX12(HWND hwnd);
 
-    bool CreateDX12BasicObject();
-    void RunDX12();
+    bool CreateDX12Object();
+    void ExecuteDX12();
 
     
     

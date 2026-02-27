@@ -3,7 +3,7 @@
 #include<assert.h>
 
 // シングルトンインスタンス
-Application& Application::Instance()
+Application& Application::GetInstance()
 {
     static Application instance;
     return instance;
@@ -17,9 +17,9 @@ bool Application::Init()
     // ゲームウインドウ作成
     if(CreateGameWindow() == false) return false;
 
-    // DirectX12基本オブジェクト作成
+    // DirectX12オブジェクト作成
     _dx12.reset(new DX12(_hwnd));
-    if(_dx12->CreateDX12BasicObject() == false) return false;
+    if(_dx12->CreateDX12Object() == false) return false;
 
 }
 
@@ -40,8 +40,8 @@ void Application::Run()
             break;
         }
 
-        // DirectX12による処理
-        _dx12->RunDX12();
+        // DirectX12処理
+        _dx12->ExecuteDX12();
     }
 }
 
@@ -111,6 +111,8 @@ LRESULT WindowProcedure(
 
     return DefWindowProc(hwnd, msg, wparam, lparam);
 }
+
+
 
 
 Application::Application(){}

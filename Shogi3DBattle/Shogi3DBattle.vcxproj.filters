@@ -33,7 +33,7 @@
     <ClCompile Include="src\DX12.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="header\src\Command.cpp">
+    <ClCompile Include="header\src\Draw.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,7 +47,7 @@
     <ClInclude Include="header\DX12.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="header\Command.h">
+    <ClInclude Include="header\Draw.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

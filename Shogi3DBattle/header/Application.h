@@ -3,7 +3,7 @@
 #include<Windows.h>
 #include<memory>
 
-// ウィンドウプロシージャ
+// ウィンドウプロシージャ宣言
 LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 class DX12;
@@ -35,13 +35,12 @@ private:
     void CreateWindowObject();
     void ExitGameWindow();
 
-    // 委譲
+    // DX12オブジェクト
     std::shared_ptr<DX12> _dx12;
 
 
 public:
-    // アプリケーションメインライン
-    static Application& Instance();
+    static Application& GetInstance();
     bool Init();
     void Run();
     void Exit(); 
