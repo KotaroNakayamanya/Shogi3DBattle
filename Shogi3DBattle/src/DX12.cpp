@@ -1,4 +1,6 @@
 ﻿#include"DX12.h"
+#include"Command.h"
+
 #include<algorithm>
 #include<string>
 #include<cassert>
@@ -36,23 +38,13 @@ bool DX12::CreateDX12BasicObject()
     if (FAILED(CreateDevice()))
     {
         assert(false); return false;
-    }
-    
+    }  
 
     // コマンドアロケータ、リスト、キュー作成
-    if (FAILED(CreateCommandAllocator()))
+    if (FAILED(_command->CreateCommandObject(_device.Get())))
     {
         assert(false); return false;
     }
-    if (FAILED(CreateCommandList()))
-    {
-        assert(false); return false;
-    }
-    if (FAILED(CreateCommandQueue()))
-    {
-        assert(false); return false;
-    }
-
     // スワップチェーン作成
     if (FAILED(CreateSwapChain()))
     {
@@ -78,50 +70,6 @@ bool DX12::CreateDX12BasicObject()
     return true;
 }
 
-// コマンド実行
-void DX12::RunDX12()
-{
-    // 現在のバックバッファのインデックスを取得
-    auto currentBufferIdx =
-        _swapChain->GetCurrentBackBufferIndex();
-
-    // 対応したRTVをレンダーターゲットに設定
-    SetRTVToRenderTargetWithBarrier(currentBufferIdx);
-
-    // レンダーターゲットハンドルを取得
-    auto rtvHandle = GetRTVHandle(currentBufferIdx);
-    
-    // レンダーターゲット設定
-    _commandList->OMSetRenderTargets(1, &rtvHandle, true, nullptr);
-
-    // レンダーターゲットクリア
-    float clearRTVColor[] =
-        {1.0f, 1.0f, 0.0f, 1.0f};
-    _commandList->ClearRenderTargetView(
-        rtvHandle, clearRTVColor, 0, nullptr);
-
-    // 表示画面に設定
-    SetRTVToPresentWithBarrier(currentBufferIdx);
-
-    _commandList->Close();
-
-    // コマンド実行
-    ExecuteCommand();
-
-    // フェンスによる同期制御
-    WaitProcessWithFence();
-
-    // コマンドリセット
-    CommandReset();
-    
-    // 画面スワップ
-    _swapChain->Present(1, 0);
-
-    return;
-}
-
-
-
 // DXGIファクトリー作成
 HRESULT DX12::CreateFactory()
 {
@@ -137,7 +85,6 @@ HRESULT DX12::CreateFactory()
 
     return result;
 }
-
 
 // 使用されているアダプター（グラフィックボード等）を取得する
 void DX12::CreateUsedAdapterLists()
@@ -172,7 +119,6 @@ void DX12::DecisionUsingAdapter()
     }
 }
 
-
 // デバイス作成
 HRESULT DX12::CreateDevice()
 {
@@ -192,122 +138,27 @@ HRESULT DX12::CreateDevice()
     return result;
 }
 
-// コマンドアロケータ作成
-HRESULT DX12::CreateCommandAllocator()
+// コマンドオブジェクト作成
+HRESULT DX12::CreateCommandObject()
 {
-    return _device->CreateCommandAllocator(
-        D3D12_COMMAND_LIST_TYPE_DIRECT,
-        IID_PPV_ARGS(_commandAllocator.ReleaseAndGetAddressOf()));
-}
-
-// コマンドリスト作成
-HRESULT DX12::CreateCommandList()
-{
-    return _device->CreateCommandList(
-        0,
-        D3D12_COMMAND_LIST_TYPE_DIRECT,
-        _commandAllocator.Get(),
-        nullptr,
-        IID_PPV_ARGS(_commandList.ReleaseAndGetAddressOf()));
-}
-
-// コマンドキュー作成
-HRESULT DX12::CreateCommandQueue()
-{
-    D3D12_COMMAND_QUEUE_DESC commandQueueDesc =
-        GetCommandQueueDesc();
-
-    return _device->CreateCommandQueue(
-        &commandQueueDesc,
-        IID_PPV_ARGS(_commandQueue.ReleaseAndGetAddressOf()));
+    return _command->CreateCommandObject(
+               _device.Get());
 }
 
 // スワップチェーン作成
 HRESULT DX12::CreateSwapChain()
 {
+    ID3D12CommandQueue* commandQueue =
+        _command->GetCommandQueue();
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = GetSwapChainDesc();
 
     return _dxgiFactory->CreateSwapChainForHwnd(
-        _commandQueue.Get(),
+        commandQueue,
         _hwnd,
         &swapChainDesc,
         nullptr,
         nullptr,
         (IDXGISwapChain1**)_swapChain.ReleaseAndGetAddressOf());
-}
-
-// レンダーターゲットビューヒープ作成
-HRESULT DX12::CreateRTVHeap()
-{
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetRTVHeapDesc();
-
-    return _device->CreateDescriptorHeap(
-        &heapDesc,
-        IID_PPV_ARGS(_rtvHeap.ReleaseAndGetAddressOf()));
-}
-
-// レンダーターゲットビュー作成
-HRESULT DX12::CreateRTV()
-{
-    // ヒープの先頭アドレスを取得しておく
-    D3D12_CPU_DESCRIPTOR_HANDLE destinationPtr =
-        _rtvHeap->GetCPUDescriptorHandleForHeapStart();
-
-    _rtvs.resize(_bufferNum);
-
-    for (int i = 0; i < _bufferNum; i++)
-    {
-        if (FAILED(SetBufferToRTV(i)))
-        {
-            assert(false); return E_FAIL;
-        }
-
-        _device->CreateRenderTargetView(
-            _rtvs[i].Get(),
-            nullptr,
-            destinationPtr);
-
-        // RTVビューを入れた分、アドレスを足す
-        destinationPtr.ptr +=
-            _device->GetDescriptorHandleIncrementSize(
-                D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-    }
-
-    return S_OK;
-}
-
-HRESULT DX12::SetBufferToRTV(int i)
-{
-    return _swapChain->GetBuffer(
-        i, IID_PPV_ARGS(_rtvs[i].ReleaseAndGetAddressOf()));
-}
-
-// フェンス作成
-HRESULT DX12::CreateFence()
-{
-    return _device->CreateFence(
-        _fenceVal,
-        D3D12_FENCE_FLAG_NONE,
-        IID_PPV_ARGS(_fence.ReleaseAndGetAddressOf()));
-}
-
-
-
-
-// コマンドリストディスクリプタを返す
-D3D12_COMMAND_QUEUE_DESC DX12::GetCommandQueueDesc()
-{
-    D3D12_COMMAND_QUEUE_DESC desc;
-    desc.Type =    // コマンドリストタイプの種類
-        D3D12_COMMAND_LIST_TYPE_DIRECT;
-    desc.Priority = // アプリケーション優先度 通常
-        D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
-    desc.Flags = // タイムアウトなし
-        D3D12_COMMAND_QUEUE_FLAG_NONE; 
-    desc.NodeMask =
-        0;
-
-    return desc;
 }
 
 // スワップチェーンディスクリプタを返す
@@ -347,6 +198,17 @@ DXGI_SWAP_CHAIN_DESC1 DX12::GetSwapChainDesc()
     return desc;
 }
 
+
+// レンダーターゲットビューヒープ作成
+HRESULT DX12::CreateRTVHeap()
+{
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetRTVHeapDesc();
+
+    return _device->CreateDescriptorHeap(
+        &heapDesc,
+        IID_PPV_ARGS(_rtvHeap.ReleaseAndGetAddressOf()));
+}
+
 // RTVヒープディスクリプタを返す
 D3D12_DESCRIPTOR_HEAP_DESC DX12::GetRTVHeapDesc()
 {
@@ -363,24 +225,91 @@ D3D12_DESCRIPTOR_HEAP_DESC DX12::GetRTVHeapDesc()
     return desc;
 }
 
-
-// フェンスによる同期制御
-void DX12::WaitProcessWithFence()
+// レンダーターゲットビュー作成
+HRESULT DX12::CreateRTV()
 {
-    // GPU処理完了後のフェンスの値を設定
-    _commandQueue->Signal(_fence.Get(), ++_fenceVal);
+    // ヒープの先頭アドレスを取得しておく
+    D3D12_CPU_DESCRIPTOR_HANDLE destinationPtr =
+        _rtvHeap->GetCPUDescriptorHandleForHeapStart();
 
-    while (_fence->GetCompletedValue() != _fenceVal)
+    _rtvs.resize(_bufferNum);
+
+    for (int i = 0; i < _bufferNum; i++)
     {
-        auto event = CreateEvent(nullptr, false, false, nullptr);
-        _fence->SetEventOnCompletion(_fenceVal, event);
-        WaitForSingleObject(event, INFINITE);
-        CloseHandle(event);
+        if (FAILED(SetBufferToRTV(i)))
+        {
+            assert(false); return E_FAIL;
+        }
+
+        _device->CreateRenderTargetView(
+            _rtvs[i].Get(),
+            nullptr,
+            destinationPtr);
+
+        // RTVビューを入れた分、アドレスを足す
+        destinationPtr.ptr +=
+            _device->GetDescriptorHandleIncrementSize(
+                D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     }
+
+    return S_OK;
+}
+
+HRESULT DX12::SetBufferToRTV(int i)
+{
+    return _swapChain->GetBuffer(
+        i, IID_PPV_ARGS(_rtvs[i].ReleaseAndGetAddressOf()));
 }
 
 
 
+
+
+
+// コマンド実行
+void DX12::RunDX12()
+{
+    // 現在のバックバッファのインデックスを取得
+    auto currentBackBufferIdx =
+        _swapChain->GetCurrentBackBufferIndex();
+
+    // レンダーターゲットハンドルを取得
+    auto rtvHandle = GetRTVHandle(currentBackBufferIdx);
+
+    // RTVをレンダーターゲット
+    ChangeRTVToRenderTarget(currentBackBufferIdx);
+    
+    // レンダーターゲット設定
+    SetRenderTarget(rtvHandle);
+
+    // レンダーターゲットクリア
+    ClearRenderTarget(rtvHandle);
+
+    // 表示画面に設定
+    ChangeRTVToPresent(currentBackBufferIdx);
+
+    CommandClose();
+
+    // コマンド実行
+    ExecuteCommand();
+
+    // フェンスによる同期制御
+    WaitProcessWithFence();
+
+    // コマンドリセット
+    CommandReset();
+    
+    // 画面スワップ
+    _swapChain->Present(1, 0);
+
+    return;
+}
+
+// レンダーターゲットに対応したRTVを設定
+void DX12::ChangeRTVToRenderTarget(UINT idx)
+{
+    _command->ChangeRTVToRenderTarget(_rtvs[idx].Get(), _bufferNum - 1);
+}
 
 // レンダーターゲットハンドルを返す
 D3D12_CPU_DESCRIPTOR_HANDLE DX12::GetRTVHandle(UINT idx)
@@ -395,71 +324,80 @@ D3D12_CPU_DESCRIPTOR_HANDLE DX12::GetRTVHandle(UINT idx)
     return handle;
 }
 
-// RTVをレンダーターゲットに設定
-void DX12::SetRTVToRenderTargetWithBarrier(
-    UINT idx)
+void DX12::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
 {
-    D3D12_RESOURCE_BARRIER bufferBarrierDesc =
-        GetBufferBarrierDesc(_rtvs[idx].Get());
-
-    bufferBarrierDesc.Transition.StateBefore =
-        D3D12_RESOURCE_STATE_PRESENT;
-    bufferBarrierDesc.Transition.StateAfter  =
-        D3D12_RESOURCE_STATE_RENDER_TARGET;
-
-    _commandList->ResourceBarrier(
-        _bufferNum - 1,
-        &bufferBarrierDesc);
+    _command->ClearRenderTarget(handle);
 }
 
 // RTVを表示画面に設定
-void DX12::SetRTVToPresentWithBarrier(
+void DX12::ChangeRTVToPresent(
     UINT idx)
 {
-    D3D12_RESOURCE_BARRIER bufferBarrierDesc =
-        GetBufferBarrierDesc(_rtvs[idx].Get());
-
-    bufferBarrierDesc.Transition.StateBefore =
-        D3D12_RESOURCE_STATE_RENDER_TARGET;
-    bufferBarrierDesc.Transition.StateAfter  =
-        D3D12_RESOURCE_STATE_PRESENT;
-
-    _commandList->ResourceBarrier(
-        _bufferNum - 1,
-        &bufferBarrierDesc);
+    _command->ChangeRTVToPresent(_rtvs[idx].Get(), _bufferNum - 1);
 }
 
-D3D12_RESOURCE_BARRIER DX12::GetBufferBarrierDesc(
-    ID3D12Resource* rtv)
+void DX12::CommandClose()
 {
-    D3D12_RESOURCE_BARRIER desc;
-
-    desc.Type =
-        D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    desc.Flags =
-        D3D12_RESOURCE_BARRIER_FLAG_NONE;
-
-    desc.Transition.pResource =
-        rtv;
-    desc.Transition.Subresource =
-        D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-
-    return desc;  
+    _command->CommandClose();
 }
+
+
+// フェンス作成
+HRESULT DX12::CreateFence()
+{
+    return _device->CreateFence(
+        _fenceVal,
+        D3D12_FENCE_FLAG_NONE,
+        IID_PPV_ARGS(_fence.ReleaseAndGetAddressOf()));
+}
+
+
+
+
+
+
+
+// フェンスによる同期制御
+void DX12::WaitProcessWithFence()
+{
+    ID3D12CommandQueue* commandQueue =
+        GetCommandQueue();
+    // GPU処理完了後のフェンスの値を設定
+    commandQueue->Signal(_fence.Get(), ++_fenceVal);
+
+    while (_fence->GetCompletedValue() != _fenceVal)
+    {
+        auto event = CreateEvent(nullptr, false, false, nullptr);
+        _fence->SetEventOnCompletion(_fenceVal, event);
+        WaitForSingleObject(event, INFINITE);
+        CloseHandle(event);
+    }
+}
+
+ID3D12CommandQueue* DX12::GetCommandQueue()
+{
+    return _command->GetCommandQueue();
+}
+
+
+
+
+
 
 void DX12::CommandReset()
 {
-    _commandAllocator->Reset();
-    _commandList->Reset(_commandAllocator.Get(), nullptr);
+    _command->CommandReset();
 }
 
 void DX12::ExecuteCommand()
 {
-    ID3D12CommandList* commandLists[] = {_commandList.Get()};
-    _commandQueue->ExecuteCommandLists(1, commandLists);
+    _command->ExecuteCommand();
 }
 
-
+void DX12::SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
+{
+    _command->SetRenderTarget(handle);
+}
 
 DX12::DX12(){}
 
@@ -470,4 +408,5 @@ DX12::DX12(HWND hwnd)
 #endif
 
     _hwnd = hwnd;
+    _command.reset(new Command());
 }

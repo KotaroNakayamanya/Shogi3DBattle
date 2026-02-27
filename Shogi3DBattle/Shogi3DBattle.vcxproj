@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="header\src\Command.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\DX12.cpp" />
     <ClCompile Include="src\main.cpp" />

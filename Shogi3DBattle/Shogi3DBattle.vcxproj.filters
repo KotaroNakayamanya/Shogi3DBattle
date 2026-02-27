@@ -33,6 +33,9 @@
     <ClCompile Include="src\DX12.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
+    <ClCompile Include="header\src\Command.cpp">
+      <Filter>ソース ファイル\DX12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
