@@ -26,6 +26,8 @@ bool Application::Init()
 // 実行処理
 void Application::Run()
 {
+    ShowWindow(_hwnd, SW_SHOW);
+
     MSG msg = {};
 
     while (true) {
@@ -62,7 +64,6 @@ bool Application::CreateGameWindow()
     AdjustWindowRect(&_WINDOW_RECT,
         WS_OVERLAPPEDWINDOW, false);
     CreateWindowObject();
-    ShowWindow(_hwnd, SW_SHOW);
 
     return true;
 }
