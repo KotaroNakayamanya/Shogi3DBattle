@@ -1,48 +1,60 @@
 ﻿#include"Draw.h"
 #include<cassert>
 
-//ID3D12CommandAllocator** Draw::GetCommandAllocatorPtr(){return _commandAllocator.GetAddressOf(); }
-//ID3D12GraphicsCommandList** Draw::GetCommandListPtr(){return _commandList.GetAddressOf();}
-//ID3D12CommandQueue** Draw::GetCommandQueuePtr(){return _commandQueue.GetAddressOf(); }
-//IDXGISwapChain4** Draw::Draw::GetSwapChainPtr(){return _swapChain.GetAddressOf(); }
-//ID3D12Fence** Draw::GetFencePtr(){return _fence.GetAddressOf(); }
-//UINT Draw::GetFenceVal(){return _fenceVal;}
-
 // 描画オブジェクト作成
 HRESULT Draw::CreateDrawObject(
-    ID3D12Device*            device,
-    IDXGIFactory6*           dxgiFactory,
-    HWND                     hwnd,
-    D3D12_COMMAND_QUEUE_DESC commandQueueDesc,
-    DXGI_SWAP_CHAIN_DESC1    swapChainDesc)
+    ID3D12Device*              device,
+    IDXGIFactory6*             dxgiFactory,
+    HWND                       hwnd,
+    D3D12_COMMAND_QUEUE_DESC   commandQueueDesc,
+    DXGI_SWAP_CHAIN_DESC1      swapChainDesc,
+    D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc)
 {
+    // コマンドアロケータ作成
     if (FAILED(CreateCommandAllocator(
         device)))
     {
         assert(false); return E_FAIL;
     }
+    // コマンドリスト作成
     if (FAILED(CreateCommandList(
         device)))
     {
         assert(false); return E_FAIL;
     }
+    // コマンドキュー作成
     if (FAILED(CreateCommandQueue(
         device, commandQueueDesc)))
     {
         assert(false); return E_FAIL;
     }
+    // スワップチェーン作成
     if (FAILED(CreateSwapChain(
         dxgiFactory, hwnd, swapChainDesc)))
     {
         assert(false); return E_FAIL;
     }
+    // フェンス作成
     if (FAILED(CreateFence(
+        device)))
+    {
+        assert(false); return E_FAIL;
+    }
+    // RTVヒープ作成
+    if (FAILED(CreateRTVHeap(
+        device, rtvHeapDesc)))
+    {
+        assert(false); return E_FAIL;
+    }
+    // RTV作成
+    if (FAILED(CreateRTV(
         device)))
     {
         assert(false); return E_FAIL;
     }
 }
 
+// コマンドアロケータ作成
 HRESULT Draw::CreateCommandAllocator(ID3D12Device* device)
 {
     return device->CreateCommandAllocator(
@@ -50,6 +62,7 @@ HRESULT Draw::CreateCommandAllocator(ID3D12Device* device)
         IID_PPV_ARGS(_commandAllocator.ReleaseAndGetAddressOf()));
 }
 
+// コマンドリスト作成
 HRESULT Draw::CreateCommandList(ID3D12Device* device)
 {
     return device->CreateCommandList(
@@ -60,6 +73,7 @@ HRESULT Draw::CreateCommandList(ID3D12Device* device)
         IID_PPV_ARGS(_commandList.ReleaseAndGetAddressOf()));
 }
 
+// コマンドキュー作成
 HRESULT Draw::CreateCommandQueue(
     ID3D12Device*            device,
     D3D12_COMMAND_QUEUE_DESC commandQueueDesc)
@@ -69,7 +83,7 @@ HRESULT Draw::CreateCommandQueue(
         IID_PPV_ARGS(_commandQueue.ReleaseAndGetAddressOf()));
 }
 
-
+// スワップチェーン作成
 HRESULT Draw::CreateSwapChain(
     IDXGIFactory6*        dxgiFactory,
     HWND                  hwnd,
@@ -84,6 +98,7 @@ HRESULT Draw::CreateSwapChain(
         (IDXGISwapChain1**)_swapChain.ReleaseAndGetAddressOf());
 }
 
+// フェンス作成
 HRESULT Draw::CreateFence(ID3D12Device* device)
 {
     return device->CreateFence(
@@ -92,16 +107,121 @@ HRESULT Draw::CreateFence(ID3D12Device* device)
         IID_PPV_ARGS(_fence.ReleaseAndGetAddressOf()));
 }
 
-
-
-
- HRESULT Draw::SetBufferToRTV(UINT i, ID3D12Resource** rtvPtr)
+// RTVヒープ作成
+HRESULT Draw::CreateRTVHeap(
+    ID3D12Device*              device,
+    D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc)
 {
-    return _swapChain->GetBuffer(i, IID_PPV_ARGS(rtvPtr));
+    return device->CreateDescriptorHeap(
+        &rtvHeapDesc,
+        IID_PPV_ARGS(_rtvHeap.ReleaseAndGetAddressOf()));
+}
+
+// RTV作成
+HRESULT Draw::CreateRTV(ID3D12Device* device)
+{
+    _rtvs.resize(_bufferCount);
+
+    // ヒープの先頭アドレスを取得しておく
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle =
+        _rtvHeap->GetCPUDescriptorHandleForHeapStart();
+
+    for (int i = 0; i < _bufferCount; i++)
+    {
+        if (FAILED(SetRTVBuffer(i))) // 各RTVにバッファを対応させる
+        {
+            assert(false); return E_FAIL;
+        }
+
+        device->CreateRenderTargetView(
+            _rtvs[i].Get(),
+            nullptr,
+            rtvHeapHandle);
+
+        // RTVビューを入れた分、アドレスを足す
+        rtvHeapHandle.ptr +=
+            device->GetDescriptorHandleIncrementSize(
+                D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    }
+
+    return S_OK;
+}
+
+// RTVにバッファを対応させる
+ HRESULT Draw::SetRTVBuffer(UINT i)
+{
+    return _swapChain->GetBuffer(
+        i, 
+        IID_PPV_ARGS(_rtvs[i].ReleaseAndGetAddressOf()));
 }
 
 
 
+
+
+
+
+
+
+// レンダーターゲット準備
+void Draw::PrepareRenderTarget(UINT rtvOffset)
+{
+    // バックバッファのハンドルを取得
+    auto backBufferIdx = _swapChain->GetCurrentBackBufferIndex();
+    auto rtvHandle = _rtvHeap->GetCPUDescriptorHandleForHeapStart();
+    rtvHandle.ptr += backBufferIdx * rtvOffset;
+
+    // バックバッファに対応するRTVをレンダーターゲットに設定
+    ChangeRTVBarrierToRenderTarget(_rtvs[backBufferIdx].Get());
+    SetRenderTarget(rtvHandle);
+
+    // レンダーターゲットクリア
+    ClearRenderTarget(rtvHandle);
+}
+
+// 描画実行
+void Draw::ExecuteDraw()
+{
+    // バックバッファに対応するRTVを表示画面に設定
+    auto backBufferIdx = _swapChain->GetCurrentBackBufferIndex();
+    ChangeRTVBarrierToPresent(_rtvs[backBufferIdx].Get());
+
+    // コマンド実行および画面スワップによる表示
+    _commandList->Close();
+    ExecuteCommand();
+    WaitProcessWithFence();
+    ResetCommand();
+    _swapChain->Present(1, 0);
+}
+
+// コマンド実行
+void Draw::ExecuteCommand()
+{
+    ID3D12CommandList* commandLists[] = {_commandList.Get()};
+    _commandQueue->ExecuteCommandLists(1, commandLists);
+}
+
+// フェンスによる同期制御
+void Draw::WaitProcessWithFence()
+{
+    // GPU処理完了後のフェンスの値を設定
+    _commandQueue->Signal(_fence.Get(), ++_fenceVal);
+
+    while (_fence->GetCompletedValue() != _fenceVal)
+    {
+        auto event = CreateEvent(nullptr, false, false, nullptr);
+        _fence->SetEventOnCompletion(_fenceVal, event);
+        WaitForSingleObject(event, INFINITE);
+        CloseHandle(event);
+    }
+}
+
+// コマンドリセット
+void Draw::ResetCommand()
+{
+    _commandAllocator->Reset();
+    _commandList->Reset(_commandAllocator.Get(), nullptr);
+}
 
 void Draw::ChangeRTVBarrierToRenderTarget(ID3D12Resource* rtv)
 {
@@ -163,85 +283,6 @@ void Draw::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
     _commandList->ClearRenderTargetView(
         handle, clearRTVColor, 0, nullptr);
 }
-
-
-
-
-// レンダーターゲット準備
-void Draw::PrepareRenderTarget(
-    D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle,
-    UINT rtvOffset,
-    std::vector<ComPtr<ID3D12Resource>> rtvs)
-{
-    // バックバッファのハンドルを取得
-    auto backBufferIdx = _swapChain->GetCurrentBackBufferIndex();
-    auto rtvHandle = rtvStartHandle;
-    rtvHandle.ptr += backBufferIdx * rtvOffset;
-
-    // バックバッファに対応するRTVをレンダーターゲットに設定
-    ChangeRTVBarrierToRenderTarget(rtvs[backBufferIdx].Get());
-    SetRenderTarget(rtvHandle);
-
-    // レンダーターゲットクリア
-    ClearRenderTarget(rtvHandle);
-}
-
-// 描画実行
-void Draw::ExecuteDraw(
-    std::vector<ComPtr<ID3D12Resource>> rtvs)
-{
-    // バックバッファに対応するRTVを表示画面に設定
-    auto backBufferIdx = _swapChain->GetCurrentBackBufferIndex();
-    ChangeRTVBarrierToPresent(rtvs[backBufferIdx].Get());
-
-    // コマンド実行および画面スワップによる表示
-    _commandList->Close();
-    ExecuteCommand();
-    WaitProcessWithFence();
-    ResetCommand();
-    _swapChain->Present(1, 0);
-}
-
-// コマンド実行
-void Draw::ExecuteCommand()
-{
-    ID3D12CommandList* commandLists[] = {_commandList.Get()};
-    _commandQueue->ExecuteCommandLists(1, commandLists);
-}
-
-// フェンスによる同期制御
-void Draw::WaitProcessWithFence()
-{
-    // GPU処理完了後のフェンスの値を設定
-    _commandQueue->Signal(_fence.Get(), ++_fenceVal);
-
-    while (_fence->GetCompletedValue() != _fenceVal)
-    {
-        auto event = CreateEvent(nullptr, false, false, nullptr);
-        _fence->SetEventOnCompletion(_fenceVal, event);
-        WaitForSingleObject(event, INFINITE);
-        CloseHandle(event);
-    }
-}
-
-// コマンドリセット
-void Draw::ResetCommand()
-{
-    _commandAllocator->Reset();
-    _commandList->Reset(_commandAllocator.Get(), nullptr);
-}
-
-//D3D12_CPU_DESCRIPTOR_HANDLE Draw::GetRTVHandle(UINT idx)
-//{
-//    auto handle =
-//        _rtvHeap->GetCPUDescriptorHandleForHeapStart();
-//    auto offset =
-//        _device->GetDescriptorHandleIncrementSize(
-//              D3D12_DESCRIPTOR_HEAP_TYPE_RTV); 
-//    handle.ptr += idx * offset;
-//
-//    return handle;
-//}
 
 
 

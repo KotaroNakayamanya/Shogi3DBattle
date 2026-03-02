@@ -13,8 +13,9 @@ class Object;
 
 class DX12
 {
-template<typename T>
+    template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 private:
     HWND _hwnd; // ウインドウハンドル
 
@@ -27,32 +28,11 @@ private:
     HRESULT CreateDevice();  // Direct3Dデバイス作成
     HRESULT CreateFactory(); // DXGIファクトリ作成
 
-
-    ComPtr<ID3D12DescriptorHeap>        _rtvHeap; // RTVヒープ
-    std::vector<ComPtr<ID3D12Resource>> _rtvs;    // RTV
-
-    HRESULT CreateRTVHeap(); // RTVヒープ作成
-    HRESULT CreateRTV();     // RTV作成
-
-
-    // GPU機能レベル一覧
-    std::array<D3D_FEATURE_LEVEL, 5> _featureLevels =
-    {
-        D3D_FEATURE_LEVEL_12_2,
-        D3D_FEATURE_LEVEL_12_1,
-        D3D_FEATURE_LEVEL_12_0,
-        D3D_FEATURE_LEVEL_11_1,
-        D3D_FEATURE_LEVEL_11_0
-    };
-
-    std::vector<ComPtr<IDXGIAdapter>> _adapters;     // 搭載されているアダプターリスト
-    ComPtr<IDXGIAdapter>              _usingAdapter; // 使用するアダプター
-
-    void CreateUsedAdapterLists(); // 搭載されているアダプターリストの作成
-    void DecisionUsingAdapter();   // 使用するアダプターの決定
+    ComPtr<IDXGIAdapter> GetUsingAdapter(); // 使用するアダプターを取得
+    std::vector<ComPtr<IDXGIAdapter>> GetCanUseAdapters(); // 使用可能なアダプターを取得
  
 
-    DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc(); // スワップチェーンディスクリプタ
+    
  
     HRESULT CreateVertexBuffer(); // 頂点バッファ作成
     HRESULT CreateIndexBuffer(); // インデックスバッファ作成
@@ -78,17 +58,15 @@ private:
 
 
 
-    HRESULT SetBufferToRTV(UINT);
     D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc();
 
     
-    D3D12_COMMAND_QUEUE_DESC GetCommandQueueDesc();
-
-
-    D3D12_CPU_DESCRIPTOR_HANDLE GetRTVHandle(UINT idx);
+    D3D12_COMMAND_QUEUE_DESC GetCommandQueueDesc(); // コマンドキューディスクリプタ
+    DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc(); // スワップチェーンディスクリプタ
 
     D3D12_HEAP_PROPERTIES GetHeapProperty();
     D3D12_RESOURCE_DESC GetResourceDesc();
+
     D3D12_SHADER_BYTECODE GetVertexShaderDesc();
     D3D12_SHADER_BYTECODE GetPixelShaderDesc();
     D3D12_RASTERIZER_DESC GetRasterizerDesc();

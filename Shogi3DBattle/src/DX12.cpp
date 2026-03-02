@@ -48,16 +48,6 @@ bool DX12::CreateDX12Object()
         assert(false); return false;
     }
 
-    // レンダーターゲットビュー作成
-    if (FAILED(CreateRTVHeap()))
-    {
-        assert(false); return false;
-    }
-    if (FAILED(CreateRTV()))
-    {
-        assert(false); return false;
-    }
-
     // 頂点集合作成
     if (FAILED(CreateVertexSets()))
     {
@@ -137,17 +127,27 @@ HRESULT DX12::CreateFactory()
 // デバイス作成
 HRESULT DX12::CreateDevice()
 {
-    // 使用するアダプターを決定
-    CreateUsedAdapterLists();
-    DecisionUsingAdapter();
+    // GPU機能レベル一覧
+    std::array<D3D_FEATURE_LEVEL, 5> featureLevels =
+    {
+        D3D_FEATURE_LEVEL_12_2,
+        D3D_FEATURE_LEVEL_12_1,
+        D3D_FEATURE_LEVEL_12_0,
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0
+    };
+    
+    // 使用するアダプターを取得
+    ComPtr<IDXGIAdapter> adapter =
+        GetUsingAdapter();
 
-    HRESULT result;
     // GPU機能レベルの配列順にデバイス作成を試みる
-    std::find_if(_featureLevels.begin(), _featureLevels.end(),
-        [this, &result](D3D_FEATURE_LEVEL featureLevel)
+    HRESULT result;
+    std::find_if(featureLevels.begin(), featureLevels.end(),
+        [this, &result, adapter](D3D_FEATURE_LEVEL featureLevel)
         {
             result = D3D12CreateDevice(
-                _usingAdapter.Get(),
+                adapter.Get(),
                 featureLevel,
                 IID_PPV_ARGS(_device.ReleaseAndGetAddressOf()));
 
@@ -157,36 +157,54 @@ HRESULT DX12::CreateDevice()
     return result;
 }
 
-// 使われているアダプタ（GPU）を動的配列に入れる
-void DX12::CreateUsedAdapterLists()
+// 使用するアダプターを取得
+ComPtr<IDXGIAdapter> DX12::GetUsingAdapter()
 {
+    // アダプター一覧
+    std::array<std::wstring, 3> adapterNames =
+    {
+        L"NVIDIA",
+        L"AMD",
+        L"Intel"
+    };
+
+    // 使用可能なアダプターを取得
+    std::vector<ComPtr<IDXGIAdapter>> canUseAdapters =
+        GetCanUseAdapters();
+
+    for(auto adapter : canUseAdapters)
+    {
+        // アダプター名取得
+        DXGI_ADAPTER_DESC adapterDesc;
+        adapter->GetDesc(&adapterDesc);
+        std::wstring str = adapterDesc.Description;
+
+
+        for (auto adapterName : adapterNames)
+        {
+            if (str.find(adapterName) != std::string::npos)
+                return adapter;
+        }
+    }
+
+    return canUseAdapters[0];
+}
+
+// 使用可能なアダプターを取得
+std::vector<ComPtr<IDXGIAdapter>> DX12::GetCanUseAdapters()
+{
+    std::vector<ComPtr<IDXGIAdapter>> adapters;
+
     ComPtr<IDXGIAdapter> tmpAdapter;
     int i = 0;
     while (_dxgiFactory->EnumAdapters(i, tmpAdapter.ReleaseAndGetAddressOf())
            != DXGI_ERROR_NOT_FOUND)
     {
-        _adapters.push_back(tmpAdapter.Get());
+        adapters.push_back(tmpAdapter.Get());
         i++;
     }
-}
 
-// 使用するアダプターを決定
-void DX12::DecisionUsingAdapter()
-{
-    for(auto adapter : _adapters)
-    {
-        // アダプター説明オブジェクト取得
-        DXGI_ADAPTER_DESC adapterDesc;
-        adapter->GetDesc(&adapterDesc);
-
-        std::wstring str = adapterDesc.Description;
-
-        if (str.find(L"NVIDIA") != std::string::npos)
-        {
-            _usingAdapter.Swap(adapter);
-            break;
-        }
-    }
+    return adapters;
 }
 
 // 描画オブジェクト（コマンド、スワップチェーン、フェンス）を作成
@@ -199,9 +217,11 @@ HRESULT DX12::CreateDrawObject()
         _dxgiFactory.Get(),
         _hwnd,
         GetCommandQueueDesc(),
-        GetSwapChainDesc());
+        GetSwapChainDesc(),
+        GetRTVHeapDesc());
 }
 
+// コマンドキューディスクリプタ
 D3D12_COMMAND_QUEUE_DESC DX12::GetCommandQueueDesc()
 {
     D3D12_COMMAND_QUEUE_DESC desc = {};
@@ -217,6 +237,7 @@ D3D12_COMMAND_QUEUE_DESC DX12::GetCommandQueueDesc()
     return desc;
 }
 
+// スワップチェーンディスクリプタ
 DXGI_SWAP_CHAIN_DESC1 DX12::GetSwapChainDesc()
 {
     DXGI_SWAP_CHAIN_DESC1 desc = {};
@@ -250,28 +271,7 @@ DXGI_SWAP_CHAIN_DESC1 DX12::GetSwapChainDesc()
     return desc;
 }
 
-//HRESULT DX12::CreateFence()
-//{
-//    auto fencePtr = _draw->GetFencePtr();
-//    auto fenceVal = _draw->GetFenceVal();
-//
-//    return _device->CreateFence(
-//        fenceVal,
-//        D3D12_FENCE_FLAG_NONE,
-//        IID_PPV_ARGS(fencePtr));
-//}
-
-// レンダーターゲットビューヒープ作成
-HRESULT DX12::CreateRTVHeap()
-{
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetRTVHeapDesc();
-
-    return _device->CreateDescriptorHeap(
-        &heapDesc,
-        IID_PPV_ARGS(_rtvHeap.ReleaseAndGetAddressOf()));
-}
-
-// RTVヒープディスクリプタを返す
+// RTVヒープディスクリプタ
 D3D12_DESCRIPTOR_HEAP_DESC DX12::GetRTVHeapDesc()
 {
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
@@ -285,44 +285,6 @@ D3D12_DESCRIPTOR_HEAP_DESC DX12::GetRTVHeapDesc()
         D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
     return desc;
-}
-
-// レンダーターゲットビュー作成
-HRESULT DX12::CreateRTV()
-{
-    // ヒープの先頭アドレスを取得しておく
-    D3D12_CPU_DESCRIPTOR_HANDLE destinationPtr =
-        _rtvHeap->GetCPUDescriptorHandleForHeapStart();
-
-    _rtvs.resize(_bufferNum);
-
-    for (int i = 0; i < _bufferNum; i++)
-    {
-        if (FAILED(SetBufferToRTV(i)))
-        {
-            assert(false); return E_FAIL;
-        }
-
-        _device->CreateRenderTargetView(
-            _rtvs[i].Get(),
-            nullptr,
-            destinationPtr);
-
-        // RTVビューを入れた分、アドレスを足す
-        destinationPtr.ptr +=
-            _device->GetDescriptorHandleIncrementSize(
-                D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-    }
-
-    return S_OK;
-}
-
-// 各RTVにバッファを対応させる
-HRESULT DX12::SetBufferToRTV(UINT i)
-{
-    return _draw->SetBufferToRTV(
-        i, _rtvs[i].ReleaseAndGetAddressOf());
-
 }
 
 // 頂点集合作成
@@ -732,16 +694,11 @@ void DX12::ExecuteDX12()
 // レンダーターゲットの準備（Drawクラス）
 void DX12::PrepareRenderTarget()
 {
-    auto rtvStartHandle =
-        _rtvHeap->GetCPUDescriptorHandleForHeapStart();
     auto rtvOffset =
         _device->GetDescriptorHandleIncrementSize(
             D3D12_DESCRIPTOR_HEAP_TYPE_RTV); 
         
-    _draw->PrepareRenderTarget(
-        rtvStartHandle,
-        rtvOffset,
-        _rtvs);
+    _draw->PrepareRenderTarget(rtvOffset);
 }
 
 // パイプラインセット
@@ -857,7 +814,7 @@ void DX12::SetDrawInstanced()
 // 描画実行（Drawクラス）
 void DX12::ExecuteDraw()
 {
-    _draw->ExecuteDraw(_rtvs);
+    _draw->ExecuteDraw();
 }
 
 
