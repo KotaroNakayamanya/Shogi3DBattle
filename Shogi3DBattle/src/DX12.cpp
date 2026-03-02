@@ -82,7 +82,7 @@ bool DX12::CreateDX12Object()
     }
 
     // インプットレイアウト作成
-    CreateInputLayout();
+    //CreateInputLayout();
 
     // ルートシグネチャバイナリコード作成
     if (FAILED(CreateRootSignatureBinary()))
@@ -339,6 +339,7 @@ HRESULT DX12::CreateVertexBuffer()
 
 }
 
+// 頂点ヒーププロパティ
 D3D12_HEAP_PROPERTIES DX12::GetHeapProperty()
 {
     D3D12_HEAP_PROPERTIES prop = {};
@@ -353,6 +354,7 @@ D3D12_HEAP_PROPERTIES DX12::GetHeapProperty()
     return prop;
 }
 
+// 
 D3D12_RESOURCE_DESC DX12::GetResourceDesc()
 {
     D3D12_RESOURCE_DESC desc = {};
@@ -467,8 +469,8 @@ HRESULT DX12::LoadVertexShaderFile()
         "vs_5_1",
         D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
         0,
-        _vertexShaderBinary.ReleaseAndGetAddressOf(),
-        _errorBinary       .ReleaseAndGetAddressOf());
+        _vertexShaderBlob.ReleaseAndGetAddressOf(),
+        _errorBlob       .ReleaseAndGetAddressOf());
 }
 
 HRESULT DX12::LoadPixelShaderFile()
@@ -481,26 +483,15 @@ HRESULT DX12::LoadPixelShaderFile()
         "ps_5_1",
         D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
         0,
-        _pixelShaderBinary.ReleaseAndGetAddressOf(),
-        _errorBinary      .ReleaseAndGetAddressOf());
+        _pixelShaderBlob.ReleaseAndGetAddressOf(),
+        _errorBlob      .ReleaseAndGetAddressOf());
 }
 
-// インプットレイアウト作成
-void DX12::CreateInputLayout()
-{
-    _inputLayout =
-    {
-        {
-            "POSITION",
-            0,
-            DXGI_FORMAT_R32G32B32_FLOAT,
-            0,
-            D3D12_APPEND_ALIGNED_ELEMENT,
-            D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-            0
-        }
-    };
-}
+//// インプットレイアウト作成
+//void DX12::CreateInputLayout()
+//{
+//    
+//}
 
 // ルートシグネチャバイナリ作成
 HRESULT DX12::CreateRootSignatureBinary()
@@ -511,8 +502,8 @@ HRESULT DX12::CreateRootSignatureBinary()
     return D3D12SerializeRootSignature(
         &rootSignatureDesc,
         D3D_ROOT_SIGNATURE_VERSION_1_0,
-        _rootSignatureBinary.ReleaseAndGetAddressOf(),
-        _errorBinary.        ReleaseAndGetAddressOf());
+        _rootSignatureBlob.ReleaseAndGetAddressOf(),
+        _errorBlob.        ReleaseAndGetAddressOf());
 }
 
 D3D12_ROOT_SIGNATURE_DESC DX12::GetRootSignatureDesc()
@@ -530,8 +521,8 @@ HRESULT DX12::CreateRootSignature()
 {
     return _device->CreateRootSignature(
         0,
-        _rootSignatureBinary->GetBufferPointer(),
-        _rootSignatureBinary->GetBufferSize(),
+        _rootSignatureBlob->GetBufferPointer(),
+        _rootSignatureBlob->GetBufferSize(),
         IID_PPV_ARGS(_rootSignature.ReleaseAndGetAddressOf()));
 
     //_rootSignatureBinary.ReleaseAndGetAddressOf();
@@ -544,6 +535,24 @@ HRESULT DX12::CreatePipelineState()
 {
     D3D12_GRAPHICS_PIPELINE_STATE_DESC desc =
         GetPipelineStateDesc();
+
+    std::array<D3D12_INPUT_ELEMENT_DESC, 1> inputLayout =
+    {
+        { // 頂点レイアウト
+            "POSITION",
+            0,
+            DXGI_FORMAT_R32G32B32_FLOAT,
+            0,
+            D3D12_APPEND_ALIGNED_ELEMENT,
+            D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+            0
+        }
+    };
+
+    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc =
+        GetInputLayoutDesc(inputLayout);
+
+    desc.InputLayout = inputLayoutDesc;
 
     return _device->CreateGraphicsPipelineState(
         &desc,
@@ -566,8 +575,6 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC DX12::GetPipelineStateDesc()
         GetBlendStateDesc();
     desc.RasterizerState =
         GetRasterizerDesc();
-    desc.InputLayout =
-        GetInputLayoutDesc();
     desc.IBStripCutValue =
         D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;
     desc.PrimitiveTopologyType =
@@ -583,14 +590,27 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC DX12::GetPipelineStateDesc()
     return desc;
 }
 
+D3D12_INPUT_LAYOUT_DESC DX12::GetInputLayoutDesc(
+    std::array<D3D12_INPUT_ELEMENT_DESC, 1> inputLayout)
+{
+    D3D12_INPUT_LAYOUT_DESC desc = {};
+
+    desc.pInputElementDescs =
+        inputLayout.data();
+    desc.NumElements =
+        inputLayout.size();
+ 
+    return desc;
+}
+
 D3D12_SHADER_BYTECODE DX12::GetVertexShaderDesc()
 {
     D3D12_SHADER_BYTECODE desc = {};
 
     desc.pShaderBytecode =
-        _vertexShaderBinary->GetBufferPointer();
+        _vertexShaderBlob->GetBufferPointer();
     desc.BytecodeLength =
-        _vertexShaderBinary->GetBufferSize();
+        _vertexShaderBlob->GetBufferSize();
 
     return desc;
 }
@@ -600,9 +620,9 @@ D3D12_SHADER_BYTECODE DX12::GetPixelShaderDesc()
     D3D12_SHADER_BYTECODE desc = {};
 
     desc.pShaderBytecode =
-        _pixelShaderBinary->GetBufferPointer();
+        _pixelShaderBlob->GetBufferPointer();
     desc.BytecodeLength =
-        _pixelShaderBinary->GetBufferSize();
+        _pixelShaderBlob->GetBufferSize();
 
     return desc;
 }
@@ -651,24 +671,12 @@ D3D12_RASTERIZER_DESC DX12::GetRasterizerDesc()
     return desc;
 }
 
-D3D12_INPUT_LAYOUT_DESC DX12::GetInputLayoutDesc()
-{
-    D3D12_INPUT_LAYOUT_DESC desc = {};
-
-    desc.pInputElementDescs =
-        _inputLayout.data();
-    desc.NumElements =
-        _inputLayout.size();
-
-    return desc;
-}
-
 DXGI_SAMPLE_DESC DX12::GetSampleDesc()
 {
     DXGI_SAMPLE_DESC desc = {};
 
     desc.Count   = 1; // サンプリング数
-    desc.Quality = 0; // クオリティ（０は最低）
+    desc.Quality = 0; // クオリティ（0は最低）
 
     return desc;
 }

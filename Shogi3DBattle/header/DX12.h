@@ -27,9 +27,19 @@ private:
     ComPtr<ID3D12Device>  _device;      // Direct3Dデバイス
     ComPtr<IDXGIFactory6> _dxgiFactory; // DXGIファクトリ
 
+    ComPtr<ID3DBlob> _vertexShaderBlob; // 頂点シェーダーバイナリオブジェクト
+    ComPtr<ID3DBlob> _pixelShaderBlob; // ピクセルシェーダバイナリオブジェクト
+    ComPtr<ID3DBlob> _rootSignatureBlob; // ルートシグネチャバイナリオブジェクト
+    ComPtr<ID3DBlob> _errorBlob; // エラーバイナリオブジェクト
+
+    ComPtr<ID3D12RootSignature> _rootSignature; // ルートシグネチャ
+    ComPtr<ID3D12PipelineState> _pipelineState; //パイプラインステート
+
+    std::vector<D3D12_INPUT_ELEMENT_DESC> _inputLayout; // インプットレイアウト
+
+
     HRESULT CreateDevice();  // Direct3Dデバイス作成
     HRESULT CreateFactory(); // DXGIファクトリ作成
-
     ComPtr<IDXGIAdapter> GetUsingAdapter(); // 使用するアダプターを取得
     std::vector<ComPtr<IDXGIAdapter>> GetCanUseAdapters(); // 使用可能なアダプターを取得
  
@@ -42,54 +52,47 @@ private:
     HRESULT LoadShaderFile();       // シェーダファイルのロード
     HRESULT LoadVertexShaderFile(); // 頂点シェーダロード
     HRESULT LoadPixelShaderFile();  // ピクセルシェーダロード
-
-    ComPtr<ID3DBlob> _vertexShaderBinary; // 頂点シェーダーバイナリ
-    ComPtr<ID3DBlob> _pixelShaderBinary; // ピクセルシェーダバイナリ
-    ComPtr<ID3DBlob> _rootSignatureBinary; // ルートシグネチャバイナリ
-    ComPtr<ID3DBlob> _errorBinary; // エラーバイナリ
-
-
-    ComPtr<ID3D12PipelineState> _pipelineState; //パイプラインステート
-
+    HRESULT CreateRootSignatureBinary(); // ルートシグネチャ（バイナリコード）作成
+    HRESULT CreateRootSignature(); // ルートシグネチャ作成
     HRESULT CreatePipelineState(); // パイプラインステート作成
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC GetPipelineStateDesc(); // パイプラインステートディスクリプタ
+    
+    HRESULT MapVertexToBuffer(); // 頂点をバッファにマップ
+    HRESULT MapIndexToBuffer();  // インデックスをバッファにマップ
+    
+    
 
-    ComPtr<ID3D12RootSignature> _rootSignature; // ルートシグネチャ
-    std::vector<D3D12_INPUT_ELEMENT_DESC> _inputLayout;
 
 
-
-
-    D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc();
 
     
+
+    // 描画オブジェクト
     D3D12_COMMAND_QUEUE_DESC GetCommandQueueDesc(); // コマンドキューディスクリプタ
     DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc(); // スワップチェーンディスクリプタ
+    D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc(); // RTVヒープディスクリプタ
 
-    D3D12_HEAP_PROPERTIES GetHeapProperty();
-    D3D12_RESOURCE_DESC GetResourceDesc();
 
-    D3D12_SHADER_BYTECODE GetVertexShaderDesc();
-    D3D12_SHADER_BYTECODE GetPixelShaderDesc();
-    D3D12_RASTERIZER_DESC GetRasterizerDesc();
-    D3D12_BLEND_DESC GetBlendStateDesc();
-    D3D12_RENDER_TARGET_BLEND_DESC GetRenderTargetBlendDesc();
-    D3D12_INPUT_LAYOUT_DESC GetInputLayoutDesc();
-    DXGI_SAMPLE_DESC GetSampleDesc();
-    D3D12_ROOT_SIGNATURE_DESC GetRootSignatureDesc();
+    // 頂点・インデックスバッファ
+    D3D12_HEAP_PROPERTIES GetHeapProperty(); // 頂点ヒーププロパティ
+    D3D12_RESOURCE_DESC GetResourceDesc();   // リソースディスクリプタ
 
-    HRESULT CreateRootSignatureBinary();
-    HRESULT CreateRootSignature();
+    // ルートシグネチャ
+    D3D12_ROOT_SIGNATURE_DESC GetRootSignatureDesc(); // ルートシグネチャディスクリプタ
+
+
+    // パイプラインステート
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC GetPipelineStateDesc(); // パイプラインステートディスクリプタ
+    D3D12_SHADER_BYTECODE GetVertexShaderDesc();               // 頂点シェーダーディスクリプタ
+    D3D12_SHADER_BYTECODE GetPixelShaderDesc();                // ピクセルシェーダーディスクリプタ
+    D3D12_BLEND_DESC GetBlendStateDesc();                      // ブレンドステートディスクリプタ
+    D3D12_RENDER_TARGET_BLEND_DESC GetRenderTargetBlendDesc(); // レンダーターゲットブレンドディスクリプタ
+    D3D12_RASTERIZER_DESC GetRasterizerDesc();                 // ラスタライザディスクリプタ
+    D3D12_INPUT_LAYOUT_DESC GetInputLayoutDesc(                // インプットレイアウトディスクリプタ
+        std::array<D3D12_INPUT_ELEMENT_DESC, 1> inputLayout);
+    DXGI_SAMPLE_DESC GetSampleDesc();                          // サンプリングディスクリプタ
 
     
 
-    HRESULT MapVertexToBuffer();
-    HRESULT MapIndexToBuffer();
-
-
-    
-
-    void CreateInputLayout();
 
     // ビューポート
     D3D12_VIEWPORT GetViewports();
@@ -125,11 +128,8 @@ private:
     D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView();
     D3D12_INDEX_BUFFER_VIEW GetIndexBufferView();
 
-    //void ExecuteDraw();
 
     void ExecuteDraw();
-
-    void ExecuteCommand();
     void ResetCommand();
 
     void WaitProcessWithFence();
