@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="header\src\Draw.cpp" />
-    <ClCompile Include="header\src\Vertex.cpp" />
+    <ClCompile Include="header\src\Object.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\DX12.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -30,7 +30,19 @@
     <ClInclude Include="header\Draw.h" />
     <ClInclude Include="header\DX12.h" />
     <ClInclude Include="header\Piece.h" />
-    <ClInclude Include="header\Vertex.h" />
+    <ClInclude Include="header\Object.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shader\PixelShader.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PShader</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="shader\VertexShader.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VShader</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

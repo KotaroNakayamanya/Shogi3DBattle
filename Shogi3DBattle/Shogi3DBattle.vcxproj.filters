@@ -22,6 +22,9 @@
     <Filter Include="ソース ファイル\DX12">
       <UniqueIdentifier>{57166d13-f0c8-4ec6-b25f-be519ec0030e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\shader">
+      <UniqueIdentifier>{b6044eb4-9f10-4e02-bdb3-192f1a5e23b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -36,7 +39,7 @@
     <ClCompile Include="header\src\Draw.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="header\src\Vertex.cpp">
+    <ClCompile Include="header\src\Object.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,8 +56,16 @@
     <ClInclude Include="header\Draw.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="header\Vertex.h">
+    <ClInclude Include="header\Object.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shader\VertexShader.hlsl">
+      <Filter>ソース ファイル\shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\PixelShader.hlsl">
+      <Filter>ソース ファイル\shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
