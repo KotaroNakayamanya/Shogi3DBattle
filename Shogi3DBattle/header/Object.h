@@ -24,8 +24,8 @@ public:
     std::vector<DirectX::XMFLOAT3> GetVerticesPtr();
     std::vector<unsigned short> GetIndicesPtr();
 
-    unsigned int GetVertexCount();
-    unsigned int GetVertexByte();
+    unsigned int GetVerticesCount();
+    unsigned int GetVerticesByte();
 
     unsigned int GetIndicesCount();
     unsigned int GetIndicesByte();

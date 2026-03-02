@@ -1,11 +1,12 @@
 ﻿#include"DX12.h"
-#include"Object.h"
-#include"Draw.h"
 
 #include<D3Dcompiler.h>
 #include<algorithm>
 #include<string>
 #include<cassert>
+
+#include"Draw.h"
+#include"Object.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -35,13 +36,11 @@ bool DX12::CreateDX12Object()
     {
         assert(false); return false;
     }
-
     // デバイス作成（GPU機能レベルに対応していなければ失敗）
     if (FAILED(CreateDevice()))
     {
         assert(false); return false;
     }
-
     // 描画オブジェクト作成
     if (FAILED(CreateDrawObject()))
     {
@@ -207,18 +206,36 @@ std::vector<ComPtr<IDXGIAdapter>> DX12::GetCanUseAdapters()
     return adapters;
 }
 
-// 描画オブジェクト（コマンド、スワップチェーン、フェンス）を作成
+// 描画オブジェクト作成（Drawクラス）
 HRESULT DX12::CreateDrawObject()
 {
     _draw.reset(new Draw(_bufferNum));
 
-    return _draw->CreateDrawObject(
-        _device.Get(),
-        _dxgiFactory.Get(),
-        _hwnd,
-        GetCommandQueueDesc(),
-        GetSwapChainDesc(),
-        GetRTVHeapDesc());
+    DrawArgument::CreateDrawObjectArgument arg =
+        GetCreateDrawObjectArgument();
+
+    return _draw->CreateDrawObject(arg);
+}
+
+// 描画オブジェクト作成用引数
+DrawArgument::CreateDrawObjectArgument DX12::GetCreateDrawObjectArgument()
+{
+    DrawArgument::CreateDrawObjectArgument arg = {};
+
+    arg.device =
+        _device.Get();
+    arg.dxgiFactory =
+        _dxgiFactory.Get();
+    arg.hwnd =
+        _hwnd;
+    arg.commandQueueDesc =
+        GetCommandQueueDesc();
+    arg.swapChainDesc =
+        GetSwapChainDesc();
+    arg.rtvHeapDesc =
+        GetRTVHeapDesc();
+
+    return arg;
 }
 
 // コマンドキューディスクリプタ
@@ -343,7 +360,7 @@ D3D12_RESOURCE_DESC DX12::GetResourceDesc()
     desc.Dimension =
         D3D12_RESOURCE_DIMENSION_BUFFER;
     desc.Width =
-        _objects[0]->GetVertexCount() * _objects[0]->GetVertexByte();
+        _objects[0]->GetVerticesCount() * _objects[0]->GetVerticesByte();
     desc.Height =
         1;
     desc.DepthOrArraySize =
@@ -386,7 +403,7 @@ HRESULT DX12::CreateIndexBuffer()
 // バッファに頂点をマップ
 HRESULT DX12::MapVertexToBuffer()
 {
-    DirectX::XMFLOAT3* vertexMap;
+    std::shared_ptr<DirectX::XMFLOAT3> vertexMap;
 
     HRESULT result = _vertexBuffer->Map(
         0, nullptr, (void**)&vertexMap);
@@ -397,7 +414,7 @@ HRESULT DX12::MapVertexToBuffer()
 
     auto vertices = _objects[0]->GetVerticesPtr();
 
-    std::copy(vertices.begin(), vertices.end(), vertexMap);
+    std::copy(vertices.begin(), vertices.end(), vertexMap.get());
 
     _vertexBuffer->Unmap(0, nullptr);
 
@@ -407,10 +424,10 @@ HRESULT DX12::MapVertexToBuffer()
 // バッファにインデックスをマップ
 HRESULT DX12::MapIndexToBuffer()
 {
-    unsigned short* mappedIdx;
+    std::shared_ptr<unsigned short> idxMap;
 
     HRESULT result = _indexBuffer->Map(
-        0, nullptr, (void**)&mappedIdx);
+        0, nullptr, (void**)&idxMap);
     if (FAILED(result))
     {
         assert(false); return E_FAIL;
@@ -418,7 +435,7 @@ HRESULT DX12::MapIndexToBuffer()
 
     auto indices = _objects[0]->GetIndicesPtr();
     
-    std::copy(indices.begin(), indices.end(), mappedIdx);
+    std::copy(indices.begin(), indices.end(), idxMap.get());
 
     _indexBuffer->Unmap(0, nullptr);
     
@@ -659,31 +676,14 @@ DXGI_SAMPLE_DESC DX12::GetSampleDesc()
 
 
 
-
 // コマンド実行
 void DX12::ExecuteDX12()
 {
     // レンダーターゲットの準備をする
     PrepareRenderTarget();
 
-    
-    // パイプラインセット
-    SetPipeLineState();
-    // ルートシグネチャセット
-    SetRootSignature();
-    // ビューポートセット
-    SetViewports();
-    // シザー矩形セット
-    SetScissorRects();
-    // プリミティブトポロジーセット
-    SetPremitiveTopology();
-    // 頂点バッファのセット
-    SetVertexBuffers(); 
-    // インデックスバッファのセット
-    SetIndexBuffer();
-    // 描画命令セット
-    SetDrawInstanced();
-
+    // コマンドセット
+    SetCommand();
 
     // 描画実行
     ExecuteDraw();
@@ -694,27 +694,81 @@ void DX12::ExecuteDX12()
 // レンダーターゲットの準備（Drawクラス）
 void DX12::PrepareRenderTarget()
 {
-    auto rtvOffset =
+    DrawArgument::PrepareRenderTargetArgument arg =
+        GetPrepareRenderTargetArgument();
+        
+    //_draw->PrepareRenderTarget(rtvOffset);
+    _draw->PrepareRenderTarget(arg);
+}
+
+// レンダーターゲット準備用引数
+DrawArgument::PrepareRenderTargetArgument DX12::GetPrepareRenderTargetArgument()
+{
+    DrawArgument::PrepareRenderTargetArgument arg = {};
+
+    arg.resourceBarrier =
+        GetResourceBarrier();
+    arg.rtvOffset = 
         _device->GetDescriptorHandleIncrementSize(
             D3D12_DESCRIPTOR_HEAP_TYPE_RTV); 
         
-    _draw->PrepareRenderTarget(rtvOffset);
+
+    return arg;
 }
 
-// パイプラインセット
-void DX12::SetPipeLineState()
+// リソースバリア
+D3D12_RESOURCE_BARRIER DX12::GetResourceBarrier()
 {
-    _draw->SetPipeLineState(_pipelineState.Get());
+    D3D12_RESOURCE_BARRIER desc;
+
+    desc.Type =
+        D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    desc.Flags =
+        D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    desc.Transition.Subresource =
+        D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+    return desc;  
 }
 
-// ルートシグネチャセット
-void DX12::SetRootSignature()
+// コマンドセット（Drawクラス）
+void DX12::SetCommand()
 {
-    _draw->SetRootSignature(_rootSignature.Get());
+    DrawArgument::SetCommandArgument arg =
+        GetSetCommandArgument();
+
+    _draw->SetCommand(arg);
+}
+
+// コマンドセット用引数
+DrawArgument::SetCommandArgument DX12::GetSetCommandArgument()
+{
+    DrawArgument::SetCommandArgument arg = {};
+
+    arg.pipelineState =
+        _pipelineState.Get();
+    arg.rootSignature =
+        _rootSignature.Get();
+    arg.viewport =
+        GetViewports();
+    arg.scissorRect =
+        GetScissorRects();
+    arg.topology =
+        D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    arg.vertexBufferView =
+        GetVertexBufferView();
+    arg.indexBufferView =
+        GetIndexBufferView();
+    arg.vertexCount
+        = _objects[0]->GetIndicesCount();
+    arg.objectCount
+        = _objects.size();
+
+    return arg;
 }
 
 // ビューポートセット
-void DX12::SetViewports()
+D3D12_VIEWPORT DX12::GetViewports()
 {
     D3D12_VIEWPORT viewport = {};
 
@@ -725,11 +779,11 @@ void DX12::SetViewports()
     viewport.MaxDepth = 1.0f; // 深度最大値
     viewport.MinDepth = 0.0f; // 深度最小値
 
-    _draw->SetViewports(viewport);
+    return viewport;
 }
 
 // シザー矩形セット
-void DX12::SetScissorRects()
+D3D12_RECT DX12::GetScissorRects()
 {
     D3D12_RECT scissorRect = {};
 
@@ -738,51 +792,28 @@ void DX12::SetScissorRects()
     scissorRect.top = 0;
     scissorRect.bottom = 720;
     
-
-    _draw->SetScissorRects(scissorRect);
+    return scissorRect;
 }
 
-// プリミティブトポロジーセット
-void DX12::SetPremitiveTopology()
-{
-    _draw->SetPremitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-// 頂点バッファをコマンドリストへセット
-void DX12::SetVertexBuffers()
-{
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView =
-        GetVertexBufferView();
-
-    _draw->SetVertexBuffers(vertexBufferView); 
-}
-
+// 頂点バッファビュー
 D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBufferView()
 {
     D3D12_VERTEX_BUFFER_VIEW view;
 
-    UINT vertexByte = _objects[0]->GetVertexByte();
-    UINT objectByte = vertexByte * _objects[0]->GetVertexCount();
+    UINT vertexByte = _objects[0]->GetVerticesByte();
+    UINT verticesByte = vertexByte * _objects[0]->GetVerticesCount();
 
     view.BufferLocation =
         _vertexBuffer->GetGPUVirtualAddress();
     view.SizeInBytes =
-        objectByte; // 注意
+        verticesByte; // 注意
     view.StrideInBytes =
         vertexByte; // 注意
 
     return view;
 }
 
-// インデックスバッファをコマンドリストへセット
-void DX12::SetIndexBuffer()
-{
-    D3D12_INDEX_BUFFER_VIEW indexBufferView =
-        GetIndexBufferView();
-
-    _draw->SetIndexBuffer(indexBufferView); 
-}
-
+// インデックスバッファビュー
 D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBufferView()
 {
     D3D12_INDEX_BUFFER_VIEW view;
@@ -799,22 +830,24 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBufferView()
     return view;
 }
 
-// 描画命令セット
-void DX12::SetDrawInstanced()
-{
-    /*_draw->SetDrawInstanced(
-        _objects[0]->GetVertexCount(),
-        _objects.size());*/
-
-    _draw->SetDrawInstanced(
-        _objects[0]->GetIndicesCount(),
-        _objects.size());
-}
-
 // 描画実行（Drawクラス）
 void DX12::ExecuteDraw()
 {
-    _draw->ExecuteDraw();
+    DrawArgument::ExecuteDrawArgument arg =
+        GetExecuteDrawArgument();
+        
+    _draw->ExecuteDraw(arg);
+}
+
+// コマンド実行用引数
+DrawArgument::ExecuteDrawArgument DX12::GetExecuteDrawArgument()
+{
+    DrawArgument::ExecuteDrawArgument arg = {};
+
+    arg.resourceBarrier =
+        GetResourceBarrier();
+
+    return arg;
 }
 
 

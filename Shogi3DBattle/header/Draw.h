@@ -5,6 +5,8 @@
 #include<wrl.h>
 #include<vector>
 
+#include"DrawArgument.h"
+
 class Draw
 {
     template<typename T>
@@ -45,14 +47,8 @@ private:
     // RTVにバッファを対応させる
     HRESULT SetRTVBuffer(UINT i);
 
-
-    D3D12_RESOURCE_BARRIER GetBufferBarrierDesc(ID3D12Resource* rtv);
-
-    // RTVのレンダーターゲット⇔Presentの切り替え
-    void ChangeRTVBarrierToRenderTarget(ID3D12Resource* rtv);
-    void ChangeRTVBarrierToPresent     (ID3D12Resource* rtv);
-
-    void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle);
+    void ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier);
+    void ChangeRTVBarrierToPresent     (D3D12_RESOURCE_BARRIER resourceBarrier);
 
     void ExecuteCommand(); // コマンド実行
     void ResetCommand  (); // コマンドリセット
@@ -64,56 +60,14 @@ private:
 
 public:
     Draw(UINT bufferNum);
+    ~Draw();
 
     // 描画オブジェクト生成
-    HRESULT CreateDrawObject(
-        ID3D12Device*              device,
-        IDXGIFactory6*             dxgiFactory,
-        HWND                       hwnd,
-        D3D12_COMMAND_QUEUE_DESC   commandQueueDesc,
-        DXGI_SWAP_CHAIN_DESC1      swapChainDesc,
-        D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc);
-
+    HRESULT CreateDrawObject(DrawArgument::CreateDrawObjectArgument arg);
     // レンダーターゲットの準備
-    void PrepareRenderTarget(
-        //D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle,
-        UINT rtvOffset);//,
-        //std::vector<ComPtr<ID3D12Resource>> rtvs);
-
+    void PrepareRenderTarget(DrawArgument::PrepareRenderTargetArgument arg);
+    // コマンドセット
+    void SetCommand(DrawArgument::SetCommandArgument arg);
     // 描画実行
-    void ExecuteDraw();//std::vector<ComPtr<ID3D12Resource>> rtvs);
-
-
-
-
-    
-   
-
-
-    
-
-    
-
-
-
-
-
-    // パイプラインセット
-    void SetPipeLineState(ID3D12PipelineState* pipelineState);
-    // ルートシグネチャセット
-    void SetRootSignature(ID3D12RootSignature* rootSignature);
-    // ビューポートセット
-    void SetViewports(D3D12_VIEWPORT viewport);
-    // シザー矩形セット
-    void SetScissorRects(D3D12_RECT scissorRect);
-    // プリミティブトポロジーセット
-    void SetPremitiveTopology(D3D12_PRIMITIVE_TOPOLOGY topology);
-    // 頂点バッファのセット
-    void SetVertexBuffers(D3D12_VERTEX_BUFFER_VIEW vertexBufferView); 
-    // インデックスバッファのセット
-    void SetIndexBuffer(D3D12_INDEX_BUFFER_VIEW indexBufferView); 
-    // 描画命令セット
-    void SetDrawInstanced(UINT vertexCount, UINT objectCount);
-
-    
+    void ExecuteDraw(DrawArgument::ExecuteDrawArgument arg);
 };

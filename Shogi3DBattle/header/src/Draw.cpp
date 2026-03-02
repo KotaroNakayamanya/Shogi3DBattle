@@ -3,52 +3,47 @@
 
 // 描画オブジェクト作成
 HRESULT Draw::CreateDrawObject(
-    ID3D12Device*              device,
-    IDXGIFactory6*             dxgiFactory,
-    HWND                       hwnd,
-    D3D12_COMMAND_QUEUE_DESC   commandQueueDesc,
-    DXGI_SWAP_CHAIN_DESC1      swapChainDesc,
-    D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc)
+    DrawArgument::CreateDrawObjectArgument arg)
 {
     // コマンドアロケータ作成
     if (FAILED(CreateCommandAllocator(
-        device)))
+        arg.device)))
     {
         assert(false); return E_FAIL;
     }
     // コマンドリスト作成
     if (FAILED(CreateCommandList(
-        device)))
+        arg.device)))
     {
         assert(false); return E_FAIL;
     }
     // コマンドキュー作成
     if (FAILED(CreateCommandQueue(
-        device, commandQueueDesc)))
+        arg.device, arg.commandQueueDesc)))
     {
         assert(false); return E_FAIL;
     }
     // スワップチェーン作成
     if (FAILED(CreateSwapChain(
-        dxgiFactory, hwnd, swapChainDesc)))
+        arg.dxgiFactory, arg.hwnd, arg.swapChainDesc)))
     {
         assert(false); return E_FAIL;
     }
     // フェンス作成
     if (FAILED(CreateFence(
-        device)))
+        arg.device)))
     {
         assert(false); return E_FAIL;
     }
     // RTVヒープ作成
     if (FAILED(CreateRTVHeap(
-        device, rtvHeapDesc)))
+        arg.device, arg.rtvHeapDesc)))
     {
         assert(false); return E_FAIL;
     }
     // RTV作成
     if (FAILED(CreateRTV(
-        device)))
+        arg.device)))
     {
         assert(false); return E_FAIL;
     }
@@ -158,33 +153,81 @@ HRESULT Draw::CreateRTV(ID3D12Device* device)
 
 
 
-
-
-
-
-
 // レンダーターゲット準備
-void Draw::PrepareRenderTarget(UINT rtvOffset)
+void Draw::PrepareRenderTarget(DrawArgument::PrepareRenderTargetArgument arg)
 {
-    // バックバッファのハンドルを取得
+    // バックバッファに対応するRTVをレンダーターゲットに設定
     auto backBufferIdx = _swapChain->GetCurrentBackBufferIndex();
     auto rtvHandle = _rtvHeap->GetCPUDescriptorHandleForHeapStart();
-    rtvHandle.ptr += backBufferIdx * rtvOffset;
+    rtvHandle.ptr += backBufferIdx * arg.rtvOffset;
 
-    // バックバッファに対応するRTVをレンダーターゲットに設定
-    ChangeRTVBarrierToRenderTarget(_rtvs[backBufferIdx].Get());
-    SetRenderTarget(rtvHandle);
+    ChangeRTVBarrierToRenderTarget(arg.resourceBarrier);
+    _commandList->OMSetRenderTargets(1, &rtvHandle, true, nullptr);
 
     // レンダーターゲットクリア
     ClearRenderTarget(rtvHandle);
 }
 
+// RTVリソースをレンダーターゲットに変更
+void Draw::ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier)
+{
+    D3D12_RESOURCE_BARRIER barrier = resourceBarrier;
+
+    auto backBufferIdx = _swapChain->GetCurrentBackBufferIndex();
+
+    barrier.Transition.pResource =
+        _rtvs[backBufferIdx].Get();
+    barrier.Transition.StateBefore =
+        D3D12_RESOURCE_STATE_PRESENT;
+    barrier.Transition.StateAfter  =
+        D3D12_RESOURCE_STATE_RENDER_TARGET;
+
+    _commandList->ResourceBarrier(
+        _bufferCount - 1,
+        &barrier);
+}
+
+// 画面クリア
+void Draw::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
+{
+    float clearRTVColor[] =
+        {1.0f, 1.0f, 0.0f, 1.0f};
+    _commandList->ClearRenderTargetView(
+        handle, clearRTVColor, 0, nullptr);
+}
+
+
+
+
+// コマンドセット
+void Draw::SetCommand(DrawArgument::SetCommandArgument arg)
+{
+    // パイプラインセット
+    _commandList->SetPipelineState(arg.pipelineState);
+    // ルートシグネチャセット
+    _commandList->SetGraphicsRootSignature(arg.rootSignature);
+    // ビューポートセット
+    _commandList->RSSetViewports(1, &arg.viewport);
+    // シザー矩形セット
+    _commandList->RSSetScissorRects(1, &arg.scissorRect);
+    // トポロジーセット
+    _commandList->IASetPrimitiveTopology(arg.topology);
+    // 頂点バッファセット
+    _commandList->IASetVertexBuffers(0, 1, &arg.vertexBufferView);
+    // インデックスバッファセット
+    _commandList->IASetIndexBuffer(&arg.indexBufferView);
+    // 描画命令セット
+    _commandList->DrawIndexedInstanced(arg.vertexCount, arg.objectCount, 0, 0, 0);
+}
+
+
+
+
 // 描画実行
-void Draw::ExecuteDraw()
+void Draw::ExecuteDraw(DrawArgument::ExecuteDrawArgument arg)
 {
     // バックバッファに対応するRTVを表示画面に設定
-    auto backBufferIdx = _swapChain->GetCurrentBackBufferIndex();
-    ChangeRTVBarrierToPresent(_rtvs[backBufferIdx].Get());
+    ChangeRTVBarrierToPresent(arg.resourceBarrier);
 
     // コマンド実行および画面スワップによる表示
     _commandList->Close();
@@ -192,6 +235,25 @@ void Draw::ExecuteDraw()
     WaitProcessWithFence();
     ResetCommand();
     _swapChain->Present(1, 0);
+}
+
+// RTVリソースを画面表示に変更
+void Draw::ChangeRTVBarrierToPresent(D3D12_RESOURCE_BARRIER resourceBarrier)
+{
+    D3D12_RESOURCE_BARRIER barrier = resourceBarrier;
+
+    auto backBufferIdx = _swapChain->GetCurrentBackBufferIndex();
+
+    barrier.Transition.pResource =
+        _rtvs[backBufferIdx].Get();
+    barrier.Transition.StateBefore =
+        D3D12_RESOURCE_STATE_RENDER_TARGET;
+    barrier.Transition.StateAfter  =
+        D3D12_RESOURCE_STATE_PRESENT;
+
+    _commandList->ResourceBarrier(
+        _bufferCount - 1,
+        &barrier);
 }
 
 // コマンド実行
@@ -223,123 +285,12 @@ void Draw::ResetCommand()
     _commandList->Reset(_commandAllocator.Get(), nullptr);
 }
 
-void Draw::ChangeRTVBarrierToRenderTarget(ID3D12Resource* rtv)
-{
-    D3D12_RESOURCE_BARRIER bufferBarrierDesc =
-        GetBufferBarrierDesc(rtv);
 
-    bufferBarrierDesc.Transition.StateBefore =
-        D3D12_RESOURCE_STATE_PRESENT;
-    bufferBarrierDesc.Transition.StateAfter  =
-        D3D12_RESOURCE_STATE_RENDER_TARGET;
-
-    _commandList->ResourceBarrier(
-        _bufferCount - 1,
-        &bufferBarrierDesc);
-}
-
-void Draw::ChangeRTVBarrierToPresent(ID3D12Resource* rtv)
-{
-    D3D12_RESOURCE_BARRIER bufferBarrierDesc =
-        GetBufferBarrierDesc(rtv);
-
-    bufferBarrierDesc.Transition.StateBefore =
-        D3D12_RESOURCE_STATE_RENDER_TARGET;
-    bufferBarrierDesc.Transition.StateAfter  =
-        D3D12_RESOURCE_STATE_PRESENT;
-
-    _commandList->ResourceBarrier(
-        _bufferCount - 1,
-        &bufferBarrierDesc);
-}
-
-D3D12_RESOURCE_BARRIER Draw::GetBufferBarrierDesc(
-    ID3D12Resource* rtv)
-{
-    D3D12_RESOURCE_BARRIER desc;
-
-    desc.Type =
-        D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    desc.Flags =
-        D3D12_RESOURCE_BARRIER_FLAG_NONE;
-
-    desc.Transition.pResource =
-        rtv;
-    desc.Transition.Subresource =
-        D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-
-    return desc;  
-}
-
-void Draw::SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
-{
-    _commandList->OMSetRenderTargets(1, &handle, true, nullptr);
-}
-
-void Draw::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
-{
-    float clearRTVColor[] =
-        {1.0f, 1.0f, 0.0f, 1.0f};
-    _commandList->ClearRenderTargetView(
-        handle, clearRTVColor, 0, nullptr);
-}
-
-
-
-
-
-// パイプラインセット
-void Draw::SetPipeLineState(ID3D12PipelineState* pipelineState)
-{
-    _commandList->SetPipelineState(pipelineState);
-}
-
-// ルートシグネチャセット
-void Draw::SetRootSignature(ID3D12RootSignature* rootSignature)
-{
-    _commandList->SetGraphicsRootSignature(rootSignature);
-}
-
-// ビューポートセット
-void Draw::SetViewports(D3D12_VIEWPORT viewport)
-{
-    _commandList->RSSetViewports(1, &viewport);
-}
-
-// シザー矩形セット
-void Draw::SetScissorRects(D3D12_RECT scissorRect)
-{
-    _commandList->RSSetScissorRects(1, &scissorRect);
-}
-
-// プリミティブトポロジーセット
-void Draw::SetPremitiveTopology(D3D12_PRIMITIVE_TOPOLOGY topology)
-{
-    _commandList->IASetPrimitiveTopology(topology);
-}
-
-// 頂点バッファをコマンドリストへセット
-void Draw::SetVertexBuffers(
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView)
-{
-    _commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-}
-
-// インデックスバッファをコマンドリストへセット
-void Draw::SetIndexBuffer(
-    D3D12_INDEX_BUFFER_VIEW indexBufferView)
-{
-    _commandList->IASetIndexBuffer(&indexBufferView);
-}
-
-// 描画命令セット
-void Draw::SetDrawInstanced(UINT vertexCount, UINT objectCount)
-{
-    _commandList->DrawIndexedInstanced(vertexCount, objectCount, 0, 0, 0);
-}
 
 
 Draw::Draw(UINT bufferNum)
 {
     _bufferCount = bufferNum;
 }
+
+Draw::~Draw(){}

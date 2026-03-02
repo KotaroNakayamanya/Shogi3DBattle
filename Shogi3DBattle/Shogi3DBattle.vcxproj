@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="header\DrawArgument.h" />
     <ClCompile Include="header\src\Draw.cpp" />
     <ClCompile Include="header\src\Object.cpp" />
     <ClCompile Include="src\Application.cpp" />

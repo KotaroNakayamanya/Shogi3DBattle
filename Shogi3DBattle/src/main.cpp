@@ -1,6 +1,6 @@
 ﻿#include"Application.h"
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     Application& app = Application::GetInstance();
 

@@ -10,12 +10,12 @@ std::vector<unsigned short> Object::GetIndicesPtr()
     return _indices;
 }
 
-unsigned int Object::GetVertexCount()
+unsigned int Object::GetVerticesCount()
 {
     return _vertices.size();
 }
 
-unsigned int Object::GetVertexByte()
+unsigned int Object::GetVerticesByte()
 {
     return sizeof(_vertices[0]);
 }

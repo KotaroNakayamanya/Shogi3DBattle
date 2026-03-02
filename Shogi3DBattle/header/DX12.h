@@ -8,6 +8,8 @@
 #include<vector>
 #include<array>
 
+#include"DrawArgument.h"
+
 class Draw;
 class Object;
 
@@ -89,26 +91,18 @@ private:
 
     void CreateInputLayout();
 
-
-    // パイプラインセット
-    void SetPipeLineState();
-    // ルートシグネチャセット
-    void SetRootSignature();
-    // ビューポートセット
-    void SetViewports();
-    // シザー矩形セット
-    void SetScissorRects();
-    // プリミティブトポロジーセット
-    void SetPremitiveTopology();
-    // 頂点バッファのセット
-    void SetVertexBuffers();
-    // 頂点バッファのセット
-    void SetIndexBuffer(); 
-    // 描画命令セット
-    void SetDrawInstanced();
+    // ビューポート
+    D3D12_VIEWPORT GetViewports();
+    // シザー矩形
+    D3D12_RECT GetScissorRects();
 
     // レンダーターゲットの準備
     void PrepareRenderTarget();
+
+    // コマンドセット
+    void SetCommand();
+
+    
     
 
 
@@ -126,14 +120,12 @@ private:
 
     HRESULT CreateDrawObject();
 
-    void ChangeRTVBarrierToRenderTarget(ID3D12Resource* rtv);
-    void ChangeRTVBarrierToPresent     (ID3D12Resource* rtv);
-
-    void SetRenderTarget  (D3D12_CPU_DESCRIPTOR_HANDLE handle);
     void ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle);
     
     D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView();
     D3D12_INDEX_BUFFER_VIEW GetIndexBufferView();
+
+    //void ExecuteDraw();
 
     void ExecuteDraw();
 
@@ -142,9 +134,20 @@ private:
 
     void WaitProcessWithFence();
 
+    // リソースバリア
+    D3D12_RESOURCE_BARRIER GetResourceBarrier();
 
     
+    // 描画オブジェクト作成用引数
+    DrawArgument::CreateDrawObjectArgument GetCreateDrawObjectArgument();
+    // レンダーターゲット準備用引数
+    DrawArgument::PrepareRenderTargetArgument GetPrepareRenderTargetArgument();
+    // コマンドセット用引数
+    DrawArgument::SetCommandArgument GetSetCommandArgument();
+    // コマンド実行用引数
+    DrawArgument::ExecuteDrawArgument GetExecuteDrawArgument();
     
+
 
 
 
