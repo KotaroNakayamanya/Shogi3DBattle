@@ -32,6 +32,8 @@
     <ClInclude Include="header\DX12.h" />
     <ClInclude Include="header\Piece.h" />
     <ClInclude Include="header\Object.h" />
+    <ClInclude Include="header\TexRGBAStruct.h" />
+    <ClInclude Include="header\VertexStruct.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\PixelShader.hlsl">
@@ -44,6 +46,9 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader\Shader.hlsli" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

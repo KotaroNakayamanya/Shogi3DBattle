@@ -8,6 +8,8 @@
 #include"Draw.h"
 #include"Object.h"
 
+#include"VertexStruct.h"
+
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
@@ -52,7 +54,6 @@ bool DX12::CreateDX12Object()
     {
         assert(false); return false;
     }
-
     // 頂点バッファ作成
     if (FAILED(CreateVertexBuffer()))
     {
@@ -63,7 +64,6 @@ bool DX12::CreateDX12Object()
     {
         assert(false); return false;
     }
-
     // インデックスバッファ作成
     if (FAILED(CreateIndexBuffer()))
     {
@@ -75,20 +75,18 @@ bool DX12::CreateDX12Object()
         assert(false); return false;
     }
 
+    // テクスチャバッファ作成
+    //if (FAILED(CreateTextureBuffer()))
+    //{
+    //    assert(false); return false;
+    //}
+
     // シェーダーファイル読み込み
     if (FAILED(LoadShaderFile()))
     {
         assert(false); return false;
     }
 
-    // インプットレイアウト作成
-    //CreateInputLayout();
-
-    // ルートシグネチャバイナリコード作成
-    if (FAILED(CreateRootSignatureBinary()))
-    {
-        assert(false); return false;
-    }
     // ルートシグネチャ作成
     if (FAILED(CreateRootSignature()))
     {
@@ -182,11 +180,11 @@ ComPtr<IDXGIAdapter> DX12::GetUsingAdapter()
         for (auto adapterName : adapterNames)
         {
             if (str.find(adapterName) != std::string::npos)
-                return adapter;
+                return adapter.Get();
         }
     }
 
-    return canUseAdapters[0];
+    return canUseAdapters[0].Get();
 }
 
 // 使用可能なアダプターを取得
@@ -328,6 +326,8 @@ HRESULT DX12::CreateVertexBuffer()
     // リソースディスクリプタ取得
     D3D12_RESOURCE_DESC resourceDesc =
         GetResourceDesc();
+    resourceDesc.Width =
+        _objects[0]->GetVerticesCount() * _objects[0]->GetVerticesByte();
 
     return _device->CreateCommittedResource(
         &heapProperty,
@@ -361,8 +361,6 @@ D3D12_RESOURCE_DESC DX12::GetResourceDesc()
 
     desc.Dimension =
         D3D12_RESOURCE_DIMENSION_BUFFER;
-    desc.Width =
-        _objects[0]->GetVerticesCount() * _objects[0]->GetVerticesByte();
     desc.Height =
         1;
     desc.DepthOrArraySize =
@@ -405,7 +403,7 @@ HRESULT DX12::CreateIndexBuffer()
 // バッファに頂点をマップ
 HRESULT DX12::MapVertexToBuffer()
 {
-    std::shared_ptr<DirectX::XMFLOAT3> vertexMap;
+    std::shared_ptr<VertexStruct::Vertex> vertexMap;
 
     HRESULT result = _vertexBuffer->Map(
         0, nullptr, (void**)&vertexMap);
@@ -487,25 +485,37 @@ HRESULT DX12::LoadPixelShaderFile()
         _errorBlob      .ReleaseAndGetAddressOf());
 }
 
-//// インプットレイアウト作成
-//void DX12::CreateInputLayout()
-//{
-//    
-//}
-
-// ルートシグネチャバイナリ作成
-HRESULT DX12::CreateRootSignatureBinary()
+// ルートシグネチャ作成
+HRESULT DX12::CreateRootSignature()
 {
-    D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc =
-        GetRootSignatureDesc();
-    
-    return D3D12SerializeRootSignature(
-        &rootSignatureDesc,
-        D3D_ROOT_SIGNATURE_VERSION_1_0,
-        _rootSignatureBlob.ReleaseAndGetAddressOf(),
-        _errorBlob.        ReleaseAndGetAddressOf());
+    ComPtr<ID3DBlob> _rootSignatureBlob =
+        GetRootSignatureBlob();
+
+    return _device->CreateRootSignature(
+        0,
+        _rootSignatureBlob->GetBufferPointer(),
+        _rootSignatureBlob->GetBufferSize(),
+        IID_PPV_ARGS(_rootSignature.ReleaseAndGetAddressOf()));
 }
 
+ // ルートシグネチャBlob取得
+ComPtr<ID3DBlob> DX12::GetRootSignatureBlob()
+{
+    ComPtr<ID3DBlob> rootSignatureBlob;
+
+    D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc =
+        GetRootSignatureDesc();
+
+    D3D12SerializeRootSignature(
+        &rootSignatureDesc,
+        D3D_ROOT_SIGNATURE_VERSION_1_0,
+        rootSignatureBlob.ReleaseAndGetAddressOf(),
+        _errorBlob.       ReleaseAndGetAddressOf());
+
+    return rootSignatureBlob.Get();
+}
+
+// ルートシグネチャディスクリプタ
 D3D12_ROOT_SIGNATURE_DESC DX12::GetRootSignatureDesc()
 {
     D3D12_ROOT_SIGNATURE_DESC desc = {};
@@ -516,17 +526,7 @@ D3D12_ROOT_SIGNATURE_DESC DX12::GetRootSignatureDesc()
     return desc;
 }
 
-// ルートシグネチャ作成
-HRESULT DX12::CreateRootSignature()
-{
-    return _device->CreateRootSignature(
-        0,
-        _rootSignatureBlob->GetBufferPointer(),
-        _rootSignatureBlob->GetBufferSize(),
-        IID_PPV_ARGS(_rootSignature.ReleaseAndGetAddressOf()));
 
-    //_rootSignatureBinary.ReleaseAndGetAddressOf();
-}
 
 
 
@@ -536,22 +536,35 @@ HRESULT DX12::CreatePipelineState()
     D3D12_GRAPHICS_PIPELINE_STATE_DESC desc =
         GetPipelineStateDesc();
 
-    std::array<D3D12_INPUT_ELEMENT_DESC, 1> inputLayout =
-    {
-        { // 頂点レイアウト
-            "POSITION",
-            0,
-            DXGI_FORMAT_R32G32B32_FLOAT,
-            0,
-            D3D12_APPEND_ALIGNED_ELEMENT,
-            D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-            0
-        }
+    std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
+    inputLayout.resize(2);
+    inputLayout[0] =
+    { // 頂点レイアウト
+        "POSITION",
+        0,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+    inputLayout[1] = 
+    { // uv
+        "TEXCOORD",
+        0,
+        DXGI_FORMAT_R32G32_FLOAT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
     };
 
-    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc =
-        GetInputLayoutDesc(inputLayout);
-
+    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
+    inputLayoutDesc.pInputElementDescs =
+        inputLayout.data();
+    inputLayoutDesc.NumElements =
+        inputLayout.size();
+    
     desc.InputLayout = inputLayoutDesc;
 
     return _device->CreateGraphicsPipelineState(
@@ -564,7 +577,7 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC DX12::GetPipelineStateDesc()
     D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};   
     
     desc.pRootSignature =
-        _rootSignature.Get();;
+        _rootSignature.Get();
     desc.VS =
         GetVertexShaderDesc();
     desc.PS =
@@ -591,14 +604,14 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC DX12::GetPipelineStateDesc()
 }
 
 D3D12_INPUT_LAYOUT_DESC DX12::GetInputLayoutDesc(
-    std::array<D3D12_INPUT_ELEMENT_DESC, 1> inputLayout)
+    std::vector<D3D12_INPUT_ELEMENT_DESC>* inputLayout)
 {
     D3D12_INPUT_LAYOUT_DESC desc = {};
 
     desc.pInputElementDescs =
-        inputLayout.data();
+        inputLayout->data();
     desc.NumElements =
-        inputLayout.size();
+        inputLayout->size();
  
     return desc;
 }

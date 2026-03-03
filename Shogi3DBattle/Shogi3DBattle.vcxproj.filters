@@ -25,6 +25,12 @@
     <Filter Include="ソース ファイル\shader">
       <UniqueIdentifier>{b6044eb4-9f10-4e02-bdb3-192f1a5e23b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\struct">
+      <UniqueIdentifier>{be4e91d5-d58e-421f-9cd4-595eac7aa787}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\argument">
+      <UniqueIdentifier>{25b51312-ac09-4327-bb0d-63a1e0e5aff7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -43,7 +49,7 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="header\DrawArgument.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\argument</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +68,12 @@
     <ClInclude Include="header\Object.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="header\TexRGBAStruct.h">
+      <Filter>ヘッダー ファイル\struct</Filter>
+    </ClInclude>
+    <ClInclude Include="header\VertexStruct.h">
+      <Filter>ヘッダー ファイル\struct</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\VertexShader.hlsl">
@@ -70,5 +82,10 @@
     <FxCompile Include="shader\PixelShader.hlsl">
       <Filter>ソース ファイル\shader</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader\Shader.hlsli">
+      <Filter>ソース ファイル\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

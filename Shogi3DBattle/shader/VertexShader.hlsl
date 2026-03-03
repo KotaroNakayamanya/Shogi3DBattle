@@ -1,4 +1,13 @@
-float4 VShader(float4 pos : POSITION) : SV_POSITION
+#include"Shader.hlsli"
+
+Output VShader(
+    float4 position : POSITION,
+    float2 uv       : TEXCOORD)
 {
-    return pos;
+    Output output;
+    
+    output.svPosition = position;
+    output.uv = uv;
+    
+    return output;
 }

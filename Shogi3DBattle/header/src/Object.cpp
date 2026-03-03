@@ -1,6 +1,6 @@
 ﻿#include"Object.h"
 
-std::vector<DirectX::XMFLOAT3> Object::GetVerticesPtr()
+std::vector<VertexStruct::Vertex> Object::GetVerticesPtr()
 {
     return _vertices;
 }

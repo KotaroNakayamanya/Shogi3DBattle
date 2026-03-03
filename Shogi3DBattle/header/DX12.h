@@ -29,7 +29,7 @@ private:
 
     ComPtr<ID3DBlob> _vertexShaderBlob; // 頂点シェーダーバイナリオブジェクト
     ComPtr<ID3DBlob> _pixelShaderBlob; // ピクセルシェーダバイナリオブジェクト
-    ComPtr<ID3DBlob> _rootSignatureBlob; // ルートシグネチャバイナリオブジェクト
+    //ComPtr<ID3DBlob> _rootSignatureBlob; // ルートシグネチャバイナリオブジェクト
     ComPtr<ID3DBlob> _errorBlob; // エラーバイナリオブジェクト
 
     ComPtr<ID3D12RootSignature> _rootSignature; // ルートシグネチャ
@@ -52,8 +52,8 @@ private:
     HRESULT LoadShaderFile();       // シェーダファイルのロード
     HRESULT LoadVertexShaderFile(); // 頂点シェーダロード
     HRESULT LoadPixelShaderFile();  // ピクセルシェーダロード
-    HRESULT CreateRootSignatureBinary(); // ルートシグネチャ（バイナリコード）作成
     HRESULT CreateRootSignature(); // ルートシグネチャ作成
+    ComPtr<ID3DBlob> GetRootSignatureBlob(); // ルートシグネチャBlob取得
     HRESULT CreatePipelineState(); // パイプラインステート作成
     
     HRESULT MapVertexToBuffer(); // 頂点をバッファにマップ
@@ -88,7 +88,7 @@ private:
     D3D12_RENDER_TARGET_BLEND_DESC GetRenderTargetBlendDesc(); // レンダーターゲットブレンドディスクリプタ
     D3D12_RASTERIZER_DESC GetRasterizerDesc();                 // ラスタライザディスクリプタ
     D3D12_INPUT_LAYOUT_DESC GetInputLayoutDesc(                // インプットレイアウトディスクリプタ
-        std::array<D3D12_INPUT_ELEMENT_DESC, 1> inputLayout);
+        std::vector<D3D12_INPUT_ELEMENT_DESC>* inputLayout);
     DXGI_SAMPLE_DESC GetSampleDesc();                          // サンプリングディスクリプタ
 
     

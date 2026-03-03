@@ -191,7 +191,7 @@ void Draw::ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier
 void Draw::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
 {
     float clearRTVColor[] =
-        {1.0f, 1.0f, 0.0f, 1.0f};
+        {0.0f, 0.3f, 0.0f, 1.0f};
     _commandList->ClearRenderTargetView(
         handle, clearRTVColor, 0, nullptr);
 }
