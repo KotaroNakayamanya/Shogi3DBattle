@@ -324,91 +324,9 @@ TextureArg::CreateTextureObjArg DX12::GetCreateTextureObjArg()
     TextureArg::CreateTextureObjArg arg = {};
 
     arg.device = _device.Get();
-    arg.heapProp = GetTextureHeapProp();
-    arg.resourceDesc = GetTextureResourceDesc();
-    arg.heapDesc = GetTextureHeapDesc();
-    arg.srvDesc = GetSRVDesc();
+    arg.sampleDesc = GetSampleDesc();
 
     return arg;
-}
-
-// テクスチャヒーププロパティ
-D3D12_HEAP_PROPERTIES DX12::GetTextureHeapProp()
-{
-    D3D12_HEAP_PROPERTIES prop = {};
-
-    prop.Type =
-        D3D12_HEAP_TYPE_CUSTOM;
-    prop.CPUPageProperty =
-        D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-    prop.MemoryPoolPreference = // 転送L0
-        D3D12_MEMORY_POOL_L0;
-    prop.CreationNodeMask =
-        0;
-    prop.VisibleNodeMask =
-        0;
-
-    return prop;
-}
-
-// テクスチャリソースディスクリプタ
-D3D12_RESOURCE_DESC DX12::GetTextureResourceDesc()
-{
-    D3D12_RESOURCE_DESC desc = {};
-
-    desc.Dimension =
-        D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    desc.Height =
-        256;
-    desc.Width =
-        256;
-    desc.DepthOrArraySize =
-        1;
-    desc.SampleDesc =
-        GetSampleDesc();
-    desc.MipLevels =
-        1;
-    desc.Format =
-        DXGI_FORMAT_R8G8B8A8_UNORM;  
-    desc.Layout =
-        D3D12_TEXTURE_LAYOUT_UNKNOWN;
-    desc.Flags =
-        D3D12_RESOURCE_FLAG_NONE;
-   
-
-    return desc;
-}
-
-// テクスチャヒープディスクリプタ
-D3D12_DESCRIPTOR_HEAP_DESC DX12::GetTextureHeapDesc()
-{
-    D3D12_DESCRIPTOR_HEAP_DESC desc = {};
-    desc.Type = // シェーダリソースビュー用
-        D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    desc.NodeMask =
-        0;
-    desc.NumDescriptors =
-        1;
-    desc.Flags = // シェーダから使用可能
-        D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-    return desc;
-}
-
-// SRVディスクリプタ
-D3D12_SHADER_RESOURCE_VIEW_DESC DX12::GetSRVDesc()
-{
-    D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-    desc.Format =
-        DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.Shader4ComponentMapping =
-        D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    desc.ViewDimension =
-        D3D12_SRV_DIMENSION_TEXTURE2D;
-    desc.Texture2D.MipLevels =
-        1;
-
-    return desc;
 }
 
 // 頂点オブジェクト作成
@@ -839,7 +757,8 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
     arg.rootSignature =
         _rootSignature.Get();
     arg.textureDescHeap =
-        _texture->GetTextureDescHeap();
+        //_texture->GetTextureDescHeap();
+        _texture->GetDescHeap();
     arg.viewport =
         GetViewports();
     arg.scissorRect =

@@ -50,9 +50,7 @@ private:
     HRESULT CreateRootSignature(); // ルートシグネチャ作成
     ComPtr<ID3DBlob> GetRootSignatureBlob(); // ルートシグネチャBlob取得
     HRESULT CreatePipelineState(); // パイプラインステート作成
-   
-
-    D3D12_SHADER_RESOURCE_VIEW_DESC GetSRVDesc();
+  
 
     D3D12_ROOT_PARAMETER GetRootParam(); // ルートパラメータ
     D3D12_ROOT_DESCRIPTOR_TABLE GetDescTable(); // ディスクリプタテーブル
@@ -79,14 +77,7 @@ private:
     // 描画オブジェクト
     D3D12_COMMAND_QUEUE_DESC GetCommandQueueDesc(); // コマンドキューディスクリプタ
     DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc(); // スワップチェーンディスクリプタ
-    
-    
-
-    
-    // テクスチャ
-    D3D12_RESOURCE_DESC GetTextureResourceDesc();   // リソースディスクリプタ
-    D3D12_DESCRIPTOR_HEAP_DESC GetTextureHeapDesc(); // テクスチャヒープディスクリプタ
-    D3D12_HEAP_PROPERTIES GetTextureHeapProp(); // テクスチャヒーププロパティ
+ 
 
     // ルートシグネチャ
     D3D12_ROOT_SIGNATURE_DESC GetRootSignatureDesc(); // ルートシグネチャディスクリプタ
