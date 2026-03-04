@@ -19,7 +19,7 @@ HRESULT Texture::CreateTextureObj(TextureArg::CreateTextureObjArg arg)
         assert(false); return E_FAIL;
     }
     // テクスチャディスクリプタヒープ作成
-    if (FAILED(CreateDescHeap(arg.device)))
+    if (FAILED(CreateHeap(arg.device)))
     {
         assert(false); return E_FAIL;
     }
@@ -43,7 +43,7 @@ HRESULT Texture::CreateTextureBuff(ID3D12Device* device, DXGI_SAMPLE_DESC sample
         &resourceDesc,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
         nullptr,
-        IID_PPV_ARGS(_textureBuff.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(_buff.ReleaseAndGetAddressOf()));
 }
 
 // テクスチャ書き込み
@@ -61,12 +61,33 @@ HRESULT Texture::WriteTextureToBuff()
         texture.A = 255;
     }
 
-    return _textureBuff->WriteToSubresource(
+    return _buff->WriteToSubresource(
         0,
         nullptr,
         pieceTextureData.data(),
         sizeof(TextureStruct::TextureRGBA)*256,
         sizeof(TextureStruct::TextureRGBA)*pieceTextureData.size());
+}
+
+// テクスチャディスクリプタヒープ作成
+HRESULT Texture::CreateHeap(ID3D12Device* device)
+{
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetHeapDesc();
+
+    return device->CreateDescriptorHeap(
+        &heapDesc,
+        IID_PPV_ARGS(_heap.ReleaseAndGetAddressOf()));
+}
+
+// SRV作成
+void Texture::CreateSRV(ID3D12Device* device)
+{
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = GetSRVDesc();
+
+    device->CreateShaderResourceView(
+        _buff.Get(),
+        &srvDesc,
+        _heap->GetCPUDescriptorHandleForHeapStart());
 }
 
 
@@ -117,27 +138,6 @@ D3D12_RESOURCE_DESC Texture::GetResourceDesc()
     return desc;
 }
 
-// テクスチャディスクリプタヒープ作成
-HRESULT Texture::CreateDescHeap(ID3D12Device* device)
-{
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetHeapDesc();
-
-    return device->CreateDescriptorHeap(
-        &heapDesc,
-        IID_PPV_ARGS(_textureDescHeap.ReleaseAndGetAddressOf()));
-}
-
-// SRV作成
-void Texture::CreateSRV(ID3D12Device* device)
-{
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = GetSRVDesc();
-
-    device->CreateShaderResourceView(
-        _textureBuff.Get(),
-        &srvDesc,
-        _textureDescHeap->GetCPUDescriptorHandleForHeapStart());
-}
-
 // テクスチャヒープディスクリプタ
 D3D12_DESCRIPTOR_HEAP_DESC Texture::GetHeapDesc()
 {
@@ -148,6 +148,7 @@ D3D12_DESCRIPTOR_HEAP_DESC Texture::GetHeapDesc()
         0;
     desc.NumDescriptors =
         1;
+        //2; // SRV CBV
     desc.Flags = // シェーダから使用可能
         D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
@@ -173,9 +174,9 @@ D3D12_SHADER_RESOURCE_VIEW_DESC Texture::GetSRVDesc()
 
 
 // テクスチャディスクリプタヒープを渡す
-ID3D12DescriptorHeap* Texture::GetDescHeap()
+ID3D12DescriptorHeap* Texture::GetHeap()
 {
-    return _textureDescHeap.Get();
+    return _heap.Get();
 }
 
 

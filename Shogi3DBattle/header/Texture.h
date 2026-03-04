@@ -11,14 +11,14 @@ template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    ComPtr<ID3D12Resource> _textureBuff; // テクスチャバッファ
-    ComPtr<ID3D12DescriptorHeap> _textureDescHeap; // テクスチャディスクリプタヒープ
+    ComPtr<ID3D12Resource> _buff; // テクスチャバッファ
+    ComPtr<ID3D12DescriptorHeap> _heap; // テクスチャディスクリプタヒープ
 
     HRESULT CreateTextureBuff(ID3D12Device* device, DXGI_SAMPLE_DESC sampleDesc); // テクスチャバッファ作成
 
     HRESULT WriteTextureToBuff(); // テクスチャ書き込み
 
-    HRESULT CreateDescHeap(ID3D12Device* device); // テクスチャディスクリプタヒープ作成
+    HRESULT CreateHeap(ID3D12Device* device); // テクスチャディスクリプタヒープ作成
 
     void CreateSRV(ID3D12Device* device); // SRV作成
 
@@ -37,7 +37,7 @@ public:
     HRESULT CreateTextureObj(
         TextureArg::CreateTextureObjArg arg);
     // テクスチャディスクリプタヒープを渡す
-    ID3D12DescriptorHeap* GetDescHeap();
+    ID3D12DescriptorHeap* GetHeap();
 
     Texture();
     ~Texture();

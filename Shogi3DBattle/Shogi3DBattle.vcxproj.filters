@@ -63,6 +63,9 @@
     <ClCompile Include="src\Vertex.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
+    <ClCompile Include="src\Const.cpp">
+      <Filter>ソース ファイル\DX12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -100,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="header\VertexArg.h">
       <Filter>ヘッダー ファイル\argument</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Const.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

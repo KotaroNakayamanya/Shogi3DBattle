@@ -10,6 +10,7 @@
 #include"Draw.h"
 #include"Vertex.h"
 #include"Object.h"
+#include"Const.h"
 
 #include"VertexStruct.h"
 
@@ -75,7 +76,11 @@ bool DX12::CreateDX12Obj()
         assert(false); return false;
     }
 
-    
+    // コンスタントオブジェクト作成
+    if (FAILED(CreateConstObj()))
+    {
+        assert(false); return false;
+    }
 
     // ルートシグネチャ作成
     if (FAILED(CreateRootSignature()))
@@ -244,6 +249,14 @@ HRESULT DX12::CreateTextureObj()
         GetCreateTextureObjArg();
     
     return _texture->CreateTextureObj(arg);
+}
+
+// コンスタントオブジェクト作成
+HRESULT DX12::CreateConstObj()
+{
+    _const = std::make_shared<Const>();
+
+    return _const->CreateConstObj(_device.Get());
 }
 
 // テクスチャオブジェクト作成用引数
@@ -685,8 +698,7 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
     arg.rootSignature =
         _rootSignature.Get();
     arg.textureDescHeap =
-        //_texture->GetTextureDescHeap();
-        _texture->GetDescHeap();
+        _texture->GetHeap();
     arg.viewport =
         GetViewports();
     arg.scissorRect =

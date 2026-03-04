@@ -16,6 +16,7 @@ class Vertex;
 class Shader;
 class Draw;
 class Texture;
+class Const;
 class Object;
 
 class DX12
@@ -64,6 +65,10 @@ private:
     // 頂点オブジェクト
     std::shared_ptr<Vertex> _vertex;
     HRESULT CreateVertexObj();
+
+    // コンスタンとオブジェクト
+    std::shared_ptr<Const> _const;
+    HRESULT CreateConstObj();
  
 
     // ルートシグネチャ
