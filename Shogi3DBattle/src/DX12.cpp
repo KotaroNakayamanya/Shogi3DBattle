@@ -6,10 +6,10 @@
 #include<cassert>
 
 #include"Draw.h"
+#include"Texture.h"
 #include"Object.h"
 
 #include"VertexStruct.h"
-#include"TextureStruct.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -76,13 +76,8 @@ bool DX12::CreateDX12Object()
         assert(false); return false;
     }
 
-    // テクスチャバッファ作成
-    if (FAILED(CreateTextureBuffer()))
-    {
-        assert(false); return false;
-    }
-    // テクスチャ書き込み
-    if (FAILED(WriteTextureToBuffer()))
+    // テクスチャオブジェクト作成
+    if (FAILED(CreateTextureObject()))
     {
         assert(false); return false;
     }
@@ -92,13 +87,6 @@ bool DX12::CreateDX12Object()
     {
         assert(false); return false;
     }
-    // テクスチャディスクリプタヒープ作成
-    if (FAILED(CreateTextureDescHeap()))
-    {
-        assert(false); return false;
-    }
-    // SRV作成
-    CreateSRV();
 
     // ルートシグネチャ作成
     if (FAILED(CreateRootSignature()))
@@ -220,7 +208,7 @@ std::vector<ComPtr<IDXGIAdapter>> DX12::GetCanUseAdapters()
 // 描画オブジェクト作成（Drawクラス）
 HRESULT DX12::CreateDrawObject()
 {
-    _draw.reset(new Draw(_bufferNum));
+    _draw = std::make_shared<Draw>(_bufferNum);
 
     DrawArgument::CreateDrawObjectArgument arg =
         GetCreateDrawObjectArgument();
@@ -454,22 +442,29 @@ HRESULT DX12::MapIndexToBuffer()
     return S_OK;
 }
 
-// テクスチャバッファ作成
-HRESULT DX12::CreateTextureBuffer()
+// テクスチャオブジェクト作成
+HRESULT DX12::CreateTextureObject()
 {
-    D3D12_HEAP_PROPERTIES heapProperty =
-        GetTextureHeapProperty();
+    _texture = std::make_shared<Texture>();
 
-    D3D12_RESOURCE_DESC resourceDesc =
-        GetTextureResourceDesc();
+    TextureArgument::CreateTextureObjectArgument arg =
+        GetCreateTextureObjectArgument();
+    
+    return _texture->CreateTextureObject(arg);
+}
 
-    return _device->CreateCommittedResource(
-        &heapProperty,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
-        nullptr,
-        IID_PPV_ARGS(_textureBuffer.ReleaseAndGetAddressOf()));
+// テクスチャオブジェクト作成用引数
+TextureArgument::CreateTextureObjectArgument DX12::GetCreateTextureObjectArgument()
+{
+    TextureArgument::CreateTextureObjectArgument arg = {};
+
+    arg.device = _device.Get();
+    arg.heapProperty = GetTextureHeapProperty();
+    arg.resourceDesc = GetTextureResourceDesc();
+    arg.heapDesc = GetTextureHeapDesc();
+    arg.srvDesc = GetSRVDesc();
+
+    return arg;
 }
 
 // テクスチャヒーププロパティ
@@ -519,33 +514,6 @@ D3D12_RESOURCE_DESC DX12::GetTextureResourceDesc()
     return desc;
 }
 
-// テクスチャ書き込み
-HRESULT DX12::WriteTextureToBuffer()
-{
-    std::vector<TextureStruct::TextureRGBA> pieceTextureData;
-    pieceTextureData.resize(256*256);
-
-    unsigned int count = 0;
-    for (auto& texture : pieceTextureData)
-    {
-        // 216 178 128 でちょうどいい茶色
-        texture.R = 216;
-        texture.G = 178;
-        texture.B = 128;     
-
-        texture.A = 255;
-        count++;
-    }
-    auto a = sizeof(pieceTextureData[0]);
-    auto b = sizeof(char);
-    return _textureBuffer->WriteToSubresource(
-        0,
-        nullptr,
-        pieceTextureData.data(),
-        sizeof(TextureStruct::TextureRGBA)*256,
-        sizeof(TextureStruct::TextureRGBA)*pieceTextureData.size());
-}
-
 // シェーダーファイルをロード
 HRESULT DX12::LoadShaderFile()
 {
@@ -589,16 +557,16 @@ HRESULT DX12::LoadPixelShaderFile()
         _errorBlob      .ReleaseAndGetAddressOf());
 }
 
-// テクスチャディスクリプタヒープ作成
-HRESULT DX12::CreateTextureDescHeap()
-{
-    D3D12_DESCRIPTOR_HEAP_DESC textureHeapDesc =
-        GetTextureHeapDesc();
-
-    return _device->CreateDescriptorHeap(
-        &textureHeapDesc,
-        IID_PPV_ARGS(_textureDescHeap.ReleaseAndGetAddressOf()));
-}
+//// テクスチャディスクリプタヒープ作成
+//HRESULT DX12::CreateTextureDescHeap()
+//{
+//    D3D12_DESCRIPTOR_HEAP_DESC textureHeapDesc =
+//        GetTextureHeapDesc();
+//
+//    return _device->CreateDescriptorHeap(
+//        &textureHeapDesc,
+//        IID_PPV_ARGS(_textureDescHeap.ReleaseAndGetAddressOf()));
+//}
 
 // テクスチャヒープディスクリプタ
 D3D12_DESCRIPTOR_HEAP_DESC DX12::GetTextureHeapDesc()
@@ -616,17 +584,17 @@ D3D12_DESCRIPTOR_HEAP_DESC DX12::GetTextureHeapDesc()
     return desc;
 }
 
-// SRV作成
-void DX12::CreateSRV()
-{
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc =
-        GetSRVDesc();
-
-    _device->CreateShaderResourceView(
-        _textureBuffer.Get(),
-        &srvDesc,
-        _textureDescHeap->GetCPUDescriptorHandleForHeapStart());
-}
+//// SRV作成
+//void DX12::CreateSRV()
+//{
+//    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc =
+//        GetSRVDesc();
+//
+//    _device->CreateShaderResourceView(
+//        _textureBuffer.Get(),
+//        &srvDesc,
+//        _textureDescHeap->GetCPUDescriptorHandleForHeapStart());
+//}
 
 // SRVディスクリプタ
 D3D12_SHADER_RESOURCE_VIEW_DESC DX12::GetSRVDesc()
@@ -1033,7 +1001,8 @@ DrawArgument::SetCommandArgument DX12::GetSetCommandArgument()
     arg.rootSignature =
         _rootSignature.Get();
     arg.textureDescHeap =
-        _textureDescHeap.Get();
+        //_textureDescHeap.Get();
+        _texture->GetTextureDescriptorHeap();
     arg.viewport =
         GetViewports();
     arg.scissorRect =

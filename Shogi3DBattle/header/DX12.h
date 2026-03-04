@@ -9,8 +9,10 @@
 #include<array>
 
 #include"DrawArgument.h"
+#include"TextureArgument.h"
 
 class Draw;
+class Texture;
 class Object;
 
 class DX12
@@ -48,8 +50,6 @@ private:
     HRESULT CreateVertexBuffer(); // 頂点バッファ作成
     HRESULT CreateIndexBuffer(); // インデックスバッファ作成
 
-    HRESULT CreateTextureBuffer(); // テクスチャバッファ作成
-
     HRESULT LoadShaderFile();       // シェーダファイルのロード
     HRESULT LoadVertexShaderFile(); // 頂点シェーダロード
     HRESULT LoadPixelShaderFile();  // ピクセルシェーダロード
@@ -59,14 +59,9 @@ private:
     
     HRESULT MapVertexToBuffer(); // 頂点をバッファにマップ
     HRESULT MapIndexToBuffer();  // インデックスをバッファにマップ
-    
-    // テクスチャディスクリプタヒープ
-    ComPtr<ID3D12DescriptorHeap> _textureDescHeap;
-    HRESULT CreateTextureDescHeap();
+   
 
     D3D12_SHADER_RESOURCE_VIEW_DESC GetSRVDesc();
-
-    void CreateSRV();
 
     D3D12_ROOT_PARAMETER GetRootParameter(); // ルートパラメータ
     D3D12_ROOT_DESCRIPTOR_TABLE GetDescriptorTable(); // ディスクリプタテーブル
@@ -79,9 +74,9 @@ private:
 
     // ヒープ
     D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc(); // RTVヒープディスクリプタ
-    D3D12_DESCRIPTOR_HEAP_DESC GetTextureHeapDesc(); // テクスチャヒープディスクリプタ
+
     D3D12_HEAP_PROPERTIES GetVertexHeapProperty(); // 頂点ヒーププロパティ
-    D3D12_HEAP_PROPERTIES GetTextureHeapProperty(); // テクスチャヒーププロパティ
+    
     
 
 
@@ -100,7 +95,10 @@ private:
 
     // テクスチャバッファ
     
+    // テクスチャ
     D3D12_RESOURCE_DESC GetTextureResourceDesc();   // リソースディスクリプタ
+    D3D12_DESCRIPTOR_HEAP_DESC GetTextureHeapDesc(); // テクスチャヒープディスクリプタ
+    D3D12_HEAP_PROPERTIES GetTextureHeapProperty(); // テクスチャヒーププロパティ
 
     // ルートシグネチャ
     D3D12_ROOT_SIGNATURE_DESC GetRootSignatureDesc(); // ルートシグネチャディスクリプタ
@@ -130,17 +128,17 @@ private:
 
     // コマンドセット
     void SetCommand();
-
+    
+    // テクスチャ委譲
+    std::shared_ptr<Texture> _texture;
+    TextureArgument::CreateTextureObjectArgument GetCreateTextureObjectArgument();
    
-
+   // テクスチャオブジェクト作成
+   HRESULT CreateTextureObject();
 
     // 頂点バッファ
     ComPtr<ID3D12Resource> _vertexBuffer;
     ComPtr<ID3D12Resource> _indexBuffer;
-
-    // テクスチャバッファ
-    ComPtr<ID3D12Resource> _textureBuffer;
-    HRESULT WriteTextureToBuffer();
 
     // 頂点オブジェクト
     std::vector<std::shared_ptr<Object>> _objects;
@@ -149,9 +147,7 @@ private:
     // 描画オブジェクト
     std::shared_ptr<Draw> _draw; 
 
-    HRESULT CreateDrawObject();
-
-    void ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle);
+    HRESULT CreateDrawObject(); // 描画オブジェクト作成
     
     D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView();
     D3D12_INDEX_BUFFER_VIEW GetIndexBufferView();

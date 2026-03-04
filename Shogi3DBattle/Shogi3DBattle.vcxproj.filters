@@ -31,6 +31,9 @@
     <Filter Include="ヘッダー ファイル\argument">
       <UniqueIdentifier>{25b51312-ac09-4327-bb0d-63a1e0e5aff7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\DX12">
+      <UniqueIdentifier>{0e035323-ee1f-4428-9320-4d22a40c736c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -51,6 +54,9 @@
     <ClCompile Include="header\DrawArgument.h">
       <Filter>ヘッダー ファイル\argument</Filter>
     </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -59,20 +65,26 @@
     <ClInclude Include="header\Piece.h">
       <Filter>ヘッダー ファイル\Piece</Filter>
     </ClInclude>
-    <ClInclude Include="header\DX12.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Draw.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Object.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="header\TextureStruct.h">
       <Filter>ヘッダー ファイル\struct</Filter>
     </ClInclude>
     <ClInclude Include="header\VertexStruct.h">
       <Filter>ヘッダー ファイル\struct</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DX12.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Object.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Draw.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Texture.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\TextureArgument.h">
+      <Filter>ヘッダー ファイル\argument</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
