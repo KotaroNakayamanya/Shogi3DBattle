@@ -68,7 +68,7 @@
     <ClInclude Include="header\Object.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="header\TexRGBAStruct.h">
+    <ClInclude Include="header\TextureStruct.h">
       <Filter>ヘッダー ファイル\struct</Filter>
     </ClInclude>
     <ClInclude Include="header\VertexStruct.h">

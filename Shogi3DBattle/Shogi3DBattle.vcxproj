@@ -32,7 +32,7 @@
     <ClInclude Include="header\DX12.h" />
     <ClInclude Include="header\Piece.h" />
     <ClInclude Include="header\Object.h" />
-    <ClInclude Include="header\TexRGBAStruct.h" />
+    <ClInclude Include="header\TextureStruct.h" />
     <ClInclude Include="header\VertexStruct.h" />
   </ItemGroup>
   <ItemGroup>

@@ -206,6 +206,12 @@ void Draw::SetCommand(DrawArgument::SetCommandArgument arg)
     _commandList->SetPipelineState(arg.pipelineState);
     // ルートシグネチャセット
     _commandList->SetGraphicsRootSignature(arg.rootSignature);
+    // テクスチャディスクリプタヒープセット
+    _commandList->SetDescriptorHeaps(1, &arg.textureDescHeap);
+    // ルートパラメータとディスクリプタヒープ関連付け
+    _commandList->SetGraphicsRootDescriptorTable(
+        0,
+        arg.textureDescHeap->GetGPUDescriptorHandleForHeapStart());
     // ビューポートセット
     _commandList->RSSetViewports(1, &arg.viewport);
     // シザー矩形セット
@@ -218,6 +224,7 @@ void Draw::SetCommand(DrawArgument::SetCommandArgument arg)
     _commandList->IASetIndexBuffer(&arg.indexBufferView);
     // 描画命令セット
     _commandList->DrawIndexedInstanced(arg.vertexCount, arg.objectCount, 0, 0, 0);
+
 }
 
 
@@ -235,6 +242,7 @@ void Draw::ExecuteDraw(DrawArgument::ExecuteDrawArgument arg)
     WaitProcessWithFence();
     ResetCommand();
     _swapChain->Present(1, 0);
+
 }
 
 // RTVリソースを画面表示に変更

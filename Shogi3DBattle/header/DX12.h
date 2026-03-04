@@ -29,7 +29,6 @@ private:
 
     ComPtr<ID3DBlob> _vertexShaderBlob; // 頂点シェーダーバイナリオブジェクト
     ComPtr<ID3DBlob> _pixelShaderBlob; // ピクセルシェーダバイナリオブジェクト
-    //ComPtr<ID3DBlob> _rootSignatureBlob; // ルートシグネチャバイナリオブジェクト
     ComPtr<ID3DBlob> _errorBlob; // エラーバイナリオブジェクト
 
     ComPtr<ID3D12RootSignature> _rootSignature; // ルートシグネチャ
@@ -49,6 +48,8 @@ private:
     HRESULT CreateVertexBuffer(); // 頂点バッファ作成
     HRESULT CreateIndexBuffer(); // インデックスバッファ作成
 
+    HRESULT CreateTextureBuffer(); // テクスチャバッファ作成
+
     HRESULT LoadShaderFile();       // シェーダファイルのロード
     HRESULT LoadVertexShaderFile(); // 頂点シェーダロード
     HRESULT LoadPixelShaderFile();  // ピクセルシェーダロード
@@ -59,9 +60,29 @@ private:
     HRESULT MapVertexToBuffer(); // 頂点をバッファにマップ
     HRESULT MapIndexToBuffer();  // インデックスをバッファにマップ
     
+    // テクスチャディスクリプタヒープ
+    ComPtr<ID3D12DescriptorHeap> _textureDescHeap;
+    HRESULT CreateTextureDescHeap();
+
+    D3D12_SHADER_RESOURCE_VIEW_DESC GetSRVDesc();
+
+    void CreateSRV();
+
+    D3D12_ROOT_PARAMETER GetRootParameter(); // ルートパラメータ
+    D3D12_ROOT_DESCRIPTOR_TABLE GetDescriptorTable(); // ディスクリプタテーブル
+    D3D12_DESCRIPTOR_RANGE GetDescriptorRange(); // ディスクリプタレンジ
+    D3D12_STATIC_SAMPLER_DESC GetSamplerDesc(); // サンプラーディスクリプタ
+
+    // ディスクリプタで使用されたメモリ開放
+    void DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc);
+
+
+    // ヒープ
+    D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc(); // RTVヒープディスクリプタ
+    D3D12_DESCRIPTOR_HEAP_DESC GetTextureHeapDesc(); // テクスチャヒープディスクリプタ
+    D3D12_HEAP_PROPERTIES GetVertexHeapProperty(); // 頂点ヒーププロパティ
+    D3D12_HEAP_PROPERTIES GetTextureHeapProperty(); // テクスチャヒーププロパティ
     
-
-
 
 
     
@@ -69,12 +90,17 @@ private:
     // 描画オブジェクト
     D3D12_COMMAND_QUEUE_DESC GetCommandQueueDesc(); // コマンドキューディスクリプタ
     DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc(); // スワップチェーンディスクリプタ
-    D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc(); // RTVヒープディスクリプタ
+    
+    
 
 
     // 頂点・インデックスバッファ
-    D3D12_HEAP_PROPERTIES GetHeapProperty(); // 頂点ヒーププロパティ
-    D3D12_RESOURCE_DESC GetResourceDesc();   // リソースディスクリプタ
+    
+    D3D12_RESOURCE_DESC GetVertexResourceDesc();   // リソースディスクリプタ
+
+    // テクスチャバッファ
+    
+    D3D12_RESOURCE_DESC GetTextureResourceDesc();   // リソースディスクリプタ
 
     // ルートシグネチャ
     D3D12_ROOT_SIGNATURE_DESC GetRootSignatureDesc(); // ルートシグネチャディスクリプタ
@@ -105,14 +131,16 @@ private:
     // コマンドセット
     void SetCommand();
 
-    
-    
+   
 
 
-
-    // バッファオブジェクト
+    // 頂点バッファ
     ComPtr<ID3D12Resource> _vertexBuffer;
     ComPtr<ID3D12Resource> _indexBuffer;
+
+    // テクスチャバッファ
+    ComPtr<ID3D12Resource> _textureBuffer;
+    HRESULT WriteTextureToBuffer();
 
     // 頂点オブジェクト
     std::vector<std::shared_ptr<Object>> _objects;

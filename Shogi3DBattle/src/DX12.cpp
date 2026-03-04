@@ -9,6 +9,7 @@
 #include"Object.h"
 
 #include"VertexStruct.h"
+#include"TextureStruct.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -76,16 +77,28 @@ bool DX12::CreateDX12Object()
     }
 
     // テクスチャバッファ作成
-    //if (FAILED(CreateTextureBuffer()))
-    //{
-    //    assert(false); return false;
-    //}
+    if (FAILED(CreateTextureBuffer()))
+    {
+        assert(false); return false;
+    }
+    // テクスチャ書き込み
+    if (FAILED(WriteTextureToBuffer()))
+    {
+        assert(false); return false;
+    }
 
     // シェーダーファイル読み込み
     if (FAILED(LoadShaderFile()))
     {
         assert(false); return false;
     }
+    // テクスチャディスクリプタヒープ作成
+    if (FAILED(CreateTextureDescHeap()))
+    {
+        assert(false); return false;
+    }
+    // SRV作成
+    CreateSRV();
 
     // ルートシグネチャ作成
     if (FAILED(CreateRootSignature()))
@@ -169,7 +182,7 @@ ComPtr<IDXGIAdapter> DX12::GetUsingAdapter()
     std::vector<ComPtr<IDXGIAdapter>> canUseAdapters =
         GetCanUseAdapters();
 
-    for(auto adapter : canUseAdapters)
+    for(auto& adapter : canUseAdapters)
     {
         // アダプター名取得
         DXGI_ADAPTER_DESC adapterDesc;
@@ -177,14 +190,14 @@ ComPtr<IDXGIAdapter> DX12::GetUsingAdapter()
         std::wstring str = adapterDesc.Description;
 
 
-        for (auto adapterName : adapterNames)
+        for (auto& adapterName : adapterNames)
         {
             if (str.find(adapterName) != std::string::npos)
-                return adapter.Get();
+                return adapter;
         }
     }
 
-    return canUseAdapters[0].Get();
+    return canUseAdapters[0];
 }
 
 // 使用可能なアダプターを取得
@@ -197,7 +210,7 @@ std::vector<ComPtr<IDXGIAdapter>> DX12::GetCanUseAdapters()
     while (_dxgiFactory->EnumAdapters(i, tmpAdapter.ReleaseAndGetAddressOf())
            != DXGI_ERROR_NOT_FOUND)
     {
-        adapters.push_back(tmpAdapter.Get());
+        adapters.push_back(tmpAdapter);
         i++;
     }
 
@@ -322,10 +335,10 @@ HRESULT DX12::CreateVertexBuffer()
 {
     // 頂点ヒーププロパティ取得
     D3D12_HEAP_PROPERTIES heapProperty =
-        GetHeapProperty();
+        GetVertexHeapProperty();
     // リソースディスクリプタ取得
     D3D12_RESOURCE_DESC resourceDesc =
-        GetResourceDesc();
+        GetVertexResourceDesc();
     resourceDesc.Width =
         _objects[0]->GetVerticesCount() * _objects[0]->GetVerticesByte();
 
@@ -336,11 +349,10 @@ HRESULT DX12::CreateVertexBuffer()
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
         IID_PPV_ARGS(_vertexBuffer.ReleaseAndGetAddressOf()));
-
 }
 
 // 頂点ヒーププロパティ
-D3D12_HEAP_PROPERTIES DX12::GetHeapProperty()
+D3D12_HEAP_PROPERTIES DX12::GetVertexHeapProperty()
 {
     D3D12_HEAP_PROPERTIES prop = {};
 
@@ -354,8 +366,8 @@ D3D12_HEAP_PROPERTIES DX12::GetHeapProperty()
     return prop;
 }
 
-// 
-D3D12_RESOURCE_DESC DX12::GetResourceDesc()
+// 頂点リソースディスクリプタ
+D3D12_RESOURCE_DESC DX12::GetVertexResourceDesc()
 {
     D3D12_RESOURCE_DESC desc = {};
 
@@ -384,10 +396,10 @@ HRESULT DX12::CreateIndexBuffer()
 {
     // 頂点ヒーププロパティ取得
     D3D12_HEAP_PROPERTIES heapProperty =
-        GetHeapProperty();
+        GetVertexHeapProperty();
     // リソースディスクリプタ取得
     D3D12_RESOURCE_DESC resourceDesc =
-        GetResourceDesc();
+        GetVertexResourceDesc();
     resourceDesc.Width = _objects[0]->GetIndicesByte();
 
     return _device->CreateCommittedResource(
@@ -442,6 +454,98 @@ HRESULT DX12::MapIndexToBuffer()
     return S_OK;
 }
 
+// テクスチャバッファ作成
+HRESULT DX12::CreateTextureBuffer()
+{
+    D3D12_HEAP_PROPERTIES heapProperty =
+        GetTextureHeapProperty();
+
+    D3D12_RESOURCE_DESC resourceDesc =
+        GetTextureResourceDesc();
+
+    return _device->CreateCommittedResource(
+        &heapProperty,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
+        nullptr,
+        IID_PPV_ARGS(_textureBuffer.ReleaseAndGetAddressOf()));
+}
+
+// テクスチャヒーププロパティ
+D3D12_HEAP_PROPERTIES DX12::GetTextureHeapProperty()
+{
+    D3D12_HEAP_PROPERTIES prop = {};
+
+    prop.Type =
+        D3D12_HEAP_TYPE_CUSTOM;
+    prop.CPUPageProperty =
+        D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+    prop.MemoryPoolPreference = // 転送L0
+        D3D12_MEMORY_POOL_L0;
+    prop.CreationNodeMask =
+        0;
+    prop.VisibleNodeMask =
+        0;
+
+    return prop;
+}
+
+// テクスチャリソースディスクリプタ
+D3D12_RESOURCE_DESC DX12::GetTextureResourceDesc()
+{
+    D3D12_RESOURCE_DESC desc = {};
+
+    desc.Dimension =
+        D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    desc.Height =
+        256;
+    desc.Width =
+        256;
+    desc.DepthOrArraySize =
+        1;
+    desc.SampleDesc =
+        GetSampleDesc();
+    desc.MipLevels =
+        1;
+    desc.Format =
+        DXGI_FORMAT_R8G8B8A8_UNORM;  
+    desc.Layout =
+        D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    desc.Flags =
+        D3D12_RESOURCE_FLAG_NONE;
+   
+
+    return desc;
+}
+
+// テクスチャ書き込み
+HRESULT DX12::WriteTextureToBuffer()
+{
+    std::vector<TextureStruct::TextureRGBA> pieceTextureData;
+    pieceTextureData.resize(256*256);
+
+    unsigned int count = 0;
+    for (auto& texture : pieceTextureData)
+    {
+        // 216 178 128 でちょうどいい茶色
+        texture.R = 216;
+        texture.G = 178;
+        texture.B = 128;     
+
+        texture.A = 255;
+        count++;
+    }
+    auto a = sizeof(pieceTextureData[0]);
+    auto b = sizeof(char);
+    return _textureBuffer->WriteToSubresource(
+        0,
+        nullptr,
+        pieceTextureData.data(),
+        sizeof(TextureStruct::TextureRGBA)*256,
+        sizeof(TextureStruct::TextureRGBA)*pieceTextureData.size());
+}
+
 // シェーダーファイルをロード
 HRESULT DX12::LoadShaderFile()
 {
@@ -485,6 +589,61 @@ HRESULT DX12::LoadPixelShaderFile()
         _errorBlob      .ReleaseAndGetAddressOf());
 }
 
+// テクスチャディスクリプタヒープ作成
+HRESULT DX12::CreateTextureDescHeap()
+{
+    D3D12_DESCRIPTOR_HEAP_DESC textureHeapDesc =
+        GetTextureHeapDesc();
+
+    return _device->CreateDescriptorHeap(
+        &textureHeapDesc,
+        IID_PPV_ARGS(_textureDescHeap.ReleaseAndGetAddressOf()));
+}
+
+// テクスチャヒープディスクリプタ
+D3D12_DESCRIPTOR_HEAP_DESC DX12::GetTextureHeapDesc()
+{
+    D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+    desc.Type = // シェーダリソースビュー用
+        D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    desc.NodeMask =
+        0;
+    desc.NumDescriptors =
+        1;
+    desc.Flags = // シェーダから使用可能
+        D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+    return desc;
+}
+
+// SRV作成
+void DX12::CreateSRV()
+{
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc =
+        GetSRVDesc();
+
+    _device->CreateShaderResourceView(
+        _textureBuffer.Get(),
+        &srvDesc,
+        _textureDescHeap->GetCPUDescriptorHandleForHeapStart());
+}
+
+// SRVディスクリプタ
+D3D12_SHADER_RESOURCE_VIEW_DESC DX12::GetSRVDesc()
+{
+    D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
+    desc.Format =
+        DXGI_FORMAT_R8G8B8A8_UNORM;
+    desc.Shader4ComponentMapping =
+        D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    desc.ViewDimension =
+        D3D12_SRV_DIMENSION_TEXTURE2D;
+    desc.Texture2D.MipLevels =
+        1;
+
+    return desc;
+}
+
 // ルートシグネチャ作成
 HRESULT DX12::CreateRootSignature()
 {
@@ -512,6 +671,9 @@ ComPtr<ID3DBlob> DX12::GetRootSignatureBlob()
         rootSignatureBlob.ReleaseAndGetAddressOf(),
         _errorBlob.       ReleaseAndGetAddressOf());
 
+    // ディスクリプタで使用されたメモリ開放
+    DeleteRootSignatureDescMemory(&rootSignatureDesc);
+
     return rootSignatureBlob.Get();
 }
 
@@ -520,10 +682,110 @@ D3D12_ROOT_SIGNATURE_DESC DX12::GetRootSignatureDesc()
 {
     D3D12_ROOT_SIGNATURE_DESC desc = {};
 
+    D3D12_ROOT_PARAMETER* rootParameterPtr =
+        new D3D12_ROOT_PARAMETER;
+    *rootParameterPtr = GetRootParameter();
+
+    D3D12_STATIC_SAMPLER_DESC* samplerDescPtr =
+        new D3D12_STATIC_SAMPLER_DESC;
+    *samplerDescPtr = GetSamplerDesc();
+
     desc.Flags =
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+    desc.pParameters =
+        rootParameterPtr;
+    desc.NumParameters =
+        1;
+    desc.pStaticSamplers =
+        samplerDescPtr;
+    desc.NumStaticSamplers =
+        1;
 
     return desc;
+}
+
+// ルートパラメータ
+D3D12_ROOT_PARAMETER DX12::GetRootParameter()
+{
+    D3D12_ROOT_PARAMETER desc = {};
+
+    desc.ParameterType =
+        D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+    desc.ShaderVisibility = // ピクセルシェーダから利用可能
+        D3D12_SHADER_VISIBILITY_PIXEL;
+    desc.DescriptorTable =
+        GetDescriptorTable();
+
+    return desc;
+}
+
+// ディスクリプタテーブル
+D3D12_ROOT_DESCRIPTOR_TABLE DX12::GetDescriptorTable()
+{
+    D3D12_ROOT_DESCRIPTOR_TABLE desc = {};
+
+    D3D12_DESCRIPTOR_RANGE* descriptorRangePtr =
+        new D3D12_DESCRIPTOR_RANGE;
+    *descriptorRangePtr = GetDescriptorRange();
+
+    desc.pDescriptorRanges =
+        descriptorRangePtr;
+    desc.NumDescriptorRanges =
+        1;
+
+    return desc;
+}
+
+// ディスクリプタレンジ
+D3D12_DESCRIPTOR_RANGE DX12::GetDescriptorRange()
+{
+    D3D12_DESCRIPTOR_RANGE desc = {};
+
+    desc.NumDescriptors = // ディスクリプタ数
+        1;
+    desc.RangeType = // タイプ：SRV
+        D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+    desc.BaseShaderRegister = // スロット0から
+        0;
+    desc.OffsetInDescriptorsFromTableStart =
+        D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+    return desc;
+}
+
+// サンプラーディスクリプタ
+D3D12_STATIC_SAMPLER_DESC DX12::GetSamplerDesc()
+{
+    D3D12_STATIC_SAMPLER_DESC desc = {};
+
+    desc.AddressU = // 横
+        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    desc.AddressV = // 縦
+        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    desc.AddressW = // 奥行き
+        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    desc.BorderColor =
+        D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+    desc.Filter = // 線形補完
+        D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+    desc.MaxLOD = // ミップマップ最大値
+        D3D12_FLOAT32_MAX;
+    desc.MinLOD = // ミップマップ最小値
+        0.0f;
+    desc.ShaderVisibility = // シェーダ確認範囲
+        D3D12_SHADER_VISIBILITY_PIXEL;
+    desc.ComparisonFunc =
+        D3D12_COMPARISON_FUNC_NEVER;
+
+    return desc;
+}
+
+// ルートシグネチャディスクリプタのメモリ解放
+void DX12::DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc)
+{
+    delete desc->pParameters->DescriptorTable.pDescriptorRanges;
+    delete desc->pParameters;
+    delete desc->pStaticSamplers;
 }
 
 
@@ -718,7 +980,6 @@ void DX12::PrepareRenderTarget()
     DrawArgument::PrepareRenderTargetArgument arg =
         GetPrepareRenderTargetArgument();
         
-    //_draw->PrepareRenderTarget(rtvOffset);
     _draw->PrepareRenderTarget(arg);
 }
 
@@ -759,6 +1020,7 @@ void DX12::SetCommand()
         GetSetCommandArgument();
 
     _draw->SetCommand(arg);
+
 }
 
 // コマンドセット用引数
@@ -770,6 +1032,8 @@ DrawArgument::SetCommandArgument DX12::GetSetCommandArgument()
         _pipelineState.Get();
     arg.rootSignature =
         _rootSignature.Get();
+    arg.textureDescHeap =
+        _textureDescHeap.Get();
     arg.viewport =
         GetViewports();
     arg.scissorRect =
