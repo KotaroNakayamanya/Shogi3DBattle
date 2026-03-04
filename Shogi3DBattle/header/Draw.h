@@ -13,7 +13,7 @@ class Draw
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    UINT _buffCount;  // バッファー数（スワップチェーン作成に利用）
+    UINT _buffNum;  // バッファー数（スワップチェーン作成に利用）
     UINT _fenceVal = 0; // フェンスの同期処理確認用
     
 

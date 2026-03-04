@@ -114,13 +114,13 @@ HRESULT Draw::CreateRTVHeap(
 // RTV作成
 HRESULT Draw::CreateRTV(ID3D12Device* device)
 {
-    _rtvs.resize(_buffCount);
+    _rtvs.resize(_buffNum);
 
     // ヒープの先頭アドレスを取得しておく
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle =
         _rtvHeap->GetCPUDescriptorHandleForHeapStart();
 
-    for (int i = 0; i < _buffCount; i++)
+    for (int i = 0; i < _buffNum; i++)
     {
         if (FAILED(SetRTVBuffer(i))) // 各RTVにバッファを対応させる
         {
@@ -182,7 +182,7 @@ void Draw::ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier
         D3D12_RESOURCE_STATE_RENDER_TARGET;
 
     _commandList->ResourceBarrier(
-        _buffCount - 1,
+        _buffNum - 1,
         &barrier);
 }
 
@@ -235,11 +235,13 @@ void Draw::ExeDraw(DrawArg::ExeDrawArg arg)
     // バックバッファに対応するRTVを表示画面に設定
     ChangeRTVBarrierToPresent(arg.resourceBarrier);
 
-    // コマンド実行および画面スワップによる表示
+    // コマンド実行
     _commandList->Close();
     ExeCommand();
     WaitProcessWithFence();
     ResetCommand();
+
+    // 画面スワップ
     _swapChain->Present(1, 0);
 
 }
@@ -259,7 +261,7 @@ void Draw::ChangeRTVBarrierToPresent(D3D12_RESOURCE_BARRIER resourceBarrier)
         D3D12_RESOURCE_STATE_PRESENT;
 
     _commandList->ResourceBarrier(
-        _buffCount - 1,
+        _buffNum - 1,
         &barrier);
 }
 
@@ -297,7 +299,7 @@ void Draw::ResetCommand()
 
 Draw::Draw(UINT bufferNum)
 {
-    _buffCount = bufferNum;
+    _buffNum = bufferNum;
 }
 
 Draw::~Draw(){}
