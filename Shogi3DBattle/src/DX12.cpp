@@ -308,7 +308,7 @@ HRESULT DX12::CreateVertexSets()
 }
 
 // 頂点ヒーププロパティ
-D3D12_HEAP_PROPERTIES DX12::GetVertexHeapProperty()
+D3D12_HEAP_PROPERTIES DX12::GetVertexHeapProp()
 {
     D3D12_HEAP_PROPERTIES prop = {};
 
@@ -364,7 +364,7 @@ TextureArg::CreateTextureObjArg DX12::GetCreateTextureObjArg()
     TextureArg::CreateTextureObjArg arg = {};
 
     arg.device = _device.Get();
-    arg.heapProp = GetTextureHeapProperty();
+    arg.heapProp = GetTextureHeapProp();
     arg.resourceDesc = GetTextureResourceDesc();
     arg.heapDesc = GetTextureHeapDesc();
     arg.srvDesc = GetSRVDesc();
@@ -373,7 +373,7 @@ TextureArg::CreateTextureObjArg DX12::GetCreateTextureObjArg()
 }
 
 // テクスチャヒーププロパティ
-D3D12_HEAP_PROPERTIES DX12::GetTextureHeapProperty()
+D3D12_HEAP_PROPERTIES DX12::GetTextureHeapProp()
 {
     D3D12_HEAP_PROPERTIES prop = {};
 
@@ -468,7 +468,7 @@ VertexArg::GetCreateVertexObjArg DX12::GetCreateVertexObjArg()
     VertexArg::GetCreateVertexObjArg arg = {};
 
     arg.device = _device.Get();
-    arg.heapProp = GetVertexHeapProperty();
+    arg.heapProp = GetVertexHeapProp();
     arg.resourceDesc = GetVertexResourceDesc();
     arg.vertexByte = _objects[0]->GetVerticesCount() * _objects[0]->GetVerticesByte();
     arg.vertexPtr = _objects[0]->GetVerticesPtr();
@@ -526,7 +526,7 @@ D3D12_ROOT_SIGNATURE_DESC DX12::GetRootSignatureDesc()
 
     D3D12_ROOT_PARAMETER* rootParameterPtr =
         new D3D12_ROOT_PARAMETER;
-    *rootParameterPtr = GetRootParameter();
+    *rootParameterPtr = GetRootParam();
 
     D3D12_STATIC_SAMPLER_DESC* samplerDescPtr =
         new D3D12_STATIC_SAMPLER_DESC;
@@ -547,7 +547,7 @@ D3D12_ROOT_SIGNATURE_DESC DX12::GetRootSignatureDesc()
 }
 
 // ルートパラメータ
-D3D12_ROOT_PARAMETER DX12::GetRootParameter()
+D3D12_ROOT_PARAMETER DX12::GetRootParam()
 {
     D3D12_ROOT_PARAMETER desc = {};
 
@@ -556,19 +556,19 @@ D3D12_ROOT_PARAMETER DX12::GetRootParameter()
     desc.ShaderVisibility = // ピクセルシェーダから利用可能
         D3D12_SHADER_VISIBILITY_PIXEL;
     desc.DescriptorTable =
-        GetDescriptorTable();
+        GetDescTable();
 
     return desc;
 }
 
 // ディスクリプタテーブル
-D3D12_ROOT_DESCRIPTOR_TABLE DX12::GetDescriptorTable()
+D3D12_ROOT_DESCRIPTOR_TABLE DX12::GetDescTable()
 {
     D3D12_ROOT_DESCRIPTOR_TABLE desc = {};
 
     D3D12_DESCRIPTOR_RANGE* descriptorRangePtr =
         new D3D12_DESCRIPTOR_RANGE;
-    *descriptorRangePtr = GetDescriptorRange();
+    *descriptorRangePtr = GetDescRange();
 
     desc.pDescriptorRanges =
         descriptorRangePtr;
@@ -579,7 +579,7 @@ D3D12_ROOT_DESCRIPTOR_TABLE DX12::GetDescriptorTable()
 }
 
 // ディスクリプタレンジ
-D3D12_DESCRIPTOR_RANGE DX12::GetDescriptorRange()
+D3D12_DESCRIPTOR_RANGE DX12::GetDescRange()
 {
     D3D12_DESCRIPTOR_RANGE desc = {};
 

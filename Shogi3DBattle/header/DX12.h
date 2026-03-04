@@ -54,9 +54,9 @@ private:
 
     D3D12_SHADER_RESOURCE_VIEW_DESC GetSRVDesc();
 
-    D3D12_ROOT_PARAMETER GetRootParameter(); // ルートパラメータ
-    D3D12_ROOT_DESCRIPTOR_TABLE GetDescriptorTable(); // ディスクリプタテーブル
-    D3D12_DESCRIPTOR_RANGE GetDescriptorRange(); // ディスクリプタレンジ
+    D3D12_ROOT_PARAMETER GetRootParam(); // ルートパラメータ
+    D3D12_ROOT_DESCRIPTOR_TABLE GetDescTable(); // ディスクリプタテーブル
+    D3D12_DESCRIPTOR_RANGE GetDescRange(); // ディスクリプタレンジ
     D3D12_STATIC_SAMPLER_DESC GetSamplerDesc(); // サンプラーディスクリプタ
 
     // ディスクリプタで使用されたメモリ開放
@@ -66,7 +66,7 @@ private:
     // ヒープ
     D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc(); // RTVヒープディスクリプタ
 
-    D3D12_HEAP_PROPERTIES GetVertexHeapProperty(); // 頂点ヒーププロパティ
+    D3D12_HEAP_PROPERTIES GetVertexHeapProp(); // 頂点ヒーププロパティ
 
     // 頂点オブジェクト
     std::shared_ptr<Vertex> _vertex;
@@ -93,7 +93,7 @@ private:
     // テクスチャ
     D3D12_RESOURCE_DESC GetTextureResourceDesc();   // リソースディスクリプタ
     D3D12_DESCRIPTOR_HEAP_DESC GetTextureHeapDesc(); // テクスチャヒープディスクリプタ
-    D3D12_HEAP_PROPERTIES GetTextureHeapProperty(); // テクスチャヒーププロパティ
+    D3D12_HEAP_PROPERTIES GetTextureHeapProp(); // テクスチャヒーププロパティ
 
     // ルートシグネチャ
     D3D12_ROOT_SIGNATURE_DESC GetRootSignatureDesc(); // ルートシグネチャディスクリプタ

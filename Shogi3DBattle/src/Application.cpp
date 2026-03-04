@@ -63,7 +63,7 @@ bool Application::CreateGameWindow()
     RegisterClassEx(&_windowClass);
     AdjustWindowRect(&_WINDOW_RECT,
         WS_OVERLAPPEDWINDOW, false);
-    CreateWindowObject();
+    CreateWindowObj();
 
     return true;
 }
@@ -76,7 +76,7 @@ void Application::CreateWindowClass()
     _windowClass.hInstance     = GetModuleHandle(nullptr); // アプリケーションハンドル
 }
 
-void Application::CreateWindowObject()
+void Application::CreateWindowObj()
 {
     _hwnd = CreateWindow(
         _windowClass.lpszClassName,              // クラス名

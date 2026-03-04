@@ -32,7 +32,7 @@ private:
     // ウインドウ用関数
     bool CreateGameWindow();
     void CreateWindowClass();
-    void CreateWindowObject();
+    void CreateWindowObj();
     void ExitGameWindow();
 
     // DX12オブジェクト
