@@ -5,7 +5,7 @@
 #include<wrl.h>
 #include<vector>
 
-#include"DrawArgument.h"
+#include"DrawArg.h"
 
 class Draw
 {
@@ -13,7 +13,7 @@ class Draw
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    UINT _bufferCount;  // バッファー数（スワップチェーン作成に利用）
+    UINT _buffCount;  // バッファー数（スワップチェーン作成に利用）
     UINT _fenceVal = 0; // フェンスの同期処理確認用
     
 
@@ -50,7 +50,7 @@ private:
     void ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier);
     void ChangeRTVBarrierToPresent     (D3D12_RESOURCE_BARRIER resourceBarrier);
 
-    void ExecuteCommand(); // コマンド実行
+    void ExeCommand(); // コマンド実行
     void ResetCommand  (); // コマンドリセット
 
     void WaitProcessWithFence(); // フェンスによる同期処理
@@ -63,11 +63,11 @@ public:
     ~Draw();
 
     // 描画オブジェクト生成
-    HRESULT CreateDrawObject(DrawArgument::CreateDrawObjectArgument arg);
+    HRESULT CreateDrawObj(DrawArg::CreateDrawObjArg arg);
     // レンダーターゲットの準備
-    void PrepareRenderTarget(DrawArgument::PrepareRenderTargetArgument arg);
+    void PrepareRenderTarget(DrawArg::PrepareRenderTargetArg arg);
     // コマンドセット
-    void SetCommand(DrawArgument::SetCommandArgument arg);
+    void SetCommand(DrawArg::SetCommandArg arg);
     // 描画実行
-    void ExecuteDraw(DrawArgument::ExecuteDrawArgument arg);
+    void ExeDraw(DrawArg::ExeDrawArg arg);
 };

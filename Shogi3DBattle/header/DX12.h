@@ -8,8 +8,8 @@
 #include<vector>
 #include<array>
 
-#include"DrawArgument.h"
-#include"TextureArgument.h"
+#include"DrawArg.h"
+#include"TextureArg.h"
 #include"VertexArg.h"
 
 class Vertex;
@@ -26,7 +26,7 @@ class DX12
 private:
     HWND _hwnd; // ウインドウハンドル
 
-    const int _bufferNum = 2; // 描画に使用する画面数
+    const int _buffNum = 2; // 描画に使用する画面数
 
 
     ComPtr<ID3D12Device>  _device;      // Direct3Dデバイス
@@ -126,9 +126,9 @@ private:
     
     // テクスチャオブジェクト
     std::shared_ptr<Texture> _texture;
-    HRESULT CreateTextureObject(); // テクスチャオブジェクト作成
-    TextureArgument::CreateTextureObjectArgument // テクスチャオブジェクト作成用引数
-        GetCreateTextureObjectArgument();
+    HRESULT CreateTextureObj(); // テクスチャオブジェクト作成
+    TextureArg::CreateTextureObjArg // テクスチャオブジェクト作成用引数
+        GetCreateTextureObjArg();
 
     // 頂点オブジェクト
     std::vector<std::shared_ptr<Object>> _objects;
@@ -142,7 +142,7 @@ private:
     D3D12_INDEX_BUFFER_VIEW GetIndexBufferView();
 
 
-    void ExecuteDraw();
+    void ExeDraw();
     void ResetCommand();
     void WaitProcessWithFence();
 
@@ -151,15 +151,15 @@ private:
 
     // 描画オブジェクト
     std::shared_ptr<Draw> _draw; 
-    HRESULT CreateDrawObject(); // 描画オブジェクト作成
-    DrawArgument::CreateDrawObjectArgument // 描画オブジェクト作成用引数
-        GetCreateDrawObjectArgument();
-    DrawArgument::PrepareRenderTargetArgument // レンダーターゲット準備用引数
-        GetPrepareRenderTargetArgument();
-    DrawArgument::SetCommandArgument // コマンドセット用引数
-        GetSetCommandArgument();
-    DrawArgument::ExecuteDrawArgument // コマンド実行用引数
-        GetExecuteDrawArgument();
+    HRESULT CreateDrawObj(); // 描画オブジェクト作成
+    DrawArg::CreateDrawObjArg // 描画オブジェクト作成用引数
+        GetCreateDrawObjArg();
+    DrawArg::PrepareRenderTargetArg // レンダーターゲット準備用引数
+        GetPrepareRenderTargetArg();
+    DrawArg::SetCommandArg // コマンドセット用引数
+        GetSetCommandArg();
+    DrawArg::ExeDrawArg // コマンド実行用引数
+        GetExeDrawArg();
     
 
     // シェーダーオブジェクト
@@ -169,8 +169,8 @@ private:
 
 
 public:
-    bool CreateDX12Object();
-    void ExecuteDX12();
+    bool CreateDX12Obj();
+    void ExeDX12();
 
     DX12(HWND hwnd);
     ~DX12();

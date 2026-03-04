@@ -3,11 +3,11 @@
 #include<d3d12.h>
 #include<dxgi1_6.h>
 
-class DrawArgument
+class DrawArg
 {
 public:
     // 描画オブジェクト作成用引数
-    typedef struct CreateDrawObjectArgument
+    typedef struct CreateDrawObjArg
     {
         ID3D12Device*  device;
         IDXGIFactory6* dxgiFactory;
@@ -18,17 +18,17 @@ public:
         DXGI_SWAP_CHAIN_DESC1      swapChainDesc;
         D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc;
 
-    }CreateDrawObjectArgument;
+    }CreateDrawObjArg;
 
     // レンダーターゲット準備用引数
-    typedef struct PrepareRenderTargetArgument
+    typedef struct PrepareRenderTargetArg
     {
         UINT rtvOffset;
         D3D12_RESOURCE_BARRIER resourceBarrier;
-    };
+    }PrepareRenderTargetArg;
 
     // コマンドセット用引数
-    typedef struct SetCommandArgument
+    typedef struct SetCommandArg
     {
         ID3D12PipelineState* pipelineState;
         ID3D12RootSignature* rootSignature;
@@ -39,18 +39,18 @@ public:
         D3D12_RECT     scissorRect;
 
         D3D12_PRIMITIVE_TOPOLOGY topology;
-        D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
-        D3D12_INDEX_BUFFER_VIEW  indexBufferView;
+        D3D12_VERTEX_BUFFER_VIEW vertexBuffView;
+        D3D12_INDEX_BUFFER_VIEW  indexBuffView;
 
         UINT vertexCount;
-        UINT objectCount;
+        UINT objCount;
 
-    }SetCommandArgument;
+    }SetCommandArg;
 
     // コマンド実行用引数
-    typedef struct ExecuteDrawArgument
+    typedef struct ExeDrawArg
     {
         D3D12_RESOURCE_BARRIER resourceBarrier;
 
-    }ExecuteDrawArgument;
+    }ExeDrawArg;
 };

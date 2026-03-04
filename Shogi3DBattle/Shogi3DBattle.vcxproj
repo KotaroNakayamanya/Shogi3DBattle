@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="header\DrawArgument.h" />
+    <ClCompile Include="header\DrawArg.h" />
     <ClCompile Include="header\src\Draw.cpp" />
     <ClCompile Include="header\src\Object.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -37,7 +37,7 @@
     <ClInclude Include="header\Object.h" />
     <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\Texture.h" />
-    <ClInclude Include="header\TextureArgument.h" />
+    <ClInclude Include="header\TextureArg.h" />
     <ClInclude Include="header\TextureStruct.h" />
     <ClInclude Include="header\Vertex.h" />
     <ClInclude Include="header\VertexArg.h" />

@@ -2,8 +2,7 @@
 #include<cassert>
 
 // 描画オブジェクト作成
-HRESULT Draw::CreateDrawObject(
-    DrawArgument::CreateDrawObjectArgument arg)
+HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
 {
     // コマンドアロケータ作成
     if (FAILED(CreateCommandAllocator(
@@ -115,13 +114,13 @@ HRESULT Draw::CreateRTVHeap(
 // RTV作成
 HRESULT Draw::CreateRTV(ID3D12Device* device)
 {
-    _rtvs.resize(_bufferCount);
+    _rtvs.resize(_buffCount);
 
     // ヒープの先頭アドレスを取得しておく
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle =
         _rtvHeap->GetCPUDescriptorHandleForHeapStart();
 
-    for (int i = 0; i < _bufferCount; i++)
+    for (int i = 0; i < _buffCount; i++)
     {
         if (FAILED(SetRTVBuffer(i))) // 各RTVにバッファを対応させる
         {
@@ -154,7 +153,7 @@ HRESULT Draw::CreateRTV(ID3D12Device* device)
 
 
 // レンダーターゲット準備
-void Draw::PrepareRenderTarget(DrawArgument::PrepareRenderTargetArgument arg)
+void Draw::PrepareRenderTarget(DrawArg::PrepareRenderTargetArg arg)
 {
     // バックバッファに対応するRTVをレンダーターゲットに設定
     auto backBufferIdx = _swapChain->GetCurrentBackBufferIndex();
@@ -183,7 +182,7 @@ void Draw::ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier
         D3D12_RESOURCE_STATE_RENDER_TARGET;
 
     _commandList->ResourceBarrier(
-        _bufferCount - 1,
+        _buffCount - 1,
         &barrier);
 }
 
@@ -200,7 +199,7 @@ void Draw::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
 
 
 // コマンドセット
-void Draw::SetCommand(DrawArgument::SetCommandArgument arg)
+void Draw::SetCommand(DrawArg::SetCommandArg arg)
 {
     // パイプラインセット
     _commandList->SetPipelineState(arg.pipelineState);
@@ -219,11 +218,11 @@ void Draw::SetCommand(DrawArgument::SetCommandArgument arg)
     // トポロジーセット
     _commandList->IASetPrimitiveTopology(arg.topology);
     // 頂点バッファセット
-    _commandList->IASetVertexBuffers(0, 1, &arg.vertexBufferView);
+    _commandList->IASetVertexBuffers(0, 1, &arg.vertexBuffView);
     // インデックスバッファセット
-    _commandList->IASetIndexBuffer(&arg.indexBufferView);
+    _commandList->IASetIndexBuffer(&arg.indexBuffView);
     // 描画命令セット
-    _commandList->DrawIndexedInstanced(arg.vertexCount, arg.objectCount, 0, 0, 0);
+    _commandList->DrawIndexedInstanced(arg.vertexCount, arg.objCount, 0, 0, 0);
 
 }
 
@@ -231,14 +230,14 @@ void Draw::SetCommand(DrawArgument::SetCommandArgument arg)
 
 
 // 描画実行
-void Draw::ExecuteDraw(DrawArgument::ExecuteDrawArgument arg)
+void Draw::ExeDraw(DrawArg::ExeDrawArg arg)
 {
     // バックバッファに対応するRTVを表示画面に設定
     ChangeRTVBarrierToPresent(arg.resourceBarrier);
 
     // コマンド実行および画面スワップによる表示
     _commandList->Close();
-    ExecuteCommand();
+    ExeCommand();
     WaitProcessWithFence();
     ResetCommand();
     _swapChain->Present(1, 0);
@@ -260,12 +259,12 @@ void Draw::ChangeRTVBarrierToPresent(D3D12_RESOURCE_BARRIER resourceBarrier)
         D3D12_RESOURCE_STATE_PRESENT;
 
     _commandList->ResourceBarrier(
-        _bufferCount - 1,
+        _buffCount - 1,
         &barrier);
 }
 
 // コマンド実行
-void Draw::ExecuteCommand()
+void Draw::ExeCommand()
 {
     ID3D12CommandList* commandLists[] = {_commandList.Get()};
     _commandQueue->ExecuteCommandLists(1, commandLists);
@@ -298,7 +297,7 @@ void Draw::ResetCommand()
 
 Draw::Draw(UINT bufferNum)
 {
-    _bufferCount = bufferNum;
+    _buffCount = bufferNum;
 }
 
 Draw::~Draw(){}

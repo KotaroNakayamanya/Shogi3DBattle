@@ -24,7 +24,7 @@ HRESULT Shader::CreateShaderBlob()
 // 頂点シェーダバイナリ作成
 HRESULT Shader::CreateVertexShaderBlob()
 {
-    ComPtr<ID3DBlob> errorBlob;
+    ComPtr<ID3DBlob> errBlob;
 
     return D3DCompileFromFile(
         L"shader/VertexShader.hlsl",
@@ -35,13 +35,13 @@ HRESULT Shader::CreateVertexShaderBlob()
         D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
         0,
         _vertexShaderBlob.ReleaseAndGetAddressOf(),
-        errorBlob        .ReleaseAndGetAddressOf());
+        errBlob          .ReleaseAndGetAddressOf());
 }
 
 // ピクセルシェーダバイナリ作成
 HRESULT Shader::CreatePixelShaderBlob()
 {
-    ComPtr<ID3DBlob> errorBlob;
+    ComPtr<ID3DBlob> errBlob;
 
     return D3DCompileFromFile(
         L"shader/PixelShader.hlsl",
@@ -52,7 +52,7 @@ HRESULT Shader::CreatePixelShaderBlob()
         D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
         0,
         _pixelShaderBlob.ReleaseAndGetAddressOf(),
-        errorBlob       .ReleaseAndGetAddressOf());
+        errBlob         .ReleaseAndGetAddressOf());
 }
 
 
@@ -63,9 +63,6 @@ ID3DBlob* Shader::GetVertexShaderBlob()
 {
     return _vertexShaderBlob.Get();
 }
-
-
-
 
 // ピクセルシェーダーバイナリを渡す
 ID3DBlob* Shader::GetPixelShaderBlob()

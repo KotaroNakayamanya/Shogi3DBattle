@@ -33,7 +33,7 @@ namespace {
 
 
 // DirectX12初期設定
-bool DX12::CreateDX12Object()
+bool DX12::CreateDX12Obj()
 {
     // DXGIファクトリー作成
     if (FAILED(CreateFactory()))
@@ -46,7 +46,7 @@ bool DX12::CreateDX12Object()
         assert(false); return false;
     }
     // 描画オブジェクト作成
-    if (FAILED(CreateDrawObject()))
+    if (FAILED(CreateDrawObj()))
     {
         assert(false); return false;
     }
@@ -70,7 +70,7 @@ bool DX12::CreateDX12Object()
     }
 
     // テクスチャオブジェクト作成
-    if (FAILED(CreateTextureObject()))
+    if (FAILED(CreateTextureObj()))
     {
         assert(false); return false;
     }
@@ -195,20 +195,20 @@ std::vector<ComPtr<IDXGIAdapter>> DX12::GetCanUseAdapters()
 }
 
 // 描画オブジェクト作成（Drawクラス）
-HRESULT DX12::CreateDrawObject()
+HRESULT DX12::CreateDrawObj()
 {
-    _draw = std::make_shared<Draw>(_bufferNum);
+    _draw = std::make_shared<Draw>(_buffNum);
 
-    DrawArgument::CreateDrawObjectArgument arg =
-        GetCreateDrawObjectArgument();
+    DrawArg::CreateDrawObjArg arg =
+        GetCreateDrawObjArg();
 
-    return _draw->CreateDrawObject(arg);
+    return _draw->CreateDrawObj(arg);
 }
 
 // 描画オブジェクト作成用引数
-DrawArgument::CreateDrawObjectArgument DX12::GetCreateDrawObjectArgument()
+DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg()
 {
-    DrawArgument::CreateDrawObjectArgument arg = {};
+    DrawArg::CreateDrawObjArg arg = {};
 
     arg.device =
         _device.Get();
@@ -262,7 +262,7 @@ DXGI_SWAP_CHAIN_DESC1 DX12::GetSwapChainDesc()
     desc.BufferUsage =
         DXGI_USAGE_BACK_BUFFER;
     desc.BufferCount =
-        _bufferNum;
+        _buffNum;
 
     desc.Scaling =
         DXGI_SCALING_STRETCH;
@@ -285,7 +285,7 @@ D3D12_DESCRIPTOR_HEAP_DESC DX12::GetRTVHeapDesc()
     desc.NodeMask =
         0;
     desc.NumDescriptors =
-        _bufferNum;
+        _buffNum;
     desc.Flags =
         D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
@@ -348,23 +348,23 @@ D3D12_RESOURCE_DESC DX12::GetVertexResourceDesc()
 }
 
 // テクスチャオブジェクト作成
-HRESULT DX12::CreateTextureObject()
+HRESULT DX12::CreateTextureObj()
 {
     _texture = std::make_shared<Texture>();
 
-    TextureArgument::CreateTextureObjectArgument arg =
-        GetCreateTextureObjectArgument();
+    TextureArg::CreateTextureObjArg arg =
+        GetCreateTextureObjArg();
     
-    return _texture->CreateTextureObject(arg);
+    return _texture->CreateTextureObj(arg);
 }
 
 // テクスチャオブジェクト作成用引数
-TextureArgument::CreateTextureObjectArgument DX12::GetCreateTextureObjectArgument()
+TextureArg::CreateTextureObjArg DX12::GetCreateTextureObjArg()
 {
-    TextureArgument::CreateTextureObjectArgument arg = {};
+    TextureArg::CreateTextureObjArg arg = {};
 
     arg.device = _device.Get();
-    arg.heapProperty = GetTextureHeapProperty();
+    arg.heapProp = GetTextureHeapProperty();
     arg.resourceDesc = GetTextureResourceDesc();
     arg.heapDesc = GetTextureHeapDesc();
     arg.srvDesc = GetSRVDesc();
@@ -468,7 +468,7 @@ VertexArg::GetCreateVertexObjArg DX12::GetCreateVertexObjArg()
     VertexArg::GetCreateVertexObjArg arg = {};
 
     arg.device = _device.Get();
-    arg.heapProperty = GetVertexHeapProperty();
+    arg.heapProp = GetVertexHeapProperty();
     arg.resourceDesc = GetVertexResourceDesc();
     arg.vertexByte = _objects[0]->GetVerticesCount() * _objects[0]->GetVerticesByte();
     arg.vertexPtr = _objects[0]->GetVerticesPtr();
@@ -808,7 +808,7 @@ DXGI_SAMPLE_DESC DX12::GetSampleDesc()
 
 
 // コマンド実行
-void DX12::ExecuteDX12()
+void DX12::ExeDX12()
 {
     // レンダーターゲットの準備をする
     PrepareRenderTarget();
@@ -817,7 +817,7 @@ void DX12::ExecuteDX12()
     SetCommand();
 
     // 描画実行
-    ExecuteDraw();
+    ExeDraw();
 
     return;
 }
@@ -825,16 +825,16 @@ void DX12::ExecuteDX12()
 // レンダーターゲットの準備（Drawクラス）
 void DX12::PrepareRenderTarget()
 {
-    DrawArgument::PrepareRenderTargetArgument arg =
-        GetPrepareRenderTargetArgument();
+    DrawArg::PrepareRenderTargetArg arg =
+        GetPrepareRenderTargetArg();
         
     _draw->PrepareRenderTarget(arg);
 }
 
 // レンダーターゲット準備用引数
-DrawArgument::PrepareRenderTargetArgument DX12::GetPrepareRenderTargetArgument()
+DrawArg::PrepareRenderTargetArg DX12::GetPrepareRenderTargetArg()
 {
-    DrawArgument::PrepareRenderTargetArgument arg = {};
+    DrawArg::PrepareRenderTargetArg arg = {};
 
     arg.resourceBarrier =
         GetResourceBarrier();
@@ -864,37 +864,37 @@ D3D12_RESOURCE_BARRIER DX12::GetResourceBarrier()
 // コマンドセット（Drawクラス）
 void DX12::SetCommand()
 {
-    DrawArgument::SetCommandArgument arg =
-        GetSetCommandArgument();
+    DrawArg::SetCommandArg arg =
+        GetSetCommandArg();
 
     _draw->SetCommand(arg);
 
 }
 
 // コマンドセット用引数
-DrawArgument::SetCommandArgument DX12::GetSetCommandArgument()
+DrawArg::SetCommandArg DX12::GetSetCommandArg()
 {
-    DrawArgument::SetCommandArgument arg = {};
+    DrawArg::SetCommandArg arg = {};
 
     arg.pipelineState =
         _pipelineState.Get();
     arg.rootSignature =
         _rootSignature.Get();
     arg.textureDescHeap =
-        _texture->GetTextureDescriptorHeap();
+        _texture->GetTextureDescHeap();
     arg.viewport =
         GetViewports();
     arg.scissorRect =
         GetScissorRects();
     arg.topology =
         D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-    arg.vertexBufferView =
+    arg.vertexBuffView =
         GetVertexBufferView();
-    arg.indexBufferView =
+    arg.indexBuffView =
         GetIndexBufferView();
     arg.vertexCount
         = _objects[0]->GetIndicesCount();
-    arg.objectCount
+    arg.objCount
         = _objects.size();
 
     return arg;
@@ -970,18 +970,18 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBufferView()
 }
 
 // 描画実行（Drawクラス）
-void DX12::ExecuteDraw()
+void DX12::ExeDraw()
 {
-    DrawArgument::ExecuteDrawArgument arg =
-        GetExecuteDrawArgument();
+    DrawArg::ExeDrawArg arg =
+        GetExeDrawArg();
         
-    _draw->ExecuteDraw(arg);
+    _draw->ExeDraw(arg);
 }
 
 // コマンド実行用引数
-DrawArgument::ExecuteDrawArgument DX12::GetExecuteDrawArgument()
+DrawArg::ExeDrawArg DX12::GetExeDrawArg()
 {
-    DrawArgument::ExecuteDrawArgument arg = {};
+    DrawArg::ExeDrawArg arg = {};
 
     arg.resourceBarrier =
         GetResourceBarrier();

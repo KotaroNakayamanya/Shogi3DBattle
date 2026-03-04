@@ -48,7 +48,7 @@
     <ClCompile Include="header\src\Draw.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="header\DrawArgument.h">
+    <ClCompile Include="header\DrawArg.h">
       <Filter>ヘッダー ファイル\argument</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader.cpp">
@@ -89,7 +89,7 @@
     <ClInclude Include="header\Texture.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="header\TextureArgument.h">
+    <ClInclude Include="header\TextureArg.h">
       <Filter>ヘッダー ファイル\argument</Filter>
     </ClInclude>
     <ClInclude Include="header\Shader.h">

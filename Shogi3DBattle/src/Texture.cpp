@@ -6,12 +6,12 @@
 #include "TextureStruct.h"
 
 // テクスチャオブジェクト作成
-HRESULT Texture::CreateTextureObject(
-    TextureArgument::CreateTextureObjectArgument arg)
+HRESULT Texture::CreateTextureObj(
+    TextureArg::CreateTextureObjArg arg)
 {
     // テクスチャバッファ作成
-    if(FAILED(CreateTextureBuffer(
-        arg.device, arg.heapProperty, arg.resourceDesc)))
+    if(FAILED(CreateTextureBuff(
+        arg.device, arg.heapProp, arg.resourceDesc)))
     {
         assert(false); return E_FAIL;
     }
@@ -28,28 +28,28 @@ HRESULT Texture::CreateTextureObject(
 }
 
 // テクスチャバッファ作成
-HRESULT Texture::CreateTextureBuffer(
+HRESULT Texture::CreateTextureBuff(
     ID3D12Device* device,
-    D3D12_HEAP_PROPERTIES heapProperty,
+    D3D12_HEAP_PROPERTIES heapProp,
     D3D12_RESOURCE_DESC   resourceDesc)
 {
     HRESULT result;
 
     // テクスチャバッファ作成
     result = device->CreateCommittedResource(
-        &heapProperty,
+        &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
         nullptr,
-        IID_PPV_ARGS(_textureBuffer.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(_textureBuff.ReleaseAndGetAddressOf()));
     if (FAILED(result))
     {
         assert(false); return result;
     }
 
     // テクスチャをバッファに書き込み
-    result = WriteTextureToBuffer();
+    result = WriteTextureToBuff();
     if (FAILED(result))
     {
         assert(false); return result;
@@ -59,7 +59,7 @@ HRESULT Texture::CreateTextureBuffer(
 }
 
 // テクスチャ書き込み
-HRESULT Texture::WriteTextureToBuffer()
+HRESULT Texture::WriteTextureToBuff()
 {
     std::vector<TextureStruct::TextureRGBA> pieceTextureData;
     pieceTextureData.resize(256*256);
@@ -73,7 +73,7 @@ HRESULT Texture::WriteTextureToBuffer()
         texture.A = 255;
     }
 
-    return _textureBuffer->WriteToSubresource(
+    return _textureBuff->WriteToSubresource(
         0,
         nullptr,
         pieceTextureData.data(),
@@ -97,7 +97,7 @@ void Texture::CreateSRV(
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc)
 {
     device->CreateShaderResourceView(
-        _textureBuffer.Get(),
+        _textureBuff.Get(),
         &srvDesc,
         _textureDescHeap->GetCPUDescriptorHandleForHeapStart());
 }
@@ -105,7 +105,7 @@ void Texture::CreateSRV(
 
 
 // テクスチャディスクリプタヒープを渡す
-ID3D12DescriptorHeap* Texture::GetTextureDescriptorHeap()
+ID3D12DescriptorHeap* Texture::GetTextureDescHeap()
 {
     return _textureDescHeap.Get();
 }

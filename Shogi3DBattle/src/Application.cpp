@@ -19,7 +19,7 @@ bool Application::Init()
 
     // DirectX12オブジェクト作成
     _dx12.reset(new DX12(_hwnd));
-    if(_dx12->CreateDX12Object() == false) return false;
+    if(_dx12->CreateDX12Obj() == false) return false;
 
 }
 
@@ -43,7 +43,7 @@ void Application::Run()
         }
 
         // DirectX12処理
-        _dx12->ExecuteDX12();
+        _dx12->ExeDX12();
     }
 }
 

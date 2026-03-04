@@ -9,6 +9,7 @@ class Vertex
 {
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 private:
     ComPtr<ID3D12Resource> _vertexBuff; // 頂点バッファ
     ComPtr<ID3D12Resource> _indexBuff;  // インデックスバッファ
@@ -16,13 +17,13 @@ private:
 
     HRESULT CreateVertexBuff( // 頂点バッファ作成
         ID3D12Device* device,
-        D3D12_HEAP_PROPERTIES heapProperty,
+        D3D12_HEAP_PROPERTIES heapProp,
         D3D12_RESOURCE_DESC   resourceDesc,
         unsigned int vertexByte);
 
     HRESULT CreateIndexBuff( // インデックスバッファ作成
         ID3D12Device* device,
-        D3D12_HEAP_PROPERTIES heapProperty,
+        D3D12_HEAP_PROPERTIES heapProp,
         D3D12_RESOURCE_DESC   resourceDesc,
         unsigned int indexByte);
 
