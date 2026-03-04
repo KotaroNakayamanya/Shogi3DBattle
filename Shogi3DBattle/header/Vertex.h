@@ -27,8 +27,8 @@ private:
         D3D12_RESOURCE_DESC   resourceDesc,
         unsigned int indexByte);
 
-    HRESULT MapVertexToBuff(std::vector<VertexStruct::Vertex> vertexPtr); // 頂点をバッファにマップ
-    HRESULT MapIndexToBuff(std::vector<unsigned short> indexPtr);  // インデックスをバッファにマップ
+    HRESULT MapVertexBuff(std::vector<VertexStruct::Vertex> vertexPtr); // 頂点をバッファにマップ
+    HRESULT MapIndexBuff(std::vector<unsigned short> indexPtr);  // インデックスをバッファにマップ
 
 
 public:

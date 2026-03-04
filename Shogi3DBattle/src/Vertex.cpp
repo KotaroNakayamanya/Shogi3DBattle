@@ -16,7 +16,7 @@ HRESULT Vertex::CreateVertexObj(
         assert(false); return E_FAIL;
     }
     // 頂点バッファにマップ
-    if (FAILED(MapVertexToBuff(
+    if (FAILED(MapVertexBuff(
         arg.vertexPtr)))
     {
         assert(false); return E_FAIL;
@@ -28,7 +28,7 @@ HRESULT Vertex::CreateVertexObj(
         assert(false); return E_FAIL;
     }
     // インデックスバッファにマップ
-    if (FAILED(MapIndexToBuff(
+    if (FAILED(MapIndexBuff(
         arg.indexPtr)))
     {
         assert(false); return E_FAIL;
@@ -54,7 +54,7 @@ HRESULT Vertex::CreateVertexBuff(
 }
 
 // 頂点バッファにマップ
-HRESULT Vertex::MapVertexToBuff(
+HRESULT Vertex::MapVertexBuff(
     std::vector<VertexStruct::Vertex> vertexPtr)
 {
     std::shared_ptr<VertexStruct::Vertex> vertexMap;
@@ -95,7 +95,7 @@ HRESULT Vertex::CreateIndexBuff(
 }
 
 // インデックスバッファにマップ
-HRESULT Vertex::MapIndexToBuff(
+HRESULT Vertex::MapIndexBuff(
     std::vector<unsigned short> indexPtr)
 {
     std::shared_ptr<unsigned short> indexMap;
