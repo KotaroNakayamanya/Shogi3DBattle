@@ -25,27 +25,17 @@ private:
     ComPtr<ID3D12DescriptorHeap>        _rtvHeap;          // RTVヒープ
     std::vector<ComPtr<ID3D12Resource>> _rtvs;             // RTV
 
-    HRESULT CreateCommandAllocator( // コマンドアロケータ作成
-        ID3D12Device* device);
-    HRESULT CreateCommandList(      // コマンドリスト作成
-        ID3D12Device* device);    
-    HRESULT CreateCommandQueue(     // コマンドキュー作成
-        ID3D12Device*            device,
-        D3D12_COMMAND_QUEUE_DESC commandQueueDesc);
-    HRESULT CreateSwapChain(        // スワップチェーン作成
-        IDXGIFactory6*        dxgiFactory,
-        HWND                  hwnd,
-        DXGI_SWAP_CHAIN_DESC1 swapChainDesc);
-    HRESULT CreateFence(            // フェンス作成
-        ID3D12Device* device);       
-    HRESULT CreateRTVHeap(          // RTVヒープ作成
-        ID3D12Device*              device,
-        D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc); 
-    HRESULT CreateRTV(              // RTV作成
-        ID3D12Device* device);
 
-    // RTVにバッファを対応させる
-    HRESULT SetRTVBuffer(UINT i);
+    HRESULT CreateCommandAllocator(ID3D12Device* device); // コマンドアロケータ作成
+    HRESULT CreateCommandList(ID3D12Device* device); // コマンドリスト作成
+    HRESULT CreateCommandQueue(ID3D12Device* device); // コマンドキュー作成
+    HRESULT CreateSwapChain(IDXGIFactory6* dxgiFactory, HWND hwnd); // スワップチェーン作成
+    HRESULT CreateFence(ID3D12Device* device); // フェンス作成
+    HRESULT CreateRTVHeap(ID3D12Device* device); // RTVヒープ作成
+    HRESULT CreateRTV(ID3D12Device* device); // RTV作成
+
+    
+    HRESULT SetRTVBuffer(UINT i); // RTVにバッファを対応させる
 
     void ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier);
     void ChangeRTVBarrierToPresent     (D3D12_RESOURCE_BARRIER resourceBarrier);
@@ -56,6 +46,11 @@ private:
     void WaitProcessWithFence(); // フェンスによる同期処理
 
     void ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle);
+
+
+    D3D12_COMMAND_QUEUE_DESC GetCommandQueueDesc(); // コマンドキューディスクリプタ
+    DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc(); // スワップチェーンディスクリプタ
+    D3D12_DESCRIPTOR_HEAP_DESC GetHeapDesc(); // RTVヒープディスクリプタ
 
 
 public:

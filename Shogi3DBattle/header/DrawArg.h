@@ -11,12 +11,7 @@ public:
     {
         ID3D12Device*  device;
         IDXGIFactory6* dxgiFactory;
-
         HWND hwnd;
-
-        D3D12_COMMAND_QUEUE_DESC   commandQueueDesc;
-        DXGI_SWAP_CHAIN_DESC1      swapChainDesc;
-        D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc;
 
     }CreateDrawObjArg;
 
@@ -25,6 +20,7 @@ public:
     {
         UINT rtvOffset;
         D3D12_RESOURCE_BARRIER resourceBarrier;
+
     }PrepareRenderTargetArg;
 
     // コマンドセット用引数

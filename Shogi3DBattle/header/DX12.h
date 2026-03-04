@@ -61,22 +61,9 @@ private:
     void DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc);
 
 
-    // ヒープ
-    D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc(); // RTVヒープディスクリプタ
-
-
     // 頂点オブジェクト
     std::shared_ptr<Vertex> _vertex;
     HRESULT CreateVertexObj();
-    
-    
-
-
-    
-
-    // 描画オブジェクト
-    D3D12_COMMAND_QUEUE_DESC GetCommandQueueDesc(); // コマンドキューディスクリプタ
-    DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc(); // スワップチェーンディスクリプタ
  
 
     // ルートシグネチャ

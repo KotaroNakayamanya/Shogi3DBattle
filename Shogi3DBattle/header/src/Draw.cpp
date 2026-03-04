@@ -5,44 +5,37 @@
 HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
 {
     // コマンドアロケータ作成
-    if (FAILED(CreateCommandAllocator(
-        arg.device)))
+    if (FAILED(CreateCommandAllocator(arg.device)))
     {
         assert(false); return E_FAIL;
     }
     // コマンドリスト作成
-    if (FAILED(CreateCommandList(
-        arg.device)))
+    if (FAILED(CreateCommandList(arg.device)))
     {
         assert(false); return E_FAIL;
     }
     // コマンドキュー作成
-    if (FAILED(CreateCommandQueue(
-        arg.device, arg.commandQueueDesc)))
+    if (FAILED(CreateCommandQueue(arg.device)))
     {
         assert(false); return E_FAIL;
     }
     // スワップチェーン作成
-    if (FAILED(CreateSwapChain(
-        arg.dxgiFactory, arg.hwnd, arg.swapChainDesc)))
+    if (FAILED(CreateSwapChain(arg.dxgiFactory, arg.hwnd)))
     {
         assert(false); return E_FAIL;
     }
     // フェンス作成
-    if (FAILED(CreateFence(
-        arg.device)))
+    if (FAILED(CreateFence(arg.device)))
     {
         assert(false); return E_FAIL;
     }
     // RTVヒープ作成
-    if (FAILED(CreateRTVHeap(
-        arg.device, arg.rtvHeapDesc)))
+    if (FAILED(CreateRTVHeap(arg.device)))
     {
         assert(false); return E_FAIL;
     }
     // RTV作成
-    if (FAILED(CreateRTV(
-        arg.device)))
+    if (FAILED(CreateRTV(arg.device)))
     {
         assert(false); return E_FAIL;
     }
@@ -68,21 +61,20 @@ HRESULT Draw::CreateCommandList(ID3D12Device* device)
 }
 
 // コマンドキュー作成
-HRESULT Draw::CreateCommandQueue(
-    ID3D12Device*            device,
-    D3D12_COMMAND_QUEUE_DESC commandQueueDesc)
+HRESULT Draw::CreateCommandQueue(ID3D12Device* device)
 {
+    D3D12_COMMAND_QUEUE_DESC commandQueueDesc = GetCommandQueueDesc();
+
     return device->CreateCommandQueue(
         &commandQueueDesc,
         IID_PPV_ARGS(_commandQueue.ReleaseAndGetAddressOf()));
 }
 
 // スワップチェーン作成
-HRESULT Draw::CreateSwapChain(
-    IDXGIFactory6*        dxgiFactory,
-    HWND                  hwnd,
-    DXGI_SWAP_CHAIN_DESC1 swapChainDesc)
+HRESULT Draw::CreateSwapChain(IDXGIFactory6* dxgiFactory, HWND hwnd)
 {
+    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = GetSwapChainDesc();
+
     return dxgiFactory->CreateSwapChainForHwnd(
         _commandQueue.Get(),
         hwnd,
@@ -102,12 +94,12 @@ HRESULT Draw::CreateFence(ID3D12Device* device)
 }
 
 // RTVヒープ作成
-HRESULT Draw::CreateRTVHeap(
-    ID3D12Device*              device,
-    D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc)
+HRESULT Draw::CreateRTVHeap(ID3D12Device* device)
 {
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetHeapDesc();
+
     return device->CreateDescriptorHeap(
-        &rtvHeapDesc,
+        &heapDesc,
         IID_PPV_ARGS(_rtvHeap.ReleaseAndGetAddressOf()));
 }
 
@@ -292,6 +284,75 @@ void Draw::ResetCommand()
 {
     _commandAllocator->Reset();
     _commandList->Reset(_commandAllocator.Get(), nullptr);
+}
+
+
+
+
+// コマンドキューディスクリプタ
+D3D12_COMMAND_QUEUE_DESC Draw::GetCommandQueueDesc()
+{
+    D3D12_COMMAND_QUEUE_DESC desc = {};
+
+    desc.Type =    // コマンドリストタイプの種類
+        D3D12_COMMAND_LIST_TYPE_DIRECT;
+    desc.Priority = // アプリケーション優先度 通常
+        D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
+    desc.Flags = // タイムアウトなし
+        D3D12_COMMAND_QUEUE_FLAG_NONE; 
+    desc.NodeMask =
+        0;
+
+    return desc;
+}
+
+// スワップチェーンディスクリプタ
+DXGI_SWAP_CHAIN_DESC1 Draw::GetSwapChainDesc()
+{
+    DXGI_SWAP_CHAIN_DESC1 desc = {};
+
+    desc.Width =
+        1280;
+    desc.Height =
+        720;
+    desc.Format =
+        DXGI_FORMAT_R8G8B8A8_UNORM;
+    desc.Stereo =
+        false;
+    desc.SampleDesc.Count =
+        1;
+    desc.SampleDesc.Quality =
+        0;
+    desc.BufferUsage =
+        DXGI_USAGE_BACK_BUFFER;
+    desc.BufferCount =
+        _buffNum;
+
+    desc.Scaling =
+        DXGI_SCALING_STRETCH;
+    desc.SwapEffect =
+        DXGI_SWAP_EFFECT_FLIP_DISCARD;
+    desc.AlphaMode =
+        DXGI_ALPHA_MODE_UNSPECIFIED;
+    desc.Flags =
+        DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
+    return desc;
+}
+// ヒープディスクリプタ
+D3D12_DESCRIPTOR_HEAP_DESC Draw::GetHeapDesc()
+{
+    D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+    desc.Type =
+        D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+    desc.NodeMask =
+        0;
+    desc.NumDescriptors =
+        _buffNum;
+    desc.Flags =
+        D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+
+    return desc;
 }
 
 

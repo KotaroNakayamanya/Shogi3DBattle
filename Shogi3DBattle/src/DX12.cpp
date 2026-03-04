@@ -216,80 +216,8 @@ DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg()
         _dxgiFactory.Get();
     arg.hwnd =
         _hwnd;
-    arg.commandQueueDesc =
-        GetCommandQueueDesc();
-    arg.swapChainDesc =
-        GetSwapChainDesc();
-    arg.rtvHeapDesc =
-        GetRTVHeapDesc();
 
     return arg;
-}
-
-// コマンドキューディスクリプタ
-D3D12_COMMAND_QUEUE_DESC DX12::GetCommandQueueDesc()
-{
-    D3D12_COMMAND_QUEUE_DESC desc = {};
-    desc.Type =    // コマンドリストタイプの種類
-        D3D12_COMMAND_LIST_TYPE_DIRECT;
-    desc.Priority = // アプリケーション優先度 通常
-        D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
-    desc.Flags = // タイムアウトなし
-        D3D12_COMMAND_QUEUE_FLAG_NONE; 
-    desc.NodeMask =
-        0;
-
-    return desc;
-}
-
-// スワップチェーンディスクリプタ
-DXGI_SWAP_CHAIN_DESC1 DX12::GetSwapChainDesc()
-{
-    DXGI_SWAP_CHAIN_DESC1 desc = {};
-
-    desc.Width =
-        1280;
-    desc.Height =
-        720;
-    desc.Format =
-        DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.Stereo =
-        false;
-    desc.SampleDesc.Count =
-        1;
-    desc.SampleDesc.Quality =
-        0;
-    desc.BufferUsage =
-        DXGI_USAGE_BACK_BUFFER;
-    desc.BufferCount =
-        _buffNum;
-
-    desc.Scaling =
-        DXGI_SCALING_STRETCH;
-    desc.SwapEffect =
-        DXGI_SWAP_EFFECT_FLIP_DISCARD;
-    desc.AlphaMode =
-        DXGI_ALPHA_MODE_UNSPECIFIED;
-    desc.Flags =
-        DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-
-    return desc;
-}
-
-// RTVヒープディスクリプタ
-D3D12_DESCRIPTOR_HEAP_DESC DX12::GetRTVHeapDesc()
-{
-    D3D12_DESCRIPTOR_HEAP_DESC desc = {};
-    desc.Type =
-        D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-    desc.NodeMask =
-        0;
-    desc.NumDescriptors =
-        _buffNum;
-    desc.Flags =
-        D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-
-    return desc;
 }
 
 // 頂点集合作成
