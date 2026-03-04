@@ -10,7 +10,9 @@
 
 #include"DrawArgument.h"
 #include"TextureArgument.h"
+#include"VertexArg.h"
 
+class Vertex;
 class Shader;
 class Draw;
 class Texture;
@@ -30,10 +32,7 @@ private:
     ComPtr<ID3D12Device>  _device;      // Direct3Dデバイス
     ComPtr<IDXGIFactory6> _dxgiFactory; // DXGIファクトリ
 
-    ComPtr<ID3DBlob> _errorBlob; // エラーバイナリオブジェクト
-
-    std::shared_ptr<Shader> _shader;
-    HRESULT CreateShaderBlob(); // シェーダーバイナリ作成
+    
 
     ComPtr<ID3D12RootSignature> _rootSignature; // ルートシグネチャ
     ComPtr<ID3D12PipelineState> _pipelineState; //パイプラインステート
@@ -45,19 +44,12 @@ private:
     HRESULT CreateFactory(); // DXGIファクトリ作成
     ComPtr<IDXGIAdapter> GetUsingAdapter(); // 使用するアダプターを取得
     std::vector<ComPtr<IDXGIAdapter>> GetCanUseAdapters(); // 使用可能なアダプターを取得
- 
 
-    
- 
-    HRESULT CreateVertexBuffer(); // 頂点バッファ作成
-    HRESULT CreateIndexBuffer(); // インデックスバッファ作成
+    VertexArg::GetCreateVertexObjArg GetCreateVertexObjArg();
 
     HRESULT CreateRootSignature(); // ルートシグネチャ作成
     ComPtr<ID3DBlob> GetRootSignatureBlob(); // ルートシグネチャBlob取得
     HRESULT CreatePipelineState(); // パイプラインステート作成
-    
-    HRESULT MapVertexToBuffer(); // 頂点をバッファにマップ
-    HRESULT MapIndexToBuffer();  // インデックスをバッファにマップ
    
 
     D3D12_SHADER_RESOURCE_VIEW_DESC GetSRVDesc();
@@ -75,6 +67,10 @@ private:
     D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc(); // RTVヒープディスクリプタ
 
     D3D12_HEAP_PROPERTIES GetVertexHeapProperty(); // 頂点ヒーププロパティ
+
+    // 頂点オブジェクト
+    std::shared_ptr<Vertex> _vertex;
+    HRESULT CreateVertexObj();
     
     
 
@@ -128,25 +124,19 @@ private:
     // コマンドセット
     void SetCommand();
     
-    // テクスチャ委譲
+    // テクスチャオブジェクト
     std::shared_ptr<Texture> _texture;
-    TextureArgument::CreateTextureObjectArgument GetCreateTextureObjectArgument();
-   
-   // テクスチャオブジェクト作成
-   HRESULT CreateTextureObject();
-
-    // 頂点バッファ
-    ComPtr<ID3D12Resource> _vertexBuffer;
-    ComPtr<ID3D12Resource> _indexBuffer;
+    HRESULT CreateTextureObject(); // テクスチャオブジェクト作成
+    TextureArgument::CreateTextureObjectArgument // テクスチャオブジェクト作成用引数
+        GetCreateTextureObjectArgument();
 
     // 頂点オブジェクト
     std::vector<std::shared_ptr<Object>> _objects;
     HRESULT CreateVertexSets();
     
-    // 描画オブジェクト
-    std::shared_ptr<Draw> _draw; 
+    
 
-    HRESULT CreateDrawObject(); // 描画オブジェクト作成
+   
     
     D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView();
     D3D12_INDEX_BUFFER_VIEW GetIndexBufferView();
@@ -154,30 +144,34 @@ private:
 
     void ExecuteDraw();
     void ResetCommand();
-
     void WaitProcessWithFence();
 
     // リソースバリア
     D3D12_RESOURCE_BARRIER GetResourceBarrier();
 
-    
-    // 描画オブジェクト作成用引数
-    DrawArgument::CreateDrawObjectArgument GetCreateDrawObjectArgument();
-    // レンダーターゲット準備用引数
-    DrawArgument::PrepareRenderTargetArgument GetPrepareRenderTargetArgument();
-    // コマンドセット用引数
-    DrawArgument::SetCommandArgument GetSetCommandArgument();
-    // コマンド実行用引数
-    DrawArgument::ExecuteDrawArgument GetExecuteDrawArgument();
+    // 描画オブジェクト
+    std::shared_ptr<Draw> _draw; 
+    HRESULT CreateDrawObject(); // 描画オブジェクト作成
+    DrawArgument::CreateDrawObjectArgument // 描画オブジェクト作成用引数
+        GetCreateDrawObjectArgument();
+    DrawArgument::PrepareRenderTargetArgument // レンダーターゲット準備用引数
+        GetPrepareRenderTargetArgument();
+    DrawArgument::SetCommandArgument // コマンドセット用引数
+        GetSetCommandArgument();
+    DrawArgument::ExecuteDrawArgument // コマンド実行用引数
+        GetExecuteDrawArgument();
     
 
+    // シェーダーオブジェクト
+    std::shared_ptr<Shader> _shader;
+    HRESULT CreateShaderBlob(); // シェーダーバイナリ作成
 
 
 
 public:
-    DX12(HWND hwnd);
-    ~DX12();
-
     bool CreateDX12Object();
     void ExecuteDX12();
+
+    DX12(HWND hwnd);
+    ~DX12();
 };

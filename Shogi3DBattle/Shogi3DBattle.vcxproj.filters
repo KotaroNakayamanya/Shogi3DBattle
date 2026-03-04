@@ -48,16 +48,19 @@
     <ClCompile Include="header\src\Draw.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="header\src\Object.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="header\DrawArgument.h">
       <Filter>ヘッダー ファイル\argument</Filter>
     </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>ソース ファイル\DX12</Filter>
+    </ClCompile>
     <ClCompile Include="src\Texture.cpp">
+      <Filter>ソース ファイル\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="header\src\Object.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader.cpp">
+    <ClCompile Include="src\Vertex.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
   </ItemGroup>
@@ -91,6 +94,12 @@
     </ClInclude>
     <ClInclude Include="header\Shader.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Vertex.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\VertexArg.h">
+      <Filter>ヘッダー ファイル\argument</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

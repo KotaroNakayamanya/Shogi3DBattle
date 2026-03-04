@@ -6,8 +6,9 @@
 #include<cassert>
 
 #include"Shader.h"
-#include"Draw.h"
 #include"Texture.h"
+#include"Draw.h"
+#include"Vertex.h"
 #include"Object.h"
 
 #include"VertexStruct.h"
@@ -55,23 +56,15 @@ bool DX12::CreateDX12Object()
     {
         assert(false); return false;
     }
-    // 頂点バッファ作成
-    if (FAILED(CreateVertexBuffer()))
+
+    // 頂点オブジェクト作成
+    if (FAILED(CreateVertexObj()))
     {
         assert(false); return false;
     }
-    // バッファに頂点をマップ
-    if (FAILED(MapVertexToBuffer()))
-    {
-        assert(false); return false;
-    }
-    // インデックスバッファ作成
-    if (FAILED(CreateIndexBuffer()))
-    {
-        assert(false); return false;
-    }
-    // バッファにインデックスをマップ
-    if (FAILED(MapIndexToBuffer()))
+
+    // シェーダーバイナリ作成
+    if (FAILED(CreateShaderBlob()))
     {
         assert(false); return false;
     }
@@ -82,11 +75,7 @@ bool DX12::CreateDX12Object()
         assert(false); return false;
     }
 
-    // シェーダーバイナリ作成
-    if (FAILED(CreateShaderBlob()))
-    {
-        assert(false); return false;
-    }
+    
 
     // ルートシグネチャ作成
     if (FAILED(CreateRootSignature()))
@@ -318,27 +307,6 @@ HRESULT DX12::CreateVertexSets()
     return S_OK;
 }
 
-// 頂点バッファ作成
-HRESULT DX12::CreateVertexBuffer()
-{
-    // 頂点ヒーププロパティ取得
-    D3D12_HEAP_PROPERTIES heapProperty =
-        GetVertexHeapProperty();
-    // リソースディスクリプタ取得
-    D3D12_RESOURCE_DESC resourceDesc =
-        GetVertexResourceDesc();
-    resourceDesc.Width =
-        _objects[0]->GetVerticesCount() * _objects[0]->GetVerticesByte();
-
-    return _device->CreateCommittedResource(
-        &heapProperty,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(_vertexBuffer.ReleaseAndGetAddressOf()));
-}
-
 // 頂点ヒーププロパティ
 D3D12_HEAP_PROPERTIES DX12::GetVertexHeapProperty()
 {
@@ -377,69 +345,6 @@ D3D12_RESOURCE_DESC DX12::GetVertexResourceDesc()
         D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
     return desc;
-}
-
-// インデックスバッファ作成
-HRESULT DX12::CreateIndexBuffer()
-{
-    // 頂点ヒーププロパティ取得
-    D3D12_HEAP_PROPERTIES heapProperty =
-        GetVertexHeapProperty();
-    // リソースディスクリプタ取得
-    D3D12_RESOURCE_DESC resourceDesc =
-        GetVertexResourceDesc();
-    resourceDesc.Width = _objects[0]->GetIndicesByte();
-
-    return _device->CreateCommittedResource(
-        &heapProperty,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(_indexBuffer.ReleaseAndGetAddressOf()));
-
-}
-
-// バッファに頂点をマップ
-HRESULT DX12::MapVertexToBuffer()
-{
-    std::shared_ptr<VertexStruct::Vertex> vertexMap;
-
-    HRESULT result = _vertexBuffer->Map(
-        0, nullptr, (void**)&vertexMap);
-    if (FAILED(result))
-    {
-        assert(false); return E_FAIL;
-    }
-
-    auto vertices = _objects[0]->GetVerticesPtr();
-
-    std::copy(vertices.begin(), vertices.end(), vertexMap.get());
-
-    _vertexBuffer->Unmap(0, nullptr);
-
-    return S_OK;
-}
-
-// バッファにインデックスをマップ
-HRESULT DX12::MapIndexToBuffer()
-{
-    std::shared_ptr<unsigned short> idxMap;
-
-    HRESULT result = _indexBuffer->Map(
-        0, nullptr, (void**)&idxMap);
-    if (FAILED(result))
-    {
-        assert(false); return E_FAIL;
-    }
-
-    auto indices = _objects[0]->GetIndicesPtr();
-    
-    std::copy(indices.begin(), indices.end(), idxMap.get());
-
-    _indexBuffer->Unmap(0, nullptr);
-    
-    return S_OK;
 }
 
 // テクスチャオブジェクト作成
@@ -545,6 +450,34 @@ D3D12_SHADER_RESOURCE_VIEW_DESC DX12::GetSRVDesc()
 
     return desc;
 }
+
+// 頂点オブジェクト作成
+HRESULT DX12::CreateVertexObj()
+{
+    _vertex = std::make_shared<Vertex>();
+
+    VertexArg::GetCreateVertexObjArg arg =
+        GetCreateVertexObjArg();
+
+    return _vertex->CreateVertexObj(arg);
+}
+
+// 頂点オブジェクト作成用関数
+VertexArg::GetCreateVertexObjArg DX12::GetCreateVertexObjArg()
+{
+    VertexArg::GetCreateVertexObjArg arg = {};
+
+    arg.device = _device.Get();
+    arg.heapProperty = GetVertexHeapProperty();
+    arg.resourceDesc = GetVertexResourceDesc();
+    arg.vertexByte = _objects[0]->GetVerticesCount() * _objects[0]->GetVerticesByte();
+    arg.vertexPtr = _objects[0]->GetVerticesPtr();
+    arg.indexByte = _objects[0]->GetIndicesByte();
+    arg.indexPtr = _objects[0]->GetIndicesPtr();
+
+    return arg;
+}
+
 // シェーダーバイナリ作成
 HRESULT DX12::CreateShaderBlob()
 {
@@ -569,6 +502,7 @@ HRESULT DX12::CreateRootSignature()
 ComPtr<ID3DBlob> DX12::GetRootSignatureBlob()
 {
     ComPtr<ID3DBlob> rootSignatureBlob;
+    ComPtr<ID3DBlob> errorBlob;
 
     D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc =
         GetRootSignatureDesc();
@@ -577,7 +511,7 @@ ComPtr<ID3DBlob> DX12::GetRootSignatureBlob()
         &rootSignatureDesc,
         D3D_ROOT_SIGNATURE_VERSION_1_0,
         rootSignatureBlob.ReleaseAndGetAddressOf(),
-        _errorBlob.       ReleaseAndGetAddressOf());
+        errorBlob.        ReleaseAndGetAddressOf());
 
     // ディスクリプタで使用されたメモリ開放
     DeleteRootSignatureDescMemory(&rootSignatureDesc);
@@ -999,11 +933,14 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBufferView()
 {
     D3D12_VERTEX_BUFFER_VIEW view;
 
+    ComPtr<ID3D12Resource> vertexBuff =
+        _vertex->GetVertexBuff();
+
     UINT vertexByte = _objects[0]->GetVerticesByte();
     UINT verticesByte = vertexByte * _objects[0]->GetVerticesCount();
 
     view.BufferLocation =
-        _vertexBuffer->GetGPUVirtualAddress();
+        vertexBuff->GetGPUVirtualAddress();
     view.SizeInBytes =
         verticesByte; // 注意
     view.StrideInBytes =
@@ -1017,10 +954,13 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBufferView()
 {
     D3D12_INDEX_BUFFER_VIEW view;
 
+    ComPtr<ID3D12Resource> indexBuff =
+        _vertex->GetIndexBuff();
+
     UINT indicesByte = _objects[0]->GetIndicesByte();
 
     view.BufferLocation =
-        _indexBuffer->GetGPUVirtualAddress();
+        indexBuff->GetGPUVirtualAddress();
     view.Format =
         DXGI_FORMAT_R16_UINT;
     view.SizeInBytes =
