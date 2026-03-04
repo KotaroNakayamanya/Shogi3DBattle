@@ -307,46 +307,6 @@ HRESULT DX12::CreateVertexSets()
     return S_OK;
 }
 
-// 頂点ヒーププロパティ
-D3D12_HEAP_PROPERTIES DX12::GetVertexHeapProp()
-{
-    D3D12_HEAP_PROPERTIES prop = {};
-
-    prop.Type =
-        D3D12_HEAP_TYPE_UPLOAD;
-    prop.CPUPageProperty =
-        D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-    prop.MemoryPoolPreference =
-        D3D12_MEMORY_POOL_UNKNOWN;
-
-    return prop;
-}
-
-// 頂点リソースディスクリプタ
-D3D12_RESOURCE_DESC DX12::GetVertexResourceDesc()
-{
-    D3D12_RESOURCE_DESC desc = {};
-
-    desc.Dimension =
-        D3D12_RESOURCE_DIMENSION_BUFFER;
-    desc.Height =
-        1;
-    desc.DepthOrArraySize =
-        1;
-    desc.MipLevels =
-        1;
-    desc.Format =
-        DXGI_FORMAT_UNKNOWN;
-    desc.SampleDesc.Count =
-        1;
-    desc.Flags =
-        D3D12_RESOURCE_FLAG_NONE;
-    desc.Layout =
-        D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-    return desc;
-}
-
 // テクスチャオブジェクト作成
 HRESULT DX12::CreateTextureObj()
 {
@@ -468,8 +428,6 @@ VertexArg::GetCreateVertexObjArg DX12::GetCreateVertexObjArg()
     VertexArg::GetCreateVertexObjArg arg = {};
 
     arg.device = _device.Get();
-    arg.heapProp = GetVertexHeapProp();
-    arg.resourceDesc = GetVertexResourceDesc();
     arg.vertexByte = _objects[0]->GetVerticesCount() * _objects[0]->GetVerticesByte();
     arg.vertexPtr = _objects[0]->GetVerticesPtr();
     arg.indexByte = _objects[0]->GetIndicesByte();
@@ -889,9 +847,9 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
     arg.topology =
         D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
     arg.vertexBuffView =
-        GetVertexBufferView();
+        GetVertexBuffView();
     arg.indexBuffView =
-        GetIndexBufferView();
+        GetIndexBuffView();
     arg.vertexCount
         = _objects[0]->GetIndicesCount();
     arg.objCount
@@ -929,7 +887,7 @@ D3D12_RECT DX12::GetScissorRects()
 }
 
 // 頂点バッファビュー
-D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBufferView()
+D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBuffView()
 {
     D3D12_VERTEX_BUFFER_VIEW view;
 
@@ -950,7 +908,7 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBufferView()
 }
 
 // インデックスバッファビュー
-D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBufferView()
+D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBuffView()
 {
     D3D12_INDEX_BUFFER_VIEW view;
 

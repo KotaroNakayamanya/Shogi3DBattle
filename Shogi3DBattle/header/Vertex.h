@@ -15,21 +15,14 @@ private:
     ComPtr<ID3D12Resource> _indexBuff;  // インデックスバッファ
 
 
-    HRESULT CreateVertexBuff( // 頂点バッファ作成
-        ID3D12Device* device,
-        D3D12_HEAP_PROPERTIES heapProp,
-        D3D12_RESOURCE_DESC   resourceDesc,
-        unsigned int vertexByte);
-
-    HRESULT CreateIndexBuff( // インデックスバッファ作成
-        ID3D12Device* device,
-        D3D12_HEAP_PROPERTIES heapProp,
-        D3D12_RESOURCE_DESC   resourceDesc,
-        unsigned int indexByte);
+    HRESULT CreateVertexBuff(ID3D12Device* device, unsigned int vertexByte); // 頂点バッファ作成
+    HRESULT CreateIndexBuff(ID3D12Device* device, unsigned int indexByte); // インデックスバッファ作成
 
     HRESULT MapVertexBuff(std::vector<VertexStruct::Vertex> vertexPtr); // 頂点をバッファにマップ
     HRESULT MapIndexBuff(std::vector<unsigned short> indexPtr);  // インデックスをバッファにマップ
 
+    D3D12_HEAP_PROPERTIES GetHeapProp(); // 頂点ヒーププロパティ
+    D3D12_RESOURCE_DESC GetResourceDesc();  // リソースディスクリプタ
 
 public:
     // 頂点オブジェクト作成

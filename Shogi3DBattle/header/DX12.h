@@ -66,7 +66,6 @@ private:
     // ヒープ
     D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc(); // RTVヒープディスクリプタ
 
-    D3D12_HEAP_PROPERTIES GetVertexHeapProp(); // 頂点ヒーププロパティ
 
     // 頂点オブジェクト
     std::shared_ptr<Vertex> _vertex;
@@ -83,12 +82,6 @@ private:
     
     
 
-
-    // 頂点・インデックスバッファ
-    
-    D3D12_RESOURCE_DESC GetVertexResourceDesc();   // リソースディスクリプタ
-
-    // テクスチャバッファ
     
     // テクスチャ
     D3D12_RESOURCE_DESC GetTextureResourceDesc();   // リソースディスクリプタ
@@ -138,8 +131,9 @@ private:
 
    
     
-    D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView();
-    D3D12_INDEX_BUFFER_VIEW GetIndexBufferView();
+    // コマンドセット
+    D3D12_VERTEX_BUFFER_VIEW GetVertexBuffView();
+    D3D12_INDEX_BUFFER_VIEW GetIndexBuffView();
 
 
     void ExeDraw();
