@@ -11,6 +11,7 @@
 #include"DrawArgument.h"
 #include"TextureArgument.h"
 
+class Shader;
 class Draw;
 class Texture;
 class Object;
@@ -29,9 +30,10 @@ private:
     ComPtr<ID3D12Device>  _device;      // Direct3Dデバイス
     ComPtr<IDXGIFactory6> _dxgiFactory; // DXGIファクトリ
 
-    ComPtr<ID3DBlob> _vertexShaderBlob; // 頂点シェーダーバイナリオブジェクト
-    ComPtr<ID3DBlob> _pixelShaderBlob; // ピクセルシェーダバイナリオブジェクト
     ComPtr<ID3DBlob> _errorBlob; // エラーバイナリオブジェクト
+
+    std::shared_ptr<Shader> _shader;
+    HRESULT CreateShaderBlob(); // シェーダーバイナリ作成
 
     ComPtr<ID3D12RootSignature> _rootSignature; // ルートシグネチャ
     ComPtr<ID3D12PipelineState> _pipelineState; //パイプラインステート
@@ -50,9 +52,6 @@ private:
     HRESULT CreateVertexBuffer(); // 頂点バッファ作成
     HRESULT CreateIndexBuffer(); // インデックスバッファ作成
 
-    HRESULT LoadShaderFile();       // シェーダファイルのロード
-    HRESULT LoadVertexShaderFile(); // 頂点シェーダロード
-    HRESULT LoadPixelShaderFile();  // ピクセルシェーダロード
     HRESULT CreateRootSignature(); // ルートシグネチャ作成
     ComPtr<ID3DBlob> GetRootSignatureBlob(); // ルートシグネチャBlob取得
     HRESULT CreatePipelineState(); // パイプラインステート作成

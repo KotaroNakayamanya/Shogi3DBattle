@@ -5,6 +5,7 @@
 #include<string>
 #include<cassert>
 
+#include"Shader.h"
 #include"Draw.h"
 #include"Texture.h"
 #include"Object.h"
@@ -13,7 +14,6 @@
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "d3dcompiler.lib")
 
 namespace {
     template<typename T>
@@ -82,8 +82,8 @@ bool DX12::CreateDX12Object()
         assert(false); return false;
     }
 
-    // シェーダーファイル読み込み
-    if (FAILED(LoadShaderFile()))
+    // シェーダーバイナリ作成
+    if (FAILED(CreateShaderBlob()))
     {
         assert(false); return false;
     }
@@ -514,60 +514,6 @@ D3D12_RESOURCE_DESC DX12::GetTextureResourceDesc()
     return desc;
 }
 
-// シェーダーファイルをロード
-HRESULT DX12::LoadShaderFile()
-{
-    if (FAILED(LoadVertexShaderFile()))
-    {
-        assert(false); return E_FAIL;
-    }
-    if (FAILED(LoadPixelShaderFile()))
-    {
-        assert(false); return E_FAIL;
-    }
-
-    return S_OK;
-}
-
-HRESULT DX12::LoadVertexShaderFile()
-{
-    return D3DCompileFromFile(
-        L"shader/VertexShader.hlsl",
-        nullptr,
-        D3D_COMPILE_STANDARD_FILE_INCLUDE,
-        "VShader",
-        "vs_5_1",
-        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-        0,
-        _vertexShaderBlob.ReleaseAndGetAddressOf(),
-        _errorBlob       .ReleaseAndGetAddressOf());
-}
-
-HRESULT DX12::LoadPixelShaderFile()
-{
-    return D3DCompileFromFile(
-        L"shader/PixelShader.hlsl",
-        nullptr,
-        D3D_COMPILE_STANDARD_FILE_INCLUDE,
-        "PShader",
-        "ps_5_1",
-        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-        0,
-        _pixelShaderBlob.ReleaseAndGetAddressOf(),
-        _errorBlob      .ReleaseAndGetAddressOf());
-}
-
-//// テクスチャディスクリプタヒープ作成
-//HRESULT DX12::CreateTextureDescHeap()
-//{
-//    D3D12_DESCRIPTOR_HEAP_DESC textureHeapDesc =
-//        GetTextureHeapDesc();
-//
-//    return _device->CreateDescriptorHeap(
-//        &textureHeapDesc,
-//        IID_PPV_ARGS(_textureDescHeap.ReleaseAndGetAddressOf()));
-//}
-
 // テクスチャヒープディスクリプタ
 D3D12_DESCRIPTOR_HEAP_DESC DX12::GetTextureHeapDesc()
 {
@@ -584,18 +530,6 @@ D3D12_DESCRIPTOR_HEAP_DESC DX12::GetTextureHeapDesc()
     return desc;
 }
 
-//// SRV作成
-//void DX12::CreateSRV()
-//{
-//    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc =
-//        GetSRVDesc();
-//
-//    _device->CreateShaderResourceView(
-//        _textureBuffer.Get(),
-//        &srvDesc,
-//        _textureDescHeap->GetCPUDescriptorHandleForHeapStart());
-//}
-
 // SRVディスクリプタ
 D3D12_SHADER_RESOURCE_VIEW_DESC DX12::GetSRVDesc()
 {
@@ -610,6 +544,12 @@ D3D12_SHADER_RESOURCE_VIEW_DESC DX12::GetSRVDesc()
         1;
 
     return desc;
+}
+// シェーダーバイナリ作成
+HRESULT DX12::CreateShaderBlob()
+{
+    _shader = std::make_shared<Shader>();
+    return _shader->CreateShaderBlob();
 }
 
 // ルートシグネチャ作成
@@ -850,10 +790,13 @@ D3D12_SHADER_BYTECODE DX12::GetVertexShaderDesc()
 {
     D3D12_SHADER_BYTECODE desc = {};
 
+    ComPtr<ID3DBlob> vertexShaderBlob =
+        _shader->GetVertexShaderBlob();
+
     desc.pShaderBytecode =
-        _vertexShaderBlob->GetBufferPointer();
+        vertexShaderBlob->GetBufferPointer();
     desc.BytecodeLength =
-        _vertexShaderBlob->GetBufferSize();
+        vertexShaderBlob->GetBufferSize();
 
     return desc;
 }
@@ -862,10 +805,13 @@ D3D12_SHADER_BYTECODE DX12::GetPixelShaderDesc()
 {
     D3D12_SHADER_BYTECODE desc = {};
 
+    ComPtr<ID3DBlob> pixelShaderBlob =
+        _shader->GetPixelShaderBlob();
+
     desc.pShaderBytecode =
-        _pixelShaderBlob->GetBufferPointer();
+        pixelShaderBlob->GetBufferPointer();
     desc.BytecodeLength =
-        _pixelShaderBlob->GetBufferSize();
+        pixelShaderBlob->GetBufferSize();
 
     return desc;
 }
@@ -1001,7 +947,6 @@ DrawArgument::SetCommandArgument DX12::GetSetCommandArgument()
     arg.rootSignature =
         _rootSignature.Get();
     arg.textureDescHeap =
-        //_textureDescHeap.Get();
         _texture->GetTextureDescriptorHeap();
     arg.viewport =
         GetViewports();

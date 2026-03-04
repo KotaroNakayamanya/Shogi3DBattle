@@ -25,6 +25,7 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\DX12.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -33,6 +34,7 @@
     <ClInclude Include="header\DX12.h" />
     <ClInclude Include="header\Piece.h" />
     <ClInclude Include="header\Object.h" />
+    <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\Texture.h" />
     <ClInclude Include="header\TextureArgument.h" />
     <ClInclude Include="header\TextureStruct.h" />
