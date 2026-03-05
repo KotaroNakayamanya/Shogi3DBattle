@@ -11,6 +11,7 @@
 #include"DrawArg.h"
 #include"TextureArg.h"
 #include"VertexArg.h"
+#include"HeapArg.h"
 
 class Vertex;
 class Shader;
@@ -18,6 +19,7 @@ class Draw;
 class Texture;
 class Const;
 class Object;
+class Heap;
 
 class DX12
 {
@@ -102,6 +104,11 @@ private:
     HRESULT CreateTextureObj(); // テクスチャオブジェクト作成
     TextureArg::CreateTextureObjArg // テクスチャオブジェクト作成用引数
         GetCreateTextureObjArg();
+
+    // ヒープオブジェクト
+    std::shared_ptr<Heap> _heap;
+    HRESULT CreateHeap();
+    HeapArg::CreateHeapArg GetCreateHeapArg(); // ヒープ作成用引数
 
     // 頂点オブジェクト
     std::vector<std::shared_ptr<Object>> _objects;
@@ -196,8 +203,6 @@ private:
 
     std::vector<D3D12_ROOT_PARAMETER> GetRootParams(UINT paramNum); // ルートパラメータ
     D3D12_ROOT_DESCRIPTOR_TABLE GetDescTable(RangeTypeState* rangeType); // ディスクリプタテーブル
-    //D3D12_DESCRIPTOR_RANGE GetDescRange(); // ディスクリプタレンジ
-    //D3D12_DESCRIPTOR_RANGE GetDescRange(UINT rangeNum); // ディスクリプタレンジ
     std::vector<D3D12_STATIC_SAMPLER_DESC> GetSamplerDescs(UINT samplerNum); // サンプラーディスクリプタ
 
 

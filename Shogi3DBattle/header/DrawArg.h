@@ -28,8 +28,8 @@ public:
     {
         ID3D12PipelineState* pipelineState;
         ID3D12RootSignature* rootSignature;
-        ID3D12DescriptorHeap* textureDescHeap;
-
+        ID3D12DescriptorHeap* heap;
+        UINT offset;
 
         D3D12_VIEWPORT viewport;
         D3D12_RECT     scissorRect;

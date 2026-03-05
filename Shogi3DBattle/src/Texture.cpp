@@ -18,13 +18,6 @@ HRESULT Texture::CreateTextureObj(TextureArg::CreateTextureObjArg arg)
     {
         assert(false); return E_FAIL;
     }
-    // テクスチャディスクリプタヒープ作成
-    if (FAILED(CreateHeap(arg.device)))
-    {
-        assert(false); return E_FAIL;
-    }
-    // SRV作成
-    CreateSRV(arg.device);
 
     return S_OK;
 }
@@ -67,27 +60,6 @@ HRESULT Texture::WriteTextureToBuff()
         pieceTextureData.data(),
         sizeof(TextureStruct::TextureRGBA)*256,
         sizeof(TextureStruct::TextureRGBA)*pieceTextureData.size());
-}
-
-// テクスチャディスクリプタヒープ作成
-HRESULT Texture::CreateHeap(ID3D12Device* device)
-{
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetHeapDesc();
-
-    return device->CreateDescriptorHeap(
-        &heapDesc,
-        IID_PPV_ARGS(_heap.ReleaseAndGetAddressOf()));
-}
-
-// SRV作成
-void Texture::CreateSRV(ID3D12Device* device)
-{
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = GetSRVDesc();
-
-    device->CreateShaderResourceView(
-        _buff.Get(),
-        &srvDesc,
-        _heap->GetCPUDescriptorHandleForHeapStart());
 }
 
 
@@ -138,45 +110,13 @@ D3D12_RESOURCE_DESC Texture::GetResourceDesc()
     return desc;
 }
 
-// テクスチャヒープディスクリプタ
-D3D12_DESCRIPTOR_HEAP_DESC Texture::GetHeapDesc()
+
+
+
+// バッファを渡す
+ID3D12Resource* Texture::GetBuff()
 {
-    D3D12_DESCRIPTOR_HEAP_DESC desc = {};
-    desc.Type = // シェーダリソースビュー用
-        D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    desc.NodeMask =
-        0;
-    desc.NumDescriptors =
-        1;
-        //2; // SRV CBV
-    desc.Flags = // シェーダから使用可能
-        D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-    return desc;
-}
-
-// SRVディスクリプタ
-D3D12_SHADER_RESOURCE_VIEW_DESC Texture::GetSRVDesc()
-{
-    D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-    desc.Format =
-        DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.Shader4ComponentMapping =
-        D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    desc.ViewDimension =
-        D3D12_SRV_DIMENSION_TEXTURE2D;
-    desc.Texture2D.MipLevels =
-        1;
-
-    return desc;
-}
-
-
-
-// テクスチャディスクリプタヒープを渡す
-ID3D12DescriptorHeap* Texture::GetHeap()
-{
-    return _heap.Get();
+    return _buff.Get();
 }
 
 

@@ -20,12 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="header\DrawArg.h" />
-    <ClCompile Include="header\src\Draw.cpp" />
-    <ClCompile Include="header\src\Object.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Const.cpp" />
+    <ClCompile Include="src\Draw.cpp" />
     <ClCompile Include="src\DX12.cpp" />
+    <ClCompile Include="src\Heap.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Vertex.cpp" />
@@ -35,6 +36,8 @@
     <ClInclude Include="header\Const.h" />
     <ClInclude Include="header\Draw.h" />
     <ClInclude Include="header\DX12.h" />
+    <ClInclude Include="header\Heap.h" />
+    <ClInclude Include="header\HeapArg.h" />
     <ClInclude Include="header\Piece.h" />
     <ClInclude Include="header\Object.h" />
     <ClInclude Include="header\Shader.h" />

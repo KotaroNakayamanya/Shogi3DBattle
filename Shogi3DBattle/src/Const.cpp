@@ -17,13 +17,8 @@ HRESULT Const::CreateConstObj(ID3D12Device* device)
     {
         assert(false); return E_FAIL;
     }
-    // ディスクリプタヒープ作成
-    if (FAILED(CreateHeap(device)))
-    {
-        assert(false); return E_FAIL;
-    }
-    // CBV作成
-    CreateCBV(device);
+
+    return S_OK;
 }
 
 // コンスタントバッファ作成
@@ -57,6 +52,7 @@ HRESULT Const::MapBuff()
     }
 
     DirectX::XMMATRIX mat = DirectX::XMMatrixIdentity();
+    mat *= DirectX::XMMatrixRotationZ(DirectX::XM_PI/4);
     *map = mat;
 
     auto a = *map;
@@ -64,28 +60,6 @@ HRESULT Const::MapBuff()
     _buff->Unmap(0, nullptr);
 
     return S_OK;
-}
-
-// ディスクリプタヒープ作成
-HRESULT Const::CreateHeap(ID3D12Device* device)
-{
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc =
-        GetHeapDesc();
-
-    return device->CreateDescriptorHeap(
-        &heapDesc,
-        IID_PPV_ARGS(_heap.ReleaseAndGetAddressOf()));
-}
-
-// CBV作成
-void Const::CreateCBV(ID3D12Device* device)
-{
-    D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc =
-        GetCBVDesc();
-
-    device->CreateConstantBufferView(
-        &cbvDesc,
-        _heap->GetCPUDescriptorHandleForHeapStart());
 }
 
 
@@ -133,31 +107,13 @@ D3D12_RESOURCE_DESC Const::GetResourceDesc()
     return desc;
 }
 
-// テクスチャヒープディスクリプタ
-D3D12_DESCRIPTOR_HEAP_DESC Const::GetHeapDesc()
+
+
+
+// バッファを渡す
+ID3D12Resource* Const::GetBuff()
 {
-    D3D12_DESCRIPTOR_HEAP_DESC desc = {};
-    desc.Type = // CBV用
-        D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    desc.NodeMask =
-        0;
-    desc.NumDescriptors =
-        1;
-    desc.Flags = // シェーダから使用可能
-        D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-    return desc;
-}
-
-// CBVディスクリプタ
-D3D12_CONSTANT_BUFFER_VIEW_DESC Const::GetCBVDesc()
-{
-    D3D12_CONSTANT_BUFFER_VIEW_DESC desc = {};
-
-    desc.BufferLocation = _buff->GetGPUVirtualAddress();
-    desc.SizeInBytes = _buff->GetDesc().Width * _buff->GetDesc().Height;
-
-    return desc;
+    return _buff.Get();
 }
 
 

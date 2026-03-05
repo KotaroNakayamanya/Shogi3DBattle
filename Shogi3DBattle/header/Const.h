@@ -10,22 +10,17 @@ class Const
 
 private:
     ComPtr<ID3D12Resource> _buff; // コンスタントバッファ
-    ComPtr<ID3D12DescriptorHeap> _heap; // ディスクリプタヒープ
 
     HRESULT CreateBuff(ID3D12Device* device); // コンスタントバッファ作成
-    HRESULT CreateHeap(ID3D12Device* device); // ディスクリプタヒープ作成
-    void CreateCBV(ID3D12Device* device); // CBV作成
-
+    HRESULT MapBuff(); // バッファにマップ
 
     D3D12_HEAP_PROPERTIES GetHeapProp(); // ヒーププロパティ
     D3D12_RESOURCE_DESC GetResourceDesc(); // リソースディスクリプタ
-    D3D12_DESCRIPTOR_HEAP_DESC GetHeapDesc(); // ヒープディスクリプタ
-    D3D12_CONSTANT_BUFFER_VIEW_DESC GetCBVDesc(); // CBVディスクリプタ
+
 
 public:
     HRESULT CreateConstObj(ID3D12Device* device); // コンスタントオブジェクト作成
-    HRESULT MapBuff();
-
+    ID3D12Resource* GetBuff(); // バッファを返す
 
     Const();
     ~Const();

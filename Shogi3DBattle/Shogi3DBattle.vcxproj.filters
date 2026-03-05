@@ -45,9 +45,6 @@
     <ClCompile Include="src\DX12.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="header\src\Draw.cpp">
-      <Filter>ソース ファイル\DX12</Filter>
-    </ClCompile>
     <ClCompile Include="header\DrawArg.h">
       <Filter>ヘッダー ファイル\argument</Filter>
     </ClCompile>
@@ -57,13 +54,19 @@
     <ClCompile Include="src\Texture.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
-    <ClCompile Include="header\src\Object.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Vertex.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
     <ClCompile Include="src\Const.cpp">
+      <Filter>ソース ファイル\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Draw.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Object.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Heap.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
   </ItemGroup>
@@ -106,6 +109,12 @@
     </ClInclude>
     <ClInclude Include="header\Const.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Heap.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\HeapArg.h">
+      <Filter>ヘッダー ファイル\argument</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

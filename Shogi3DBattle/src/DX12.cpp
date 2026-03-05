@@ -11,6 +11,7 @@
 #include"Vertex.h"
 #include"Object.h"
 #include"Const.h"
+#include"Heap.h"
 
 #include"VertexStruct.h"
 
@@ -75,9 +76,13 @@ bool DX12::CreateDX12Obj()
     {
         assert(false); return false;
     }
-
     // コンスタントオブジェクト作成
     if (FAILED(CreateConstObj()))
+    {
+        assert(false); return false;
+    }
+    // ヒープ作成
+    if (FAILED(CreateHeap()))
     {
         assert(false); return false;
     }
@@ -221,6 +226,28 @@ DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg()
         _dxgiFactory.Get();
     arg.hwnd =
         _hwnd;
+
+    return arg;
+}
+
+// ヒープ作成
+HRESULT DX12::CreateHeap()
+{
+    _heap = std::make_shared<Heap>();
+
+    HeapArg::CreateHeapArg arg = GetCreateHeapArg();
+
+    return _heap->CreateHeap(arg);
+}
+
+// ヒープ作成用引数
+HeapArg::CreateHeapArg DX12::GetCreateHeapArg()
+{
+    HeapArg::CreateHeapArg arg = {};
+
+    arg.device = _device.Get();
+    arg.srvBuff = _texture->GetBuff();
+    arg.cbvBuff = _const->GetBuff();
 
     return arg;
 }
@@ -438,24 +465,6 @@ D3D12_ROOT_DESCRIPTOR_TABLE DX12::GetDescTable(RangeTypeState* rangeType)
 
     return desc;
 }
-
-//// ディスクリプタレンジ
-//D3D12_DESCRIPTOR_RANGE DX12::GetDescRange(UINT rangeNum)
-//{
-//    D3D12_DESCRIPTOR_RANGE desc = {};
-//
-//    // SRV
-//    desc.NumDescriptors = // ディスクリプタ数
-//        1;
-//    desc.RangeType = // タイプ：SRV
-//        D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-//    desc.BaseShaderRegister = // スロット0から
-//        0;
-//    desc.OffsetInDescriptorsFromTableStart =
-//        D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-//
-//    return desc;
-//}
 
 // SRVディスクリプタレンジ
 std::vector<D3D12_DESCRIPTOR_RANGE> DX12::RangeTypeSRV::GetSRVDescRanges()
@@ -769,8 +778,10 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
         _pipelineState.Get();
     arg.rootSignature =
         _rootSignature.Get();
-    arg.textureDescHeap =
-        _texture->GetHeap();
+    arg.heap
+        = _heap->GetHeap();;
+    arg.offset =
+        _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     arg.viewport =
         GetViewports();
     arg.scissorRect =

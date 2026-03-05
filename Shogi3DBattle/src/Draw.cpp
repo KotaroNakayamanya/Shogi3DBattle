@@ -197,12 +197,17 @@ void Draw::SetCommand(DrawArg::SetCommandArg arg)
     _commandList->SetPipelineState(arg.pipelineState);
     // ルートシグネチャセット
     _commandList->SetGraphicsRootSignature(arg.rootSignature);
-    // テクスチャディスクリプタヒープセット
-    _commandList->SetDescriptorHeaps(1, &arg.textureDescHeap);
+    // ディスクリプタヒープセット
+    _commandList->SetDescriptorHeaps(1, &arg.heap);
     // ルートパラメータとディスクリプタヒープ関連付け
+    auto handle = arg.heap->GetGPUDescriptorHandleForHeapStart();
     _commandList->SetGraphicsRootDescriptorTable(
         0,
-        arg.textureDescHeap->GetGPUDescriptorHandleForHeapStart());
+        handle);
+    handle.ptr += arg.offset;
+    _commandList->SetGraphicsRootDescriptorTable(
+        1,
+        handle);
     // ビューポートセット
     _commandList->RSSetViewports(1, &arg.viewport);
     // シザー矩形セット
