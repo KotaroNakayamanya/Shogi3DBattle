@@ -341,110 +341,182 @@ D3D12_ROOT_SIGNATURE_DESC DX12::GetRootSignatureDesc()
 {
     D3D12_ROOT_SIGNATURE_DESC desc = {};
 
-    D3D12_ROOT_PARAMETER* rootParameterPtr =
-        new D3D12_ROOT_PARAMETER;
-    *rootParameterPtr = GetRootParam();
+    UINT paramNum = 2;
+    UINT samplerNum = 1;
 
-    D3D12_STATIC_SAMPLER_DESC* samplerDescPtr =
-        new D3D12_STATIC_SAMPLER_DESC;
-    *samplerDescPtr = GetSamplerDesc();
+    std::vector<D3D12_ROOT_PARAMETER>* rootParameterPtr =
+        new std::vector<D3D12_ROOT_PARAMETER>;
+    *rootParameterPtr = GetRootParams(paramNum);
+
+    std::vector<D3D12_STATIC_SAMPLER_DESC>* samplerDescPtr =
+        new std::vector<D3D12_STATIC_SAMPLER_DESC>;
+    *samplerDescPtr = GetSamplerDescs(samplerNum);
 
     desc.Flags =
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
     desc.pParameters =
-        rootParameterPtr;
+        rootParameterPtr->data();
     desc.NumParameters =
-        1;
+        paramNum;
     desc.pStaticSamplers =
-        samplerDescPtr;
+        samplerDescPtr->data();
     desc.NumStaticSamplers =
         1;
 
     return desc;
 }
 
-// ルートパラメータ
-D3D12_ROOT_PARAMETER DX12::GetRootParam()
+// サンプラーディスクリプタ
+std::vector<D3D12_STATIC_SAMPLER_DESC> DX12::GetSamplerDescs(UINT samplerNum)
 {
-    D3D12_ROOT_PARAMETER desc = {};
+    std::vector<D3D12_STATIC_SAMPLER_DESC> descs = {};
+    descs.resize(samplerNum);
 
-    desc.ParameterType =
-        D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-    desc.ShaderVisibility = // ピクセルシェーダから利用可能
+
+    descs[0].AddressU = // 横
+        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    descs[0].AddressV = // 縦
+        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    descs[0].AddressW = // 奥行き
+        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    descs[0].BorderColor =
+        D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+    descs[0].Filter = // 線形補完
+        D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+    descs[0].MaxLOD = // ミップマップ最大値
+        D3D12_FLOAT32_MAX;
+    descs[0].MinLOD = // ミップマップ最小値
+        0.0f;
+    descs[0].ShaderVisibility = // シェーダ確認範囲
         D3D12_SHADER_VISIBILITY_PIXEL;
-    desc.DescriptorTable =
-        GetDescTable();
+    descs[0].ComparisonFunc =
+        D3D12_COMPARISON_FUNC_NEVER;
 
-    return desc;
+    return descs;
+}
+
+// ルートパラメータ
+std::vector<D3D12_ROOT_PARAMETER> DX12::GetRootParams(UINT paramNum)
+{
+    std::vector<D3D12_ROOT_PARAMETER> descs = {};
+    descs.resize(paramNum);
+
+    // SRV
+    descs[0].ParameterType = // ディスクリプタテーブル
+        D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+    descs[0].ShaderVisibility = // ピクセルシェーダで利用可能
+        D3D12_SHADER_VISIBILITY_PIXEL;
+    descs[0].DescriptorTable =
+        GetDescTable(new RangeTypeSRV(1));
+    
+    // CBV
+    descs[1].ParameterType = // ディスクリプタテーブル
+        D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+    descs[1].ShaderVisibility = // 頂点シェーダで利用可能
+        D3D12_SHADER_VISIBILITY_VERTEX;
+    descs[1].DescriptorTable =
+        GetDescTable(new RangeTypeCBV(1));
+
+    return descs;
 }
 
 // ディスクリプタテーブル
-D3D12_ROOT_DESCRIPTOR_TABLE DX12::GetDescTable()
+D3D12_ROOT_DESCRIPTOR_TABLE DX12::GetDescTable(RangeTypeState* rangeType)
 {
     D3D12_ROOT_DESCRIPTOR_TABLE desc = {};
 
-    D3D12_DESCRIPTOR_RANGE* descriptorRangePtr =
-        new D3D12_DESCRIPTOR_RANGE;
-    *descriptorRangePtr = GetDescRange();
+    std::vector<D3D12_DESCRIPTOR_RANGE>* descRangePtr =
+        new std::vector<D3D12_DESCRIPTOR_RANGE>;
+
+    // 派生クラスのオーバーライドが呼ばれる
+    *descRangePtr = rangeType->GetDescRanges();
 
     desc.pDescriptorRanges =
-        descriptorRangePtr;
+        descRangePtr->data();
     desc.NumDescriptorRanges =
-        1;
+        rangeType->GetRangeNum();;
 
     return desc;
 }
 
-// ディスクリプタレンジ
-D3D12_DESCRIPTOR_RANGE DX12::GetDescRange()
+//// ディスクリプタレンジ
+//D3D12_DESCRIPTOR_RANGE DX12::GetDescRange(UINT rangeNum)
+//{
+//    D3D12_DESCRIPTOR_RANGE desc = {};
+//
+//    // SRV
+//    desc.NumDescriptors = // ディスクリプタ数
+//        1;
+//    desc.RangeType = // タイプ：SRV
+//        D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+//    desc.BaseShaderRegister = // スロット0から
+//        0;
+//    desc.OffsetInDescriptorsFromTableStart =
+//        D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+//
+//    return desc;
+//}
+
+// SRVディスクリプタレンジ
+std::vector<D3D12_DESCRIPTOR_RANGE> DX12::RangeTypeSRV::GetSRVDescRanges()
 {
-    D3D12_DESCRIPTOR_RANGE desc = {};
+    std::vector<D3D12_DESCRIPTOR_RANGE> descs = {};
+    descs.resize(GetRangeNum());
 
-    desc.NumDescriptors = // ディスクリプタ数
-        1;
-    desc.RangeType = // タイプ：SRV
-        D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-    desc.BaseShaderRegister = // スロット0から
-        0;
-    desc.OffsetInDescriptorsFromTableStart =
-        D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+    UINT slotNo = 0;
+    for (auto& desc : descs)
+    {
+        desc.NumDescriptors = // ディスクリプタ数
+            1;
+        desc.RangeType = // タイプ：SRV
+            D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+        desc.BaseShaderRegister = // スロット0から
+            slotNo;
+        desc.OffsetInDescriptorsFromTableStart =
+            D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-    return desc;
+        slotNo++;
+    }
+    
+
+    return descs;
 }
 
-// サンプラーディスクリプタ
-D3D12_STATIC_SAMPLER_DESC DX12::GetSamplerDesc()
+// CBVディスクリプタレンジ
+std::vector<D3D12_DESCRIPTOR_RANGE> DX12::RangeTypeCBV::GetCBVDescRanges()
 {
-    D3D12_STATIC_SAMPLER_DESC desc = {};
+    std::vector<D3D12_DESCRIPTOR_RANGE> descs = {};
+    descs.resize(GetRangeNum());
 
-    desc.AddressU = // 横
-        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-    desc.AddressV = // 縦
-        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-    desc.AddressW = // 奥行き
-        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-    desc.BorderColor =
-        D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
-    desc.Filter = // 線形補完
-        D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-    desc.MaxLOD = // ミップマップ最大値
-        D3D12_FLOAT32_MAX;
-    desc.MinLOD = // ミップマップ最小値
-        0.0f;
-    desc.ShaderVisibility = // シェーダ確認範囲
-        D3D12_SHADER_VISIBILITY_PIXEL;
-    desc.ComparisonFunc =
-        D3D12_COMPARISON_FUNC_NEVER;
+    UINT slotNo = 0;
+    for (auto& desc : descs)
+    {
+        desc.NumDescriptors = // ディスクリプタ数
+            1;
+        desc.RangeType = // タイプ：CRV
+            D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+        desc.BaseShaderRegister = // スロット0から
+            slotNo;
+        desc.OffsetInDescriptorsFromTableStart =
+            D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-    return desc;
+        slotNo++;
+    }
+    
+
+    return descs;
 }
 
 // ルートシグネチャディスクリプタのメモリ解放
 void DX12::DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc)
 {
-    delete desc->pParameters->DescriptorTable.pDescriptorRanges;
-    delete desc->pParameters;
-    delete desc->pStaticSamplers;
+    UINT rangesNum  = desc->pParameters->DescriptorTable.NumDescriptorRanges;
+    UINT paramNum   = desc->NumParameters;
+    UINT samplerNum = desc->NumStaticSamplers;
+
+    delete[rangesNum]  desc->pParameters->DescriptorTable.pDescriptorRanges;
+    delete[paramNum]   desc->pParameters;
+    delete[samplerNum] desc->pStaticSamplers;
 }
 
 

@@ -53,10 +53,7 @@ private:
     HRESULT CreatePipelineState(); // パイプラインステート作成
   
 
-    D3D12_ROOT_PARAMETER GetRootParam(); // ルートパラメータ
-    D3D12_ROOT_DESCRIPTOR_TABLE GetDescTable(); // ディスクリプタテーブル
-    D3D12_DESCRIPTOR_RANGE GetDescRange(); // ディスクリプタレンジ
-    D3D12_STATIC_SAMPLER_DESC GetSamplerDesc(); // サンプラーディスクリプタ
+   
 
     // ディスクリプタで使用されたメモリ開放
     void DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc);
@@ -142,6 +139,67 @@ private:
     // シェーダーオブジェクト
     std::shared_ptr<Shader> _shader;
     HRESULT CreateShaderBlob(); // シェーダーバイナリ作成
+
+
+
+
+
+    // ディスクリプタレンジ作成用ステート
+    class RangeTypeState
+    {
+    private:
+        UINT rangeNum; // レンジ数
+    public:
+        // 仮想関数
+        virtual std::vector<D3D12_DESCRIPTOR_RANGE> GetDescRanges() = 0;
+
+        UINT GetRangeNum(){return rangeNum;}
+
+        RangeTypeState(RangeTypeState& state);
+
+        RangeTypeState(UINT num):rangeNum(num){}
+        RangeTypeState()        :rangeNum(-1){}
+        ~RangeTypeState(){}
+    };
+
+    // SRVディスクリプタレンジ作成
+    class RangeTypeSRV : public RangeTypeState
+    {
+    private:
+        std::vector<D3D12_DESCRIPTOR_RANGE> GetSRVDescRanges(); // SRVディスクリプタレンジ
+    public:
+        std::vector<D3D12_DESCRIPTOR_RANGE> GetDescRanges() override
+        {
+            return GetSRVDescRanges();
+        }
+
+        RangeTypeSRV(UINT num):RangeTypeState(num){}
+        RangeTypeSRV():        RangeTypeState(-1){}
+        ~RangeTypeSRV(){}
+    };
+
+    // CBVディスクリプタレンジ作成
+    class RangeTypeCBV : public RangeTypeState
+    {
+    private:
+        std::vector<D3D12_DESCRIPTOR_RANGE> GetCBVDescRanges(); // CBVディスクリプタレンジ
+    public:
+        std::vector<D3D12_DESCRIPTOR_RANGE> GetDescRanges() override
+        {
+            return GetCBVDescRanges();
+        }
+
+        RangeTypeCBV(UINT num):RangeTypeState(num){}
+        RangeTypeCBV():        RangeTypeState(-1){}
+        ~RangeTypeCBV(){}
+    };
+
+    std::vector<D3D12_ROOT_PARAMETER> GetRootParams(UINT paramNum); // ルートパラメータ
+    D3D12_ROOT_DESCRIPTOR_TABLE GetDescTable(RangeTypeState* rangeType); // ディスクリプタテーブル
+    //D3D12_DESCRIPTOR_RANGE GetDescRange(); // ディスクリプタレンジ
+    //D3D12_DESCRIPTOR_RANGE GetDescRange(UINT rangeNum); // ディスクリプタレンジ
+    std::vector<D3D12_STATIC_SAMPLER_DESC> GetSamplerDescs(UINT samplerNum); // サンプラーディスクリプタ
+
 
 
 
