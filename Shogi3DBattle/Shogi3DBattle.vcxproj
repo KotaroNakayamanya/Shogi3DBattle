@@ -27,6 +27,7 @@
     <ClCompile Include="src\Heap.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Object.cpp" />
+    <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Vertex.cpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="header\HeapArg.h" />
     <ClInclude Include="header\Piece.h" />
     <ClInclude Include="header\Object.h" />
+    <ClInclude Include="header\RootSignature.h" />
     <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\Texture.h" />
     <ClInclude Include="header\TextureArg.h" />

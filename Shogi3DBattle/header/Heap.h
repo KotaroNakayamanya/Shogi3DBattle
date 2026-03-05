@@ -13,7 +13,7 @@ class Heap
 private:
     ComPtr<ID3D12DescriptorHeap> _heap; // ディスクリプタヒープ
 
-    HRESULT CreateDescHeap(ID3D12Device* device); // ディスクリプタヒープ作成
+    HRESULT CreateHeap(ID3D12Device* device); // ヒープ作成
     void CreateSRV(ID3D12Device* device, ID3D12Resource* srvBuff); // SRV作成
     void CreateCBV(ID3D12Device* device, ID3D12Resource* cbvBuff); // CBV作成
 
@@ -22,7 +22,7 @@ private:
     D3D12_CONSTANT_BUFFER_VIEW_DESC GetCBVDesc(ID3D12Resource* cbvBuff); // CBVディスクリプタ
 
 public:
-    HRESULT CreateHeap(HeapArg::CreateHeapArg arg); // ヒープ作成
+    HRESULT CreateHeapObj(HeapArg::CreateHeapArg arg); // ヒープ作成
     ID3D12DescriptorHeap* GetHeap(); // ヒープを渡す
 
     Heap();

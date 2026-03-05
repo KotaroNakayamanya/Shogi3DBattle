@@ -69,6 +69,9 @@
     <ClCompile Include="src\Heap.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
+    <ClCompile Include="src\RootSignature.cpp">
+      <Filter>ソース ファイル\DX12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="header\HeapArg.h">
       <Filter>ヘッダー ファイル\argument</Filter>
+    </ClInclude>
+    <ClInclude Include="header\RootSignature.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

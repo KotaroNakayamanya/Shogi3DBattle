@@ -2,11 +2,11 @@
 
 #include<cassert>
 
-// ヒープ作成
-HRESULT Heap::CreateHeap(HeapArg::CreateHeapArg arg)
+// ヒープオブジェクト作成
+HRESULT Heap::CreateHeapObj(HeapArg::CreateHeapArg arg)
 {
-    // ディスクリプタヒープ作成
-    if (FAILED(CreateDescHeap(arg.device)))
+    // ヒープ作成
+    if (FAILED(CreateHeap(arg.device)))
     {
         assert(false); return E_FAIL;
     }
@@ -18,8 +18,8 @@ HRESULT Heap::CreateHeap(HeapArg::CreateHeapArg arg)
     return S_OK;
 }
 
-// ディスクリプタヒープ作成
-HRESULT Heap::CreateDescHeap(ID3D12Device* device)
+// ヒープ作成
+HRESULT Heap::CreateHeap(ID3D12Device* device)
 {
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetHeapDesc();
 

@@ -12,6 +12,7 @@
 #include"Object.h"
 #include"Const.h"
 #include"Heap.h"
+#include"RootSignature.h"
 
 #include"VertexStruct.h"
 
@@ -53,6 +54,12 @@ bool DX12::CreateDX12Obj()
         assert(false); return false;
     }
 
+    // シェーダーバイナリ作成
+    if (FAILED(CreateShaderBlob()))
+    {
+        assert(false); return false;
+    }
+
     // 頂点集合作成
     if (FAILED(CreateVertexSets()))
     {
@@ -61,12 +68,6 @@ bool DX12::CreateDX12Obj()
 
     // 頂点オブジェクト作成
     if (FAILED(CreateVertexObj()))
-    {
-        assert(false); return false;
-    }
-
-    // シェーダーバイナリ作成
-    if (FAILED(CreateShaderBlob()))
     {
         assert(false); return false;
     }
@@ -81,14 +82,14 @@ bool DX12::CreateDX12Obj()
     {
         assert(false); return false;
     }
-    // ヒープ作成
-    if (FAILED(CreateHeap()))
+    // ヒープオブジェクト作成
+    if (FAILED(CreateHeapObj()))
     {
         assert(false); return false;
     }
 
-    // ルートシグネチャ作成
-    if (FAILED(CreateRootSignature()))
+    // ルートシグネチャオブジェクト作成
+    if (FAILED(CreateRootSignatureObj()))
     {
         assert(false); return false;
     }
@@ -231,13 +232,13 @@ DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg()
 }
 
 // ヒープ作成
-HRESULT DX12::CreateHeap()
+HRESULT DX12::CreateHeapObj()
 {
     _heap = std::make_shared<Heap>();
 
     HeapArg::CreateHeapArg arg = GetCreateHeapArg();
 
-    return _heap->CreateHeap(arg);
+    return _heap->CreateHeapObj(arg);
 }
 
 // ヒープ作成用引数
@@ -329,203 +330,12 @@ HRESULT DX12::CreateShaderBlob()
     return _shader->CreateShaderBlob();
 }
 
-// ルートシグネチャ作成
-HRESULT DX12::CreateRootSignature()
+//// ルートシグネチャオブジェクト作成
+HRESULT DX12::CreateRootSignatureObj()
 {
-    ComPtr<ID3DBlob> _rootSignatureBlob =
-        GetRootSignatureBlob();
+    _rootSignature = std::make_shared<RootSignature>();
 
-    return _device->CreateRootSignature(
-        0,
-        _rootSignatureBlob->GetBufferPointer(),
-        _rootSignatureBlob->GetBufferSize(),
-        IID_PPV_ARGS(_rootSignature.ReleaseAndGetAddressOf()));
-}
-
- // ルートシグネチャBlob取得
-ComPtr<ID3DBlob> DX12::GetRootSignatureBlob()
-{
-    ComPtr<ID3DBlob> rootSignatureBlob;
-    ComPtr<ID3DBlob> errorBlob;
-
-    D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc =
-        GetRootSignatureDesc();
-
-    D3D12SerializeRootSignature(
-        &rootSignatureDesc,
-        D3D_ROOT_SIGNATURE_VERSION_1_0,
-        rootSignatureBlob.ReleaseAndGetAddressOf(),
-        errorBlob.        ReleaseAndGetAddressOf());
-
-    // ディスクリプタで使用されたメモリ開放
-    DeleteRootSignatureDescMemory(&rootSignatureDesc);
-
-    return rootSignatureBlob.Get();
-}
-
-// ルートシグネチャディスクリプタ
-D3D12_ROOT_SIGNATURE_DESC DX12::GetRootSignatureDesc()
-{
-    D3D12_ROOT_SIGNATURE_DESC desc = {};
-
-    UINT paramNum = 2;
-    UINT samplerNum = 1;
-
-    std::vector<D3D12_ROOT_PARAMETER>* rootParameterPtr =
-        new std::vector<D3D12_ROOT_PARAMETER>;
-    *rootParameterPtr = GetRootParams(paramNum);
-
-    std::vector<D3D12_STATIC_SAMPLER_DESC>* samplerDescPtr =
-        new std::vector<D3D12_STATIC_SAMPLER_DESC>;
-    *samplerDescPtr = GetSamplerDescs(samplerNum);
-
-    desc.Flags =
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-    desc.pParameters =
-        rootParameterPtr->data();
-    desc.NumParameters =
-        paramNum;
-    desc.pStaticSamplers =
-        samplerDescPtr->data();
-    desc.NumStaticSamplers =
-        1;
-
-    return desc;
-}
-
-// サンプラーディスクリプタ
-std::vector<D3D12_STATIC_SAMPLER_DESC> DX12::GetSamplerDescs(UINT samplerNum)
-{
-    std::vector<D3D12_STATIC_SAMPLER_DESC> descs = {};
-    descs.resize(samplerNum);
-
-
-    descs[0].AddressU = // 横
-        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-    descs[0].AddressV = // 縦
-        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-    descs[0].AddressW = // 奥行き
-        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-    descs[0].BorderColor =
-        D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
-    descs[0].Filter = // 線形補完
-        D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-    descs[0].MaxLOD = // ミップマップ最大値
-        D3D12_FLOAT32_MAX;
-    descs[0].MinLOD = // ミップマップ最小値
-        0.0f;
-    descs[0].ShaderVisibility = // シェーダ確認範囲
-        D3D12_SHADER_VISIBILITY_PIXEL;
-    descs[0].ComparisonFunc =
-        D3D12_COMPARISON_FUNC_NEVER;
-
-    return descs;
-}
-
-// ルートパラメータ
-std::vector<D3D12_ROOT_PARAMETER> DX12::GetRootParams(UINT paramNum)
-{
-    std::vector<D3D12_ROOT_PARAMETER> descs = {};
-    descs.resize(paramNum);
-
-    // SRV
-    descs[0].ParameterType = // ディスクリプタテーブル
-        D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-    descs[0].ShaderVisibility = // ピクセルシェーダで利用可能
-        D3D12_SHADER_VISIBILITY_PIXEL;
-    descs[0].DescriptorTable =
-        GetDescTable(new RangeTypeSRV(1));
-    
-    // CBV
-    descs[1].ParameterType = // ディスクリプタテーブル
-        D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-    descs[1].ShaderVisibility = // 頂点シェーダで利用可能
-        D3D12_SHADER_VISIBILITY_VERTEX;
-    descs[1].DescriptorTable =
-        GetDescTable(new RangeTypeCBV(1));
-
-    return descs;
-}
-
-// ディスクリプタテーブル
-D3D12_ROOT_DESCRIPTOR_TABLE DX12::GetDescTable(RangeTypeState* rangeType)
-{
-    D3D12_ROOT_DESCRIPTOR_TABLE desc = {};
-
-    std::vector<D3D12_DESCRIPTOR_RANGE>* descRangePtr =
-        new std::vector<D3D12_DESCRIPTOR_RANGE>;
-
-    // 派生クラスのオーバーライドが呼ばれる
-    *descRangePtr = rangeType->GetDescRanges();
-
-    desc.pDescriptorRanges =
-        descRangePtr->data();
-    desc.NumDescriptorRanges =
-        rangeType->GetRangeNum();;
-
-    return desc;
-}
-
-// SRVディスクリプタレンジ
-std::vector<D3D12_DESCRIPTOR_RANGE> DX12::RangeTypeSRV::GetSRVDescRanges()
-{
-    std::vector<D3D12_DESCRIPTOR_RANGE> descs = {};
-    descs.resize(GetRangeNum());
-
-    UINT slotNo = 0;
-    for (auto& desc : descs)
-    {
-        desc.NumDescriptors = // ディスクリプタ数
-            1;
-        desc.RangeType = // タイプ：SRV
-            D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-        desc.BaseShaderRegister = // スロット0から
-            slotNo;
-        desc.OffsetInDescriptorsFromTableStart =
-            D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-        slotNo++;
-    }
-    
-
-    return descs;
-}
-
-// CBVディスクリプタレンジ
-std::vector<D3D12_DESCRIPTOR_RANGE> DX12::RangeTypeCBV::GetCBVDescRanges()
-{
-    std::vector<D3D12_DESCRIPTOR_RANGE> descs = {};
-    descs.resize(GetRangeNum());
-
-    UINT slotNo = 0;
-    for (auto& desc : descs)
-    {
-        desc.NumDescriptors = // ディスクリプタ数
-            1;
-        desc.RangeType = // タイプ：CRV
-            D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-        desc.BaseShaderRegister = // スロット0から
-            slotNo;
-        desc.OffsetInDescriptorsFromTableStart =
-            D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-        slotNo++;
-    }
-    
-
-    return descs;
-}
-
-// ルートシグネチャディスクリプタのメモリ解放
-void DX12::DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc)
-{
-    UINT rangesNum  = desc->pParameters->DescriptorTable.NumDescriptorRanges;
-    UINT paramNum   = desc->NumParameters;
-    UINT samplerNum = desc->NumStaticSamplers;
-
-    delete[rangesNum]  desc->pParameters->DescriptorTable.pDescriptorRanges;
-    delete[paramNum]   desc->pParameters;
-    delete[samplerNum] desc->pStaticSamplers;
+    return _rootSignature->CreateRootSignatureObj(_device.Get());
 }
 
 
@@ -579,7 +389,7 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC DX12::GetPipelineStateDesc()
     D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};   
     
     desc.pRootSignature =
-        _rootSignature.Get();
+        _rootSignature->GetRootSignature();
     desc.VS =
         GetVertexShaderDesc();
     desc.PS =
@@ -777,7 +587,7 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
     arg.pipelineState =
         _pipelineState.Get();
     arg.rootSignature =
-        _rootSignature.Get();
+        _rootSignature->GetRootSignature();
     arg.heap
         = _heap->GetHeap();;
     arg.offset =
