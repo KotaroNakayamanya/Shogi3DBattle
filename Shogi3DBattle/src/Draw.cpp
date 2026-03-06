@@ -30,12 +30,7 @@ HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
     {
         assert(false); return E_FAIL;
     }
-    //// フェンス作成
-    //if (FAILED(CreateFence(arg.device)))
-    //{
-    //    assert(false); return E_FAIL;
-    //}
-    // // フェンスオブジェクト作成
+    // フェンスオブジェクト作成
     if (FAILED(CreateFenceObj(arg.device)))
     {
         assert(false); return E_FAIL;
@@ -78,28 +73,18 @@ HRESULT Draw::CreateSwapChainObj(
     IDXGIFactory6* dxgiFactory,
     HWND hwnd)
 {
-    _swapChain = std::make_unique<SwapChain>();
-
     ID3D12CommandQueue* commandQueue =
         _commandQueue->GetCommandQueue();
-
+    
+    _swapChain = std::make_unique<SwapChain>();
     return _swapChain->CreateSwapChain(
         dxgiFactory, commandQueue, hwnd, _buffNum);
 }
 
-//// フェンス作成
-//HRESULT Draw::CreateFence(ID3D12Device* device)
-//{
-//    return device->CreateFence(
-//        _fenceVal,
-//        D3D12_FENCE_FLAG_NONE,
-//        IID_PPV_ARGS(_fence.ReleaseAndGetAddressOf()));
-//}
 // フェンスオブジェクト作成
 HRESULT Draw::CreateFenceObj(ID3D12Device* device)
 {
     _fence = std::make_unique<Fence>();
-
     return _fence->CreateFence(device);
 }
 

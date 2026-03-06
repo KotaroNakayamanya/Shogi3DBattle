@@ -12,7 +12,7 @@
 #include"Vertex.h"
 #include"Object.h"
 #include"Const.h"
-#include"Heap.h"
+#include"CSUHeap.h"
 #include"RootSignature.h"
 #include"Pipeline.h"
 
@@ -160,17 +160,16 @@ DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg()
 // ヒープ作成
 HRESULT DX12::CreateHeapObj()
 {
-    _heap = std::make_unique<Heap>();
+    _heap = std::make_unique<CSUHeap>();
 
-    HeapArg::CreateHeapArg arg = GetCreateHeapObjArg();
-
-    return _heap->CreateHeapObj(arg);
+    CSUHeapArg::CreateCSUHeapArg arg = GetCreateCSUHeapArg();
+    return _heap->CreateHeap(arg);
 }
 
 // ヒープ作成用引数
-HeapArg::CreateHeapArg DX12::GetCreateHeapObjArg()
+CSUHeapArg::CreateCSUHeapArg DX12::GetCreateCSUHeapArg()
 {
-    HeapArg::CreateHeapArg arg = {};
+    CSUHeapArg::CreateCSUHeapArg arg = {};
 
     arg.device = _device->GetDevice();
     arg.srvBuff = _texture->GetBuff();

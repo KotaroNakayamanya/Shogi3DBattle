@@ -63,7 +63,7 @@
     <ClCompile Include="src\Object.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Heap.cpp">
+    <ClCompile Include="src\CSUHeap.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
@@ -140,10 +140,10 @@
     <ClInclude Include="header\Const.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="header\Heap.h">
+    <ClInclude Include="header\CSUHeap.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="header\HeapArg.h">
+    <ClInclude Include="header\CSUHeapArg.h">
       <Filter>ヘッダー ファイル\argument</Filter>
     </ClInclude>
     <ClInclude Include="header\RootSignature.h">

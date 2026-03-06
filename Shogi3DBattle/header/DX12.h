@@ -5,7 +5,7 @@
 #include"DrawArg.h"
 #include"TextureArg.h"
 #include"VertexArg.h"
-#include"HeapArg.h"
+#include"CSUHeapArg.h"
 #include"PipelineArg.h"
 
 class DXGIFactory;
@@ -17,7 +17,7 @@ class Draw;
 class Texture;
 class Const;
 class Object;
-class Heap;
+class CSUHeap;
 class RootSignature;
 class Pipeline;
 
@@ -66,10 +66,10 @@ private:
     std::unique_ptr<Const> _const; // コンスタントオブジェクト
     HRESULT CreateConstObj();      // コンスタントオブジェクト作成
 
-    std::unique_ptr<Heap> _heap; // ヒープオブジェクト
+    std::unique_ptr<CSUHeap> _heap; // ヒープオブジェクト
     HRESULT CreateHeapObj();     // ヒープオブジェクト作成
-    HeapArg::CreateHeapArg       // ヒープオブジェクト作成用引数
-        GetCreateHeapObjArg();  
+    CSUHeapArg::CreateCSUHeapArg // ヒープオブジェクト作成用引数
+        GetCreateCSUHeapArg();  
 
     DXGI_SAMPLE_DESC GetSampleDesc(); // サンプリングディスクリプタ
   

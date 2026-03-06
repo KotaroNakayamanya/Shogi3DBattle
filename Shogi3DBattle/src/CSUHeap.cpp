@@ -1,9 +1,9 @@
-#include"Heap.h"
+#include"CSUHeap.h"
 
 #include<cassert>
 
-// ヒープオブジェクト作成
-HRESULT Heap::CreateHeapObj(HeapArg::CreateHeapArg arg)
+// ヒープ作成
+HRESULT CSUHeap::CreateHeap(CSUHeapArg::CreateCSUHeapArg arg)
 {
     // ヒープ作成
     if (FAILED(CreateHeap(arg.device)))
@@ -19,7 +19,7 @@ HRESULT Heap::CreateHeapObj(HeapArg::CreateHeapArg arg)
 }
 
 // ヒープ作成
-HRESULT Heap::CreateHeap(ID3D12Device* device)
+HRESULT CSUHeap::CreateHeap(ID3D12Device* device)
 {
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetHeapDesc();
 
@@ -29,7 +29,7 @@ HRESULT Heap::CreateHeap(ID3D12Device* device)
 }
 
 // SRV作成
-void Heap::CreateSRV(ID3D12Device* device, ID3D12Resource* srvBuff)
+void CSUHeap::CreateSRV(ID3D12Device* device, ID3D12Resource* srvBuff)
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = GetSRVDesc();
 
@@ -42,7 +42,7 @@ void Heap::CreateSRV(ID3D12Device* device, ID3D12Resource* srvBuff)
 }
 
 // CBV作成
-void Heap::CreateCBV(ID3D12Device* device, ID3D12Resource* cbvBuff)
+void CSUHeap::CreateCBV(ID3D12Device* device, ID3D12Resource* cbvBuff)
 {
     auto handle = _heap->GetCPUDescriptorHandleForHeapStart();
     handle.ptr += device->GetDescriptorHandleIncrementSize(
@@ -59,7 +59,7 @@ void Heap::CreateCBV(ID3D12Device* device, ID3D12Resource* cbvBuff)
 
 
 // ヒープディスクリプタ
-D3D12_DESCRIPTOR_HEAP_DESC Heap::GetHeapDesc()
+D3D12_DESCRIPTOR_HEAP_DESC CSUHeap::GetHeapDesc()
 {
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
 
@@ -76,7 +76,7 @@ D3D12_DESCRIPTOR_HEAP_DESC Heap::GetHeapDesc()
 }
 
 // SRVディスクリプタ
-D3D12_SHADER_RESOURCE_VIEW_DESC Heap::GetSRVDesc()
+D3D12_SHADER_RESOURCE_VIEW_DESC CSUHeap::GetSRVDesc()
 {
     D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
     desc.Format =
@@ -92,7 +92,7 @@ D3D12_SHADER_RESOURCE_VIEW_DESC Heap::GetSRVDesc()
 }
 
 // CBVディスクリプタ
-D3D12_CONSTANT_BUFFER_VIEW_DESC Heap::GetCBVDesc(ID3D12Resource* cbvBuff) 
+D3D12_CONSTANT_BUFFER_VIEW_DESC CSUHeap::GetCBVDesc(ID3D12Resource* cbvBuff) 
 {
     D3D12_CONSTANT_BUFFER_VIEW_DESC desc = {};
 
@@ -103,7 +103,7 @@ D3D12_CONSTANT_BUFFER_VIEW_DESC Heap::GetCBVDesc(ID3D12Resource* cbvBuff)
 }
 
 // ヒープを渡す
-ID3D12DescriptorHeap* Heap::GetHeap()
+ID3D12DescriptorHeap* CSUHeap::GetHeap()
 {
     return _heap.Get();
 }
@@ -111,5 +111,5 @@ ID3D12DescriptorHeap* Heap::GetHeap()
 
 
 
-Heap::Heap(){}
-Heap::~Heap(){}
+CSUHeap::CSUHeap(){}
+CSUHeap::~CSUHeap(){}
