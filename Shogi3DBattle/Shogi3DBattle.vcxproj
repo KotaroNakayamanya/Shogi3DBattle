@@ -22,6 +22,7 @@
     <ClCompile Include="header\DrawArg.h" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\CommandAllocator.cpp" />
     <ClCompile Include="src\Const.cpp" />
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Draw.cpp" />
@@ -39,6 +40,7 @@
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
     <ClInclude Include="header\Application.h" />
+    <ClInclude Include="header\CommandAllocator.h" />
     <ClInclude Include="header\Const.h" />
     <ClInclude Include="header\Device.h" />
     <ClInclude Include="header\Draw.h" />

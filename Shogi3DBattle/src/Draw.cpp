@@ -1,11 +1,18 @@
 ﻿#include"Draw.h"
 #include<cassert>
 
+#include"CommandAllocator.h"
+
 // 描画オブジェクト作成
 HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
 {
-    // コマンドアロケータ作成
-    if (FAILED(CreateCommandAllocator(arg.device)))
+    //// コマンドアロケータ作成
+    //if (FAILED(CreateCommandAllocator(arg.device)))
+    //{
+    //    assert(false); return E_FAIL;
+    //}
+    // コマンドアロケータオブジェクト作成
+    if (FAILED(CreateCommandAllocatorObj(arg.device)))
     {
         assert(false); return E_FAIL;
     }
@@ -40,13 +47,12 @@ HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
         assert(false); return E_FAIL;
     }
 }
-
-// コマンドアロケータ作成
-HRESULT Draw::CreateCommandAllocator(ID3D12Device* device)
+// コマンドアロケータオブジェクト作成
+HRESULT Draw::CreateCommandAllocatorObj(ID3D12Device* device)
 {
-    return device->CreateCommandAllocator(
-        D3D12_COMMAND_LIST_TYPE_DIRECT,
-        IID_PPV_ARGS(_commandAllocator.ReleaseAndGetAddressOf()));
+    _commandAllocator = std::make_shared<CommandAllocator>();
+
+    return _commandAllocator->CreateCommandAllocator(device);
 }
 
 // コマンドリスト作成
@@ -55,7 +61,7 @@ HRESULT Draw::CreateCommandList(ID3D12Device* device)
     return device->CreateCommandList(
         0,
         D3D12_COMMAND_LIST_TYPE_DIRECT,
-        _commandAllocator.Get(),
+        _commandAllocator->GetCommandAllocator(),
         nullptr,
         IID_PPV_ARGS(_commandList.ReleaseAndGetAddressOf()));
 }
@@ -287,8 +293,11 @@ void Draw::WaitProcessWithFence()
 // コマンドリセット
 void Draw::ResetCommand()
 {
-    _commandAllocator->Reset();
-    _commandList->Reset(_commandAllocator.Get(), nullptr);
+    ID3D12CommandAllocator* commandAllocator =
+        _commandAllocator->GetCommandAllocator();
+
+    commandAllocator->Reset();
+    _commandList->Reset(commandAllocator, nullptr);
 }
 
 

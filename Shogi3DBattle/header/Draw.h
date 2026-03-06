@@ -3,9 +3,12 @@
 #include<d3d12.h>
 #include<dxgi1_6.h>
 #include<wrl.h>
+#include<memory>
 #include<vector>
 
 #include"DrawArg.h"
+
+class CommandAllocator;
 
 class Draw
 {
@@ -15,9 +18,10 @@ class Draw
 private:
     UINT _buffNum;  // バッファー数（スワップチェーン作成に利用）
     UINT _fenceVal = 0; // フェンスの同期処理確認用
-    
 
-    ComPtr<ID3D12CommandAllocator>      _commandAllocator; // コマンドアロケータ
+    std::shared_ptr<CommandAllocator> _commandAllocator;     // コマンドアロケータオブジェクト
+    HRESULT CreateCommandAllocatorObj(ID3D12Device* device); // コマンドアロケータオブジェクト作成
+
     ComPtr<ID3D12GraphicsCommandList>   _commandList;      // コマンドリスト
     ComPtr<ID3D12CommandQueue>          _commandQueue;     // コマンドキュー
     ComPtr<IDXGISwapChain4>             _swapChain;        // スワップチェーン
@@ -26,7 +30,7 @@ private:
     std::vector<ComPtr<ID3D12Resource>> _rtvs;             // RTV
 
 
-    HRESULT CreateCommandAllocator(ID3D12Device* device); // コマンドアロケータ作成
+    
     HRESULT CreateCommandList(ID3D12Device* device); // コマンドリスト作成
     HRESULT CreateCommandQueue(ID3D12Device* device); // コマンドキュー作成
     HRESULT CreateSwapChain(IDXGIFactory6* dxgiFactory, HWND hwnd); // スワップチェーン作成
