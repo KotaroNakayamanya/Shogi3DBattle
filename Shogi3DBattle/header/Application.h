@@ -1,50 +1,30 @@
 ﻿#pragma once
 
-#include<Windows.h>
 #include<memory>
 
-// ウィンドウプロシージャ宣言
-LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-
+class GameWindow;
 class DX12;
+class KeyMap;
 
 class Application
 {
 private:
-    // シングルトンパターン
-    Application();
-    Application(const Application&) = delete;
-    Application& operator=(const Application&) = delete;
+    std::unique_ptr<GameWindow> _gameWindow; // ゲームウインドウオブジェクト
+    std::unique_ptr<DX12> _dx12; // DX12オブジェクト
+    std::unique_ptr<KeyMap> _keyMap; // キーマップオブジェクト
 
-
-    // ウインドウ用変数
-    WNDCLASSEX _windowClass;
-    HWND       _hwnd;
-
-    // DX12オブジェクト
-    std::unique_ptr<DX12> _dx12;
-
-    const wchar_t* _WINDOW_CLASS_NAME = L"window";
-    const wchar_t* _WINDOW_TITLE      = L"将棋大戦3D";
-
-    const LONG _WINDOW_WIDTH = 1280;
-    const LONG _WINDOW_HIGHT = 720;
-    RECT       _WINDOW_RECT  = {0, 0, _WINDOW_WIDTH, _WINDOW_HIGHT};
-
-
-    // ウインドウ用関数
-    bool CreateGameWindow();
-    void CreateWindowClass();
-    void CreateWindowObj();
-
-    
-
+    Application(); // デフォルトコンストラクタ禁止
+    Application(const Application&) = delete; // コピー禁止
+    Application& operator=(const Application&) = delete; // 代入禁止
 
 public:
-    static Application& GetInstance();
-    bool Init();
-    void Run();
-    void Exit(); 
+    static Application& GetInstance(); // シングルトンインスタンスを返す
+
+    bool Init(); // 初期処理
+    void Run();  // ゲーム実行処理
+    void Exit(); // 終了処理
+
+    KeyMap* GetKeyMapObj(); // キーマップオブジェクトを返す
 
     ~Application();
 };

@@ -52,7 +52,7 @@ HRESULT Const::MapBuff()
     }
 
     DirectX::XMMATRIX mat = DirectX::XMMatrixIdentity();
-    mat *= DirectX::XMMatrixRotationZ(DirectX::XM_PI/4);
+    //mat *= DirectX::XMMatrixRotationZ(DirectX::XM_PI/4);
     *map = mat;
 
     auto a = *map;

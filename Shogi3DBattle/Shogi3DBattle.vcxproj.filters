@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Piece">
-      <UniqueIdentifier>{f2aef7b7-ea3d-4125-827c-a463bca68594}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DX12">
-      <UniqueIdentifier>{57166d13-f0c8-4ec6-b25f-be519ec0030e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\shader">
       <UniqueIdentifier>{b6044eb4-9f10-4e02-bdb3-192f1a5e23b9}</UniqueIdentifier>
     </Filter>
@@ -34,20 +28,38 @@
     <Filter Include="ヘッダー ファイル\arg">
       <UniqueIdentifier>{25b51312-ac09-4327-bb0d-63a1e0e5aff7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DX12\draw">
-      <UniqueIdentifier>{b0818766-add5-4078-96ee-ea4b2466aba2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DX12\csu">
-      <UniqueIdentifier>{e9b92a4c-31a8-488f-ae82-24e612e18f8f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\DX12\csu">
       <UniqueIdentifier>{8e35ec3d-b74e-4de4-8151-9baa1815ee54}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\DX12\factory">
       <UniqueIdentifier>{ab7f19d6-8f72-4310-ba78-c38a4ef41ff9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DX12\factory">
+    <Filter Include="ヘッダー ファイル\game_window">
+      <UniqueIdentifier>{127d3bb3-f6f7-4aa5-b5f4-b485b8c74824}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\piece">
+      <UniqueIdentifier>{f2aef7b7-ea3d-4125-827c-a463bca68594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12">
+      <UniqueIdentifier>{57166d13-f0c8-4ec6-b25f-be519ec0030e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\draw">
+      <UniqueIdentifier>{b0818766-add5-4078-96ee-ea4b2466aba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\csu">
+      <UniqueIdentifier>{e9b92a4c-31a8-488f-ae82-24e612e18f8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\factory">
       <UniqueIdentifier>{2c7af551-259d-4c5d-b4f0-2010ff7a97de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\game_window">
+      <UniqueIdentifier>{32ab675c-7748-4ec7-b4ff-8d5a0f2e212b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\map">
+      <UniqueIdentifier>{31fe555d-f8f5-4f7d-bd70-caa2e40237e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\map">
+      <UniqueIdentifier>{54f4de9d-ec76-4f59-834a-1e00085e3871}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -55,67 +67,73 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\DX12.cpp">
-      <Filter>ソース ファイル\DX12</Filter>
+      <Filter>ソース ファイル\dx12</Filter>
     </ClCompile>
     <ClCompile Include="header\DrawArg.h">
       <Filter>ヘッダー ファイル\arg</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader.cpp">
-      <Filter>ソース ファイル\DX12</Filter>
+      <Filter>ソース ファイル\dx12</Filter>
     </ClCompile>
     <ClCompile Include="src\Vertex.cpp">
-      <Filter>ソース ファイル\DX12</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Object.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\dx12</Filter>
     </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
-      <Filter>ソース ファイル\DX12</Filter>
+      <Filter>ソース ファイル\dx12</Filter>
     </ClCompile>
     <ClCompile Include="src\Pipeline.cpp">
-      <Filter>ソース ファイル\DX12</Filter>
+      <Filter>ソース ファイル\dx12</Filter>
     </ClCompile>
     <ClCompile Include="src\Draw.cpp">
-      <Filter>ソース ファイル\DX12\draw</Filter>
+      <Filter>ソース ファイル\dx12\draw</Filter>
     </ClCompile>
     <ClCompile Include="src\CommandAllocator.cpp">
-      <Filter>ソース ファイル\DX12\draw</Filter>
+      <Filter>ソース ファイル\dx12\draw</Filter>
     </ClCompile>
     <ClCompile Include="src\CommandList.cpp">
-      <Filter>ソース ファイル\DX12\draw</Filter>
+      <Filter>ソース ファイル\dx12\draw</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\CommandQueue.cpp">
-      <Filter>ソース ファイル\DX12\draw</Filter>
+      <Filter>ソース ファイル\dx12\draw</Filter>
     </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
-      <Filter>ソース ファイル\DX12\draw</Filter>
+      <Filter>ソース ファイル\dx12\draw</Filter>
     </ClCompile>
     <ClCompile Include="src\RTVHeap.cpp">
-      <Filter>ソース ファイル\DX12\draw</Filter>
+      <Filter>ソース ファイル\dx12\draw</Filter>
     </ClCompile>
     <ClCompile Include="src\Fence.cpp">
-      <Filter>ソース ファイル\DX12\draw</Filter>
+      <Filter>ソース ファイル\dx12\draw</Filter>
     </ClCompile>
     <ClCompile Include="src\Adapter.cpp">
-      <Filter>ソース ファイル\DX12</Filter>
+      <Filter>ソース ファイル\dx12</Filter>
     </ClCompile>
     <ClCompile Include="src\CSUHeap.cpp">
-      <Filter>ソース ファイル\DX12\csu</Filter>
+      <Filter>ソース ファイル\dx12\csu</Filter>
     </ClCompile>
     <ClCompile Include="src\Texture.cpp">
-      <Filter>ソース ファイル\DX12\csu</Filter>
+      <Filter>ソース ファイル\dx12\csu</Filter>
     </ClCompile>
     <ClCompile Include="src\Const.cpp">
-      <Filter>ソース ファイル\DX12\csu</Filter>
+      <Filter>ソース ファイル\dx12\csu</Filter>
     </ClCompile>
     <ClCompile Include="src\Device.cpp">
-      <Filter>ソース ファイル\DX12\factory</Filter>
+      <Filter>ソース ファイル\dx12\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\DXGIFactory.cpp">
-      <Filter>ソース ファイル\DX12\factory</Filter>
+      <Filter>ソース ファイル\dx12\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Object.cpp">
+      <Filter>ソース ファイル\dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameWindow.cpp">
+      <Filter>ソース ファイル\game_window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KeyMap.cpp">
+      <Filter>ソース ファイル\map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -123,7 +141,7 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\Piece.h">
-      <Filter>ヘッダー ファイル\Piece</Filter>
+      <Filter>ヘッダー ファイル\piece</Filter>
     </ClInclude>
     <ClInclude Include="header\TextureStruct.h">
       <Filter>ヘッダー ファイル\struct</Filter>
@@ -133,9 +151,6 @@
     </ClInclude>
     <ClInclude Include="header\DX12.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Object.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\TextureArg.h">
       <Filter>ヘッダー ファイル\arg</Filter>
@@ -199,6 +214,18 @@
     </ClInclude>
     <ClInclude Include="header\DXGIFactory.h">
       <Filter>ヘッダー ファイル\DX12\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Object.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GameWindow.h">
+      <Filter>ヘッダー ファイル\game_window</Filter>
+    </ClInclude>
+    <ClInclude Include="header\KeyMap.h">
+      <Filter>ヘッダー ファイル\map</Filter>
+    </ClInclude>
+    <ClInclude Include="header\InputCommand.h">
+      <Filter>ヘッダー ファイル\map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

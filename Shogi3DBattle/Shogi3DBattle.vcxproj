@@ -32,6 +32,8 @@
     <ClCompile Include="src\DXGIFactory.cpp" />
     <ClCompile Include="src\CSUHeap.cpp" />
     <ClCompile Include="src\Fence.cpp" />
+    <ClCompile Include="src\GameWindow.cpp" />
+    <ClCompile Include="src\KeyMap.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\Pipeline.cpp" />
@@ -50,12 +52,15 @@
     <ClInclude Include="header\CommandQueue.h" />
     <ClInclude Include="header\Const.h" />
     <ClInclude Include="header\Device.h" />
+    <ClInclude Include="header\GameWindow.h" />
+    <ClInclude Include="header\InputCommand.h" />
     <ClInclude Include="header\Draw.h" />
     <ClInclude Include="header\DX12.h" />
     <ClInclude Include="header\DXGIFactory.h" />
     <ClInclude Include="header\Fence.h" />
     <ClInclude Include="header\CSUHeap.h" />
     <ClInclude Include="header\HeapArg.h" />
+    <ClInclude Include="header\KeyMap.h" />
     <ClInclude Include="header\Piece.h" />
     <ClInclude Include="header\Object.h" />
     <ClInclude Include="header\Pipeline.h" />

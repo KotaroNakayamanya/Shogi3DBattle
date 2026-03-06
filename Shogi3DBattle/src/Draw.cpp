@@ -121,7 +121,6 @@ void Draw::ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier
     auto rtv = _heap->GetRTV(backBufferIndex);
 
     barrier.Transition.pResource =
-        //_rtvs[backBufferIdx].Get();
         rtv;
     barrier.Transition.StateBefore =
         D3D12_RESOURCE_STATE_PRESENT;
@@ -208,7 +207,6 @@ void Draw::ChangeRTVBarrierToPresent(D3D12_RESOURCE_BARRIER resourceBarrier)
     auto rtv = _heap->GetRTV(backBufferIndex);
 
     barrier.Transition.pResource =
-        //_rtvs[backBufferIdx].Get();
         rtv;
     barrier.Transition.StateBefore =
         D3D12_RESOURCE_STATE_RENDER_TARGET;

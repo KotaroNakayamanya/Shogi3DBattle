@@ -1,24 +1,25 @@
 ﻿#include"Application.h"
-#include"DX12.h"
 #include<assert.h>
 
-// シングルトンインスタンス
-Application& Application::GetInstance()
-{
-    static Application instance;
-    return instance;
-}
+#include"GameWindow.h"
+#include"DX12.h"
+#include"KeyMap.h"
 
 // 初期処理
 bool Application::Init()
 {
-    if(CreateGameWindow() == false) // ゲームウインドウ作成
+    // ゲームウインドウ作成
+    _gameWindow = std::make_unique<GameWindow>();
+    if(_gameWindow->CreateGameWindow() == false)
         return false;
 
     // DirectX12オブジェクト作成
-    _dx12 = std::make_unique<DX12>(_hwnd);
-    if(_dx12->CreateDX12Obj() == false)
+    _dx12 = std::make_unique<DX12>();
+    if(_dx12->CreateDX12Obj(_gameWindow->GetHWND()) == false)
         return false;
+
+    // キーマップ作成
+    _keyMap = std::make_unique<KeyMap>();
 
     return true;
 }
@@ -27,7 +28,7 @@ bool Application::Init()
 void Application::Run()
 {
     // ウインドウ表示
-    ShowWindow(_hwnd, SW_SHOW);
+    _gameWindow->DisplayWindow();
 
     MSG msg = {};
     while (true) {
@@ -50,61 +51,43 @@ void Application::Run()
 // 終了処理
 void Application::Exit()
 {
-    UnregisterClass(_windowClass.lpszClassName, _windowClass.hInstance);
-}
-
-
-
-
-// ウインドウ作成
-bool Application::CreateGameWindow()
-{
-    CreateWindowClass();
-    RegisterClassEx(&_windowClass);
-    AdjustWindowRect(&_WINDOW_RECT,
-        WS_OVERLAPPEDWINDOW, false);
-    CreateWindowObj();
-
-    return true;
-}
-
-// ウインドウクラス作成
-void Application::CreateWindowClass()
-{
-    _windowClass.cbSize        = sizeof(WNDCLASSEX);       // サイズ
-    _windowClass.lpfnWndProc   = (WNDPROC)WindowProcedure; // プロシージャ
-    _windowClass.lpszClassName = _WINDOW_CLASS_NAME;       // クラス名
-    _windowClass.hInstance     = GetModuleHandle(nullptr); // アプリケーションハンドル
-}
-
-// ウインドウオブジェクト作成
-void Application::CreateWindowObj()
-{
-    _hwnd = CreateWindow(
-        _windowClass.lpszClassName,              // クラス名
-        _WINDOW_TITLE,                           // ウインドウタイトル
-        WS_OVERLAPPEDWINDOW,                     // ウインドウスタイル
-        CW_USEDEFAULT,                           // 表示x座標
-        CW_USEDEFAULT,                           // 表示y座標
-        _WINDOW_RECT.right  - _WINDOW_RECT.left, // ウインドウ幅
-        _WINDOW_RECT.bottom - _WINDOW_RECT.top,  // ウインドウ高
-        nullptr,                                 // 親ウインドウハンドル
-        nullptr,                                 // メニューハンドル
-        _windowClass.hInstance,                  // アプリケーションハンドル
-        nullptr);                                // 追加パラメータ
+    _gameWindow->DestroyClass();
 }
 
 
 
 
 // ウインドウプロシージャ
-LRESULT WindowProcedure(
+LRESULT CALLBACK WindowProcedure(
      HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    if (msg == WM_DESTROY)
-    {
+    // キーマップを利用する
+     KeyMap* keyMap = Application::GetInstance().GetKeyMapObj();
+
+    switch(msg){
+    case WM_CHAR:
+        switch (keyMap->convertKeyToDirection(wparam))
+        {
+        case InputCommand::up:
+            DestroyWindow(hwnd);
+            break;
+        case InputCommand::left:
+            DestroyWindow(hwnd);
+            break;
+        case InputCommand::down:
+            DestroyWindow(hwnd);
+            break;
+        case InputCommand::right:
+            DestroyWindow(hwnd);
+            break;
+        default:
+            break;
+        }
+        break;
+
+    case WM_DESTROY:
         PostQuitMessage(0);
-        return 0;
+        break;
     }
 
     return DefWindowProc(hwnd, msg, wparam, lparam);
@@ -112,6 +95,22 @@ LRESULT WindowProcedure(
 
 
 
+
+// キーマップオブジェクトを返す
+KeyMap* Application::GetKeyMapObj()
+{
+    return _keyMap.get();
+}
+
+
+
+
+// シングルトンインスタンス
+Application& Application::GetInstance()
+{
+    static Application instance;
+    return instance;
+}
 
 Application::Application(){}
 Application::~Application(){}

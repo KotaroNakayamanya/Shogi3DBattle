@@ -34,7 +34,7 @@ namespace {
 
 
 // DirectX12初期設定
-bool DX12::CreateDX12Obj()
+bool DX12::CreateDX12Obj(HWND hwnd)
 {
     // DXGIファクトリーオブジェクト作成
     if (FAILED(CreateDXGIFactoryObj()))
@@ -53,7 +53,7 @@ bool DX12::CreateDX12Obj()
     }
 
     // 描画オブジェクト作成
-    if (FAILED(CreateDrawObj()))
+    if (FAILED(CreateDrawObj(hwnd)))
     {
         assert(false); return false;
     }
@@ -132,18 +132,18 @@ HRESULT DX12::CreateDeviceObj()
 }
 
 // 描画オブジェクト作成（Drawクラス）
-HRESULT DX12::CreateDrawObj()
+HRESULT DX12::CreateDrawObj(HWND hwnd)
 {
     _draw = std::make_unique<Draw>(_buffNum);
 
     DrawArg::CreateDrawObjArg arg =
-        GetCreateDrawObjArg();
+        GetCreateDrawObjArg(hwnd);
 
     return _draw->CreateDrawObj(arg);
 }
 
 // 描画オブジェクト作成用引数
-DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg()
+DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg(HWND hwnd)
 {
     DrawArg::CreateDrawObjArg arg = {};
 
@@ -152,7 +152,7 @@ DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg()
     arg.dxgiFactory =
         _dxgiFactory->GetDXGIFactory();
     arg.hwnd =
-        _hwnd;
+        hwnd;
 
     return arg;
 }
@@ -491,11 +491,6 @@ DrawArg::ExeDrawArg DX12::GetExeDrawArg()
 
 
 
-
-DX12::DX12(HWND hwnd) : DX12()
-{
-    _hwnd = hwnd;
-}
 
 DX12::DX12() {
 #ifdef _DEBUG

@@ -24,10 +24,7 @@ class Pipeline;
 class DX12
 {
 private:
-    HWND _hwnd; // ウインドウハンドル
-
     const int _buffNum = 2; // 描画に使用する画面数
-
 
     std::unique_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリーオブジェクト
     HRESULT CreateDXGIFactoryObj();            // DXGIファクトリ作成
@@ -39,8 +36,9 @@ private:
     HRESULT CreateDeviceObj();       // Direct3Dデバイスオブジェクト作成
 
     std::unique_ptr<Draw> _draw; // 描画オブジェクト
-    HRESULT CreateDrawObj();     // 描画オブジェクト作成
-
+    HRESULT CreateDrawObj(HWND hwnd); // 描画オブジェクト作成
+    DrawArg::CreateDrawObjArg // 描画オブジェクト作成用引数
+        GetCreateDrawObjArg(HWND hwnd);
 
     std::unique_ptr<Shader> _shader; // シェーダーオブジェクト
     HRESULT CreateShaderObj();       // シェーダーオブジェクト作成
@@ -78,8 +76,8 @@ private:
     // シザー矩形
     D3D12_RECT GetScissorRects();
 
-    // レンダーターゲットの準備
-    void PrepareRenderTarget();
+    
+    void PrepareRenderTarget(); // レンダーターゲットの準備
 
     // コマンドセット
     void SetCommand();
@@ -101,8 +99,6 @@ private:
     D3D12_RESOURCE_BARRIER GetResourceBarrier();
 
     // 描画オブジェクト
-    DrawArg::CreateDrawObjArg // 描画オブジェクト作成用引数
-        GetCreateDrawObjArg();
     DrawArg::PrepareRenderTargetArg // レンダーターゲット準備用引数
         GetPrepareRenderTargetArg();
     DrawArg::SetCommandArg // コマンドセット用引数
@@ -111,10 +107,9 @@ private:
         GetExeDrawArg();
     
 public:
-    bool CreateDX12Obj(); // DirectX12オブジェクト作成
+    bool CreateDX12Obj(HWND hwnd); // DirectX12オブジェクト作成
     void ExeDX12(); // DirectX12実行処理
 
-    DX12(HWND hwnd);
     DX12();
     ~DX12();
 };
