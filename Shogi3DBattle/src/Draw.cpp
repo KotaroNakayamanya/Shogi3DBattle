@@ -1,13 +1,6 @@
 ﻿#include"Draw.h"
 #include<cassert>
 
-#include"CommandAllocator.h"
-#include"CommandList.h"
-#include"CommandQueue.h"
-#include"SwapChain.h"
-#include"Fence.h"
-#include"RTVHeap.h"
-
 // 描画オブジェクト作成
 HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
 {

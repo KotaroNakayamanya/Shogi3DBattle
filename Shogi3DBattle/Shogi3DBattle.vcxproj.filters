@@ -37,9 +37,6 @@
     <Filter Include="ヘッダー ファイル\game_window">
       <UniqueIdentifier>{127d3bb3-f6f7-4aa5-b5f4-b485b8c74824}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\piece">
-      <UniqueIdentifier>{f2aef7b7-ea3d-4125-827c-a463bca68594}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\dx12">
       <UniqueIdentifier>{57166d13-f0c8-4ec6-b25f-be519ec0030e}</UniqueIdentifier>
     </Filter>
@@ -58,8 +55,14 @@
     <Filter Include="ソース ファイル\map">
       <UniqueIdentifier>{31fe555d-f8f5-4f7d-bd70-caa2e40237e0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\map">
+    <Filter Include="ヘッダー ファイル\key_map">
       <UniqueIdentifier>{54f4de9d-ec76-4f59-834a-1e00085e3871}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\scene_state">
+      <UniqueIdentifier>{78332d16-03d8-4c5d-ba6e-85e4652863a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\scene_state">
+      <UniqueIdentifier>{147c356d-309b-43f8-ae42-31545dbfb11d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -135,13 +138,13 @@
     <ClCompile Include="src\KeyMap.cpp">
       <Filter>ソース ファイル\map</Filter>
     </ClCompile>
+    <ClCompile Include="src\MovePiece.cpp">
+      <Filter>ソース ファイル\scene_state</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Piece.h">
-      <Filter>ヘッダー ファイル\piece</Filter>
     </ClInclude>
     <ClInclude Include="header\TextureStruct.h">
       <Filter>ヘッダー ファイル\struct</Filter>
@@ -222,10 +225,16 @@
       <Filter>ヘッダー ファイル\game_window</Filter>
     </ClInclude>
     <ClInclude Include="header\KeyMap.h">
-      <Filter>ヘッダー ファイル\map</Filter>
+      <Filter>ヘッダー ファイル\key_map</Filter>
     </ClInclude>
     <ClInclude Include="header\InputCommand.h">
-      <Filter>ヘッダー ファイル\map</Filter>
+      <Filter>ヘッダー ファイル\key_map</Filter>
+    </ClInclude>
+    <ClInclude Include="header\SceneState.h">
+      <Filter>ヘッダー ファイル\scene_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\MovePiece.h">
+      <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

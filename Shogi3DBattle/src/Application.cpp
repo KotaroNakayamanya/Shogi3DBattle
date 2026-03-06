@@ -1,9 +1,6 @@
 ﻿#include"Application.h"
-#include<assert.h>
 
-#include"GameWindow.h"
-#include"DX12.h"
-#include"KeyMap.h"
+#include"MovePiece.h"
 
 // 初期処理
 bool Application::Init()
@@ -18,8 +15,11 @@ bool Application::Init()
     if(_dx12->CreateDX12Obj(_gameWindow->GetHWND()) == false)
         return false;
 
-    // キーマップ作成
+    // キーマップオブジェクト作成
     _keyMap = std::make_unique<KeyMap>();
+
+    // シーンステート作成(初期は動ける状態）
+    _sceneState = std::make_unique<MovePiece>(_gameWindow->GetHWND());
 
     return true;
 }
@@ -61,28 +61,36 @@ void Application::Exit()
 LRESULT CALLBACK WindowProcedure(
      HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // キーマップを利用する
-     KeyMap* keyMap = Application::GetInstance().GetKeyMapObj();
+    Application& app = Application::GetInstance();
+    SceneState* sceneState = app.GetSceneState();
+    KeyMap* keyMap = app.GetKeyMapObj();
+
+    SceneState* newSceneState;
 
     switch(msg){
     case WM_CHAR:
         switch (keyMap->convertKeyToDirection(wparam))
         {
         case InputCommand::up:
-            DestroyWindow(hwnd);
+            newSceneState = sceneState->ExeUpCommand();
             break;
+
         case InputCommand::left:
-            DestroyWindow(hwnd);
+            newSceneState = sceneState->ExeLeftCommand();
             break;
+
         case InputCommand::down:
-            DestroyWindow(hwnd);
+            newSceneState = sceneState->ExeDownCommand();
             break;
+
         case InputCommand::right:
-            DestroyWindow(hwnd);
+            newSceneState = sceneState->ExeRightCommand();
             break;
+
         default:
-            break;
+            return DefWindowProc(hwnd, msg, wparam, lparam);
         }
+        app.SetSceneState(newSceneState);
         break;
 
     case WM_DESTROY:
@@ -95,6 +103,19 @@ LRESULT CALLBACK WindowProcedure(
 
 
 
+
+// シーンステートを返す
+SceneState* Application::GetSceneState()
+{
+    return _sceneState.get();
+}
+
+// シーンステートをセットする
+void Application::SetSceneState(SceneState* sceneState)
+{
+    if(_sceneState.get() != sceneState)
+        _sceneState.reset(sceneState);
+}
 
 // キーマップオブジェクトを返す
 KeyMap* Application::GetKeyMapObj()

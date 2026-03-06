@@ -4,14 +4,14 @@
 #include<dxgi1_6.h>
 #include<memory>
 
-#include"DrawArg.h"
+#include"CommandAllocator.h"
+#include"CommandList.h"
+#include"CommandQueue.h"
+#include"SwapChain.h"
+#include"Fence.h"
+#include"RTVHeap.h"
 
-class CommandAllocator;
-class CommandList;
-class CommandQueue;
-class SwapChain;
-class Fence;
-class RTVHeap;
+#include"DrawArg.h"
 
 class Draw
 {

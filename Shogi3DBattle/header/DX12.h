@@ -2,24 +2,24 @@
 
 #include<memory>
 
+#include"DXGIFactory.h"
+#include"Adapter.h"
+#include"Device.h"
+#include"Shader.h"
+#include"Texture.h"
+#include"Draw.h"
+#include"Vertex.h"
+#include"Object.h"
+#include"Const.h"
+#include"CSUHeap.h"
+#include"RootSignature.h"
+#include"Pipeline.h"
+
 #include"DrawArg.h"
 #include"TextureArg.h"
 #include"VertexArg.h"
 #include"HeapArg.h"
 #include"PipelineArg.h"
-
-class DXGIFactory;
-class Adapter;
-class Device;
-class Vertex;
-class Shader;
-class Draw;
-class Texture;
-class Const;
-class Object;
-class CSUHeap;
-class RootSignature;
-class Pipeline;
 
 class DX12
 {
