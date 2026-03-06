@@ -72,6 +72,9 @@
     <ClCompile Include="src\RootSignature.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
+    <ClCompile Include="src\Pipeline.cpp">
+      <Filter>ソース ファイル\DX12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -121,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="header\RootSignature.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Pipeline.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PipelineArg.h">
+      <Filter>ヘッダー ファイル\argument</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

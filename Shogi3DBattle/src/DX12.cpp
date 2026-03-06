@@ -13,6 +13,7 @@
 #include"Const.h"
 #include"Heap.h"
 #include"RootSignature.h"
+#include"Pipeline.h"
 
 #include"VertexStruct.h"
 
@@ -94,7 +95,7 @@ bool DX12::CreateDX12Obj()
         assert(false); return false;
     }
 
-    // （グラフィックス）パイプラインステート作成
+    // パイプラインステート作成
     if (FAILED(CreatePipelineState()))
     {
         assert(false); return false;
@@ -298,6 +299,17 @@ TextureArg::CreateTextureObjArg DX12::GetCreateTextureObjArg()
     return arg;
 }
 
+// サンプリングディスクリプタ
+DXGI_SAMPLE_DESC DX12::GetSampleDesc()
+{
+    DXGI_SAMPLE_DESC desc = {};
+
+    desc.Count   = 1; // サンプリング数
+    desc.Quality = 0; // クオリティ（0は最低）
+
+    return desc;
+}
+
 // 頂点オブジェクト作成
 HRESULT DX12::CreateVertexObj()
 {
@@ -345,171 +357,25 @@ HRESULT DX12::CreateRootSignatureObj()
 // パイプラインステート作成
 HRESULT DX12::CreatePipelineState()
 {
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC desc =
-        GetPipelineStateDesc();
+    _pipeline = std::make_shared<Pipeline>();
 
-    std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
-    inputLayout.resize(2);
-    inputLayout[0] =
-    { // 頂点レイアウト
-        "POSITION",
-        0,
-        DXGI_FORMAT_R32G32B32_FLOAT,
-        0,
-        D3D12_APPEND_ALIGNED_ELEMENT,
-        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-        0
-    };
-    inputLayout[1] = 
-    { // uv
-        "TEXCOORD",
-        0,
-        DXGI_FORMAT_R32G32_FLOAT,
-        0,
-        D3D12_APPEND_ALIGNED_ELEMENT,
-        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-        0
-    };
+    PipelineArg::CreatePipelineStateArg arg =
+        GetCreatePipelineStateArg();
 
-    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
-    inputLayoutDesc.pInputElementDescs =
-        inputLayout.data();
-    inputLayoutDesc.NumElements =
-        inputLayout.size();
-    
-    desc.InputLayout = inputLayoutDesc;
-
-    return _device->CreateGraphicsPipelineState(
-        &desc,
-        IID_PPV_ARGS(_pipelineState.ReleaseAndGetAddressOf()));
+    return _pipeline->CreatePipelineState(arg);
 }
 
-D3D12_GRAPHICS_PIPELINE_STATE_DESC DX12::GetPipelineStateDesc()
+PipelineArg::CreatePipelineStateArg DX12::GetCreatePipelineStateArg()
 {
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};   
-    
-    desc.pRootSignature =
-        _rootSignature->GetRootSignature();
-    desc.VS =
-        GetVertexShaderDesc();
-    desc.PS =
-        GetPixelShaderDesc();
-    desc.SampleMask =
-        D3D12_DEFAULT_SAMPLE_MASK;
-    desc.BlendState =
-        GetBlendStateDesc();
-    desc.RasterizerState =
-        GetRasterizerDesc();
-    desc.IBStripCutValue =
-        D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;
-    desc.PrimitiveTopologyType =
-        D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-    desc.NumRenderTargets =
-        1;
-    desc.RTVFormats[0] =
-        DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.SampleDesc =
-        GetSampleDesc();
+    PipelineArg::CreatePipelineStateArg arg = {};
 
+    arg.device = _device.Get();
+    arg.rootSignature = _rootSignature->GetRootSignature();
+    arg.vertexShaderBlob = _shader->GetVertexShaderBlob();
+    arg.pixelShaderBlob  = _shader->GetPixelShaderBlob();
+    arg.sampleDesc = GetSampleDesc();
 
-    return desc;
-}
-
-D3D12_INPUT_LAYOUT_DESC DX12::GetInputLayoutDesc(
-    std::vector<D3D12_INPUT_ELEMENT_DESC>* inputLayout)
-{
-    D3D12_INPUT_LAYOUT_DESC desc = {};
-
-    desc.pInputElementDescs =
-        inputLayout->data();
-    desc.NumElements =
-        inputLayout->size();
- 
-    return desc;
-}
-
-D3D12_SHADER_BYTECODE DX12::GetVertexShaderDesc()
-{
-    D3D12_SHADER_BYTECODE desc = {};
-
-    ComPtr<ID3DBlob> vertexShaderBlob =
-        _shader->GetVertexShaderBlob();
-
-    desc.pShaderBytecode =
-        vertexShaderBlob->GetBufferPointer();
-    desc.BytecodeLength =
-        vertexShaderBlob->GetBufferSize();
-
-    return desc;
-}
-
-D3D12_SHADER_BYTECODE DX12::GetPixelShaderDesc()
-{
-    D3D12_SHADER_BYTECODE desc = {};
-
-    ComPtr<ID3DBlob> pixelShaderBlob =
-        _shader->GetPixelShaderBlob();
-
-    desc.pShaderBytecode =
-        pixelShaderBlob->GetBufferPointer();
-    desc.BytecodeLength =
-        pixelShaderBlob->GetBufferSize();
-
-    return desc;
-}
-
-D3D12_BLEND_DESC DX12::GetBlendStateDesc()
-{
-    D3D12_BLEND_DESC desc = {};
-
-    desc.AlphaToCoverageEnable =
-        false;
-    desc.IndependentBlendEnable =
-        false;
-    desc.RenderTarget[0] = 
-        GetRenderTargetBlendDesc();
-
-    return desc;
-}
-
-D3D12_RENDER_TARGET_BLEND_DESC DX12::GetRenderTargetBlendDesc()
-{
-    D3D12_RENDER_TARGET_BLEND_DESC desc = {};
-
-    desc.BlendEnable =
-        false;
-    desc.LogicOpEnable =
-        false;
-    desc.RenderTargetWriteMask =
-        D3D12_COLOR_WRITE_ENABLE_ALL;
-
-    return desc;
-}
-
-D3D12_RASTERIZER_DESC DX12::GetRasterizerDesc()
-{
-    D3D12_RASTERIZER_DESC desc = {};
-
-    desc.MultisampleEnable =
-        false;
-    desc.CullMode =
-        D3D12_CULL_MODE_NONE;
-    desc.FillMode =
-        D3D12_FILL_MODE_SOLID;
-    desc.DepthClipEnable =
-        true;
-
-    return desc;
-}
-
-DXGI_SAMPLE_DESC DX12::GetSampleDesc()
-{
-    DXGI_SAMPLE_DESC desc = {};
-
-    desc.Count   = 1; // サンプリング数
-    desc.Quality = 0; // クオリティ（0は最低）
-
-    return desc;
+    return arg;
 }
 
 
@@ -585,7 +451,7 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
     DrawArg::SetCommandArg arg = {};
 
     arg.pipelineState =
-        _pipelineState.Get();
+        _pipeline->GetPipelineState();
     arg.rootSignature =
         _rootSignature->GetRootSignature();
     arg.heap

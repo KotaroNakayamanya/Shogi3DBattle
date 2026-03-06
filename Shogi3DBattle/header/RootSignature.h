@@ -75,7 +75,7 @@ private:
 
 public:
     HRESULT CreateRootSignatureObj(ID3D12Device* device); // ルートシグネチャ作成  
-    ID3D12RootSignature* GetRootSignature(); // ルートシグネチャアを渡す
+    ID3D12RootSignature* GetRootSignature(); // ルートシグネチャを渡す
 
     RootSignature();
     ~RootSignature();

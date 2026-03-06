@@ -27,6 +27,7 @@
     <ClCompile Include="src\Heap.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Object.cpp" />
+    <ClCompile Include="src\Pipeline.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -41,6 +42,8 @@
     <ClInclude Include="header\HeapArg.h" />
     <ClInclude Include="header\Piece.h" />
     <ClInclude Include="header\Object.h" />
+    <ClInclude Include="header\Pipeline.h" />
+    <ClInclude Include="header\PipelineArg.h" />
     <ClInclude Include="header\RootSignature.h" />
     <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\Texture.h" />

@@ -9,7 +9,7 @@
 HRESULT Texture::CreateTextureObj(TextureArg::CreateTextureObjArg arg)
 {
     // テクスチャバッファ作成
-    if(FAILED(CreateTextureBuff(arg.device, arg.sampleDesc)))
+    if(FAILED(CreateTextureBuff(arg)))
     {
         assert(false); return E_FAIL;
     }
@@ -23,14 +23,12 @@ HRESULT Texture::CreateTextureObj(TextureArg::CreateTextureObjArg arg)
 }
 
 // テクスチャバッファ作成
-HRESULT Texture::CreateTextureBuff(ID3D12Device* device, DXGI_SAMPLE_DESC sampleDesc)
+HRESULT Texture::CreateTextureBuff(TextureArg::CreateTextureObjArg arg)
 {
     D3D12_HEAP_PROPERTIES heapProp = GetHeapProp();
-    D3D12_RESOURCE_DESC resourceDesc = GetResourceDesc();
-
-    resourceDesc.SampleDesc = sampleDesc;
+    D3D12_RESOURCE_DESC resourceDesc = GetResourceDesc(arg.sampleDesc);
  
-    return device->CreateCommittedResource(
+    return arg.device->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
@@ -85,7 +83,7 @@ D3D12_HEAP_PROPERTIES Texture::GetHeapProp()
 }
 
 // テクスチャリソースディスクリプタ
-D3D12_RESOURCE_DESC Texture::GetResourceDesc()
+D3D12_RESOURCE_DESC Texture::GetResourceDesc(DXGI_SAMPLE_DESC sampleDesc)
 {
     D3D12_RESOURCE_DESC desc = {};
 
@@ -105,7 +103,8 @@ D3D12_RESOURCE_DESC Texture::GetResourceDesc()
         D3D12_TEXTURE_LAYOUT_UNKNOWN;
     desc.Flags =
         D3D12_RESOURCE_FLAG_NONE;
-   
+    desc.SampleDesc =
+        sampleDesc;
 
     return desc;
 }

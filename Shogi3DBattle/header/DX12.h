@@ -12,6 +12,7 @@
 #include"TextureArg.h"
 #include"VertexArg.h"
 #include"HeapArg.h"
+#include"PipelineArg.h"
 
 class Vertex;
 class Shader;
@@ -21,6 +22,7 @@ class Const;
 class Object;
 class Heap;
 class RootSignature;
+class Pipeline;
 
 class DX12
 {
@@ -36,10 +38,8 @@ private:
     ComPtr<ID3D12Device>  _device;      // Direct3Dデバイス
     ComPtr<IDXGIFactory6> _dxgiFactory; // DXGIファクトリ
 
-    
-
-    //ComPtr<ID3D12RootSignature> _rootSignature; // ルートシグネチャ
-    ComPtr<ID3D12PipelineState> _pipelineState; //パイプラインステート
+    // パイプラインオブジェクト
+    std::shared_ptr<Pipeline> _pipeline;
 
     std::vector<D3D12_INPUT_ELEMENT_DESC> _inputLayout; // インプットレイアウト
 
@@ -57,6 +57,9 @@ private:
 
 
     HRESULT CreatePipelineState(); // パイプラインステート作成
+    PipelineArg::CreatePipelineStateArg GetCreatePipelineStateArg(); // パイプラインステート作成用引数
+
+    DXGI_SAMPLE_DESC GetSampleDesc();                          // サンプリングディスクリプタ
   
 
  
@@ -69,22 +72,6 @@ private:
     // コンスタンとオブジェクト
     std::shared_ptr<Const> _const;
     HRESULT CreateConstObj();
-
-
-
-    // パイプラインステート
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC GetPipelineStateDesc(); // パイプラインステートディスクリプタ
-    D3D12_SHADER_BYTECODE GetVertexShaderDesc();               // 頂点シェーダーディスクリプタ
-    D3D12_SHADER_BYTECODE GetPixelShaderDesc();                // ピクセルシェーダーディスクリプタ
-    D3D12_BLEND_DESC GetBlendStateDesc();                      // ブレンドステートディスクリプタ
-    D3D12_RENDER_TARGET_BLEND_DESC GetRenderTargetBlendDesc(); // レンダーターゲットブレンドディスクリプタ
-    D3D12_RASTERIZER_DESC GetRasterizerDesc();                 // ラスタライザディスクリプタ
-    D3D12_INPUT_LAYOUT_DESC GetInputLayoutDesc(                // インプットレイアウトディスクリプタ
-        std::vector<D3D12_INPUT_ELEMENT_DESC>* inputLayout);
-    DXGI_SAMPLE_DESC GetSampleDesc();                          // サンプリングディスクリプタ
-
-    
-
 
     // ビューポート
     D3D12_VIEWPORT GetViewports();

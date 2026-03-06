@@ -14,11 +14,10 @@ private:
     ComPtr<ID3D12Resource> _buff; // テクスチャバッファ
 
     HRESULT CreateTextureBuff( // テクスチャバッファ作成
-        ID3D12Device* device,
-        DXGI_SAMPLE_DESC sampleDesc);
+        TextureArg::CreateTextureObjArg arg);
     HRESULT WriteTextureToBuff(); // テクスチャ書き込み
     
-    D3D12_RESOURCE_DESC GetResourceDesc();   // リソースディスクリプタ
+    D3D12_RESOURCE_DESC GetResourceDesc(DXGI_SAMPLE_DESC sampleDesc);   // リソースディスクリプタ
     D3D12_HEAP_PROPERTIES GetHeapProp(); // テクスチャヒーププロパティ
 
 
