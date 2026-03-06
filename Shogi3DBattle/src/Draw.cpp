@@ -3,6 +3,9 @@
 
 #include"CommandAllocator.h"
 #include"CommandList.h"
+#include"CommandQueue.h"
+#include"SwapChain.h"
+#include"Fence.h"
 
 // 描画オブジェクト作成
 HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
@@ -17,18 +20,23 @@ HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
     {
         assert(false); return E_FAIL;
     }
-    // コマンドキュー作成
-    if (FAILED(CreateCommandQueue(arg.device)))
+    // コマンドキューオブジェクト作成
+    if (FAILED(CreateCommandQueueObj(arg.device)))
     {
         assert(false); return E_FAIL;
     }
-    // スワップチェーン作成
-    if (FAILED(CreateSwapChain(arg.dxgiFactory, arg.hwnd)))
+    // スワップチェーンオブジェクト作成
+    if (FAILED(CreateSwapChainObj(arg.dxgiFactory, arg.hwnd)))
     {
         assert(false); return E_FAIL;
     }
-    // フェンス作成
-    if (FAILED(CreateFence(arg.device)))
+    //// フェンス作成
+    //if (FAILED(CreateFence(arg.device)))
+    //{
+    //    assert(false); return E_FAIL;
+    //}
+    // // フェンスオブジェクト作成
+    if (FAILED(CreateFenceObj(arg.device)))
     {
         assert(false); return E_FAIL;
     }
@@ -47,49 +55,52 @@ HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
 // コマンドアロケータオブジェクト作成
 HRESULT Draw::CreateCommandAllocatorObj(ID3D12Device* device)
 {
-    _commandAllocator = std::make_shared<CommandAllocator>();
+    _commandAllocator = std::make_unique<CommandAllocator>();
     return _commandAllocator->CreateCommandAllocator(device);
 }
 
 // コマンドリストオブジェクト作成
 HRESULT Draw::CreateCommandListObj(ID3D12Device* device)
 {
-    _commandList = std::make_shared<CommandList>();
+    _commandList = std::make_unique<CommandList>();
     return _commandList->CreateCommandList(
         device, _commandAllocator->GetCommandAllocator());
 }
-
-// コマンドキュー作成
-HRESULT Draw::CreateCommandQueue(ID3D12Device* device)
+// コマンドキューオブジェクト作成
+HRESULT Draw::CreateCommandQueueObj(ID3D12Device* device)
 {
-    D3D12_COMMAND_QUEUE_DESC commandQueueDesc = GetCommandQueueDesc();
-
-    return device->CreateCommandQueue(
-        &commandQueueDesc,
-        IID_PPV_ARGS(_commandQueue.ReleaseAndGetAddressOf()));
+    _commandQueue = std::make_unique<CommandQueue>();
+    return _commandQueue->CreateCommandQueue(device);
 }
 
-// スワップチェーン作成
-HRESULT Draw::CreateSwapChain(IDXGIFactory6* dxgiFactory, HWND hwnd)
+// スワップチェーンオブジェクト作成
+HRESULT Draw::CreateSwapChainObj(
+    IDXGIFactory6* dxgiFactory,
+    HWND hwnd)
 {
-    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = GetSwapChainDesc();
+    _swapChain = std::make_unique<SwapChain>();
 
-    return dxgiFactory->CreateSwapChainForHwnd(
-        _commandQueue.Get(),
-        hwnd,
-        &swapChainDesc,
-        nullptr,
-        nullptr,
-        (IDXGISwapChain1**)_swapChain.ReleaseAndGetAddressOf());
+    ID3D12CommandQueue* commandQueue =
+        _commandQueue->GetCommandQueue();
+
+    return _swapChain->CreateSwapChain(
+        dxgiFactory, commandQueue, hwnd, _buffNum);
 }
 
-// フェンス作成
-HRESULT Draw::CreateFence(ID3D12Device* device)
+//// フェンス作成
+//HRESULT Draw::CreateFence(ID3D12Device* device)
+//{
+//    return device->CreateFence(
+//        _fenceVal,
+//        D3D12_FENCE_FLAG_NONE,
+//        IID_PPV_ARGS(_fence.ReleaseAndGetAddressOf()));
+//}
+// フェンスオブジェクト作成
+HRESULT Draw::CreateFenceObj(ID3D12Device* device)
 {
-    return device->CreateFence(
-        _fenceVal,
-        D3D12_FENCE_FLAG_NONE,
-        IID_PPV_ARGS(_fence.ReleaseAndGetAddressOf()));
+    _fence = std::make_unique<Fence>();
+
+    return _fence->CreateFence(device);
 }
 
 // RTVヒープ作成
@@ -135,7 +146,7 @@ HRESULT Draw::CreateRTV(ID3D12Device* device)
 // RTVにバッファを対応させる
  HRESULT Draw::SetRTVBuffer(UINT i)
 {
-    return _swapChain->GetBuffer(
+    return _swapChain->GetSwapChain()->GetBuffer(
         i, 
         IID_PPV_ARGS(_rtvs[i].ReleaseAndGetAddressOf()));
 }
@@ -147,7 +158,7 @@ HRESULT Draw::CreateRTV(ID3D12Device* device)
 void Draw::PrepareRenderTarget(DrawArg::PrepareRenderTargetArg arg)
 {
     // バックバッファに対応するRTVをレンダーターゲットに設定
-    auto backBufferIdx = _swapChain->GetCurrentBackBufferIndex();
+    auto backBufferIdx = _swapChain->GetSwapChain()->GetCurrentBackBufferIndex();
     auto rtvHandle = _rtvHeap->GetCPUDescriptorHandleForHeapStart();
     rtvHandle.ptr += backBufferIdx * arg.rtvOffset;
 
@@ -163,7 +174,7 @@ void Draw::ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier
 {
     D3D12_RESOURCE_BARRIER barrier = resourceBarrier;
 
-    auto backBufferIdx = _swapChain->GetCurrentBackBufferIndex();
+    auto backBufferIdx = _swapChain->GetSwapChain()->GetCurrentBackBufferIndex();
 
     barrier.Transition.pResource =
         _rtvs[backBufferIdx].Get();
@@ -239,7 +250,7 @@ void Draw::ExeDraw(DrawArg::ExeDrawArg arg)
     ResetCommand();
 
     // 画面スワップ
-    _swapChain->Present(1, 0);
+    _swapChain->GetSwapChain()->Present(1, 0);
 
 }
 
@@ -248,7 +259,7 @@ void Draw::ChangeRTVBarrierToPresent(D3D12_RESOURCE_BARRIER resourceBarrier)
 {
     D3D12_RESOURCE_BARRIER barrier = resourceBarrier;
 
-    auto backBufferIdx = _swapChain->GetCurrentBackBufferIndex();
+    auto backBufferIdx = _swapChain->GetSwapChain()->GetCurrentBackBufferIndex();
 
     barrier.Transition.pResource =
         _rtvs[backBufferIdx].Get();
@@ -266,19 +277,19 @@ void Draw::ChangeRTVBarrierToPresent(D3D12_RESOURCE_BARRIER resourceBarrier)
 void Draw::ExeCommand()
 {
     ID3D12CommandList* commandLists[] = {_commandList->GetCommandList()};
-    _commandQueue->ExecuteCommandLists(1, commandLists);
+    _commandQueue->GetCommandQueue()->ExecuteCommandLists(1, commandLists);
 }
 
 // フェンスによる同期制御
 void Draw::WaitProcessWithFence()
 {
     // GPU処理完了後のフェンスの値を設定
-    _commandQueue->Signal(_fence.Get(), ++_fenceVal);
+    _commandQueue->GetCommandQueue()->Signal(_fence->GetFence(), _fence->GetIncrementFenceVal());
 
-    while (_fence->GetCompletedValue() != _fenceVal)
+    while (_fence->GetFence()->GetCompletedValue() != _fence->GetFenceVal())
     {
         auto event = CreateEvent(nullptr, false, false, nullptr);
-        _fence->SetEventOnCompletion(_fenceVal, event);
+        _fence->GetFence()->SetEventOnCompletion(_fence->GetFenceVal(), event);
         WaitForSingleObject(event, INFINITE);
         CloseHandle(event);
     }
@@ -294,59 +305,6 @@ void Draw::ResetCommand()
     _commandList->GetCommandList()->Reset(commandAllocator, nullptr);
 }
 
-
-
-
-// コマンドキューディスクリプタ
-D3D12_COMMAND_QUEUE_DESC Draw::GetCommandQueueDesc()
-{
-    D3D12_COMMAND_QUEUE_DESC desc = {};
-
-    desc.Type =    // コマンドリストタイプの種類
-        D3D12_COMMAND_LIST_TYPE_DIRECT;
-    desc.Priority = // アプリケーション優先度 通常
-        D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
-    desc.Flags = // タイムアウトなし
-        D3D12_COMMAND_QUEUE_FLAG_NONE; 
-    desc.NodeMask =
-        0;
-
-    return desc;
-}
-
-// スワップチェーンディスクリプタ
-DXGI_SWAP_CHAIN_DESC1 Draw::GetSwapChainDesc()
-{
-    DXGI_SWAP_CHAIN_DESC1 desc = {};
-
-    desc.Width =
-        1280;
-    desc.Height =
-        720;
-    desc.Format =
-        DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.Stereo =
-        false;
-    desc.SampleDesc.Count =
-        1;
-    desc.SampleDesc.Quality =
-        0;
-    desc.BufferUsage =
-        DXGI_USAGE_BACK_BUFFER;
-    desc.BufferCount =
-        _buffNum;
-
-    desc.Scaling =
-        DXGI_SCALING_STRETCH;
-    desc.SwapEffect =
-        DXGI_SWAP_EFFECT_FLIP_DISCARD;
-    desc.AlphaMode =
-        DXGI_ALPHA_MODE_UNSPECIFIED;
-    desc.Flags =
-        DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-
-    return desc;
-}
 // ヒープディスクリプタ
 D3D12_DESCRIPTOR_HEAP_DESC Draw::GetHeapDesc()
 {

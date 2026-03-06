@@ -29,3 +29,6 @@ unsigned int Object::GetIndicesByte()
 {
     return _indices.size() * sizeof(_indices[0]);
 }
+
+Object::Object(){}
+Object::~Object(){}

@@ -10,6 +10,9 @@
 
 class CommandAllocator;
 class CommandList;
+class CommandQueue;
+class SwapChain;
+class Fence;
 
 class Draw
 {
@@ -18,27 +21,30 @@ class Draw
 
 private:
     UINT _buffNum;  // バッファー数（スワップチェーン作成に利用）
-    UINT _fenceVal = 0; // フェンスの同期処理確認用
+    //UINT _fenceVal = 0; // フェンスの同期処理確認用
 
-    std::shared_ptr<CommandAllocator> _commandAllocator;     // コマンドアロケータオブジェクト
+    std::unique_ptr<CommandAllocator> _commandAllocator;     // コマンドアロケータオブジェクト
     HRESULT CreateCommandAllocatorObj(ID3D12Device* device); // コマンドアロケータオブジェクト作成
 
-    std::shared_ptr<CommandList> _commandList;     // コマンドアロケータオブジェクト
+    std::unique_ptr<CommandList> _commandList;          // コマンドアロケータオブジェクト
     HRESULT CreateCommandListObj(ID3D12Device* device); // コマンドアロケータオブジェクト作成
 
-    //ComPtr<ID3D12GraphicsCommandList>   _commandList;      // コマンドリスト
-    ComPtr<ID3D12CommandQueue>          _commandQueue;     // コマンドキュー
-    ComPtr<IDXGISwapChain4>             _swapChain;        // スワップチェーン
-    ComPtr<ID3D12Fence>                 _fence;            // フェンス
+    std::unique_ptr<CommandQueue> _commandQueue;         // コマンドキューオブジェクト
+    HRESULT CreateCommandQueueObj(ID3D12Device* device); // コマンドキューオブジェクト作成
+
+    std::unique_ptr<SwapChain> _swapChain; // スワップチェーンオブジェクト
+    HRESULT CreateSwapChainObj(            // スワップチェーンオブジェクト作成
+        IDXGIFactory6* dxgiFactory,
+        HWND hwnd);
+
+    std::unique_ptr<Fence> _fence;         // コマンドキューオブジェクト
+    HRESULT CreateFenceObj(ID3D12Device* device); // コマンドキューオブジェクト作成
+
+    //ComPtr<ID3D12Fence>                 _fence;            // フェンス
     ComPtr<ID3D12DescriptorHeap>        _rtvHeap;          // RTVヒープ
     std::vector<ComPtr<ID3D12Resource>> _rtvs;             // RTV
 
-
-    
-    //HRESULT CreateCommandList(ID3D12Device* device); // コマンドリスト作成
-    HRESULT CreateCommandQueue(ID3D12Device* device); // コマンドキュー作成
-    HRESULT CreateSwapChain(IDXGIFactory6* dxgiFactory, HWND hwnd); // スワップチェーン作成
-    HRESULT CreateFence(ID3D12Device* device); // フェンス作成
+    //HRESULT CreateFence(ID3D12Device* device); // フェンス作成
     HRESULT CreateRTVHeap(ID3D12Device* device); // RTVヒープ作成
     HRESULT CreateRTV(ID3D12Device* device); // RTV作成
 
@@ -55,9 +61,6 @@ private:
 
     void ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle);
 
-
-    D3D12_COMMAND_QUEUE_DESC GetCommandQueueDesc(); // コマンドキューディスクリプタ
-    DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc(); // スワップチェーンディスクリプタ
     D3D12_DESCRIPTOR_HEAP_DESC GetHeapDesc(); // RTVヒープディスクリプタ
 
 

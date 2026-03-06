@@ -110,7 +110,7 @@ bool DX12::CreateDX12Obj()
 // DXGIファクトリオブジェクト作成
 HRESULT DX12::CreateDXGIFactoryObj()
 {
-    _dxgiFactory = std::make_shared<DXGIFactory>();
+    _dxgiFactory = std::make_unique<DXGIFactory>();
 
     return _dxgiFactory->CreateDXGIFactory();
 }
@@ -118,7 +118,7 @@ HRESULT DX12::CreateDXGIFactoryObj()
 // アダプターオブジェクト作成
 HRESULT DX12::CreateAdapterObj()
 {
-    _adapter = std::make_shared<Adapter>();
+    _adapter = std::make_unique<Adapter>();
 
     return _adapter->CreateAdapter(_dxgiFactory->GetDXGIFactory());
 }
@@ -126,7 +126,7 @@ HRESULT DX12::CreateAdapterObj()
 // デバイスオブジェクト作成
 HRESULT DX12::CreateDeviceObj()
 {
-    _device = std::make_shared<Device>();
+    _device = std::make_unique<Device>();
     
     return _device->CreateDevice(_adapter->GetAdapter());
 }
@@ -134,7 +134,7 @@ HRESULT DX12::CreateDeviceObj()
 // 描画オブジェクト作成（Drawクラス）
 HRESULT DX12::CreateDrawObj()
 {
-    _draw = std::make_shared<Draw>(_buffNum);
+    _draw = std::make_unique<Draw>(_buffNum);
 
     DrawArg::CreateDrawObjArg arg =
         GetCreateDrawObjArg();
@@ -160,7 +160,7 @@ DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg()
 // ヒープ作成
 HRESULT DX12::CreateHeapObj()
 {
-    _heap = std::make_shared<Heap>();
+    _heap = std::make_unique<Heap>();
 
     HeapArg::CreateHeapArg arg = GetCreateHeapObjArg();
 
@@ -182,14 +182,13 @@ HeapArg::CreateHeapArg DX12::GetCreateHeapObjArg()
 // 頂点集合作成
 HRESULT DX12::CreateVertexSets()
 {
-    int objectNum = 1;
-    _objects.resize(objectNum);
 
-    std::for_each(_objects.begin(), _objects.end(),
-        [](std::shared_ptr<Object>& object)
+    /*std::for_each(_objects.begin(), _objects.end(),
+        [](std::unique_ptr<Object>& object)
         {
-            object.reset(new Object);
-        });
+            object = std::make_unique<Object>();
+        });*/
+    _object = std::make_unique<Object>();
 
     return S_OK;
 }
@@ -197,7 +196,7 @@ HRESULT DX12::CreateVertexSets()
 // テクスチャオブジェクト作成
 HRESULT DX12::CreateTextureObj()
 {
-    _texture = std::make_shared<Texture>();
+    _texture = std::make_unique<Texture>();
 
     TextureArg::CreateTextureObjArg arg =
         GetCreateTextureObjArg();
@@ -208,7 +207,7 @@ HRESULT DX12::CreateTextureObj()
 // コンスタントオブジェクト作成
 HRESULT DX12::CreateConstObj()
 {
-    _const = std::make_shared<Const>();
+    _const = std::make_unique<Const>();
 
     return _const->CreateConstObj(_device->GetDevice());
 }
@@ -238,7 +237,7 @@ DXGI_SAMPLE_DESC DX12::GetSampleDesc()
 // 頂点オブジェクト作成
 HRESULT DX12::CreateVertexObj()
 {
-    _vertex = std::make_shared<Vertex>();
+    _vertex = std::make_unique<Vertex>();
 
     VertexArg::GetCreateVertexObjArg arg =
         GetCreateVertexObjArg();
@@ -252,10 +251,10 @@ VertexArg::GetCreateVertexObjArg DX12::GetCreateVertexObjArg()
     VertexArg::GetCreateVertexObjArg arg = {};
 
     arg.device = _device->GetDevice();
-    arg.vertexByte = _objects[0]->GetVerticesCount() * _objects[0]->GetVerticesByte();
-    arg.vertexPtr = _objects[0]->GetVerticesPtr();
-    arg.indexByte = _objects[0]->GetIndicesByte();
-    arg.indexPtr = _objects[0]->GetIndicesPtr();
+    arg.vertexByte = _object->GetVerticesCount() * _object->GetVerticesByte();
+    arg.vertexPtr = _object->GetVerticesPtr();
+    arg.indexByte = _object->GetIndicesByte();
+    arg.indexPtr = _object->GetIndicesPtr();
 
     return arg;
 }
@@ -263,14 +262,14 @@ VertexArg::GetCreateVertexObjArg DX12::GetCreateVertexObjArg()
 // シェーダーバイナリ作成
 HRESULT DX12::CreateShaderObj()
 {
-    _shader = std::make_shared<Shader>();
+    _shader = std::make_unique<Shader>();
     return _shader->CreateShaderBlob();
 }
 
 //// ルートシグネチャオブジェクト作成
 HRESULT DX12::CreateRootSignatureObj()
 {
-    _rootSignature = std::make_shared<RootSignature>();
+    _rootSignature = std::make_unique<RootSignature>();
 
     return _rootSignature->CreateRootSignatureObj(_device->GetDevice());
 }
@@ -282,7 +281,7 @@ HRESULT DX12::CreateRootSignatureObj()
 // パイプラインオブジェクト作成
 HRESULT DX12::CreatePipelineObj()
 {
-    _pipeline = std::make_shared<Pipeline>();
+    _pipeline = std::make_unique<Pipeline>();
 
     PipelineArg::CreatePipelineStateArg arg =
         GetCreatePipelineObjArg();
@@ -394,9 +393,9 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
     arg.indexBuffView =
         GetIndexBuffView();
     arg.vertexCount
-        = _objects[0]->GetIndicesCount();
+        = _object->GetIndicesCount();
     arg.objCount
-        = _objects.size();
+        = 1;
 
     return arg;
 }
@@ -437,8 +436,8 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBuffView()
     ComPtr<ID3D12Resource> vertexBuff =
         _vertex->GetVertexBuff();
 
-    UINT vertexByte = _objects[0]->GetVerticesByte();
-    UINT verticesByte = vertexByte * _objects[0]->GetVerticesCount();
+    UINT vertexByte = _object->GetVerticesByte();
+    UINT verticesByte = vertexByte * _object->GetVerticesCount();
 
     view.BufferLocation =
         vertexBuff->GetGPUVirtualAddress();
@@ -458,7 +457,7 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBuffView()
     ComPtr<ID3D12Resource> indexBuff =
         _vertex->GetIndexBuff();
 
-    UINT indicesByte = _objects[0]->GetIndicesByte();
+    UINT indicesByte = _object->GetIndicesByte();
 
     view.BufferLocation =
         indexBuff->GetGPUVirtualAddress();

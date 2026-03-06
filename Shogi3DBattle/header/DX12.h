@@ -29,44 +29,44 @@ private:
     const int _buffNum = 2; // 描画に使用する画面数
 
 
-    std::shared_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリーオブジェクト
+    std::unique_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリーオブジェクト
     HRESULT CreateDXGIFactoryObj();            // DXGIファクトリ作成
 
-    std::shared_ptr<Adapter> _adapter; // アダプターオブジェクト
+    std::unique_ptr<Adapter> _adapter; // アダプターオブジェクト
     HRESULT CreateAdapterObj();        // アダプターオブジェクト作成
 
-    std::shared_ptr<Device> _device; // Direct3Dデバイスオブジェクト
+    std::unique_ptr<Device> _device; // Direct3Dデバイスオブジェクト
     HRESULT CreateDeviceObj();       // Direct3Dデバイスオブジェクト作成
 
-    std::shared_ptr<Draw> _draw; // 描画オブジェクト
+    std::unique_ptr<Draw> _draw; // 描画オブジェクト
     HRESULT CreateDrawObj();     // 描画オブジェクト作成
 
 
-    std::shared_ptr<Shader> _shader; // シェーダーオブジェクト
+    std::unique_ptr<Shader> _shader; // シェーダーオブジェクト
     HRESULT CreateShaderObj();       // シェーダーオブジェクト作成
 
-    std::shared_ptr<Vertex> _vertex; // 頂点オブジェクト
+    std::unique_ptr<Vertex> _vertex; // 頂点オブジェクト
     HRESULT CreateVertexObj();       // 頂点オブジェクト作成
     VertexArg::GetCreateVertexObjArg // 頂点オブジェクト作成用引数
         GetCreateVertexObjArg();
 
-    std::shared_ptr<RootSignature> _rootSignature; // ルートシグネチャオブジェクト
+    std::unique_ptr<RootSignature> _rootSignature; // ルートシグネチャオブジェクト
     HRESULT CreateRootSignatureObj();              // ルートシグネチャオブジェクト作成
 
-    std::shared_ptr<Pipeline> _pipeline; // パイプラインオブジェクト
+    std::unique_ptr<Pipeline> _pipeline; // パイプラインオブジェクト
     HRESULT CreatePipelineObj();         // パイプラインオブジェクト作成
     PipelineArg::CreatePipelineStateArg  // パイプラインオブジェクト作成用引数
         GetCreatePipelineObjArg(); 
 
-    std::shared_ptr<Texture> _texture; // テクスチャオブジェクト
+    std::unique_ptr<Texture> _texture; // テクスチャオブジェクト
     HRESULT CreateTextureObj();        // テクスチャオブジェクト作成
     TextureArg::CreateTextureObjArg    // テクスチャオブジェクト作成用引数
         GetCreateTextureObjArg();
 
-    std::shared_ptr<Const> _const; // コンスタントオブジェクト
+    std::unique_ptr<Const> _const; // コンスタントオブジェクト
     HRESULT CreateConstObj();      // コンスタントオブジェクト作成
 
-    std::shared_ptr<Heap> _heap; // ヒープオブジェクト
+    std::unique_ptr<Heap> _heap; // ヒープオブジェクト
     HRESULT CreateHeapObj();     // ヒープオブジェクト作成
     HeapArg::CreateHeapArg       // ヒープオブジェクト作成用引数
         GetCreateHeapObjArg();  
@@ -85,7 +85,7 @@ private:
     void SetCommand();
 
     // 頂点オブジェクト
-    std::vector<std::shared_ptr<Object>> _objects;
+    std::unique_ptr<Object> _object;
     HRESULT CreateVertexSets();
     
     // コマンドセット
