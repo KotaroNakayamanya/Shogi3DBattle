@@ -76,22 +76,22 @@ std::vector<D3D12_ROOT_PARAMETER> RootSignature::GetRootParams(UINT paramNum)
 {
     std::vector<D3D12_ROOT_PARAMETER> descs = {};
     descs.resize(paramNum);
-
-    // SRV
+ 
+    // CBV
     descs[0].ParameterType = // ディスクリプタテーブル
         D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-    descs[0].ShaderVisibility = // ピクセルシェーダで利用可能
-        D3D12_SHADER_VISIBILITY_PIXEL;
+    descs[0].ShaderVisibility = // 頂点シェーダで利用可能
+        D3D12_SHADER_VISIBILITY_VERTEX;
     descs[0].DescriptorTable =
-        GetDescTable(new RangeTypeSRV(1));
-    
-    // CBV
+        GetDescTable(new RangeTypeCBV(1));
+
+    // SRV
     descs[1].ParameterType = // ディスクリプタテーブル
         D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-    descs[1].ShaderVisibility = // 頂点シェーダで利用可能
-        D3D12_SHADER_VISIBILITY_VERTEX;
+    descs[1].ShaderVisibility = // ピクセルシェーダで利用可能
+        D3D12_SHADER_VISIBILITY_PIXEL;
     descs[1].DescriptorTable =
-        GetDescTable(new RangeTypeCBV(1));
+        GetDescTable(new RangeTypeSRV(1));
 
     return descs;
 }
@@ -113,6 +113,30 @@ D3D12_ROOT_DESCRIPTOR_TABLE RootSignature::GetDescTable(RangeTypeState* rangeTyp
         rangeType->GetRangeNum();;
 
     return desc;
+}
+
+// CBVディスクリプタレンジ
+std::vector<D3D12_DESCRIPTOR_RANGE> RootSignature::RangeTypeCBV::GetCBVDescRanges()
+{
+    std::vector<D3D12_DESCRIPTOR_RANGE> descs = {};
+    descs.resize(GetRangeNum());
+
+    UINT slotNo = 0;
+    for (auto& desc : descs)
+    {
+        desc.NumDescriptors = // ディスクリプタ数
+            1;
+        desc.RangeType = // タイプ：CRV
+            D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+        desc.BaseShaderRegister = // スロット0から
+            slotNo;
+        desc.OffsetInDescriptorsFromTableStart =
+            D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+        slotNo++;
+    }
+    
+    return descs;
 }
 
 // SRVディスクリプタレンジ
@@ -137,30 +161,6 @@ std::vector<D3D12_DESCRIPTOR_RANGE> RootSignature::RangeTypeSRV::GetSRVDescRange
     }
     
 
-    return descs;
-}
-
-// CBVディスクリプタレンジ
-std::vector<D3D12_DESCRIPTOR_RANGE> RootSignature::RangeTypeCBV::GetCBVDescRanges()
-{
-    std::vector<D3D12_DESCRIPTOR_RANGE> descs = {};
-    descs.resize(GetRangeNum());
-
-    UINT slotNo = 0;
-    for (auto& desc : descs)
-    {
-        desc.NumDescriptors = // ディスクリプタ数
-            1;
-        desc.RangeType = // タイプ：CRV
-            D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-        desc.BaseShaderRegister = // スロット0から
-            slotNo;
-        desc.OffsetInDescriptorsFromTableStart =
-            D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-        slotNo++;
-    }
-    
     return descs;
 }
 

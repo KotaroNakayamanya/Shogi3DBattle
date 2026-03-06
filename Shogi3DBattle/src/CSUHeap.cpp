@@ -1,57 +1,55 @@
 #include"CSUHeap.h"
-
 #include<cassert>
 
 // ヒープ作成
-HRESULT CSUHeap::CreateHeap(CSUHeapArg::CreateCSUHeapArg arg)
+HRESULT CSUHeap::CreateHeap(HeapArg::CreateCSUHeapArg arg)
 {
+    HRESULT result;
+
     // ヒープ作成
-    if (FAILED(CreateHeap(arg.device)))
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetHeapDesc();
+
+    result = arg.device->CreateDescriptorHeap(
+        &heapDesc,
+        IID_PPV_ARGS(_heap.ReleaseAndGetAddressOf()));
+    if (FAILED(result))
     {
         assert(false); return E_FAIL;
     }
 
     // ビュー作成
-    CreateSRV(arg.device, arg.srvBuff);
-    CreateCBV(arg.device, arg.cbvBuff);
+    CreateCBV(arg.device, arg.buff1);
+    CreateSRV(arg.device, arg.buff2);
+    
 
     return S_OK;
-}
-
-// ヒープ作成
-HRESULT CSUHeap::CreateHeap(ID3D12Device* device)
-{
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetHeapDesc();
-
-    return device->CreateDescriptorHeap(
-        &heapDesc,
-        IID_PPV_ARGS(_heap.ReleaseAndGetAddressOf()));
-}
-
-// SRV作成
-void CSUHeap::CreateSRV(ID3D12Device* device, ID3D12Resource* srvBuff)
-{
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = GetSRVDesc();
-
-    auto handle = _heap->GetCPUDescriptorHandleForHeapStart();
-
-    device->CreateShaderResourceView(
-        srvBuff,
-        &srvDesc,
-        handle);
 }
 
 // CBV作成
 void CSUHeap::CreateCBV(ID3D12Device* device, ID3D12Resource* cbvBuff)
 {
     auto handle = _heap->GetCPUDescriptorHandleForHeapStart();
-    handle.ptr += device->GetDescriptorHandleIncrementSize(
-                    D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
     D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = GetCBVDesc(cbvBuff);
 
     device->CreateConstantBufferView(
         &cbvDesc,
+        handle);
+}
+
+// SRV作成
+void CSUHeap::CreateSRV(ID3D12Device* device, ID3D12Resource* srvBuff)
+{
+    
+    auto handle = _heap->GetCPUDescriptorHandleForHeapStart();
+    handle.ptr += device->GetDescriptorHandleIncrementSize(
+                    D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = GetSRVDesc();
+
+    device->CreateShaderResourceView(
+        srvBuff,
+        &srvDesc,
         handle);
 }
 

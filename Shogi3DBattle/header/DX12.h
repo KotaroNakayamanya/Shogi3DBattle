@@ -5,7 +5,7 @@
 #include"DrawArg.h"
 #include"TextureArg.h"
 #include"VertexArg.h"
-#include"CSUHeapArg.h"
+#include"HeapArg.h"
 #include"PipelineArg.h"
 
 class DXGIFactory;
@@ -68,7 +68,7 @@ private:
 
     std::unique_ptr<CSUHeap> _heap; // ヒープオブジェクト
     HRESULT CreateHeapObj();     // ヒープオブジェクト作成
-    CSUHeapArg::CreateCSUHeapArg // ヒープオブジェクト作成用引数
+    HeapArg::CreateCSUHeapArg // ヒープオブジェクト作成用引数
         GetCreateCSUHeapArg();  
 
     DXGI_SAMPLE_DESC GetSampleDesc(); // サンプリングディスクリプタ

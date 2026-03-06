@@ -21,6 +21,9 @@ private:
     WNDCLASSEX _windowClass;
     HWND       _hwnd;
 
+    // DX12オブジェクト
+    std::unique_ptr<DX12> _dx12;
+
     const wchar_t* _WINDOW_CLASS_NAME = L"window";
     const wchar_t* _WINDOW_TITLE      = L"将棋大戦3D";
 
@@ -33,10 +36,8 @@ private:
     bool CreateGameWindow();
     void CreateWindowClass();
     void CreateWindowObj();
-    void ExitGameWindow();
 
-    // DX12オブジェクト
-    std::shared_ptr<DX12> _dx12;
+    
 
 
 public:

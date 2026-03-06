@@ -31,22 +31,6 @@ private:
         ~RangeTypeState(){}
     };
 
-    // SRVディスクリプタレンジ作成
-    class RangeTypeSRV : public RangeTypeState
-    {
-    private:
-        std::vector<D3D12_DESCRIPTOR_RANGE> GetSRVDescRanges(); // SRVディスクリプタレンジ
-    public:
-        std::vector<D3D12_DESCRIPTOR_RANGE> GetDescRanges() override
-        {
-            return GetSRVDescRanges();
-        }
-
-        RangeTypeSRV(UINT num):RangeTypeState(num){}
-        RangeTypeSRV():        RangeTypeState(-1){}
-        ~RangeTypeSRV(){}
-    };
-
     // CBVディスクリプタレンジ作成
     class RangeTypeCBV : public RangeTypeState
     {
@@ -61,6 +45,22 @@ private:
         RangeTypeCBV(UINT num):RangeTypeState(num){}
         RangeTypeCBV():        RangeTypeState(-1){}
         ~RangeTypeCBV(){}
+    };
+
+    // SRVディスクリプタレンジ作成
+    class RangeTypeSRV : public RangeTypeState
+    {
+    private:
+        std::vector<D3D12_DESCRIPTOR_RANGE> GetSRVDescRanges(); // SRVディスクリプタレンジ
+    public:
+        std::vector<D3D12_DESCRIPTOR_RANGE> GetDescRanges() override
+        {
+            return GetSRVDescRanges();
+        }
+
+        RangeTypeSRV(UINT num):RangeTypeState(num){}
+        RangeTypeSRV():        RangeTypeState(-1){}
+        ~RangeTypeSRV(){}
     };
 
     D3D12_ROOT_SIGNATURE_DESC GetRootSignatureDesc(); // ルートシグネチャディスクリプタ

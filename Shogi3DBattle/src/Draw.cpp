@@ -6,6 +6,7 @@
 #include"CommandQueue.h"
 #include"SwapChain.h"
 #include"Fence.h"
+#include"RTVHeap.h"
 
 // 描画オブジェクト作成
 HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
@@ -35,13 +36,8 @@ HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
     {
         assert(false); return E_FAIL;
     }
-    // RTVヒープ作成
-    if (FAILED(CreateRTVHeap(arg.device)))
-    {
-        assert(false); return E_FAIL;
-    }
-    // RTV作成
-    if (FAILED(CreateRTV(arg.device)))
+    // ヒープオブジェクト作成
+    if (FAILED(CreateHeapObj(arg.device)))
     {
         assert(false); return E_FAIL;
     }
@@ -88,52 +84,14 @@ HRESULT Draw::CreateFenceObj(ID3D12Device* device)
     return _fence->CreateFence(device);
 }
 
-// RTVヒープ作成
-HRESULT Draw::CreateRTVHeap(ID3D12Device* device)
+// ヒープオブジェクト作成
+HRESULT Draw::CreateHeapObj(ID3D12Device* device)
 {
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetHeapDesc();
-
-    return device->CreateDescriptorHeap(
-        &heapDesc,
-        IID_PPV_ARGS(_rtvHeap.ReleaseAndGetAddressOf()));
-}
-
-// RTV作成
-HRESULT Draw::CreateRTV(ID3D12Device* device)
-{
-    _rtvs.resize(_buffNum);
-
-    // ヒープの先頭アドレスを取得しておく
-    D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle =
-        _rtvHeap->GetCPUDescriptorHandleForHeapStart();
-
-    for (int i = 0; i < _buffNum; i++)
-    {
-        if (FAILED(SetRTVBuffer(i))) // 各RTVにバッファを対応させる
-        {
-            assert(false); return E_FAIL;
-        }
-
-        device->CreateRenderTargetView(
-            _rtvs[i].Get(),
-            nullptr,
-            rtvHeapHandle);
-
-        // RTVビューを入れた分、アドレスを足す
-        rtvHeapHandle.ptr +=
-            device->GetDescriptorHandleIncrementSize(
-                D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-    }
-
-    return S_OK;
-}
-
-// RTVにバッファを対応させる
- HRESULT Draw::SetRTVBuffer(UINT i)
-{
-    return _swapChain->GetSwapChain()->GetBuffer(
-        i, 
-        IID_PPV_ARGS(_rtvs[i].ReleaseAndGetAddressOf()));
+    _heap = std::make_unique<RTVHeap>();
+    return _heap->CreateHeap(
+        device,
+        _swapChain->GetSwapChain(),
+        _buffNum);
 }
 
 
@@ -144,7 +102,7 @@ void Draw::PrepareRenderTarget(DrawArg::PrepareRenderTargetArg arg)
 {
     // バックバッファに対応するRTVをレンダーターゲットに設定
     auto backBufferIdx = _swapChain->GetSwapChain()->GetCurrentBackBufferIndex();
-    auto rtvHandle = _rtvHeap->GetCPUDescriptorHandleForHeapStart();
+    auto rtvHandle = _heap->GetHeap()->GetCPUDescriptorHandleForHeapStart();
     rtvHandle.ptr += backBufferIdx * arg.rtvOffset;
 
     ChangeRTVBarrierToRenderTarget(arg.resourceBarrier);
@@ -159,10 +117,12 @@ void Draw::ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier
 {
     D3D12_RESOURCE_BARRIER barrier = resourceBarrier;
 
-    auto backBufferIdx = _swapChain->GetSwapChain()->GetCurrentBackBufferIndex();
+    auto backBufferIndex = _swapChain->GetSwapChain()->GetCurrentBackBufferIndex();
+    auto rtv = _heap->GetRTV(backBufferIndex);
 
     barrier.Transition.pResource =
-        _rtvs[backBufferIdx].Get();
+        //_rtvs[backBufferIdx].Get();
+        rtv;
     barrier.Transition.StateBefore =
         D3D12_RESOURCE_STATE_PRESENT;
     barrier.Transition.StateAfter  =
@@ -244,10 +204,12 @@ void Draw::ChangeRTVBarrierToPresent(D3D12_RESOURCE_BARRIER resourceBarrier)
 {
     D3D12_RESOURCE_BARRIER barrier = resourceBarrier;
 
-    auto backBufferIdx = _swapChain->GetSwapChain()->GetCurrentBackBufferIndex();
+    auto backBufferIndex = _swapChain->GetSwapChain()->GetCurrentBackBufferIndex();
+    auto rtv = _heap->GetRTV(backBufferIndex);
 
     barrier.Transition.pResource =
-        _rtvs[backBufferIdx].Get();
+        //_rtvs[backBufferIdx].Get();
+        rtv;
     barrier.Transition.StateBefore =
         D3D12_RESOURCE_STATE_RENDER_TARGET;
     barrier.Transition.StateAfter  =
@@ -290,28 +252,13 @@ void Draw::ResetCommand()
     _commandList->GetCommandList()->Reset(commandAllocator, nullptr);
 }
 
-// ヒープディスクリプタ
-D3D12_DESCRIPTOR_HEAP_DESC Draw::GetHeapDesc()
-{
-    D3D12_DESCRIPTOR_HEAP_DESC desc = {};
-    desc.Type =
-        D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-    desc.NodeMask =
-        0;
-    desc.NumDescriptors =
-        _buffNum;
-    desc.Flags =
-        D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-
-    return desc;
-}
 
 
 
-
-Draw::Draw(UINT bufferNum)
+Draw::Draw(UINT bufferNum) : Draw()
 {
     _buffNum = bufferNum;
 }
 
+Draw::Draw(){}
 Draw::~Draw(){}

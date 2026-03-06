@@ -162,18 +162,19 @@ HRESULT DX12::CreateHeapObj()
 {
     _heap = std::make_unique<CSUHeap>();
 
-    CSUHeapArg::CreateCSUHeapArg arg = GetCreateCSUHeapArg();
+    HeapArg::CreateCSUHeapArg arg = GetCreateCSUHeapArg();
     return _heap->CreateHeap(arg);
 }
 
 // ヒープ作成用引数
-CSUHeapArg::CreateCSUHeapArg DX12::GetCreateCSUHeapArg()
+HeapArg::CreateCSUHeapArg DX12::GetCreateCSUHeapArg()
 {
-    CSUHeapArg::CreateCSUHeapArg arg = {};
+    HeapArg::CreateCSUHeapArg arg = {};
 
     arg.device = _device->GetDevice();
-    arg.srvBuff = _texture->GetBuff();
-    arg.cbvBuff = _const->GetBuff();
+    arg.buff1 = _const->GetBuff();
+    arg.buff2 = _texture->GetBuff();
+  //arg.buff3 = nullptr;
 
     return arg;
 }
@@ -308,7 +309,7 @@ PipelineArg::CreatePipelineStateArg DX12::GetCreatePipelineObjArg()
 void DX12::ExeDX12()
 {
     // レンダーターゲットの準備をする
-    PrepareRenderTarget();
+     PrepareRenderTarget();
 
     // コマンドセット
     SetCommand();

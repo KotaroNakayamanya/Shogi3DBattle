@@ -12,24 +12,24 @@ Application& Application::GetInstance()
 // 初期処理
 bool Application::Init()
 {
-    bool isSucceed;
-
-    // ゲームウインドウ作成
-    if(CreateGameWindow() == false) return false;
+    if(CreateGameWindow() == false) // ゲームウインドウ作成
+        return false;
 
     // DirectX12オブジェクト作成
-    _dx12.reset(new DX12(_hwnd));
-    if(_dx12->CreateDX12Obj() == false) return false;
+    _dx12 = std::make_unique<DX12>(_hwnd);
+    if(_dx12->CreateDX12Obj() == false)
+        return false;
 
+    return true;
 }
 
 // 実行処理
 void Application::Run()
 {
+    // ウインドウ表示
     ShowWindow(_hwnd, SW_SHOW);
 
     MSG msg = {};
-
     while (true) {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
@@ -50,7 +50,7 @@ void Application::Run()
 // 終了処理
 void Application::Exit()
 {
-    ExitGameWindow();
+    UnregisterClass(_windowClass.lpszClassName, _windowClass.hInstance);
 }
 
 
@@ -68,6 +68,7 @@ bool Application::CreateGameWindow()
     return true;
 }
 
+// ウインドウクラス作成
 void Application::CreateWindowClass()
 {
     _windowClass.cbSize        = sizeof(WNDCLASSEX);       // サイズ
@@ -76,6 +77,7 @@ void Application::CreateWindowClass()
     _windowClass.hInstance     = GetModuleHandle(nullptr); // アプリケーションハンドル
 }
 
+// ウインドウオブジェクト作成
 void Application::CreateWindowObj()
 {
     _hwnd = CreateWindow(
@@ -90,11 +92,6 @@ void Application::CreateWindowObj()
         nullptr,                                 // メニューハンドル
         _windowClass.hInstance,                  // アプリケーションハンドル
         nullptr);                                // 追加パラメータ
-}
-
-void Application::ExitGameWindow()
-{
-    UnregisterClass(_windowClass.lpszClassName, _windowClass.hInstance);
 }
 
 
