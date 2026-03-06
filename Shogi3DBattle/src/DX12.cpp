@@ -1,10 +1,11 @@
 ﻿#include"DX12.h"
 
-#include<D3Dcompiler.h>
 #include<algorithm>
-#include<string>
 #include<cassert>
 
+#include"DXGIFactory.h"
+#include"Adapter.h"
+#include"Device.h"
 #include"Shader.h"
 #include"Texture.h"
 #include"Draw.h"
@@ -15,15 +16,11 @@
 #include"RootSignature.h"
 #include"Pipeline.h"
 
-#include"VertexStruct.h"
-
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
-
 namespace {
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
+    // デバッグ有効化
     void EnableDebugLayer()
     {
         ComPtr<ID3D12Debug> debugLayer = nullptr;
@@ -39,24 +36,30 @@ namespace {
 // DirectX12初期設定
 bool DX12::CreateDX12Obj()
 {
-    // DXGIファクトリー作成
-    if (FAILED(CreateFactory()))
+    // DXGIファクトリーオブジェクト作成
+    if (FAILED(CreateDXGIFactoryObj()))
     {
         assert(false); return false;
     }
-    // デバイス作成（GPU機能レベルに対応していなければ失敗）
-    if (FAILED(CreateDevice()))
+    // アダプターオブジェクト作成
+    if (FAILED(CreateAdapterObj()))
     {
         assert(false); return false;
     }
+    // デバイスオブジェクト作成
+    if (FAILED(CreateDeviceObj()))
+    {
+        assert(false); return false;
+    }
+
     // 描画オブジェクト作成
     if (FAILED(CreateDrawObj()))
     {
         assert(false); return false;
     }
 
-    // シェーダーバイナリ作成
-    if (FAILED(CreateShaderBlob()))
+    // シェーダーバイナリオブジェクト作成
+    if (FAILED(CreateShaderObj()))
     {
         assert(false); return false;
     }
@@ -94,9 +97,8 @@ bool DX12::CreateDX12Obj()
     {
         assert(false); return false;
     }
-
-    // パイプラインステート作成
-    if (FAILED(CreatePipelineState()))
+    // パイプラインオブジェクト作成
+    if (FAILED(CreatePipelineObj()))
     {
         assert(false); return false;
     }
@@ -105,105 +107,28 @@ bool DX12::CreateDX12Obj()
     return true;
 }
 
-// DXGIファクトリ作成
-HRESULT DX12::CreateFactory()
+// DXGIファクトリオブジェクト作成
+HRESULT DX12::CreateDXGIFactoryObj()
 {
-    HRESULT result;
-    // デバッグモードのときは詳細を表示させるファクトリを使用する
-#ifdef _DEBUG
-    result = CreateDXGIFactory2(
-        DXGI_CREATE_FACTORY_DEBUG,
-        IID_PPV_ARGS(_dxgiFactory.ReleaseAndGetAddressOf()));
-#else
-    result = CreateDXGIFactory1(
-        IID_PPV_ARGS(_dxgiFactory.ReleaseAndGetAddressOf()));
-#endif
+    _dxgiFactory = std::make_shared<DXGIFactory>();
 
-    return result;
+    return _dxgiFactory->CreateDXGIFactory();
 }
 
-
-// デバイス作成
-HRESULT DX12::CreateDevice()
+// アダプターオブジェクト作成
+HRESULT DX12::CreateAdapterObj()
 {
-    // GPU機能レベル一覧
-    std::array<D3D_FEATURE_LEVEL, 5> featureLevels =
-    {
-        D3D_FEATURE_LEVEL_12_2,
-        D3D_FEATURE_LEVEL_12_1,
-        D3D_FEATURE_LEVEL_12_0,
-        D3D_FEATURE_LEVEL_11_1,
-        D3D_FEATURE_LEVEL_11_0
-    };
+    _adapter = std::make_shared<Adapter>();
+
+    return _adapter->CreateAdapter(_dxgiFactory->GetDXGIFactory());
+}
+
+// デバイスオブジェクト作成
+HRESULT DX12::CreateDeviceObj()
+{
+    _device = std::make_shared<Device>();
     
-    // 使用するアダプターを取得
-    ComPtr<IDXGIAdapter> adapter =
-        GetUsingAdapter();
-
-    // GPU機能レベルの配列順にデバイス作成を試みる
-    HRESULT result;
-    std::find_if(featureLevels.begin(), featureLevels.end(),
-        [this, &result, adapter](D3D_FEATURE_LEVEL featureLevel)
-        {
-            result = D3D12CreateDevice(
-                adapter.Get(),
-                featureLevel,
-                IID_PPV_ARGS(_device.ReleaseAndGetAddressOf()));
-
-            return result == S_OK; // 作成できたら戻る
-        });
-
-    return result;
-}
-
-// 使用するアダプターを取得
-ComPtr<IDXGIAdapter> DX12::GetUsingAdapter()
-{
-    // アダプター一覧
-    std::array<std::wstring, 3> adapterNames =
-    {
-        L"NVIDIA",
-        L"AMD",
-        L"Intel"
-    };
-
-    // 使用可能なアダプターを取得
-    std::vector<ComPtr<IDXGIAdapter>> canUseAdapters =
-        GetCanUseAdapters();
-
-    for(auto& adapter : canUseAdapters)
-    {
-        // アダプター名取得
-        DXGI_ADAPTER_DESC adapterDesc;
-        adapter->GetDesc(&adapterDesc);
-        std::wstring str = adapterDesc.Description;
-
-
-        for (auto& adapterName : adapterNames)
-        {
-            if (str.find(adapterName) != std::string::npos)
-                return adapter;
-        }
-    }
-
-    return canUseAdapters[0];
-}
-
-// 使用可能なアダプターを取得
-std::vector<ComPtr<IDXGIAdapter>> DX12::GetCanUseAdapters()
-{
-    std::vector<ComPtr<IDXGIAdapter>> adapters;
-
-    ComPtr<IDXGIAdapter> tmpAdapter;
-    int i = 0;
-    while (_dxgiFactory->EnumAdapters(i, tmpAdapter.ReleaseAndGetAddressOf())
-           != DXGI_ERROR_NOT_FOUND)
-    {
-        adapters.push_back(tmpAdapter);
-        i++;
-    }
-
-    return adapters;
+    return _device->CreateDevice(_adapter->GetAdapter());
 }
 
 // 描画オブジェクト作成（Drawクラス）
@@ -223,9 +148,9 @@ DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg()
     DrawArg::CreateDrawObjArg arg = {};
 
     arg.device =
-        _device.Get();
+        _device->GetDevice();
     arg.dxgiFactory =
-        _dxgiFactory.Get();
+        _dxgiFactory->GetDXGIFactory();
     arg.hwnd =
         _hwnd;
 
@@ -237,17 +162,17 @@ HRESULT DX12::CreateHeapObj()
 {
     _heap = std::make_shared<Heap>();
 
-    HeapArg::CreateHeapArg arg = GetCreateHeapArg();
+    HeapArg::CreateHeapArg arg = GetCreateHeapObjArg();
 
     return _heap->CreateHeapObj(arg);
 }
 
 // ヒープ作成用引数
-HeapArg::CreateHeapArg DX12::GetCreateHeapArg()
+HeapArg::CreateHeapArg DX12::GetCreateHeapObjArg()
 {
     HeapArg::CreateHeapArg arg = {};
 
-    arg.device = _device.Get();
+    arg.device = _device->GetDevice();
     arg.srvBuff = _texture->GetBuff();
     arg.cbvBuff = _const->GetBuff();
 
@@ -285,7 +210,7 @@ HRESULT DX12::CreateConstObj()
 {
     _const = std::make_shared<Const>();
 
-    return _const->CreateConstObj(_device.Get());
+    return _const->CreateConstObj(_device->GetDevice());
 }
 
 // テクスチャオブジェクト作成用引数
@@ -293,7 +218,7 @@ TextureArg::CreateTextureObjArg DX12::GetCreateTextureObjArg()
 {
     TextureArg::CreateTextureObjArg arg = {};
 
-    arg.device = _device.Get();
+    arg.device = _device->GetDevice();
     arg.sampleDesc = GetSampleDesc();
 
     return arg;
@@ -326,7 +251,7 @@ VertexArg::GetCreateVertexObjArg DX12::GetCreateVertexObjArg()
 {
     VertexArg::GetCreateVertexObjArg arg = {};
 
-    arg.device = _device.Get();
+    arg.device = _device->GetDevice();
     arg.vertexByte = _objects[0]->GetVerticesCount() * _objects[0]->GetVerticesByte();
     arg.vertexPtr = _objects[0]->GetVerticesPtr();
     arg.indexByte = _objects[0]->GetIndicesByte();
@@ -336,7 +261,7 @@ VertexArg::GetCreateVertexObjArg DX12::GetCreateVertexObjArg()
 }
 
 // シェーダーバイナリ作成
-HRESULT DX12::CreateShaderBlob()
+HRESULT DX12::CreateShaderObj()
 {
     _shader = std::make_shared<Shader>();
     return _shader->CreateShaderBlob();
@@ -347,29 +272,29 @@ HRESULT DX12::CreateRootSignatureObj()
 {
     _rootSignature = std::make_shared<RootSignature>();
 
-    return _rootSignature->CreateRootSignatureObj(_device.Get());
+    return _rootSignature->CreateRootSignatureObj(_device->GetDevice());
 }
 
 
 
 
 
-// パイプラインステート作成
-HRESULT DX12::CreatePipelineState()
+// パイプラインオブジェクト作成
+HRESULT DX12::CreatePipelineObj()
 {
     _pipeline = std::make_shared<Pipeline>();
 
     PipelineArg::CreatePipelineStateArg arg =
-        GetCreatePipelineStateArg();
+        GetCreatePipelineObjArg();
 
     return _pipeline->CreatePipelineState(arg);
 }
 
-PipelineArg::CreatePipelineStateArg DX12::GetCreatePipelineStateArg()
+PipelineArg::CreatePipelineStateArg DX12::GetCreatePipelineObjArg()
 {
     PipelineArg::CreatePipelineStateArg arg = {};
 
-    arg.device = _device.Get();
+    arg.device = _device->GetDevice();
     arg.rootSignature = _rootSignature->GetRootSignature();
     arg.vertexShaderBlob = _shader->GetVertexShaderBlob();
     arg.pixelShaderBlob  = _shader->GetPixelShaderBlob();
@@ -413,7 +338,7 @@ DrawArg::PrepareRenderTargetArg DX12::GetPrepareRenderTargetArg()
     arg.resourceBarrier =
         GetResourceBarrier();
     arg.rtvOffset = 
-        _device->GetDescriptorHandleIncrementSize(
+        _device->GetDevice()->GetDescriptorHandleIncrementSize(
             D3D12_DESCRIPTOR_HEAP_TYPE_RTV); 
         
 
@@ -457,7 +382,7 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
     arg.heap
         = _heap->GetHeap();;
     arg.offset =
-        _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+        _device->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     arg.viewport =
         GetViewports();
     arg.scissorRect =
@@ -568,13 +493,15 @@ DrawArg::ExeDrawArg DX12::GetExeDrawArg()
 
 
 
-DX12::DX12(HWND hwnd)
+DX12::DX12(HWND hwnd) : DX12()
 {
+    _hwnd = hwnd;
+}
+
+DX12::DX12() {
 #ifdef _DEBUG
     ::EnableDebugLayer();
 #endif
-
-    _hwnd = hwnd;
 }
 
 DX12::~DX12(){}

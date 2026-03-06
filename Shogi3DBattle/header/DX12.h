@@ -1,12 +1,6 @@
 ﻿#pragma once
 
-#include<d3d12.h>
-#include<dxgi1_6.h>
-#include<DirectXMath.h>
 #include<memory>
-#include<wrl.h>
-#include<vector>
-#include<array>
 
 #include"DrawArg.h"
 #include"TextureArg.h"
@@ -14,6 +8,9 @@
 #include"HeapArg.h"
 #include"PipelineArg.h"
 
+class DXGIFactory;
+class Adapter;
+class Device;
 class Vertex;
 class Shader;
 class Draw;
@@ -26,53 +23,56 @@ class Pipeline;
 
 class DX12
 {
-    template<typename T>
-    using ComPtr = Microsoft::WRL::ComPtr<T>;
-
 private:
     HWND _hwnd; // ウインドウハンドル
 
     const int _buffNum = 2; // 描画に使用する画面数
 
 
-    ComPtr<ID3D12Device>  _device;      // Direct3Dデバイス
-    ComPtr<IDXGIFactory6> _dxgiFactory; // DXGIファクトリ
+    std::shared_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリーオブジェクト
+    HRESULT CreateDXGIFactoryObj();            // DXGIファクトリ作成
 
-    // パイプラインオブジェクト
-    std::shared_ptr<Pipeline> _pipeline;
+    std::shared_ptr<Adapter> _adapter; // アダプターオブジェクト
+    HRESULT CreateAdapterObj();        // アダプターオブジェクト作成
 
-    std::vector<D3D12_INPUT_ELEMENT_DESC> _inputLayout; // インプットレイアウト
+    std::shared_ptr<Device> _device; // Direct3Dデバイスオブジェクト
+    HRESULT CreateDeviceObj();       // Direct3Dデバイスオブジェクト作成
 
-
-    HRESULT CreateDevice();  // Direct3Dデバイス作成
-    HRESULT CreateFactory(); // DXGIファクトリ作成
-    ComPtr<IDXGIAdapter> GetUsingAdapter(); // 使用するアダプターを取得
-    std::vector<ComPtr<IDXGIAdapter>> GetCanUseAdapters(); // 使用可能なアダプターを取得
-
-    VertexArg::GetCreateVertexObjArg GetCreateVertexObjArg();
-
-    // ルートシグネチャオブジェクト
-    std::shared_ptr<RootSignature> _rootSignature;
-    HRESULT CreateRootSignatureObj(); // ルートシグネチャオブジェクト作成
+    std::shared_ptr<Draw> _draw; // 描画オブジェクト
+    HRESULT CreateDrawObj();     // 描画オブジェクト作成
 
 
-    HRESULT CreatePipelineState(); // パイプラインステート作成
-    PipelineArg::CreatePipelineStateArg GetCreatePipelineStateArg(); // パイプラインステート作成用引数
+    std::shared_ptr<Shader> _shader; // シェーダーオブジェクト
+    HRESULT CreateShaderObj();       // シェーダーオブジェクト作成
 
-    DXGI_SAMPLE_DESC GetSampleDesc();                          // サンプリングディスクリプタ
+    std::shared_ptr<Vertex> _vertex; // 頂点オブジェクト
+    HRESULT CreateVertexObj();       // 頂点オブジェクト作成
+    VertexArg::GetCreateVertexObjArg // 頂点オブジェクト作成用引数
+        GetCreateVertexObjArg();
+
+    std::shared_ptr<RootSignature> _rootSignature; // ルートシグネチャオブジェクト
+    HRESULT CreateRootSignatureObj();              // ルートシグネチャオブジェクト作成
+
+    std::shared_ptr<Pipeline> _pipeline; // パイプラインオブジェクト
+    HRESULT CreatePipelineObj();         // パイプラインオブジェクト作成
+    PipelineArg::CreatePipelineStateArg  // パイプラインオブジェクト作成用引数
+        GetCreatePipelineObjArg(); 
+
+    std::shared_ptr<Texture> _texture; // テクスチャオブジェクト
+    HRESULT CreateTextureObj();        // テクスチャオブジェクト作成
+    TextureArg::CreateTextureObjArg    // テクスチャオブジェクト作成用引数
+        GetCreateTextureObjArg();
+
+    std::shared_ptr<Const> _const; // コンスタントオブジェクト
+    HRESULT CreateConstObj();      // コンスタントオブジェクト作成
+
+    std::shared_ptr<Heap> _heap; // ヒープオブジェクト
+    HRESULT CreateHeapObj();     // ヒープオブジェクト作成
+    HeapArg::CreateHeapArg       // ヒープオブジェクト作成用引数
+        GetCreateHeapObjArg();  
+
+    DXGI_SAMPLE_DESC GetSampleDesc(); // サンプリングディスクリプタ
   
-
- 
-
-
-    // 頂点オブジェクト
-    std::shared_ptr<Vertex> _vertex;
-    HRESULT CreateVertexObj();
-
-    // コンスタンとオブジェクト
-    std::shared_ptr<Const> _const;
-    HRESULT CreateConstObj();
-
     // ビューポート
     D3D12_VIEWPORT GetViewports();
     // シザー矩形
@@ -83,25 +83,10 @@ private:
 
     // コマンドセット
     void SetCommand();
-    
-    // テクスチャオブジェクト
-    std::shared_ptr<Texture> _texture;
-    HRESULT CreateTextureObj(); // テクスチャオブジェクト作成
-    TextureArg::CreateTextureObjArg // テクスチャオブジェクト作成用引数
-        GetCreateTextureObjArg();
-
-    // ヒープオブジェクト
-    std::shared_ptr<Heap> _heap;
-    HRESULT CreateHeapObj(); // ヒープオブジェクト作成
-    HeapArg::CreateHeapArg GetCreateHeapArg(); // ヒープ作成用引数
 
     // 頂点オブジェクト
     std::vector<std::shared_ptr<Object>> _objects;
     HRESULT CreateVertexSets();
-    
-    
-
-   
     
     // コマンドセット
     D3D12_VERTEX_BUFFER_VIEW GetVertexBuffView();
@@ -116,8 +101,6 @@ private:
     D3D12_RESOURCE_BARRIER GetResourceBarrier();
 
     // 描画オブジェクト
-    std::shared_ptr<Draw> _draw; 
-    HRESULT CreateDrawObj(); // 描画オブジェクト作成
     DrawArg::CreateDrawObjArg // 描画オブジェクト作成用引数
         GetCreateDrawObjArg();
     DrawArg::PrepareRenderTargetArg // レンダーターゲット準備用引数
@@ -127,18 +110,11 @@ private:
     DrawArg::ExeDrawArg // コマンド実行用引数
         GetExeDrawArg();
     
-
-    // シェーダーオブジェクト
-    std::shared_ptr<Shader> _shader;
-    HRESULT CreateShaderBlob(); // シェーダーバイナリ作成
-
-
-
-
 public:
-    bool CreateDX12Obj();
-    void ExeDX12();
+    bool CreateDX12Obj(); // DirectX12オブジェクト作成
+    void ExeDX12(); // DirectX12実行処理
 
     DX12(HWND hwnd);
+    DX12();
     ~DX12();
 };

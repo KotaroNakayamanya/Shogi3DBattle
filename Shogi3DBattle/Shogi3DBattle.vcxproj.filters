@@ -75,6 +75,15 @@
     <ClCompile Include="src\Pipeline.cpp">
       <Filter>ソース ファイル\DX12</Filter>
     </ClCompile>
+    <ClCompile Include="src\DXGIFactory.cpp">
+      <Filter>ソース ファイル\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Device.cpp">
+      <Filter>ソース ファイル\DX12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Adapter.cpp">
+      <Filter>ソース ファイル\DX12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -130,6 +139,15 @@
     </ClInclude>
     <ClInclude Include="header\PipelineArg.h">
       <Filter>ヘッダー ファイル\argument</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DXGIFactory.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Device.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Adapter.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

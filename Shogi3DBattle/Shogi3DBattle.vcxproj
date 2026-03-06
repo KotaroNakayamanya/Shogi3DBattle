@@ -20,10 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="header\DrawArg.h" />
+    <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Const.cpp" />
+    <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Draw.cpp" />
     <ClCompile Include="src\DX12.cpp" />
+    <ClCompile Include="src\DXGIFactory.cpp" />
     <ClCompile Include="src\Heap.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Object.cpp" />
@@ -34,10 +37,13 @@
     <ClCompile Include="src\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\Adapter.h" />
     <ClInclude Include="header\Application.h" />
     <ClInclude Include="header\Const.h" />
+    <ClInclude Include="header\Device.h" />
     <ClInclude Include="header\Draw.h" />
     <ClInclude Include="header\DX12.h" />
+    <ClInclude Include="header\DXGIFactory.h" />
     <ClInclude Include="header\Heap.h" />
     <ClInclude Include="header\HeapArg.h" />
     <ClInclude Include="header\Piece.h" />
