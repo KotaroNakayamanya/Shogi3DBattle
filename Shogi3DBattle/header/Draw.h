@@ -9,6 +9,7 @@
 #include"DrawArg.h"
 
 class CommandAllocator;
+class CommandList;
 
 class Draw
 {
@@ -22,7 +23,10 @@ private:
     std::shared_ptr<CommandAllocator> _commandAllocator;     // コマンドアロケータオブジェクト
     HRESULT CreateCommandAllocatorObj(ID3D12Device* device); // コマンドアロケータオブジェクト作成
 
-    ComPtr<ID3D12GraphicsCommandList>   _commandList;      // コマンドリスト
+    std::shared_ptr<CommandList> _commandList;     // コマンドアロケータオブジェクト
+    HRESULT CreateCommandListObj(ID3D12Device* device); // コマンドアロケータオブジェクト作成
+
+    //ComPtr<ID3D12GraphicsCommandList>   _commandList;      // コマンドリスト
     ComPtr<ID3D12CommandQueue>          _commandQueue;     // コマンドキュー
     ComPtr<IDXGISwapChain4>             _swapChain;        // スワップチェーン
     ComPtr<ID3D12Fence>                 _fence;            // フェンス
@@ -31,7 +35,7 @@ private:
 
 
     
-    HRESULT CreateCommandList(ID3D12Device* device); // コマンドリスト作成
+    //HRESULT CreateCommandList(ID3D12Device* device); // コマンドリスト作成
     HRESULT CreateCommandQueue(ID3D12Device* device); // コマンドキュー作成
     HRESULT CreateSwapChain(IDXGIFactory6* dxgiFactory, HWND hwnd); // スワップチェーン作成
     HRESULT CreateFence(ID3D12Device* device); // フェンス作成
@@ -58,9 +62,6 @@ private:
 
 
 public:
-    Draw(UINT bufferNum);
-    ~Draw();
-
     // 描画オブジェクト生成
     HRESULT CreateDrawObj(DrawArg::CreateDrawObjArg arg);
     // レンダーターゲットの準備
@@ -69,4 +70,7 @@ public:
     void SetCommand(DrawArg::SetCommandArg arg);
     // 描画実行
     void ExeDraw(DrawArg::ExeDrawArg arg);
+
+    Draw(UINT bufferNum);
+    ~Draw();
 };

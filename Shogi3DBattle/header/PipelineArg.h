@@ -17,4 +17,7 @@ public:
         DXGI_SAMPLE_DESC sampleDesc;
 
     }CreatePipelineStateArg;
+
+    PipelineArg(){}
+    ~PipelineArg(){}
 };

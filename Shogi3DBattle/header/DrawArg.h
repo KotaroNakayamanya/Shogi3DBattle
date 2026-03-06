@@ -49,4 +49,7 @@ public:
         D3D12_RESOURCE_BARRIER resourceBarrier;
 
     }ExeDrawArg;
+
+    DrawArg(){}
+    ~DrawArg(){}
 };

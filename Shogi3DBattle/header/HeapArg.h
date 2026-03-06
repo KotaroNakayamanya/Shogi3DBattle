@@ -10,4 +10,7 @@ public:
         ID3D12Resource* cbvBuff;
 
     }CreateHeapArg;
+
+    HeapArg(){}
+    ~HeapArg(){}
 };

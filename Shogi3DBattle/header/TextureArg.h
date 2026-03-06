@@ -12,4 +12,7 @@ public:
         DXGI_SAMPLE_DESC sampleDesc;
 
     }CreateTextureObjArg;
+
+    TextureArg(){}
+    ~TextureArg(){}
 };

@@ -117,3 +117,4 @@ LRESULT WindowProcedure(
 
 
 Application::Application(){}
+Application::~Application(){}

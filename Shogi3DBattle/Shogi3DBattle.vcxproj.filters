@@ -16,9 +16,6 @@
     <Filter Include="ヘッダー ファイル\Piece">
       <UniqueIdentifier>{f2aef7b7-ea3d-4125-827c-a463bca68594}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\complete">
-      <UniqueIdentifier>{99ce34f0-214c-4d99-88ae-43cb1a613407}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\DX12">
       <UniqueIdentifier>{57166d13-f0c8-4ec6-b25f-be519ec0030e}</UniqueIdentifier>
     </Filter>
@@ -44,9 +41,6 @@
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>ソース ファイル\complete</Filter>
     </ClCompile>
     <ClCompile Include="src\DX12.cpp">
       <Filter>ソース ファイル\DX12</Filter>
@@ -92,6 +86,12 @@
     </ClCompile>
     <ClCompile Include="src\CommandAllocator.cpp">
       <Filter>ソース ファイル\DX12\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommandList.cpp">
+      <Filter>ソース ファイル\DX12\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +159,9 @@
       <Filter>ヘッダー ファイル\DX12\Draw</Filter>
     </ClInclude>
     <ClInclude Include="header\CommandAllocator.h">
+      <Filter>ヘッダー ファイル\DX12\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CommandList.h">
       <Filter>ヘッダー ファイル\DX12\Draw</Filter>
     </ClInclude>
   </ItemGroup>

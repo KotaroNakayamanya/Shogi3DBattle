@@ -2,22 +2,18 @@
 #include<cassert>
 
 #include"CommandAllocator.h"
+#include"CommandList.h"
 
 // 描画オブジェクト作成
 HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
 {
-    //// コマンドアロケータ作成
-    //if (FAILED(CreateCommandAllocator(arg.device)))
-    //{
-    //    assert(false); return E_FAIL;
-    //}
     // コマンドアロケータオブジェクト作成
     if (FAILED(CreateCommandAllocatorObj(arg.device)))
     {
         assert(false); return E_FAIL;
     }
-    // コマンドリスト作成
-    if (FAILED(CreateCommandList(arg.device)))
+    // コマンドリストオブジェクト作成
+    if (FAILED(CreateCommandListObj(arg.device)))
     {
         assert(false); return E_FAIL;
     }
@@ -47,23 +43,20 @@ HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
         assert(false); return E_FAIL;
     }
 }
+
 // コマンドアロケータオブジェクト作成
 HRESULT Draw::CreateCommandAllocatorObj(ID3D12Device* device)
 {
     _commandAllocator = std::make_shared<CommandAllocator>();
-
     return _commandAllocator->CreateCommandAllocator(device);
 }
 
-// コマンドリスト作成
-HRESULT Draw::CreateCommandList(ID3D12Device* device)
+// コマンドリストオブジェクト作成
+HRESULT Draw::CreateCommandListObj(ID3D12Device* device)
 {
-    return device->CreateCommandList(
-        0,
-        D3D12_COMMAND_LIST_TYPE_DIRECT,
-        _commandAllocator->GetCommandAllocator(),
-        nullptr,
-        IID_PPV_ARGS(_commandList.ReleaseAndGetAddressOf()));
+    _commandList = std::make_shared<CommandList>();
+    return _commandList->CreateCommandList(
+        device, _commandAllocator->GetCommandAllocator());
 }
 
 // コマンドキュー作成
@@ -159,7 +152,7 @@ void Draw::PrepareRenderTarget(DrawArg::PrepareRenderTargetArg arg)
     rtvHandle.ptr += backBufferIdx * arg.rtvOffset;
 
     ChangeRTVBarrierToRenderTarget(arg.resourceBarrier);
-    _commandList->OMSetRenderTargets(1, &rtvHandle, true, nullptr);
+    _commandList->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, true, nullptr);
 
     // レンダーターゲットクリア
     ClearRenderTarget(rtvHandle);
@@ -179,7 +172,7 @@ void Draw::ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier
     barrier.Transition.StateAfter  =
         D3D12_RESOURCE_STATE_RENDER_TARGET;
 
-    _commandList->ResourceBarrier(
+    _commandList->GetCommandList()->ResourceBarrier(
         _buffNum - 1,
         &barrier);
 }
@@ -189,7 +182,7 @@ void Draw::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
 {
     float clearRTVColor[] =
         {0.0f, 0.3f, 0.0f, 1.0f};
-    _commandList->ClearRenderTargetView(
+    _commandList->GetCommandList()->ClearRenderTargetView(
         handle, clearRTVColor, 0, nullptr);
 }
 
@@ -199,34 +192,35 @@ void Draw::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
 // コマンドセット
 void Draw::SetCommand(DrawArg::SetCommandArg arg)
 {
+    ID3D12GraphicsCommandList* commandList =
+        _commandList->GetCommandList();
     // パイプラインセット
-    _commandList->SetPipelineState(arg.pipelineState);
+    commandList->SetPipelineState(arg.pipelineState);
     // ルートシグネチャセット
-    _commandList->SetGraphicsRootSignature(arg.rootSignature);
+    commandList->SetGraphicsRootSignature(arg.rootSignature);
     // ディスクリプタヒープセット
-    _commandList->SetDescriptorHeaps(1, &arg.heap);
+    commandList->SetDescriptorHeaps(1, &arg.heap);
     // ルートパラメータとディスクリプタヒープ関連付け
     auto handle = arg.heap->GetGPUDescriptorHandleForHeapStart();
-    _commandList->SetGraphicsRootDescriptorTable(
+    commandList->SetGraphicsRootDescriptorTable(
         0,
         handle);
     handle.ptr += arg.offset;
-    _commandList->SetGraphicsRootDescriptorTable(
+    commandList->SetGraphicsRootDescriptorTable(
         1,
         handle);
     // ビューポートセット
-    _commandList->RSSetViewports(1, &arg.viewport);
+    commandList->RSSetViewports(1, &arg.viewport);
     // シザー矩形セット
-    _commandList->RSSetScissorRects(1, &arg.scissorRect);
+    commandList->RSSetScissorRects(1, &arg.scissorRect);
     // トポロジーセット
-    _commandList->IASetPrimitiveTopology(arg.topology);
+    commandList->IASetPrimitiveTopology(arg.topology);
     // 頂点バッファセット
-    _commandList->IASetVertexBuffers(0, 1, &arg.vertexBuffView);
+    commandList->IASetVertexBuffers(0, 1, &arg.vertexBuffView);
     // インデックスバッファセット
-    _commandList->IASetIndexBuffer(&arg.indexBuffView);
+    commandList->IASetIndexBuffer(&arg.indexBuffView);
     // 描画命令セット
-    _commandList->DrawIndexedInstanced(arg.vertexCount, arg.objCount, 0, 0, 0);
-
+    commandList->DrawIndexedInstanced(arg.vertexCount, arg.objCount, 0, 0, 0);
 }
 
 
@@ -239,7 +233,7 @@ void Draw::ExeDraw(DrawArg::ExeDrawArg arg)
     ChangeRTVBarrierToPresent(arg.resourceBarrier);
 
     // コマンド実行
-    _commandList->Close();
+    _commandList->GetCommandList()->Close();
     ExeCommand();
     WaitProcessWithFence();
     ResetCommand();
@@ -263,7 +257,7 @@ void Draw::ChangeRTVBarrierToPresent(D3D12_RESOURCE_BARRIER resourceBarrier)
     barrier.Transition.StateAfter  =
         D3D12_RESOURCE_STATE_PRESENT;
 
-    _commandList->ResourceBarrier(
+    _commandList->GetCommandList()->ResourceBarrier(
         _buffNum - 1,
         &barrier);
 }
@@ -271,7 +265,7 @@ void Draw::ChangeRTVBarrierToPresent(D3D12_RESOURCE_BARRIER resourceBarrier)
 // コマンド実行
 void Draw::ExeCommand()
 {
-    ID3D12CommandList* commandLists[] = {_commandList.Get()};
+    ID3D12CommandList* commandLists[] = {_commandList->GetCommandList()};
     _commandQueue->ExecuteCommandLists(1, commandLists);
 }
 
@@ -297,7 +291,7 @@ void Draw::ResetCommand()
         _commandAllocator->GetCommandAllocator();
 
     commandAllocator->Reset();
-    _commandList->Reset(commandAllocator, nullptr);
+    _commandList->GetCommandList()->Reset(commandAllocator, nullptr);
 }
 
 

@@ -17,4 +17,7 @@ public:
         std::vector<unsigned short> indexPtr;
 
     }GetCreateVertexObjArg;
+
+    VertexArg(){}
+    ~VertexArg(){}
 };

@@ -44,4 +44,6 @@ public:
     bool Init();
     void Run();
     void Exit(); 
+
+    ~Application();
 };

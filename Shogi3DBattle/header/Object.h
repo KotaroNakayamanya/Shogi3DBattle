@@ -42,4 +42,6 @@ public:
     unsigned int GetIndicesCount();
     unsigned int GetIndicesByte();
 
+    Object();
+    ~Object();
 };
