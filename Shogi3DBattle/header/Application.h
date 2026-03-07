@@ -3,7 +3,7 @@
 #include"GameWindow.h"
 #include"DX12.h"
 #include"KeyMap.h"
-#include"SceneState.h"
+#include"ISceneState.h"
 
 class Application
 {
@@ -12,7 +12,7 @@ private:
     std::unique_ptr<DX12> _dx12; // DX12オブジェクト
     std::unique_ptr<KeyMap> _keyMap; // キーマップオブジェクト
 
-    std::unique_ptr<SceneState> _sceneState; // シーンステート
+    std::unique_ptr<ISceneState> _sceneState; // シーンステート
 
     Application(); // デフォルトコンストラクタ禁止
     Application(const Application&) = delete; // コピー禁止
@@ -25,8 +25,9 @@ public:
     void Run();  // ゲーム実行処理
     void Exit(); // 終了処理
 
-    SceneState* GetSceneState(); // シーンステートを返す
-    void SetSceneState(SceneState* sceneState); // シーンステートをセットする
+    ISceneState* GetSceneState(); // シーンステートを返す
+    void SetSceneState(ISceneState* sceneState); // シーンステートをセットする
+
     KeyMap* GetKeyMapObj(); // キーマップオブジェクトを返す
 
     ~Application();

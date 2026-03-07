@@ -2,16 +2,14 @@
 
 // スワップチェーン作成
 HRESULT SwapChain::CreateSwapChain(
-    IDXGIFactory6* dxgiFactory,
-    ID3D12CommandQueue* commandQueue,
-    HWND hwnd,
-    UINT buffNum)
+    DrawArg::CreateSwapChainArg arg)
 {
-    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = GetSwapChainDesc(buffNum);
+    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = GetSwapChainDesc(
+        arg.width, arg.height, arg.buffNum);
 
-    return dxgiFactory->CreateSwapChainForHwnd(
-        commandQueue,
-        hwnd,
+    return arg.dxgiFactory->CreateSwapChainForHwnd(
+        arg.commandQueue,
+        arg.hwnd,
         &swapChainDesc,
         nullptr,
         nullptr,
@@ -19,14 +17,15 @@ HRESULT SwapChain::CreateSwapChain(
 }
 
 // スワップチェーンディスクリプタ
-DXGI_SWAP_CHAIN_DESC1 SwapChain::GetSwapChainDesc(UINT buffNum)
+DXGI_SWAP_CHAIN_DESC1 SwapChain::GetSwapChainDesc(
+    UINT width, UINT height, UINT buffNum)
 {
     DXGI_SWAP_CHAIN_DESC1 desc = {};
 
-    desc.Width =
-        1280;
-    desc.Height =
-        720;
+    desc.Width =  // 横の解像度
+        width;
+    desc.Height = // 縦の解像度
+        height;
     desc.Format =
         DXGI_FORMAT_R8G8B8A8_UNORM;
     desc.Stereo =

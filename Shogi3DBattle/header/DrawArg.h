@@ -50,6 +50,18 @@ public:
 
     }ExeDrawArg;
 
+    // スワップチェーン作成用引数
+    typedef struct CreateSwapChainArg
+    {
+        IDXGIFactory6* dxgiFactory;
+        ID3D12CommandQueue* commandQueue;
+        HWND hwnd;
+        UINT width;
+        UINT height;
+        UINT buffNum;
+
+    }CreateSwapChainArg;
+
     DrawArg(){}
     ~DrawArg(){}
 };

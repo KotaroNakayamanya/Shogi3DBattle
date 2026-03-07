@@ -230,7 +230,7 @@
     <ClInclude Include="header\InputCommand.h">
       <Filter>ヘッダー ファイル\key_map</Filter>
     </ClInclude>
-    <ClInclude Include="header\SceneState.h">
+    <ClInclude Include="header\ISceneState.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
     <ClInclude Include="header\MovePiece.h">

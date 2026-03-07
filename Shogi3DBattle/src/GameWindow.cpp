@@ -8,7 +8,8 @@ bool GameWindow::CreateGameWindow()
 {
     CreateWindowClass();
     RegisterClassEx(&_windowClass);
-    AdjustWindowRect(&_WINDOW_RECT,
+    AdjustWindowRect(
+        &_windowRect,
         WS_OVERLAPPEDWINDOW, false);
     CreateWindowObj();
 
@@ -28,17 +29,17 @@ void GameWindow::CreateWindowClass()
 void GameWindow::CreateWindowObj()
 {
     _hwnd = CreateWindow(
-        _windowClass.lpszClassName,              // クラス名
-        L"将棋大戦3D",                           // ウインドウタイトル
-        WS_OVERLAPPEDWINDOW,                     // ウインドウスタイル
-        CW_USEDEFAULT,                           // 表示x座標
-        CW_USEDEFAULT,                           // 表示y座標
-        _WINDOW_RECT.right  - _WINDOW_RECT.left, // ウインドウ幅
-        _WINDOW_RECT.bottom - _WINDOW_RECT.top,  // ウインドウ高
-        nullptr,                                 // 親ウインドウハンドル
-        nullptr,                                 // メニューハンドル
-        _windowClass.hInstance,                  // アプリケーションハンドル
-        nullptr);                                // 追加パラメータ
+        _windowClass.lpszClassName, // クラス名
+        L"将棋大戦3D",              // ウインドウタイトル
+        WS_OVERLAPPEDWINDOW,        // ウインドウスタイル,
+        CW_USEDEFAULT,              // 表示x座標
+        CW_USEDEFAULT,              // 表示y座標
+        _windowWidth,               // ウインドウ幅
+        _windowHeight,              // ウインドウ高
+        nullptr,                    // 親ウインドウハンドル
+        nullptr,                    // メニューハンドル
+        _windowClass.hInstance,     // アプリケーションハンドル
+        nullptr);                   // 追加パラメータ
 }
 
 // ウインドウを表示する

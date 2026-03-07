@@ -1,22 +1,22 @@
 #pragma once
 
 #include<Windows.h>
-#include"SceneState.h"
+#include"ISceneState.h"
 
-class MovePiece : public SceneState
+class MovePiece : public ISceneState
 {
 private:
     HWND _hwnd;
 public:
-    virtual SceneState* ExeUpCommand()    override; // 上
-    virtual SceneState* ExeLeftCommand()  override; // 左 
-    virtual SceneState* ExeDownCommand()  override; // 下
-    virtual SceneState* ExeRightCommand() override; // 右
+    virtual ISceneState* ExeDecision() override; // 決定
+    virtual ISceneState* ExeCancel()   override; // キャンセル
 
-    virtual SceneState* ExeMouseCommand() override; // マウス操作
+    virtual ISceneState* ExeUp()    override; // 上
+    virtual ISceneState* ExeLeft()  override; // 左 
+    virtual ISceneState* ExeDown()  override; // 下
+    virtual ISceneState* ExeRight() override; // 右
 
-    virtual SceneState* ExeDecisionCommand() override; // 決定
-    virtual SceneState* ExeCancelCommand()   override; // キャンセル
+    virtual ISceneState* ExeMouseMove() override; // マウス操作
 
     MovePiece(HWND hwnd);
     MovePiece();

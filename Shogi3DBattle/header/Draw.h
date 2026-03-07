@@ -31,11 +31,17 @@ private:
     HRESULT CreateSwapChainObj(            // スワップチェーンオブジェクト作成
         IDXGIFactory6* dxgiFactory,
         HWND hwnd);
+    DrawArg::CreateSwapChainArg GetCreateSwapChainArg( // スワップチェーン作成用引数
+        IDXGIFactory6* dxgiFactory,
+        ID3D12CommandQueue* commandQueue,
+        HWND hwnd,
+        UINT width,
+        UINT height);
 
     std::unique_ptr<Fence> _fence;         // コマンドキューオブジェクト
     HRESULT CreateFenceObj(ID3D12Device* device); // コマンドキューオブジェクト作成
 
-    std::shared_ptr<RTVHeap> _heap;                 // ヒープオブジェクト
+    std::unique_ptr<RTVHeap> _heap;                 // ヒープオブジェクト
     HRESULT CreateHeapObj(ID3D12Device* device); // ヒープオブジェクト作成 
 
 
@@ -58,7 +64,7 @@ public:
     void SetCommand(DrawArg::SetCommandArg arg); // コマンドセット
     void ExeDraw(DrawArg::ExeDrawArg arg); // 描画実行
 
-    Draw(UINT bufferNum);
+    Draw(UINT buffNum);
     Draw();
     ~Draw();
 };

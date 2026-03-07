@@ -68,7 +68,7 @@
     <ClInclude Include="header\PipelineArg.h" />
     <ClInclude Include="header\RootSignature.h" />
     <ClInclude Include="header\RTVHeap.h" />
-    <ClInclude Include="header\SceneState.h" />
+    <ClInclude Include="header\ISceneState.h" />
     <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\SwapChain.h" />
     <ClInclude Include="header\Texture.h" />

@@ -304,12 +304,18 @@ PipelineArg::CreatePipelineStateArg DX12::GetCreatePipelineObjArg()
 
 
 
+float angle = 0.0f;
+
 
 // コマンド実行
 void DX12::ExeDX12()
 {
     // レンダーターゲットの準備をする
      PrepareRenderTarget();
+
+    // 頂点を変換
+    angle += 0.05f;
+    _const->RotationY(angle);
 
     // コマンドセット
     SetCommand();

@@ -1,40 +1,45 @@
 #include"MovePiece.h"
 
+// 決定
+ISceneState* MovePiece::ExeDecision()
+{
+    return this;
+}
+// キャンセル
+ISceneState* MovePiece::ExeCancel()
+{
+    DestroyWindow(_hwnd);
+    return this;
+}
 // 上
-SceneState* MovePiece::ExeUpCommand()
+ISceneState* MovePiece::ExeUp()
 {
     DestroyWindow(_hwnd);
     return this;
 }
 
 // 左 
-SceneState* MovePiece::ExeLeftCommand()
+ISceneState* MovePiece::ExeLeft()
 {
+    DestroyWindow(_hwnd);
     return this;
 }
 // 下
-SceneState* MovePiece::ExeDownCommand()
+ISceneState* MovePiece::ExeDown()
 {
+    DestroyWindow(_hwnd);
     return this;
 }
 // 右
-SceneState* MovePiece::ExeRightCommand()
+ISceneState* MovePiece::ExeRight()
 {
+    DestroyWindow(_hwnd);
     return this;
 }
 // マウス操作
-SceneState* MovePiece::ExeMouseCommand()
+ISceneState* MovePiece::ExeMouseMove()
 {
-    return this;
-}
-// 決定
-SceneState* MovePiece::ExeDecisionCommand()
-{
-    return this;
-}
-// キャンセル
-SceneState* MovePiece::ExeCancelCommand()
-{
+    DestroyWindow(_hwnd);
     return this;
 }
 

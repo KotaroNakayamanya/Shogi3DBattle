@@ -64,10 +64,32 @@ HRESULT Draw::CreateSwapChainObj(
 {
     ID3D12CommandQueue* commandQueue =
         _commandQueue->GetCommandQueue();
-    
+
+    DrawArg::CreateSwapChainArg arg =
+        GetCreateSwapChainArg(dxgiFactory, commandQueue, hwnd, 1280, 720);
+
     _swapChain = std::make_unique<SwapChain>();
-    return _swapChain->CreateSwapChain(
-        dxgiFactory, commandQueue, hwnd, _buffNum);
+    return _swapChain->CreateSwapChain(arg);
+}
+
+// スワップチェーン作成用引数
+DrawArg::CreateSwapChainArg Draw::GetCreateSwapChainArg(
+    IDXGIFactory6* dxgiFactory,
+    ID3D12CommandQueue* commandQueue,
+    HWND hwnd,
+    UINT width,
+    UINT height)
+{
+    DrawArg::CreateSwapChainArg arg = {};
+
+    arg.dxgiFactory = dxgiFactory;
+    arg.commandQueue = commandQueue;
+    arg.hwnd = hwnd,
+    arg.width = width;
+    arg.height = height;
+    arg.buffNum = _buffNum;
+
+    return arg;
 }
 
 // フェンスオブジェクト作成
@@ -246,9 +268,9 @@ void Draw::ResetCommand()
 
 
 
-Draw::Draw(UINT bufferNum) : Draw()
+Draw::Draw(UINT buffNum) : Draw()
 {
-    _buffNum = bufferNum;
+    _buffNum = buffNum;
 }
 
 Draw::Draw(){}

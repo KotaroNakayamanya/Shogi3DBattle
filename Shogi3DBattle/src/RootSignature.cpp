@@ -1,4 +1,5 @@
 #include"RootSignature.h"
+#include<memory>
 
 template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -76,22 +77,26 @@ std::vector<D3D12_ROOT_PARAMETER> RootSignature::GetRootParams(UINT paramNum)
 {
     std::vector<D3D12_ROOT_PARAMETER> descs = {};
     descs.resize(paramNum);
+
+    std::unique_ptr<RangeTypeState> state;
  
     // CBV
+    state.reset(new RangeTypeCBV(1));
     descs[0].ParameterType = // ディスクリプタテーブル
         D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
     descs[0].ShaderVisibility = // 頂点シェーダで利用可能
         D3D12_SHADER_VISIBILITY_VERTEX;
     descs[0].DescriptorTable =
-        GetDescTable(new RangeTypeCBV(1));
+        GetDescTable(state.get());
 
     // SRV
+    state.reset(new RangeTypeSRV(1));
     descs[1].ParameterType = // ディスクリプタテーブル
         D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
     descs[1].ShaderVisibility = // ピクセルシェーダで利用可能
         D3D12_SHADER_VISIBILITY_PIXEL;
     descs[1].DescriptorTable =
-        GetDescTable(new RangeTypeSRV(1));
+        GetDescTable(state.get());
 
     return descs;
 }
@@ -114,6 +119,9 @@ D3D12_ROOT_DESCRIPTOR_TABLE RootSignature::GetDescTable(RangeTypeState* rangeTyp
 
     return desc;
 }
+
+
+
 
 // CBVディスクリプタレンジ
 std::vector<D3D12_DESCRIPTOR_RANGE> RootSignature::RangeTypeCBV::GetCBVDescRanges()

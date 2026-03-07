@@ -1,8 +1,5 @@
 #include"Const.h"
-
-#include<DirectXMath.h>
 #include<cassert>
-#include<memory>
 
 // コンスタントオブジェクト作成
 HRESULT Const::CreateConstObj(ID3D12Device* device)
@@ -43,21 +40,13 @@ HRESULT Const::MapBuff()
 {
     HRESULT result;
 
-    std::shared_ptr<DirectX::XMMATRIX> map;
-
-    result = _buff->Map(0, nullptr, (void**)&map);
+    result = _buff->Map(0, nullptr, (void**)&_mappedMat);
     if (FAILED(result))
     {
         assert(false); return result;
     }
 
-    DirectX::XMMATRIX mat = DirectX::XMMatrixIdentity();
-    //mat *= DirectX::XMMatrixRotationZ(DirectX::XM_PI/4);
-    *map = mat;
-
-    auto a = *map;
-
-    _buff->Unmap(0, nullptr);
+    //_buff->Unmap(0, nullptr);
 
     return S_OK;
 }
@@ -114,6 +103,32 @@ D3D12_RESOURCE_DESC Const::GetResourceDesc()
 ID3D12Resource* Const::GetBuff()
 {
     return _buff.Get();
+}
+
+
+
+
+void Const::RotationY(float pi)
+{
+    DirectX::XMMATRIX mat = DirectX::XMMatrixIdentity();
+
+    //mat *= DirectX::XMMatrixRotationY(pi);
+
+    DirectX::XMFLOAT3 eye   (0,  0, -5);
+    DirectX::XMFLOAT3 target(0,  0,  0);
+    DirectX::XMFLOAT3 up    (0,  1,  0);
+    mat *= DirectX::XMMatrixLookAtLH(
+        DirectX::XMLoadFloat3(&eye),
+        DirectX::XMLoadFloat3(&target),
+        DirectX::XMLoadFloat3(&up));
+
+    mat *= DirectX::XMMatrixPerspectiveFovLH(
+            DirectX::XM_PIDIV2, // 画角
+            1.0f,   // アスペクト比
+            5.0f,   // 手前側の画面までの距離
+            10.0f); //   奥側の画面までの距離
+
+    *_mappedMat = mat;
 }
 
 

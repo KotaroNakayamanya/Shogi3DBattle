@@ -62,39 +62,54 @@ LRESULT CALLBACK WindowProcedure(
      HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     Application& app = Application::GetInstance();
-    SceneState* sceneState = app.GetSceneState();
+
+    ISceneState* sceneState = app.GetSceneState();
     KeyMap* keyMap = app.GetKeyMapObj();
 
-    SceneState* newSceneState;
+    ISceneState* newSceneState = nullptr;
 
     switch(msg){
-    case WM_CHAR:
-        switch (keyMap->convertKeyToDirection(wparam))
-        {
-        case InputCommand::up:
-            newSceneState = sceneState->ExeUpCommand();
-            break;
 
-        case InputCommand::left:
-            newSceneState = sceneState->ExeLeftCommand();
-            break;
-
-        case InputCommand::down:
-            newSceneState = sceneState->ExeDownCommand();
-            break;
-
-        case InputCommand::right:
-            newSceneState = sceneState->ExeRightCommand();
-            break;
-
-        default:
-            return DefWindowProc(hwnd, msg, wparam, lparam);
-        }
+    case WM_LBUTTONDOWN: // 左クリック（決定）
+        newSceneState = sceneState->ExeDecision();
         app.SetSceneState(newSceneState);
         break;
 
-    case WM_DESTROY:
+    case WM_RBUTTONDOWN: // 右クリック（キャンセル）
+        newSceneState = sceneState->ExeCancel();
+        app.SetSceneState(newSceneState);
+        break;
+
+    case WM_CHAR: // キーボード入力
+        switch (keyMap->convertKeyToDirection(wparam))
+        {
+        case InputCommand::up: // 上入力
+            newSceneState = sceneState->ExeUp();
+            break;
+
+        case InputCommand::left: // 左入力
+            newSceneState = sceneState->ExeLeft();
+            break;
+
+        case InputCommand::down: // 下入力
+            newSceneState = sceneState->ExeDown();
+            break;
+
+        case InputCommand::right: // 右入力
+            newSceneState = sceneState->ExeRight();
+            break;
+
+        default:
+            break;
+        }
+        app.SetSceneState(newSceneState);
+        break;
+    
+    case WM_DESTROY: // ウインドウ破棄
         PostQuitMessage(0);
+        break;
+
+    default:
         break;
     }
 
@@ -105,15 +120,19 @@ LRESULT CALLBACK WindowProcedure(
 
 
 // シーンステートを返す
-SceneState* Application::GetSceneState()
+ISceneState* Application::GetSceneState()
 {
     return _sceneState.get();
 }
 
 // シーンステートをセットする
-void Application::SetSceneState(SceneState* sceneState)
+void Application::SetSceneState(ISceneState* sceneState)
 {
-    if(_sceneState.get() != sceneState)
+    bool isNotEqual = _sceneState.get() != sceneState;
+    bool isNotNull  = sceneState != nullptr;
+
+    // 新しいステートならセット
+    if(isNotEqual && isNotNull)
         _sceneState.reset(sceneState);
 }
 

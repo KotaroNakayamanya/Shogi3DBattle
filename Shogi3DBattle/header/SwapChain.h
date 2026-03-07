@@ -3,6 +3,7 @@
 #include<d3d12.h>
 #include<dxgi1_6.h>
 #include<wrl.h>
+#include"DrawArg.h"
 
 class SwapChain
 {
@@ -12,14 +13,12 @@ class SwapChain
 private:
     ComPtr<IDXGISwapChain4> _swapChain; // スワップチェーン
 
-    DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc(UINT buffNum); // スワップチェーンディスクリプタ
+    DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc( // スワップチェーンディスクリプタ
+        UINT width, UINT height, UINT buffNum);
 
 public:
     HRESULT CreateSwapChain( // スワップチェーン作成
-        IDXGIFactory6* dxgiFactory,
-        ID3D12CommandQueue* commandQueue,
-        HWND hwnd,
-        UINT buffNum);
+        DrawArg::CreateSwapChainArg arg);
 
     IDXGISwapChain4* GetSwapChain(); // スワップチェーンを返す
 
