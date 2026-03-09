@@ -6,12 +6,13 @@ LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 // ウインドウ作成
 bool GameWindow::CreateGameWindow()
 {
-    CreateWindowClass();
-    RegisterClassEx(&_windowClass);
-    AdjustWindowRect(
-        &_windowRect,
-        WS_OVERLAPPEDWINDOW, false);
-    CreateWindowObj();
+    CreateWindowClass(); // ウインドウクラス作成
+    RegisterClassEx(&_windowClass); //ウインドウクラス登録
+
+    RECT windowRect = {0, 0, (LONG)_windowWidth, (LONG)_windowHeight};
+    AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, false); // クライアント領域調整
+
+    CreateWindowObj(); // ウインドウオブジェクト作成
 
     return true;
 }
@@ -59,6 +60,24 @@ void GameWindow::DestroyClass()
 {
     UnregisterClass(_windowClass.lpszClassName, _windowClass.hInstance);
 }
+
+
+
+
+// ウインドウ横サイズを返す
+UINT GameWindow::GetWindowWidth()
+{
+    return _windowWidth;
+}
+
+// ウインドウ縦サイズを返す
+UINT GameWindow::GetWindowHeight()
+{
+    return _windowHeight;
+}
+
+
+
 
 GameWindow::GameWindow(){}
 GameWindow::~GameWindow(){}

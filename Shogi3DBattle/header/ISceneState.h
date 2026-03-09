@@ -1,19 +1,18 @@
 #pragma once
 
-class Command;
+#include<memory>
 
 class ISceneState
 {
 public:
-    virtual ISceneState* ExeDecision() = 0; // 決定
-    virtual ISceneState* ExeCancel()   = 0; // キャンセル
+    virtual ISceneState* ExeDecisionButton() = 0;  // 決定ボタン処理
+    virtual ISceneState* ExeCancelButton()   = 0;  // キャンセルボタン処理
+    virtual ISceneState* ExeCursorOperation() = 0; // カーソル操作処理
 
-    virtual ISceneState* ExeUp()    = 0; // 上
-    virtual ISceneState* ExeLeft()  = 0; // 左 
-    virtual ISceneState* ExeDown()  = 0; // 下
-    virtual ISceneState* ExeRight() = 0; // 右
-
-    virtual ISceneState* ExeMouseMove() = 0; // マウス操作
+    virtual ISceneState* ExeUpButton()    = 0; // 上ボタン処理
+    virtual ISceneState* ExeLeftButton()  = 0; // 左ボタン処理
+    virtual ISceneState* ExeDownButton()  = 0; // 下ボタン処理
+    virtual ISceneState* ExeRightButton() = 0; // 右ボタン処理
 
     ISceneState()  = default;
     ~ISceneState(){}

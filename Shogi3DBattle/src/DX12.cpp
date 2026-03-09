@@ -3,19 +3,6 @@
 #include<algorithm>
 #include<cassert>
 
-#include"DXGIFactory.h"
-#include"Adapter.h"
-#include"Device.h"
-#include"Shader.h"
-#include"Texture.h"
-#include"Draw.h"
-#include"Vertex.h"
-#include"Object.h"
-#include"Const.h"
-#include"CSUHeap.h"
-#include"RootSignature.h"
-#include"Pipeline.h"
-
 namespace {
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -57,7 +44,6 @@ bool DX12::CreateDX12Obj(HWND hwnd)
     {
         assert(false); return false;
     }
-
     // シェーダーバイナリオブジェクト作成
     if (FAILED(CreateShaderObj()))
     {
@@ -77,12 +63,17 @@ bool DX12::CreateDX12Obj(HWND hwnd)
     }
 
     // テクスチャオブジェクト作成
-    if (FAILED(CreateTextureObj()))
+    if (FAILED(CreateTBuffObj()))
     {
         assert(false); return false;
     }
-    // コンスタントオブジェクト作成
-    if (FAILED(CreateConstObj()))
+    // コンスタントバッファオブジェクト作成
+    if (FAILED(CreateCBuffObj()))
+    {
+        assert(false); return false;
+    }
+    // コンスタントバッファマップオブジェクト作成
+    if (FAILED(CreateCBuffMapObj()))
     {
         assert(false); return false;
     }
@@ -102,7 +93,6 @@ bool DX12::CreateDX12Obj(HWND hwnd)
     {
         assert(false); return false;
     }
-
 
     return true;
 }
@@ -153,6 +143,9 @@ DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg(HWND hwnd)
         _dxgiFactory->GetDXGIFactory();
     arg.hwnd =
         hwnd;
+    arg.width = 1280; // 初期値
+    arg.height = 720; // 初期値
+    arg.buffNum = _buffNum;
 
     return arg;
 }
@@ -172,8 +165,8 @@ HeapArg::CreateCSUHeapArg DX12::GetCreateCSUHeapArg()
     HeapArg::CreateCSUHeapArg arg = {};
 
     arg.device = _device->GetDevice();
-    arg.buff1 = _const->GetBuff();
-    arg.buff2 = _texture->GetBuff();
+    arg.buff1 = _cBuff->GetBuff();
+    arg.buff2 = _tBuff->GetTBuff();
   //arg.buff3 = nullptr;
 
     return arg;
@@ -188,32 +181,39 @@ HRESULT DX12::CreateVertexSets()
         {
             object = std::make_unique<Object>();
         });*/
-    _object = std::make_unique<Object>();
+    _pawn = std::make_unique<Pawn>();
 
     return S_OK;
 }
 
 // テクスチャオブジェクト作成
-HRESULT DX12::CreateTextureObj()
+HRESULT DX12::CreateTBuffObj()
 {
-    _texture = std::make_unique<Texture>();
+    _tBuff = std::make_unique<TBuff>();
 
     TextureArg::CreateTextureObjArg arg =
-        GetCreateTextureObjArg();
+        GetCreateTBuffObjArg();
     
-    return _texture->CreateTextureObj(arg);
+    return _tBuff->CreateTBuffObj(arg);
 }
 
 // コンスタントオブジェクト作成
-HRESULT DX12::CreateConstObj()
+HRESULT DX12::CreateCBuffObj()
 {
-    _const = std::make_unique<Const>();
+    // コンスタントバッファオブジェクト作成
+    _cBuff = std::make_unique<CBuff>();
+    return _cBuff->CreateCBuffObj(_device->GetDevice(), _pawn->GetVerticesByteSize());
+}
 
-    return _const->CreateConstObj(_device->GetDevice());
+// コンスタントバッファマップオブジェクト作成
+HRESULT DX12::CreateCBuffMapObj()
+{
+    _cBuffMap = std::make_unique<CBuffMap>();
+    return _cBuffMap->MapCBuff(_cBuff->GetBuff());
 }
 
 // テクスチャオブジェクト作成用引数
-TextureArg::CreateTextureObjArg DX12::GetCreateTextureObjArg()
+TextureArg::CreateTextureObjArg DX12::GetCreateTBuffObjArg()
 {
     TextureArg::CreateTextureObjArg arg = {};
 
@@ -251,10 +251,10 @@ VertexArg::GetCreateVertexObjArg DX12::GetCreateVertexObjArg()
     VertexArg::GetCreateVertexObjArg arg = {};
 
     arg.device = _device->GetDevice();
-    arg.vertexByte = _object->GetVerticesCount() * _object->GetVerticesByte();
-    arg.vertexPtr = _object->GetVerticesPtr();
-    arg.indexByte = _object->GetIndicesByte();
-    arg.indexPtr = _object->GetIndicesPtr();
+    arg.vertexByte  = _pawn->GetVerticesByteSize();
+    arg.vertexPtr   = _pawn->GetVerticesPtr();
+    arg.indicesByte = _pawn->GetIndicesByteSize();
+    arg.indexPtr    = _pawn->GetIndicesPtr();
 
     return arg;
 }
@@ -311,17 +311,18 @@ float angle = 0.0f;
 void DX12::ExeDX12()
 {
     // レンダーターゲットの準備をする
-     PrepareRenderTarget();
+    PrepareRenderTarget();
 
     // 頂点を変換
-    angle += 0.05f;
-    _const->RotationY(angle);
+    angle += 0.01f;
+    _cBuffMap->RotationY(angle);
 
     // コマンドセット
     SetCommand();
-
     // 描画実行
     ExeDraw();
+
+    
 
     return;
 }
@@ -399,7 +400,7 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
     arg.indexBuffView =
         GetIndexBuffView();
     arg.vertexCount
-        = _object->GetIndicesCount();
+        = _pawn->GetIndicesNum();
     arg.objCount
         = 1;
 
@@ -411,8 +412,8 @@ D3D12_VIEWPORT DX12::GetViewports()
 {
     D3D12_VIEWPORT viewport = {};
 
-    viewport.Width    = 1280;
-    viewport.Height   = 720;
+    viewport.Width    = _windowWidth;
+    viewport.Height   = _windowHeight;
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
     viewport.MaxDepth = 1.0f; // 深度最大値
@@ -427,9 +428,9 @@ D3D12_RECT DX12::GetScissorRects()
     D3D12_RECT scissorRect = {};
 
     scissorRect.left = 0;
-    scissorRect.right = 1280;
+    scissorRect.right = _windowWidth;
     scissorRect.top = 0;
-    scissorRect.bottom = 720;
+    scissorRect.bottom = _windowHeight;
     
     return scissorRect;
 }
@@ -442,15 +443,15 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBuffView()
     ComPtr<ID3D12Resource> vertexBuff =
         _vertex->GetVertexBuff();
 
-    UINT vertexByte = _object->GetVerticesByte();
-    UINT verticesByte = vertexByte * _object->GetVerticesCount();
+    UINT vertexByteSize   = _pawn->GetVertexByteSize();
+    UINT verticesByteSize = _pawn->GetVerticesByteSize();
 
     view.BufferLocation =
         vertexBuff->GetGPUVirtualAddress();
     view.SizeInBytes =
-        verticesByte; // 注意
+        verticesByteSize; // 注意
     view.StrideInBytes =
-        vertexByte; // 注意
+        vertexByteSize; // 注意
 
     return view;
 }
@@ -463,7 +464,7 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBuffView()
     ComPtr<ID3D12Resource> indexBuff =
         _vertex->GetIndexBuff();
 
-    UINT indicesByte = _object->GetIndicesByte();
+    UINT indicesByte = _pawn->GetIndicesByteSize();
 
     view.BufferLocation =
         indexBuff->GetGPUVirtualAddress();
@@ -497,6 +498,20 @@ DrawArg::ExeDrawArg DX12::GetExeDrawArg()
 
 
 
+
+// ウインドウサイズ変更処理
+void DX12::ProcessChangeWindowSize(UINT width, UINT height)
+{   
+    // 画面サイズを更新
+    _windowWidth  = width;
+    _windowHeight = height;
+    // スワップチェーン更新
+    _draw->UpdateDrawConf(
+        _device->GetDevice(),
+        _windowWidth, 
+        _windowHeight,
+        _buffNum);
+}
 
 DX12::DX12() {
 #ifdef _DEBUG

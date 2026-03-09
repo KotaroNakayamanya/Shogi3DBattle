@@ -23,9 +23,9 @@ DXGI_SWAP_CHAIN_DESC1 SwapChain::GetSwapChainDesc(
     DXGI_SWAP_CHAIN_DESC1 desc = {};
 
     desc.Width =  // 横の解像度
-        width;
+         1280;
     desc.Height = // 縦の解像度
-        height;
+         720;
     desc.Format =
         DXGI_FORMAT_R8G8B8A8_UNORM;
     desc.Stereo =
@@ -49,6 +49,19 @@ DXGI_SWAP_CHAIN_DESC1 SwapChain::GetSwapChainDesc(
         DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
     return desc;
+}
+
+// スワップチェーン更新
+HRESULT SwapChain::UpdateSwapChain(UINT width, UINT height)
+{
+    return _swapChain->ResizeBuffers(
+        0,
+        0,
+        0,
+        DXGI_FORMAT_R8G8B8A8_UNORM,
+        DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+
+    return S_OK;
 }
 
 // スワップチェーンを返す

@@ -26,7 +26,7 @@ private:
     D3D12_RENDER_TARGET_BLEND_DESC GetRenderTargetBlendDesc(); // レンダーターゲットブレンドディスクリプタ
     D3D12_RASTERIZER_DESC GetRasterizerDesc();                 // ラスタライザディスクリプタ
     D3D12_INPUT_LAYOUT_DESC GetInputLayoutDesc(                // インプットレイアウトディスクリプタ
-        std::vector<D3D12_INPUT_ELEMENT_DESC>* inputLayout);
+        std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout);
 
 
 public:

@@ -1,7 +1,5 @@
 ﻿#include"Application.h"
 
-#include"MovePiece.h"
-
 // 初期処理
 bool Application::Init()
 {
@@ -15,11 +13,8 @@ bool Application::Init()
     if(_dx12->CreateDX12Obj(_gameWindow->GetHWND()) == false)
         return false;
 
-    // キーマップオブジェクト作成
-    _keyMap = std::make_unique<KeyMap>();
-
-    // シーンステート作成(初期は動ける状態）
-    _sceneState = std::make_unique<MovePiece>(_gameWindow->GetHWND());
+    // インプットハンドラ作成(初期は動ける状態）
+    _inputHandler = std::make_unique<InputHandler>();
 
     return true;
 }
@@ -43,7 +38,6 @@ void Application::Run()
             break;
         }
 
-        // DirectX12処理
         _dx12->ExeDX12();
     }
 }
@@ -59,93 +53,87 @@ void Application::Exit()
 
 // ウインドウプロシージャ
 LRESULT CALLBACK WindowProcedure(
-     HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+     HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    // アプリケーションインスタンス取得
     Application& app = Application::GetInstance();
-
-    ISceneState* sceneState = app.GetSceneState();
-    KeyMap* keyMap = app.GetKeyMapObj();
-
-    ISceneState* newSceneState = nullptr;
+    // インプットハンドラ取得
+    InputHandler* inputHandler = app.GetInputHandler();
 
     switch(msg){
 
-    case WM_LBUTTONDOWN: // 左クリック（決定）
-        newSceneState = sceneState->ExeDecision();
-        app.SetSceneState(newSceneState);
-        break;
-
-    case WM_RBUTTONDOWN: // 右クリック（キャンセル）
-        newSceneState = sceneState->ExeCancel();
-        app.SetSceneState(newSceneState);
-        break;
-
-    case WM_CHAR: // キーボード入力
-        switch (keyMap->convertKeyToDirection(wparam))
+    case WM_GETMINMAXINFO: // ウインドウサイズ制限
+    {
+        MINMAXINFO *pmmi = (MINMAXINFO *)lParam;
+        if (pmmi)
         {
-        case InputCommand::up: // 上入力
-            newSceneState = sceneState->ExeUp();
-            break;
-
-        case InputCommand::left: // 左入力
-            newSceneState = sceneState->ExeLeft();
-            break;
-
-        case InputCommand::down: // 下入力
-            newSceneState = sceneState->ExeDown();
-            break;
-
-        case InputCommand::right: // 右入力
-            newSceneState = sceneState->ExeRight();
-            break;
-
-        default:
-            break;
+            pmmi->ptMinTrackSize.x = app.GetWindowWidth();
+            pmmi->ptMaxTrackSize.x = app.GetWindowWidth();
+            pmmi->ptMinTrackSize.y = app.GetWindowHeight();
+            pmmi->ptMaxTrackSize.y = app.GetWindowHeight();
         }
-        app.SetSceneState(newSceneState);
         break;
-    
+    }
+
+
+    case WM_LBUTTONDOWN: // 左クリック
+        inputHandler->ExeLClick();
+        break;
+
+    case WM_RBUTTONDOWN: // 右クリック
+        inputHandler->ExeRClick();  
+        break;
+
+    case WM_MOUSEMOVE: // マウス移動
+        //inputHandler->ExeMouseMove();
+        break;
+
+    case WM_CHAR: // キー入力
+        inputHandler->ExeInputKey(wParam);
+        break;
+
+
     case WM_DESTROY: // ウインドウ破棄
-        PostQuitMessage(0);
+        PostQuitMessage(0); // ループ処理終了
         break;
+
 
     default:
         break;
     }
 
-    return DefWindowProc(hwnd, msg, wparam, lparam);
+    return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
 
 
 
-// シーンステートを返す
-ISceneState* Application::GetSceneState()
+// 画面サイズ変更処理
+void Application::ProcessChangeWindowSize()
 {
-    return _sceneState.get();
+    // DirectX12オブジェクトへ処理を頼む
+    _dx12->ProcessChangeWindowSize(_width, _height);
 }
 
-// シーンステートをセットする
-void Application::SetSceneState(ISceneState* sceneState)
+// インプットハンドラを返す
+InputHandler* Application::GetInputHandler()
 {
-    bool isNotEqual = _sceneState.get() != sceneState;
-    bool isNotNull  = sceneState != nullptr;
-
-    // 新しいステートならセット
-    if(isNotEqual && isNotNull)
-        _sceneState.reset(sceneState);
+    return _inputHandler.get();
 }
 
-// キーマップオブジェクトを返す
-KeyMap* Application::GetKeyMapObj()
+UINT Application::GetWindowWidth()
 {
-    return _keyMap.get();
+    return _gameWindow->GetWindowWidth();
+}
+UINT Application::GetWindowHeight()
+{
+    return _gameWindow->GetWindowHeight();
 }
 
 
 
 
-// シングルトンインスタンス
+// シングルトンインスタンスを返す
 Application& Application::GetInstance()
 {
     static Application instance;

@@ -18,7 +18,7 @@ HRESULT Vertex::CreateVertexObj(
         assert(false); return E_FAIL;
     }
     // インデックスバッファ作成
-    if (FAILED(CreateIndexBuff(arg.device, arg.indexByte)))
+    if (FAILED(CreateIndexBuff(arg.device, arg.indicesByte)))
     {
         assert(false); return E_FAIL;
     }

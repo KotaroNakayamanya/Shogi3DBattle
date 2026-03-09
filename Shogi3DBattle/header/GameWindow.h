@@ -7,10 +7,8 @@ class GameWindow
 private:
     WNDCLASSEX _windowClass; // ウインドウクラス
     HWND       _hwnd; // ウインドウハンドル
-
     UINT _windowWidth  = 1280;
-    UINT _windowHeight =  720;
-    RECT _windowRect   = {0, 0, (LONG)_windowWidth, (LONG)_windowHeight};
+    UINT _windowHeight = 720;
 
     void CreateWindowClass(); // ウインドウクラス作成
     void CreateWindowObj();   // ウインドウオブジェクト作成
@@ -20,6 +18,9 @@ public:
     void DisplayWindow(); // ウインドウを表示する
     void DestroyClass(); // クラス破棄
     HWND GetHWND(); // ウインドウハンドルを返す 
+
+    UINT GetWindowWidth();  // ウインドウ横サイズを返す
+    UINT GetWindowHeight(); // ウインドウ縦サイズを返す
 
     GameWindow();
     ~GameWindow();

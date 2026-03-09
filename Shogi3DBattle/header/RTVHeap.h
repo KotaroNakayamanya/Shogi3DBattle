@@ -15,10 +15,6 @@ private:
     ComPtr<ID3D12DescriptorHeap> _heap; // RTVヒープ
     std::vector<ComPtr<ID3D12Resource>> _rtvs; // RTV
 
-    HRESULT CreateRTV( // RTV作成
-        ID3D12Device* device,
-        IDXGISwapChain4* swapChain,
-        UINT buffNum);
 
     HRESULT SetRTVBuffer( // RTVをバッファに対応
         IDXGISwapChain4* swapChain,
@@ -31,6 +27,13 @@ public:
         ID3D12Device* device,
         IDXGISwapChain4* swapChain,
         UINT buffNum);
+
+    HRESULT CreateRTV( // RTV作成
+        ID3D12Device* device,
+        IDXGISwapChain4* swapChain,
+        UINT buffNum);
+
+    void ClearRTV(); // RTVを破棄する
 
     ID3D12DescriptorHeap* GetHeap(); // ヒープを返す
     ID3D12Resource* GetRTV(UINT i); // RTVを返す

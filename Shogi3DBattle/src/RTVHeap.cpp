@@ -89,7 +89,11 @@ D3D12_DESCRIPTOR_HEAP_DESC RTVHeap::GetHeapDesc(UINT buffNum)
 }
 
 
-
+// RTV‚ğ”jŠü‚·‚é
+void RTVHeap::ClearRTV()
+{
+    _rtvs.clear();
+}
 
 // ƒq[ƒv‚ğ•Ô‚·
 ID3D12DescriptorHeap* RTVHeap::GetHeap()

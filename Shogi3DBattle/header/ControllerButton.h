@@ -1,10 +1,11 @@
 #pragma once
 
-enum class InputCommand
+enum class ControllerButton
 {
     up,    // ã
     left,  // ¶
     down,  // ‰º
     right, // ‰E
+
     none   // –¢’è‹`
 };

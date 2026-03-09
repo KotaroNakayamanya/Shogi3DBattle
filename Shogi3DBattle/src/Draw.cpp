@@ -19,18 +19,24 @@ HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
     {
         assert(false); return E_FAIL;
     }
-    // スワップチェーンオブジェクト作成
-    if (FAILED(CreateSwapChainObj(arg.dxgiFactory, arg.hwnd)))
-    {
-        assert(false); return E_FAIL;
-    }
     // フェンスオブジェクト作成
     if (FAILED(CreateFenceObj(arg.device)))
     {
         assert(false); return E_FAIL;
     }
+
+    // スワップチェーンオブジェクト作成
+    if (FAILED(CreateSwapChainObj(arg.dxgiFactory, arg.hwnd, arg.width, arg.height)))
+    {
+        assert(false); return E_FAIL;
+    }
     // ヒープオブジェクト作成
     if (FAILED(CreateHeapObj(arg.device)))
+    {
+        assert(false); return E_FAIL;
+    }
+    // RTV作成
+    if (FAILED(_heap->CreateRTV(arg.device, _swapChain->GetSwapChain(), arg.buffNum)))
     {
         assert(false); return E_FAIL;
     }
@@ -60,15 +66,18 @@ HRESULT Draw::CreateCommandQueueObj(ID3D12Device* device)
 // スワップチェーンオブジェクト作成
 HRESULT Draw::CreateSwapChainObj(
     IDXGIFactory6* dxgiFactory,
-    HWND hwnd)
+    HWND hwnd,
+    UINT width,
+    UINT height)
 {
     ID3D12CommandQueue* commandQueue =
         _commandQueue->GetCommandQueue();
 
     DrawArg::CreateSwapChainArg arg =
-        GetCreateSwapChainArg(dxgiFactory, commandQueue, hwnd, 1280, 720);
+        GetCreateSwapChainArg(dxgiFactory, commandQueue, hwnd, width, height);
 
-    _swapChain = std::make_unique<SwapChain>();
+    //_swapChain = std::make_unique<SwapChain>();
+    _swapChain.reset(new SwapChain());
     return _swapChain->CreateSwapChain(arg);
 }
 
@@ -102,7 +111,8 @@ HRESULT Draw::CreateFenceObj(ID3D12Device* device)
 // ヒープオブジェクト作成
 HRESULT Draw::CreateHeapObj(ID3D12Device* device)
 {
-    _heap = std::make_unique<RTVHeap>();
+    //_heap = std::make_unique<RTVHeap>();
+    _heap.reset(new RTVHeap());
     return _heap->CreateHeap(
         device,
         _swapChain->GetSwapChain(),
@@ -168,7 +178,7 @@ void Draw::SetCommand(DrawArg::SetCommandArg arg)
     commandList->SetPipelineState(arg.pipelineState);
     // ルートシグネチャセット
     commandList->SetGraphicsRootSignature(arg.rootSignature);
-    // ディスクリプタヒープセット
+    // CBV,SRVヒープセット
     commandList->SetDescriptorHeaps(1, &arg.heap);
     // ルートパラメータとディスクリプタヒープ関連付け
     auto handle = arg.heap->GetGPUDescriptorHandleForHeapStart();
@@ -199,14 +209,12 @@ void Draw::SetCommand(DrawArg::SetCommandArg arg)
 // 描画実行
 void Draw::ExeDraw(DrawArg::ExeDrawArg arg)
 {
+    
     // バックバッファに対応するRTVを表示画面に設定
     ChangeRTVBarrierToPresent(arg.resourceBarrier);
 
     // コマンド実行
-    _commandList->GetCommandList()->Close();
     ExeCommand();
-    WaitProcessWithFence();
-    ResetCommand();
 
     // 画面スワップ
     _swapChain->GetSwapChain()->Present(1, 0);
@@ -236,8 +244,14 @@ void Draw::ChangeRTVBarrierToPresent(D3D12_RESOURCE_BARRIER resourceBarrier)
 // コマンド実行
 void Draw::ExeCommand()
 {
+    _commandList->GetCommandList()->Close();
+
     ID3D12CommandList* commandLists[] = {_commandList->GetCommandList()};
     _commandQueue->GetCommandQueue()->ExecuteCommandLists(1, commandLists);
+
+    WaitProcessWithFence();
+
+    ResetCommand();
 }
 
 // フェンスによる同期制御
@@ -265,6 +279,32 @@ void Draw::ResetCommand()
     _commandList->GetCommandList()->Reset(commandAllocator, nullptr);
 }
 
+
+
+
+// 描画設定更新
+HRESULT Draw::UpdateDrawConf(
+    ID3D12Device* device,
+    UINT width, 
+    UINT height,
+    UINT buffNum)
+{
+    WaitProcessWithFence(); // GPUが処理中であれば待つ
+    
+    _heap->ClearRTV(); // RTV破棄
+    if(FAILED(_swapChain->UpdateSwapChain( // スワップチェーン更新
+        width, height)))
+    {
+        assert(false); return E_FAIL;
+    }
+    if (FAILED(_heap->CreateRTV( // RTV再作成
+        device, _swapChain->GetSwapChain(), buffNum)))
+    {
+        assert(false); return E_FAIL;
+    }
+
+    return S_OK;
+}
 
 
 

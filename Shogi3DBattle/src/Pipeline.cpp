@@ -11,9 +11,9 @@ HRESULT Pipeline::CreatePipelineState(PipelineArg::CreatePipelineStateArg arg)
             arg.sampleDesc);
 
     std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
-    inputLayout.resize(2);
+    inputLayout.resize(3);
     inputLayout[0] =
-    { // 頂点レイアウト
+    { // 頂点
         "POSITION",
         0,
         DXGI_FORMAT_R32G32B32_FLOAT,
@@ -22,7 +22,17 @@ HRESULT Pipeline::CreatePipelineState(PipelineArg::CreatePipelineStateArg arg)
         D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
         0
     };
-    inputLayout[1] = 
+    inputLayout[1] =
+    { // 法線
+        "NORMAL",
+        0,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+    inputLayout[2] = 
     { // uv
         "TEXCOORD",
         0,
@@ -33,12 +43,10 @@ HRESULT Pipeline::CreatePipelineState(PipelineArg::CreatePipelineStateArg arg)
         0
     };
 
-    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
-    inputLayoutDesc.pInputElementDescs =
-        inputLayout.data();
-    inputLayoutDesc.NumElements =
-        inputLayout.size();
+    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc =
+        GetInputLayoutDesc(inputLayout);
     
+ 
     desc.InputLayout = inputLayoutDesc;
 
     return arg.device->CreateGraphicsPipelineState(
@@ -83,14 +91,14 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC Pipeline::GetPipelineStateDesc(
 
 // インプットレイアウトディスクリプタ
 D3D12_INPUT_LAYOUT_DESC Pipeline::GetInputLayoutDesc(
-    std::vector<D3D12_INPUT_ELEMENT_DESC>* inputLayout)
+    std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout)
 {
     D3D12_INPUT_LAYOUT_DESC desc = {};
 
     desc.pInputElementDescs =
-        inputLayout->data();
+        inputLayout.data();
     desc.NumElements =
-        inputLayout->size();
+        inputLayout.size();
  
     return desc;
 }
@@ -160,8 +168,8 @@ D3D12_RASTERIZER_DESC Pipeline::GetRasterizerDesc()
 
     desc.MultisampleEnable =
         false;
-    desc.CullMode =
-        D3D12_CULL_MODE_NONE;
+    desc.CullMode = // カリング　裏側は塗らない
+        D3D12_CULL_MODE_BACK;
     desc.FillMode =
         D3D12_FILL_MODE_SOLID;
     desc.DepthClipEnable =

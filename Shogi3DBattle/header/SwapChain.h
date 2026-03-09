@@ -20,6 +20,8 @@ public:
     HRESULT CreateSwapChain( // スワップチェーン作成
         DrawArg::CreateSwapChainArg arg);
 
+    HRESULT UpdateSwapChain(UINT width, UINT height);
+
     IDXGISwapChain4* GetSwapChain(); // スワップチェーンを返す
 
     SwapChain();

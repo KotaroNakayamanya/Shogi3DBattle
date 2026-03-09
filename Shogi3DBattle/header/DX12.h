@@ -6,11 +6,13 @@
 #include"Adapter.h"
 #include"Device.h"
 #include"Shader.h"
-#include"Texture.h"
+#include"TBuff.h"
+#include"TResource.h"
 #include"Draw.h"
 #include"Vertex.h"
-#include"Object.h"
-#include"Const.h"
+#include"Pawn.h"
+#include"CBuff.h"
+#include"CBuffMap.h"
 #include"CSUHeap.h"
 #include"RootSignature.h"
 #include"Pipeline.h"
@@ -24,6 +26,9 @@
 class DX12
 {
 private:
+    UINT _windowWidth = 1280;
+    UINT _windowHeight = 720;
+
     const int _buffNum = 2; // 描画に使用する画面数
 
     std::unique_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリーオブジェクト
@@ -56,13 +61,16 @@ private:
     PipelineArg::CreatePipelineStateArg  // パイプラインオブジェクト作成用引数
         GetCreatePipelineObjArg(); 
 
-    std::unique_ptr<Texture> _texture; // テクスチャオブジェクト
-    HRESULT CreateTextureObj();        // テクスチャオブジェクト作成
-    TextureArg::CreateTextureObjArg    // テクスチャオブジェクト作成用引数
-        GetCreateTextureObjArg();
+    std::unique_ptr<TBuff> _tBuff; // テクスチャバッファオブジェクト
+    HRESULT CreateTBuffObj();    // テクスチャバッファオブジェクト作成
+    TextureArg::CreateTextureObjArg    // テクスチャバッファオブジェクト作成用引数
+        GetCreateTBuffObjArg();
 
-    std::unique_ptr<Const> _const; // コンスタントオブジェクト
-    HRESULT CreateConstObj();      // コンスタントオブジェクト作成
+    std::unique_ptr<CBuff> _cBuff; // コンスタントバッファオブジェクト
+    HRESULT CreateCBuffObj();      // コンスタントバッファオブジェクト作成
+
+    std::unique_ptr<CBuffMap> _cBuffMap; // コンスタントバッファマップオブジェクト
+    HRESULT CreateCBuffMapObj();     // コンスタントバッファマップオブジェクト作成
 
     std::unique_ptr<CSUHeap> _heap; // ヒープオブジェクト
     HRESULT CreateHeapObj();     // ヒープオブジェクト作成
@@ -82,8 +90,8 @@ private:
     // コマンドセット
     void SetCommand();
 
-    // 頂点オブジェクト
-    std::unique_ptr<Object> _object;
+    // 駒オブジェクト
+    std::unique_ptr<Pawn> _pawn;
     HRESULT CreateVertexSets();
     
     // コマンドセット
@@ -109,6 +117,9 @@ private:
 public:
     bool CreateDX12Obj(HWND hwnd); // DirectX12オブジェクト作成
     void ExeDX12(); // DirectX12実行処理
+
+    void ProcessChangeWindowSize( // ウインドウサイズ変更処理
+        UINT width, UINT height);
 
     DX12();
     ~DX12();

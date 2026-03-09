@@ -12,6 +12,9 @@ public:
         ID3D12Device*  device;
         IDXGIFactory6* dxgiFactory;
         HWND hwnd;
+        UINT width;
+        UINT height;
+        UINT buffNum;
 
     }CreateDrawObjArg;
 
@@ -61,6 +64,17 @@ public:
         UINT buffNum;
 
     }CreateSwapChainArg;
+
+    //typedef struct UpdateDrawConfArg
+    //{
+    //    ID3D12Device*  device;
+    //    IDXGIFactory6* dxgiFactory;
+    //    HWND hwnd;
+    //    UINT width;
+    //    UINT height;
+    //    UINT buffNum;
+
+    //}UpdateDrawConfArg;
 
     DrawArg(){}
     ~DrawArg(){}

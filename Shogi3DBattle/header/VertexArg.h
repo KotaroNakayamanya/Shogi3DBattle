@@ -11,9 +11,9 @@ public:
     typedef struct GetCreateVertexObjArg
     {
         ID3D12Device* device;
-        unsigned int vertexByte;
+        UINT vertexByte;
         std::vector<VertexStruct::Vertex> vertexPtr;
-        unsigned int indexByte;
+        UINT indicesByte;
         std::vector<unsigned short> indexPtr;
 
     }GetCreateVertexObjArg;

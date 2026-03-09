@@ -30,7 +30,9 @@ private:
     std::unique_ptr<SwapChain> _swapChain; // スワップチェーンオブジェクト
     HRESULT CreateSwapChainObj(            // スワップチェーンオブジェクト作成
         IDXGIFactory6* dxgiFactory,
-        HWND hwnd);
+        HWND hwnd,
+        UINT width,
+        UINT height);
     DrawArg::CreateSwapChainArg GetCreateSwapChainArg( // スワップチェーン作成用引数
         IDXGIFactory6* dxgiFactory,
         ID3D12CommandQueue* commandQueue,
@@ -43,6 +45,11 @@ private:
 
     std::unique_ptr<RTVHeap> _heap;                 // ヒープオブジェクト
     HRESULT CreateHeapObj(ID3D12Device* device); // ヒープオブジェクト作成 
+
+    HRESULT CreateRTV( // RTV作成
+        ID3D12Device* device,
+        IDXGISwapChain4* swapChain,
+        UINT buffNum);
 
 
     void ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier);
@@ -63,6 +70,12 @@ public:
     void PrepareRenderTarget(DrawArg::PrepareRenderTargetArg arg); // レンダーターゲットの準備
     void SetCommand(DrawArg::SetCommandArg arg); // コマンドセット
     void ExeDraw(DrawArg::ExeDrawArg arg); // 描画実行
+
+    HRESULT UpdateDrawConf( //描画設定更新
+        ID3D12Device* device,
+        UINT width, 
+        UINT height,
+        UINT buffNum);
 
     Draw(UINT buffNum);
     Draw();
