@@ -67,7 +67,12 @@ private:
 
 public:
     HRESULT CreateDrawObj(DrawArg::CreateDrawObjArg arg); // 描画オブジェクト生成
-    void PrepareRenderTarget(DrawArg::PrepareRenderTargetArg arg); // レンダーターゲットの準備
+
+    void PrepareRenderTarget( // レンダーターゲットの準備
+        UINT rtvOffset,
+        D3D12_RESOURCE_BARRIER resourceBarrier,
+        ID3D12DescriptorHeap* dsvHeap);
+
     void SetCommand(DrawArg::SetCommandArg arg); // コマンドセット
     void ExeDraw(DrawArg::ExeDrawArg arg); // 描画実行
 

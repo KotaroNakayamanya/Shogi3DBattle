@@ -16,6 +16,8 @@
 #include"CSUHeap.h"
 #include"RootSignature.h"
 #include"Pipeline.h"
+#include"DSBuff.h"
+#include"DSVHeap.h"
 
 #include"DrawArg.h"
 #include"TextureArg.h"
@@ -72,10 +74,16 @@ private:
     std::unique_ptr<CBuffMap> _cBuffMap; // コンスタントバッファマップオブジェクト
     HRESULT CreateCBuffMapObj();     // コンスタントバッファマップオブジェクト作成
 
-    std::unique_ptr<CSUHeap> _heap; // ヒープオブジェクト
-    HRESULT CreateHeapObj();     // ヒープオブジェクト作成
-    HeapArg::CreateCSUHeapArg // ヒープオブジェクト作成用引数
+    std::unique_ptr<CSUHeap> _csuHeap; // CSUヒープオブジェクト
+    HRESULT CreateCSUHeapObj();     // CSUヒープオブジェクト作成
+    HeapArg::CreateCSUHeapArg // CSUヒープオブジェクト作成用引数
         GetCreateCSUHeapArg();  
+
+    std::unique_ptr<DSBuff> _dsBuff; // デプスステンシルバッファ
+    HRESULT CreateDSBuffObj();       // デプスステンシルバッファ作成
+
+    std::unique_ptr<DSVHeap> _dsvHeap; // デプスステンシルヒープ
+    HRESULT CreateDSVHeapObj();        // デプスステンシルヒープ作成
 
     DXGI_SAMPLE_DESC GetSampleDesc(); // サンプリングディスクリプタ
   
@@ -107,8 +115,8 @@ private:
     D3D12_RESOURCE_BARRIER GetResourceBarrier();
 
     // 描画オブジェクト
-    DrawArg::PrepareRenderTargetArg // レンダーターゲット準備用引数
-        GetPrepareRenderTargetArg();
+    //DrawArg::PrepareRenderTargetArg // レンダーターゲット準備用引数
+    //    GetPrepareRenderTargetArg();
     DrawArg::SetCommandArg // コマンドセット用引数
         GetSetCommandArg();
     DrawArg::ExeDrawArg // コマンド実行用引数

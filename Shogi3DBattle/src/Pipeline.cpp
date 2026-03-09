@@ -85,6 +85,10 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC Pipeline::GetPipelineStateDesc(
         DXGI_FORMAT_R8G8B8A8_UNORM;
     desc.SampleDesc =
         sampleDesc;
+    desc.DepthStencilState =
+        GetDepthStencilDesc();
+    desc.DSVFormat = // 32ビットfloat値を深度値に使用
+        DXGI_FORMAT_D32_FLOAT;
 
     return desc;
 }
@@ -174,6 +178,21 @@ D3D12_RASTERIZER_DESC Pipeline::GetRasterizerDesc()
         D3D12_FILL_MODE_SOLID;
     desc.DepthClipEnable =
         true;
+
+    return desc;
+}
+
+// デプスステンシルディスクリプタ
+D3D12_DEPTH_STENCIL_DESC Pipeline::GetDepthStencilDesc()
+{
+    D3D12_DEPTH_STENCIL_DESC desc = {};
+
+    desc.DepthEnable = // デプスステンシルバッファを利用
+        true;
+    desc.DepthWriteMask = // ピクセル描画時に深度値を書き込む
+        D3D12_DEPTH_WRITE_MASK_ALL;
+    desc.DepthFunc = // 深度値が小さいほうを採用
+        D3D12_COMPARISON_FUNC_LESS;
 
     return desc;
 }

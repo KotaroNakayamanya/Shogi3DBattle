@@ -123,15 +123,25 @@ HRESULT Draw::CreateHeapObj(ID3D12Device* device)
 
 
 // レンダーターゲット準備
-void Draw::PrepareRenderTarget(DrawArg::PrepareRenderTargetArg arg)
+void Draw::PrepareRenderTarget(
+    UINT rtvOffset,
+    D3D12_RESOURCE_BARRIER resourceBarrier,
+    ID3D12DescriptorHeap* dsvHeap)
 {
     // バックバッファに対応するRTVをレンダーターゲットに設定
     auto backBufferIdx = _swapChain->GetSwapChain()->GetCurrentBackBufferIndex();
     auto rtvHandle = _heap->GetHeap()->GetCPUDescriptorHandleForHeapStart();
-    rtvHandle.ptr += backBufferIdx * arg.rtvOffset;
+    rtvHandle.ptr += backBufferIdx * rtvOffset;
 
-    ChangeRTVBarrierToRenderTarget(arg.resourceBarrier);
-    _commandList->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, true, nullptr);
+    auto dsvHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
+
+    ChangeRTVBarrierToRenderTarget(resourceBarrier);
+    _commandList->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, true, &dsvHandle);
+    // デプスステンシルバッファクリア
+    _commandList->GetCommandList()->ClearDepthStencilView(
+        dsvHandle,
+        D3D12_CLEAR_FLAG_DEPTH,
+        1.0f, 0, 0, nullptr);
 
     // レンダーターゲットクリア
     ClearRenderTarget(rtvHandle);

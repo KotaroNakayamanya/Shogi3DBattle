@@ -29,6 +29,8 @@
     <ClCompile Include="src\CBuff.cpp" />
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Draw.cpp" />
+    <ClCompile Include="src\DSBuff.cpp" />
+    <ClCompile Include="src\DSVHeap.cpp" />
     <ClCompile Include="src\DX12.cpp" />
     <ClCompile Include="src\DXGIFactory.cpp" />
     <ClCompile Include="src\CSUHeap.cpp" />
@@ -59,6 +61,8 @@
     <ClInclude Include="header\CommandQueue.h" />
     <ClInclude Include="header\CBuff.h" />
     <ClInclude Include="header\Device.h" />
+    <ClInclude Include="header\DSBuff.h" />
+    <ClInclude Include="header\DSVHeap.h" />
     <ClInclude Include="header\GameWindow.h" />
     <ClInclude Include="header\ControllerButton.h" />
     <ClInclude Include="header\Draw.h" />

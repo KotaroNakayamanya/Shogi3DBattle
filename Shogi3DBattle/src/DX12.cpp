@@ -77,8 +77,19 @@ bool DX12::CreateDX12Obj(HWND hwnd)
     {
         assert(false); return false;
     }
-    // ヒープオブジェクト作成
-    if (FAILED(CreateHeapObj()))
+    // CSUヒープオブジェクト作成
+    if (FAILED(CreateCSUHeapObj()))
+    {
+        assert(false); return false;
+    }
+
+    // デプスステンシルバッファオブジェクト作成
+    if (FAILED(CreateDSBuffObj()))
+    {
+        assert(false); return false;
+    }
+    // デプスステンシルヒープオブジェクト作成
+    if (FAILED(CreateDSVHeapObj()))
     {
         assert(false); return false;
     }
@@ -151,12 +162,12 @@ DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg(HWND hwnd)
 }
 
 // ヒープ作成
-HRESULT DX12::CreateHeapObj()
+HRESULT DX12::CreateCSUHeapObj()
 {
-    _heap = std::make_unique<CSUHeap>();
+    _csuHeap = std::make_unique<CSUHeap>();
 
     HeapArg::CreateCSUHeapArg arg = GetCreateCSUHeapArg();
-    return _heap->CreateHeap(arg);
+    return _csuHeap->CreateHeap(arg);
 }
 
 // ヒープ作成用引数
@@ -266,7 +277,23 @@ HRESULT DX12::CreateShaderObj()
     return _shader->CreateShaderBlob();
 }
 
-//// ルートシグネチャオブジェクト作成
+// デプスステンシルバッファ作成
+HRESULT DX12::CreateDSBuffObj()
+{
+    _dsBuff = std::make_unique<DSBuff>();
+    return _dsBuff->CreateDSBuffObj(
+        _device->GetDevice(), _windowWidth, _windowHeight);
+}
+
+// デプスステンシルヒープ作成
+HRESULT DX12::CreateDSVHeapObj()
+{
+    _dsvHeap = std::make_unique<DSVHeap>();
+    return _dsvHeap->CreateDSVHeap(
+        _device->GetDevice(), _dsBuff->GetDSBuff());
+}
+
+// ルートシグネチャオブジェクト作成
 HRESULT DX12::CreateRootSignatureObj()
 {
     _rootSignature = std::make_unique<RootSignature>();
@@ -330,26 +357,29 @@ void DX12::ExeDX12()
 // レンダーターゲットの準備（Drawクラス）
 void DX12::PrepareRenderTarget()
 {
-    DrawArg::PrepareRenderTargetArg arg =
-        GetPrepareRenderTargetArg();
+    UINT rtvOffset = _device->GetDevice()->GetDescriptorHandleIncrementSize(
+            D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
         
-    _draw->PrepareRenderTarget(arg);
+    _draw->PrepareRenderTarget(
+        rtvOffset,
+        GetResourceBarrier(),
+        _dsvHeap->GetDSVHeap());
 }
 
-// レンダーターゲット準備用引数
-DrawArg::PrepareRenderTargetArg DX12::GetPrepareRenderTargetArg()
-{
-    DrawArg::PrepareRenderTargetArg arg = {};
-
-    arg.resourceBarrier =
-        GetResourceBarrier();
-    arg.rtvOffset = 
-        _device->GetDevice()->GetDescriptorHandleIncrementSize(
-            D3D12_DESCRIPTOR_HEAP_TYPE_RTV); 
-        
-
-    return arg;
-}
+//// レンダーターゲット準備用引数
+//DrawArg::PrepareRenderTargetArg DX12::GetPrepareRenderTargetArg()
+//{
+//    DrawArg::PrepareRenderTargetArg arg = {};
+//
+//    arg.resourceBarrier =
+//        GetResourceBarrier();
+//    arg.rtvOffset = 
+//        _device->GetDevice()->GetDescriptorHandleIncrementSize(
+//            D3D12_DESCRIPTOR_HEAP_TYPE_RTV); 
+//        
+//
+//    return arg;
+//}
 
 // リソースバリア
 D3D12_RESOURCE_BARRIER DX12::GetResourceBarrier()
@@ -386,7 +416,7 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
     arg.rootSignature =
         _rootSignature->GetRootSignature();
     arg.heap
-        = _heap->GetHeap();;
+        = _csuHeap->GetHeap();;
     arg.offset =
         _device->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     arg.viewport =

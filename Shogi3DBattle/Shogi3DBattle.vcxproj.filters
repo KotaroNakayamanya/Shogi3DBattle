@@ -94,6 +94,12 @@
     <Filter Include="ソース ファイル\dx12\csu\texture">
       <UniqueIdentifier>{b1b639c0-1558-47a8-a1db-05be639f2be1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\depth_stencil">
+      <UniqueIdentifier>{2e353524-191a-4d14-bc30-08c011e067ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\depth_stencil">
+      <UniqueIdentifier>{4ba02cb8-278d-41ac-a182-a72b668695eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -185,6 +191,12 @@
     </ClCompile>
     <ClCompile Include="src\TResource.cpp">
       <Filter>ソース ファイル\dx12\csu\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DSBuff.cpp">
+      <Filter>ソース ファイル\dx12\depth_stencil</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DSVHeap.cpp">
+      <Filter>ソース ファイル\dx12\depth_stencil</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -298,6 +310,12 @@
     </ClInclude>
     <ClInclude Include="header\TResource.h">
       <Filter>ヘッダー ファイル\DX12\csu\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DSBuff.h">
+      <Filter>ヘッダー ファイル\DX12\depth_stencil</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DSVHeap.h">
+      <Filter>ヘッダー ファイル\DX12\depth_stencil</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

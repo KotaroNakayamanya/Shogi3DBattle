@@ -27,6 +27,7 @@ private:
     D3D12_RASTERIZER_DESC GetRasterizerDesc();                 // ラスタライザディスクリプタ
     D3D12_INPUT_LAYOUT_DESC GetInputLayoutDesc(                // インプットレイアウトディスクリプタ
         std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout);
+    D3D12_DEPTH_STENCIL_DESC GetDepthStencilDesc(); // デプスステンシルディスクリプタ
 
 
 public:

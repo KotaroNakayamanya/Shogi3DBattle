@@ -18,14 +18,6 @@ public:
 
     }CreateDrawObjArg;
 
-    // レンダーターゲット準備用引数
-    typedef struct PrepareRenderTargetArg
-    {
-        UINT rtvOffset;
-        D3D12_RESOURCE_BARRIER resourceBarrier;
-
-    }PrepareRenderTargetArg;
-
     // コマンドセット用引数
     typedef struct SetCommandArg
     {
