@@ -1,5 +1,6 @@
 ﻿#include"Draw.h"
 #include<cassert>
+#include"DXGIFactory.h"
 
 // 描画オブジェクト作成
 HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
@@ -26,7 +27,7 @@ HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
     }
 
     // スワップチェーンオブジェクト作成
-    if (FAILED(CreateSwapChainObj(arg.dxgiFactory, arg.hwnd, arg.windowWidth, arg.windowHeight)))
+    if (FAILED(CreateSwapChainObj(arg.dxgiFactoryObj, arg.hwnd, arg.windowWidth, arg.windowHeight)))
     {
         assert(false); return E_FAIL;
     }
@@ -86,7 +87,7 @@ HRESULT Draw::CreateCommandQueueObj(ID3D12Device* device)
 
 // スワップチェーンオブジェクト作成
 HRESULT Draw::CreateSwapChainObj(
-    IDXGIFactory6* dxgiFactory,
+    DXGIFactory* dxgiFactoryObj,
     HWND hwnd,
     UINT width,
     UINT height)
@@ -94,30 +95,27 @@ HRESULT Draw::CreateSwapChainObj(
     ID3D12CommandQueue* commandQueue =
         _commandQueue->GetCommandQueue();
 
-    DrawArg::CreateSwapChainArg arg =
-        GetCreateSwapChainArg(dxgiFactory, commandQueue, hwnd, width, height);
+    DXGIFactoryArg::CreateSwapChainArg arg =
+        GetCreateSwapChainArg(commandQueue, hwnd, width, height);
 
-    //_swapChain = std::make_unique<SwapChain>();
     _swapChain.reset(new SwapChain());
-    return _swapChain->CreateSwapChain(arg);
+    return dxgiFactoryObj->CreateSwapChain(_swapChain.get(), arg);
 }
-
 // スワップチェーン作成用引数
-DrawArg::CreateSwapChainArg Draw::GetCreateSwapChainArg(
-    IDXGIFactory6* dxgiFactory,
+DXGIFactoryArg::CreateSwapChainArg Draw::GetCreateSwapChainArg(
+    //IDXGIFactory6* dxgiFactory,
     ID3D12CommandQueue* commandQueue,
     HWND hwnd,
-    UINT width,
-    UINT height)
+    UINT windowWidth,
+    UINT windowHeight)
 {
-    DrawArg::CreateSwapChainArg arg = {};
+    DXGIFactoryArg::CreateSwapChainArg arg = {};
 
-    arg.dxgiFactory = dxgiFactory;
     arg.commandQueue = commandQueue;
     arg.hwnd = hwnd,
-    arg.width = width;
-    arg.height = height;
-    arg.buffNum = _buffNum;
+    arg.windowWidth = windowWidth;
+    arg.windowHeight = windowHeight;
+    arg.rtBuffNum = _buffNum;
 
     return arg;
 }
@@ -246,24 +244,28 @@ void Draw::SetCommand(DrawArg::SetCommandArg arg)
         _commandList->GetCommandList();
 
     // パイプラインセット
-    commandList->SetPipelineState(arg.pipelineState);
+    _commandList->SetPipeline(arg.pipelineState);
+
     // ルートシグネチャセット
-    commandList->SetGraphicsRootSignature(arg.rootSignature);
+    _commandList->SetRootSignature(arg.rootSignature);
+
     // CBV,SRVヒープセット
-    commandList->SetDescriptorHeaps(1, &arg.heap);
+    ID3D12DescriptorHeap* csuHeaps[] = {arg.csuHeap};
+    _commandList->SetCSUHeaps(csuHeaps); 
     // ルートパラメータとディスクリプタヒープ関連付け
-    auto handle = arg.heap->GetGPUDescriptorHandleForHeapStart();
-    commandList->SetGraphicsRootDescriptorTable(
-        0,
-        handle);
-    handle.ptr += arg.offset;
-    commandList->SetGraphicsRootDescriptorTable(
-        1,
-        handle);
+    auto csuHandle = arg.csuHeap->GetGPUDescriptorHandleForHeapStart();
+    commandList->SetGraphicsRootDescriptorTable(0, csuHandle);
+    csuHandle.ptr += arg.offset;
+    commandList->SetGraphicsRootDescriptorTable(1,csuHandle);
+
     // ビューポートセット
-    commandList->RSSetViewports(1, &_viewport);
+    D3D12_VIEWPORT viewports[] = {_viewport};
+    commandList->RSSetViewports(1, viewports);
+
     // シザー矩形セット
-    commandList->RSSetScissorRects(1, &_scissorRect);
+    D3D12_RECT scissorRects[] = {_scissorRect};
+    commandList->RSSetScissorRects(1, scissorRects);
+
     // トポロジーセット
     commandList->IASetPrimitiveTopology(arg.topology);
     // 頂点バッファセット

@@ -15,6 +15,7 @@
 
 
 #include"DrawArg.h"
+#include"DXGIFactoryArg.h"
 
 class Draw
 {
@@ -33,12 +34,11 @@ private:
 
     std::unique_ptr<SwapChain> _swapChain; // スワップチェーンオブジェクト
     HRESULT CreateSwapChainObj(            // スワップチェーンオブジェクト作成
-        IDXGIFactory6* dxgiFactory,
+        DXGIFactory* dxgiFactoryObj,
         HWND hwnd,
         UINT windowWidth,
         UINT windowHeight);
-    DrawArg::CreateSwapChainArg GetCreateSwapChainArg( // スワップチェーン作成用引数
-        IDXGIFactory6* dxgiFactory,
+    DXGIFactoryArg::CreateSwapChainArg GetCreateSwapChainArg( // スワップチェーン作成用引数
         ID3D12CommandQueue* commandQueue,
         HWND hwnd,
         UINT windowWidth,
@@ -95,12 +95,8 @@ public:
     HRESULT CreateDrawObj(DrawArg::CreateDrawObjArg arg); // 描画オブジェクト生成
 
     void PrepareRenderTarget(); // レンダーターゲットの準備
-        //UINT rtvOffset,
-        //D3D12_RESOURCE_BARRIER resourceBarrier,
-        //ID3D12DescriptorHeap* dsvHeap);
 
     void SetCommand(DrawArg::SetCommandArg arg); // コマンドセット
-    //void ExeDraw(DrawArg::ExeDrawArg arg); // 描画実行
 
     void ExeDraw(); // 描画実行
 

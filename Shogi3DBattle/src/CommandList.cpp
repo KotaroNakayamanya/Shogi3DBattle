@@ -42,10 +42,35 @@ void CommandList::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle)
         rtvHandle, clearRTVColor, 0, nullptr);
 }
 
+// パイプラインセット
+void CommandList::SetPipeline(ID3D12PipelineState* pipelineState)
+{
+    _commandList->SetPipelineState(pipelineState);
+}
+
+// ルートシグネチャセット
+void CommandList::SetRootSignature(ID3D12RootSignature* rootSignature)
+{
+    _commandList->SetGraphicsRootSignature(rootSignature);
+}
+
 // リソースバリアセット
 void CommandList::SetResourceBarrier(D3D12_RESOURCE_BARRIER resourceBarrier)
 {
     _commandList->ResourceBarrier(1, &resourceBarrier);
+}
+
+// CSUヒープセット
+void CommandList::SetCSUHeaps(ID3D12DescriptorHeap** csuHeaps)
+{
+    auto heapsNum = sizeof(csuHeaps) / sizeof(ID3D12DescriptorHeap**);
+    _commandList->SetDescriptorHeaps(heapsNum, csuHeaps);
+}
+
+// ディスクリプタテーブルセット
+void CommandList::SetDescriptorTable(UINT i, D3D12_GPU_DESCRIPTOR_HANDLE handle)
+{
+    _commandList->SetGraphicsRootDescriptorTable(i, handle);
 }
 
 // コマンドリストを返す

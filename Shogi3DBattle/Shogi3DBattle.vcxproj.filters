@@ -383,6 +383,9 @@
     <ClInclude Include="header\IdxBuff.h">
       <Filter>ヘッダー ファイル\DX12\vertex</Filter>
     </ClInclude>
+    <ClInclude Include="header\DXGIFactoryArg.h">
+      <Filter>ヘッダー ファイル\arg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\VertexShader.hlsl">

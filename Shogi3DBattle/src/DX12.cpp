@@ -78,7 +78,6 @@ bool DX12::CreateDX12Obj(HWND hwnd)
         assert(false); return false;
     }
 
-
     // テクスチャオブジェクト作成
     if (FAILED(CreateTBuffObj()))
     {
@@ -156,8 +155,8 @@ DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg(HWND hwnd)
 
     arg.device =
         _device->GetDevice();
-    arg.dxgiFactory =
-        _dxgiFactory->GetDXGIFactory();
+    arg.dxgiFactoryObj =
+        _dxgiFactory.get();
     arg.hwnd =
         hwnd;
     arg.windowWidth = 1280; // 初期値
@@ -259,20 +258,6 @@ HRESULT DX12::CreateVertBuffObj()
         _device->GetDevice(), _pawn->GetVerticesByteSize());
 }
 
-//// 頂点オブジェクト作成用関数
-//VertexArg::GetCreateVertexObjArg DX12::GetCreateVertObjArg()
-//{
-//    VertexArg::GetCreateVertexObjArg arg = {};
-//
-//    arg.device = _device->GetDevice();
-//    arg.vertexByte  = _pawn->GetVerticesByteSize();
-//    arg.vertexPtr   = _pawn->GetVerticesPtr();
-//    arg.indicesByte = _pawn->GetIndicesByteSize();
-//    arg.indexPtr    = _pawn->GetIndicesPtr();
-//
-//    return arg;
-//}
-
 // インデックスバッファオブジェクト作成
 HRESULT DX12::CreateIdxBuffObj()
 {
@@ -295,10 +280,6 @@ HRESULT DX12::CreateRootSignatureObj()
 
     return _rootSignature->CreateRootSignatureObj(_device->GetDevice());
 }
-
-
-
-
 
 // パイプラインオブジェクト作成
 HRESULT DX12::CreatePipelineObj()
@@ -324,6 +305,9 @@ PipelineArg::CreatePipelineStateArg DX12::GetCreatePipelineObjArg()
     return arg;
 }
 
+
+
+
 // コマンド実行
 void DX12::ExeDX12()
 {
@@ -337,36 +321,9 @@ void DX12::ExeDX12()
     SetCommand();
 
     // 描画実行
-    ExeDraw();
+    _draw->ExeDraw();
     return;
 }
-
-//// レンダーターゲットの準備（Drawクラス）
-//void DX12::PrepareRenderTarget()
-//{
-//    //UINT rtvOffset = _device->GetDevice()->GetDescriptorHandleIncrementSize(
-//    //        D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-//        
-//    _draw->PrepareRenderTarget(
-//        //rtvOffset,
-//        //GetResourceBarrier(),
-//        _dsvHeap->GetDSVHeap());
-//}
-
-//// リソースバリア
-//D3D12_RESOURCE_BARRIER DX12::GetResourceBarrier()
-//{
-//    D3D12_RESOURCE_BARRIER desc;
-//
-//    desc.Type =
-//        D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-//    desc.Flags =
-//        D3D12_RESOURCE_BARRIER_FLAG_NONE;
-//    desc.Transition.Subresource =
-//        D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-//
-//    return desc;  
-//}
 
 // コマンドセット（Drawクラス）
 void DX12::SetCommand()
@@ -387,14 +344,10 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
         _pipeline->GetPipelineState();
     arg.rootSignature =
         _rootSignature->GetRootSignature();
-    arg.heap
+    arg.csuHeap
         = _csuHeap->GetHeap();;
     arg.offset =
         _device->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-    //arg.viewport =
-    //    GetViewports();
-    //arg.scissorRect =
-    //    GetScissorRects();
     arg.topology =
         D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
     arg.vertexBuffView =
@@ -408,34 +361,6 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
 
     return arg;
 }
-
-//// ビューポートセット
-//D3D12_VIEWPORT DX12::GetViewports()
-//{
-//    D3D12_VIEWPORT viewport = {};
-//
-//    viewport.Width    = _windowWidth;
-//    viewport.Height   = _windowHeight;
-//    viewport.TopLeftX = 0;
-//    viewport.TopLeftY = 0;
-//    viewport.MaxDepth = 1.0f; // 深度最大値
-//    viewport.MinDepth = 0.0f; // 深度最小値
-//
-//    return viewport;
-//}
-
-//// シザー矩形セット
-//D3D12_RECT DX12::GetScissorRects()
-//{
-//    D3D12_RECT scissorRect = {};
-//
-//    scissorRect.left = 0;
-//    scissorRect.right = _windowWidth;
-//    scissorRect.top = 0;
-//    scissorRect.bottom = _windowHeight;
-//    
-//    return scissorRect;
-//}
 
 // 頂点バッファビュー
 D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBuffView()
@@ -478,25 +403,6 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBuffView()
     return view;
 }
 
-// 描画実行（Drawクラス）
-void DX12::ExeDraw()
-{
-    //DrawArg::ExeDrawArg arg =
-    //    GetExeDrawArg();
-        
-    _draw->ExeDraw();
-}
-
-//// コマンド実行用引数
-//DrawArg::ExeDrawArg DX12::GetExeDrawArg()
-//{
-//    DrawArg::ExeDrawArg arg = {};
-//
-//    arg.resourceBarrier =
-//        GetResourceBarrier();
-//
-//    return arg;
-//}
 
 
 

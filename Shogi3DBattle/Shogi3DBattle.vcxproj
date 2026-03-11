@@ -67,6 +67,7 @@
     <ClInclude Include="header\Device.h" />
     <ClInclude Include="header\DSBuff.h" />
     <ClInclude Include="header\DSVHeap.h" />
+    <ClInclude Include="header\DXGIFactoryArg.h" />
     <ClInclude Include="header\GameWindow.h" />
     <ClInclude Include="header\ControllerButton.h" />
     <ClInclude Include="header\Draw.h" />

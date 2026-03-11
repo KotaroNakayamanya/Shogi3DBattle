@@ -16,14 +16,24 @@ public:
         ID3D12Device* device,
         ID3D12CommandAllocator* commandAllocator);
 
+    void SetResourceBarrier( // リソースバリアセット
+        D3D12_RESOURCE_BARRIER resourceBarrier);
     void SetRenderTarget( // レンダーターゲットセット
         D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle,
         D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
+    void SetPipeline( // パイプラインセット
+        ID3D12PipelineState* pipelineState);
+    void SetRootSignature( // ルートシグネチャセット
+        ID3D12RootSignature* rootSignature);
+    void SetCSUHeaps( // CSUヒープセット
+        ID3D12DescriptorHeap** csuHeaps);
+    void SetDescriptorTable( // ディスクリプタテーブルセット
+        UINT i, D3D12_GPU_DESCRIPTOR_HANDLE handle);
 
     void ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle); // レンダーターゲットクリア
     void ClearDepthStencil(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle); // デプスステンシルクリア
 
-    void SetResourceBarrier(D3D12_RESOURCE_BARRIER resourceBarrier); // リソースバリアセット
+    
 
     ID3D12GraphicsCommandList* GetCommandList(); // コマンドリストを返す
 

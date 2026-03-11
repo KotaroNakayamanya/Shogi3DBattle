@@ -3,6 +3,9 @@
 #include<d3d12.h>
 #include<dxgi1_6.h>
 
+class DXGIFactory;
+
+
 class DrawArg
 {
 public:
@@ -10,7 +13,7 @@ public:
     typedef struct CreateDrawObjArg
     {
         ID3D12Device*  device;
-        IDXGIFactory6* dxgiFactory;
+        DXGIFactory* dxgiFactoryObj;
         HWND hwnd;
         UINT windowWidth;
         UINT windowHeight;
@@ -23,7 +26,7 @@ public:
     {
         ID3D12PipelineState* pipelineState;
         ID3D12RootSignature* rootSignature;
-        ID3D12DescriptorHeap* heap;
+        ID3D12DescriptorHeap* csuHeap;
         UINT offset;
 
         D3D12_PRIMITIVE_TOPOLOGY topology;
@@ -34,13 +37,6 @@ public:
         UINT objCount;
 
     }SetCommandArg;
-
-    //// コマンド実行用引数
-    //typedef struct ExeDrawArg
-    //{
-    //    D3D12_RESOURCE_BARRIER resourceBarrier;
-
-    //}ExeDrawArg;
 
     // スワップチェーン作成用引数
     typedef struct CreateSwapChainArg
@@ -53,17 +49,6 @@ public:
         UINT buffNum;
 
     }CreateSwapChainArg;
-
-    //typedef struct UpdateDrawConfArg
-    //{
-    //    ID3D12Device*  device;
-    //    IDXGIFactory6* dxgiFactory;
-    //    HWND hwnd;
-    //    UINT width;
-    //    UINT height;
-    //    UINT buffNum;
-
-    //}UpdateDrawConfArg;
 
     DrawArg(){}
     ~DrawArg(){}

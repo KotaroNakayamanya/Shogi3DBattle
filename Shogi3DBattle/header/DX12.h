@@ -51,8 +51,6 @@ private:
 
     std::unique_ptr<VertBuff> _vertBuff; // 頂点バッファオブジェクト
     HRESULT CreateVertBuffObj();         // 頂点バッファオブジェクト作成
-    VertexArg::GetCreateVertexObjArg     // 頂点バッファオブジェクト作成用引数
-        GetCreateVertObjArg();
 
     std::unique_ptr<IdxBuff> _idxBuff; // インデックスバッファオブジェクト
     HRESULT CreateIdxBuffObj();       // インデックスバッファオブジェクト作成
@@ -81,18 +79,8 @@ private:
     HeapArg::CreateCSUHeapArg // CSUヒープオブジェクト作成用引数
         GetCreateCSUHeapArg();  
 
-    //std::unique_ptr<DSBuff> _dsBuff; // デプスステンシルバッファ
-    //HRESULT CreateDSBuffObj();       // デプスステンシルバッファ作成
-
-    //std::unique_ptr<DSVHeap> _dsvHeap; // デプスステンシルヒープ
-    //HRESULT CreateDSVHeapObj();        // デプスステンシルヒープ作成
-
     DXGI_SAMPLE_DESC GetSampleDesc(); // サンプリングディスクリプタ
-  
-    // ビューポート
-    D3D12_VIEWPORT GetViewports();
-    // シザー矩形
-    D3D12_RECT GetScissorRects();
+ 
 
     
     void PrepareRenderTarget(); // レンダーターゲットの準備
@@ -113,16 +101,9 @@ private:
     void ResetCommand();
     void WaitProcessWithFence();
 
-    // リソースバリア
-    D3D12_RESOURCE_BARRIER GetResourceBarrier();
 
-    // 描画オブジェクト
-    //DrawArg::PrepareRenderTargetArg // レンダーターゲット準備用引数
-    //    GetPrepareRenderTargetArg();
     DrawArg::SetCommandArg // コマンドセット用引数
         GetSetCommandArg();
-    //DrawArg::ExeDrawArg // コマンド実行用引数
-    //    GetExeDrawArg();
     
 public:
     bool CreateDX12Obj(HWND hwnd); // DirectX12オブジェクト作成
