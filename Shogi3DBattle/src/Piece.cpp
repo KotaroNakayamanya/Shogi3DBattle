@@ -1,7 +1,7 @@
 #include"Piece.h"
 
-// 頂点集合作成
-void Piece::SetVertices(CreateVerticesArg arg)
+// 駒の頂点集合作成
+void Piece::SetPieceVertices(CreatePieceVerticesArg arg)
 {
     float bottomWidth  = arg.bottomWidth;
     float cornerWidth  = arg.cornerWidth;
@@ -51,49 +51,6 @@ DirectX::XMMATRIX Piece::GetWorldMat()
     return _worldMat;
 }
 
-// 頂点集合ポインタを返す
-std::vector<VertexStruct::Vertex> Piece::GetVerticesPtr()
-{
-    return _vertices;
-}
-
-// 頂点１つ分のバイトサイズを返す
-unsigned int Piece::GetVertexByteSize()
-{
-    return sizeof(_vertices[0]);
-}
-
-// 頂点集合全体のバイトサイズを返す
-unsigned int Piece::GetVerticesByteSize()
-{
-    return GetVertexByteSize() * _vertices.size();
-}
-
-
-
-
-// 頂点インデックスポインタを返す
-std::vector<unsigned short> Piece::GetIndicesPtr()
-{
-    return _indices;
-}
-
-unsigned int Piece::GetIndicesNum()
-{
-    return _indices.size();
-}
-
-// 頂点インデックス１つ分のバイトサイズを返す
-unsigned int Piece::GetIndexByteSize()
-{
-    return sizeof(_indices[0]);
-}
-
-// 頂点インデックス全体のバイトサイズを返す
-unsigned int Piece::GetIndicesByteSize()
-{
-    return GetIndexByteSize() * _indices.size();
-}
 
 
 

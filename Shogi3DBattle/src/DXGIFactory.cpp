@@ -1,4 +1,6 @@
 #include"DXGIFactory.h"
+#include<string>
+#include<array>
 
 #pragma comment(lib, "dxgi.lib")
 
@@ -25,7 +27,7 @@ HRESULT DXGIFactory::CreateDXGIFactory()
 
 // スワップチェーン作成
 HRESULT DXGIFactory::CreateSwapChain(
-    SwapChain* swapChain, DXGIFactoryArg::CreateSwapChainArg arg)
+    SwapChain* swapChainObj, DXGIFactoryArg::CreateSwapChainArg arg)
 {
     
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = GetSwapChainDesc(
@@ -38,7 +40,7 @@ HRESULT DXGIFactory::CreateSwapChain(
         &swapChainDesc,
         nullptr,
         nullptr,
-        (IDXGISwapChain1**)swapChain->_swapChain.ReleaseAndGetAddressOf());
+        (IDXGISwapChain1**)swapChainObj->_swapChain.ReleaseAndGetAddressOf());
 }
 
 // スワップチェーンディスクリプタ
@@ -78,11 +80,70 @@ DXGI_SWAP_CHAIN_DESC1 DXGIFactory::GetSwapChainDesc(
 
 
 
-// DXGIファクトリを渡す
-IDXGIFactory6* DXGIFactory::GetDXGIFactory()
+// 使用するアダプター作成
+HRESULT DXGIFactory::CreateAdapter(Adapter* adapterObj)
 {
-    return _dxgiFactory.Get();
+    // 探索対象のアダプター名
+    std::array<std::wstring, 3> adapterNames =
+    {
+        L"NVIDIA",
+        L"AMD",
+        L"Intel"
+    };
+
+    // 使用可能なアダプターを取得
+    std::vector<ComPtr<IDXGIAdapter>> canUseAdapters =
+        GetCanUseAdapters();
+    // 使用可能なアダプターがなければ失敗を返す
+    if(canUseAdapters.size() == 0) return E_FAIL;
+    
+
+    for(auto& adapter : canUseAdapters)
+    {
+        // アダプター名取得
+        DXGI_ADAPTER_DESC adapterDesc;
+        adapter->GetDesc(&adapterDesc);
+        std::wstring descStr = adapterDesc.Description;
+
+        // リストに存在するアダプターであれば利用する
+        auto it = std::find(adapterNames.begin(), adapterNames.begin(), descStr);
+        if (it != adapterNames.end())
+        {
+            adapterObj->_adapter = adapter;
+            goto complete;
+        }
+    }
+
+    // 見つからなければ一番最初のアダプターを利用する
+    adapterObj->_adapter = canUseAdapters[0];
+
+complete:
+    return S_OK;
 }
+
+
+template<typename T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
+
+// 使用可能なアダプターを取得
+std::vector<ComPtr<IDXGIAdapter>> DXGIFactory::GetCanUseAdapters()
+{
+    std::vector<ComPtr<IDXGIAdapter>> adapters;
+    ComPtr<IDXGIAdapter> tmpAdapter;
+    
+    int i = 0;
+    while (_dxgiFactory->EnumAdapters(i, tmpAdapter.ReleaseAndGetAddressOf())
+           != DXGI_ERROR_NOT_FOUND)
+    {
+        adapters.push_back(tmpAdapter);
+        i++;
+    }
+
+    return adapters;
+}
+
+
+
 
 DXGIFactory::DXGIFactory(){}
 DXGIFactory::~DXGIFactory(){}

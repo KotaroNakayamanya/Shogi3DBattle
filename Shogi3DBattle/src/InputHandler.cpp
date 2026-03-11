@@ -51,12 +51,6 @@ void InputHandler::MemoryMouseMove()
     _inputMemory |= ControllerButton::mouseMove;
 }
 
-// 入力クリア
-void InputHandler::ClearInputMemory()
-{
-    _inputMemory = 0;
-}
-
 // キー入力記録
 void InputHandler::MemoryInputKey(WPARAM inputKey)
 {
@@ -64,6 +58,21 @@ void InputHandler::MemoryInputKey(WPARAM inputKey)
     auto keyConf = _keyConf->convertKeyToControllerButton(inputKey);
 
     _inputMemory |= keyConf;
+}
+
+// キー入力解除
+void InputHandler::RemoveInputKey(WPARAM inputKey)
+{
+    // キーの入力を割り当てられている操作ボタンに変換する
+    auto keyConf = _keyConf->convertKeyToControllerButton(inputKey);
+
+    _inputMemory ^= keyConf;
+}
+
+// 入力クリア
+void InputHandler::ClearInputMemory()
+{
+    _inputMemory = 0;
 }
 
 

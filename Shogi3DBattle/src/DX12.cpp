@@ -24,93 +24,46 @@ namespace {
 bool DX12::CreateDX12Obj(HWND hwnd)
 {
     // DXGIファクトリーオブジェクト作成
-    if (FAILED(CreateDXGIFactoryObj()))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(CreateDXGIFactoryObj())) goto failed;
     // アダプターオブジェクト作成
-    if (FAILED(CreateAdapterObj()))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(CreateAdapterObj())) goto failed;
     // デバイスオブジェクト作成
-    if (FAILED(CreateDeviceObj()))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(CreateDeviceObj())) goto failed;
+
+    _adapter.reset(); // アダプター破棄
 
     // 描画オブジェクト作成
-    if (FAILED(CreateDrawObj(hwnd)))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(CreateDrawObj(hwnd))) goto failed;
     // シェーダーバイナリオブジェクト作成
-    if (FAILED(CreateShaderObj()))
-    {
-        assert(false); return false;
-    }
-
+    if (FAILED(CreateShaderObj())) goto failed;
     // 頂点集合作成
-    if (FAILED(CreateVertexSets()))
-    {
-        assert(false); return false;
-    }
-
+    if (FAILED(CreateVertexSets())) goto failed;
     // 頂点バッファオブジェクト作成
-    if (FAILED(CreateVertBuffObj()))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(CreateVertBuffObj())) goto failed;
     // インデックスオブジェクト作成
-    if (FAILED(CreateIdxBuffObj()))
-    {
-        assert(false); return false;
-    }
-
+    if (FAILED(CreateIdxBuffObj())) goto failed;
     // 頂点バッファに書き込み
-    if (FAILED(_vertBuff->WriteVertBuff(_pawn->GetVerticesPtr())))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(_vertBuff->WriteVertBuff(_pawn->GetVerticesPtr()))) goto failed;
     // インデックスバッファに書き込み
-    if (FAILED(_idxBuff->WriteIdxBuff(_pawn->GetIndicesPtr())))
-    {
-        assert(false); return false;
-    }
-
+    if (FAILED(_idxBuff->WriteIdxBuff(_pawn->GetIndicesPtr()))) goto failed;
     // テクスチャオブジェクト作成
-    if (FAILED(CreateTBuffObj()))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(CreateTBuffObj())) goto failed;
     // コンスタントバッファオブジェクト作成
-    if (FAILED(CreateCBuffObj()))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(CreateCBuffObj())) goto failed;
     // コンスタントバッファマップオブジェクト作成
-    if (FAILED(CreateCBuffMapObj()))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(CreateCBuffMapObj())) goto failed;
     // CSUヒープオブジェクト作成
-    if (FAILED(CreateCSUHeapObj()))
-    {
-        assert(false); return false;
-    }
-
+    if (FAILED(CreateCSUHeapObj())) goto failed;
     // ルートシグネチャオブジェクト作成
-    if (FAILED(CreateRootSignatureObj()))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(CreateRootSignatureObj())) goto failed;
     // パイプラインオブジェクト作成
-    if (FAILED(CreatePipelineObj()))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(CreatePipelineObj())) goto failed;
 
     return true;
+
+failed:
+    assert(false);
+    return false;
 }
 
 // DXGIファクトリオブジェクト作成
@@ -126,7 +79,7 @@ HRESULT DX12::CreateAdapterObj()
 {
     _adapter = std::make_unique<Adapter>();
 
-    return _adapter->CreateAdapter(_dxgiFactory->GetDXGIFactory());
+    return _dxgiFactory->CreateAdapter(_adapter.get());
 }
 
 // デバイスオブジェクト作成

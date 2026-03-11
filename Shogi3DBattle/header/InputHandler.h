@@ -27,6 +27,7 @@ public:
     void RemoveRClick(); // 右クリック解除
     void MemoryMouseMove(); // マウス移動記録
     void MemoryInputKey(WPARAM inputKey); // キー入力記録
+    void RemoveInputKey(WPARAM inputKey); // キー入力解除
     void ClearInputMemory(); // 入力クリア
 
     InputHandler(Piece* piece);

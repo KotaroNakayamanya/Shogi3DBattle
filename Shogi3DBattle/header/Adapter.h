@@ -9,15 +9,14 @@ class Adapter
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
+    friend class DXGIFactory; // DXGIファクトリから参照可能
+
 private:
     ComPtr<IDXGIAdapter> _adapter; // 使用するアダプター
 
-    std::vector<ComPtr<IDXGIAdapter>> GetCanUseAdapters( // 使用可能なアダプターを取得
-        IDXGIFactory6* dxgiFactory);
-
 public:
-    HRESULT CreateAdapter(IDXGIFactory6* dxgiFactory); // 使用するアダプター作成
-    IDXGIAdapter* GetAdapter(); // 使用するアダプターを渡す
+    void SetAdapterComPtr(ComPtr<IDXGIAdapter>); // 使用するアダプタをセットする
+    IDXGIAdapter* GetAdapter(); // 使用するアダプタを渡す
 
     Adapter();
     ~Adapter();

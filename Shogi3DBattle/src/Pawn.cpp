@@ -3,7 +3,7 @@
 Pawn::Pawn()
 {
     // 頂点集合作成（駒の大きさを決める）
-    CreateVerticesArg arg;
+    CreatePieceVerticesArg arg;
 
     arg.bottomWidth  = 0.9f; // 底面の横の長さ
     arg.cornerWidth  = 0.7f; // 角部分の横の長さ
@@ -12,7 +12,7 @@ Pawn::Pawn()
         arg.height * 0.7f;
     arg.thickness    = 0.4f; // 駒の厚み
 
-    SetVertices(arg);
+    SetPieceVertices(arg);
 }
 
 Pawn::~Pawn(){}

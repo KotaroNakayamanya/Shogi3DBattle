@@ -61,6 +61,9 @@ LRESULT CALLBACK WindowProcedure(
     // インプットハンドラ取得
     InputHandler* inputHandler = app.GetInputHandler();
 
+    UINT xPos;
+    UINT yPos;
+
     switch(msg){
 
     case WM_GETMINMAXINFO: // ウインドウサイズ制限
@@ -76,6 +79,13 @@ LRESULT CALLBACK WindowProcedure(
         break;
     }
 
+    case WM_ACTIVATEAPP: // ウインドウアクティブ状態
+        if (!wParam) // ウインドウ非活性
+        {
+            inputHandler->ClearInputMemory();   
+        }
+        return 0;
+        
 
     case WM_LBUTTONDOWN: // 左クリック
         inputHandler->MemoryLClick();
@@ -95,18 +105,22 @@ LRESULT CALLBACK WindowProcedure(
         return 0;
 
     case WM_MOUSEMOVE: // マウス移動
-        //inputHandler->ExeMouseMove();
+        //ShowCursor(false);
+        //SetCursorPos(0, 0);
+        //xPos = LOWORD(lParam);
+        //yPos = HIWORD(lParam);
+        inputHandler->MemoryMouseMove();
         return 0;
 
-    case WM_CHAR: // キー入力
+    case WM_KEYDOWN: // キー入力
         inputHandler->MemoryInputKey(wParam);
         return 0;
 
     case WM_KEYUP: // キーから指を離した
-        inputHandler->ClearInputMemory();
+        inputHandler->RemoveInputKey(wParam);
         return 0;
 
-        
+    //inputHandler->ClearInputMemory();
 
 
     case WM_DESTROY: // ウインドウ破棄

@@ -6,52 +6,25 @@
 HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
 {
     // コマンドアロケータオブジェクト作成
-    if (FAILED(CreateCommandAllocatorObj(arg.device)))
-    {
-        assert(false); return E_FAIL;
-    }
+    if (FAILED(CreateCommandAllocatorObj(arg.device))) goto failed;
     // コマンドリストオブジェクト作成
-    if (FAILED(CreateCommandListObj(arg.device)))
-    {
-        assert(false); return E_FAIL;
-    }
+    if (FAILED(CreateCommandListObj(arg.device))) goto failed;
     // コマンドキューオブジェクト作成
-    if (FAILED(CreateCommandQueueObj(arg.device)))
-    {
-        assert(false); return E_FAIL;
-    }
+    if (FAILED(CreateCommandQueueObj(arg.device))) goto failed;
     // フェンスオブジェクト作成
-    if (FAILED(CreateFenceObj(arg.device)))
-    {
-        assert(false); return E_FAIL;
-    }
+    if (FAILED(CreateFenceObj(arg.device))) goto failed;
 
     // スワップチェーンオブジェクト作成
-    if (FAILED(CreateSwapChainObj(arg.dxgiFactoryObj, arg.hwnd, arg.windowWidth, arg.windowHeight)))
-    {
-        assert(false); return E_FAIL;
-    }
+    if (FAILED(CreateSwapChainObj(arg.dxgiFactoryObj, arg.hwnd, arg.windowWidth, arg.windowHeight))) goto failed;
     // RTVヒープオブジェクト作成
-    if (FAILED(CreateRTVHeapObj(arg.device)))
-    {
-        assert(false); return E_FAIL;
-    }
+    if (FAILED(CreateRTVHeapObj(arg.device))) goto failed;
     // RTV作成
-    if (FAILED(_rtvHeap->CreateRTV(arg.device, _swapChain->GetSwapChain(), arg.buffNum)))
-    {
-        assert(false); return E_FAIL;
-    }
+    if (FAILED(_rtvHeap->CreateRTV(arg.device, _swapChain->GetSwapChain(), arg.buffNum))) goto failed;
 
     // デプスステンシルバッファオブジェクト作成
-    if (FAILED(CreateDSBuffObj(arg.device, arg.windowWidth, arg.windowHeight)))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(CreateDSBuffObj(arg.device, arg.windowWidth, arg.windowHeight))) goto failed;
     // DSVヒープオブジェクト作成
-    if (FAILED(CreateDSVHeapObj(arg.device)))
-    {
-        assert(false); return false;
-    }
+    if (FAILED(CreateDSVHeapObj(arg.device))) goto failed;
 
     // ビューポート作成
     CreateViewports(arg.windowWidth, arg.windowHeight);
@@ -62,6 +35,10 @@ HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
             D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
     return S_OK;
+
+failed:
+    assert(false);
+    return E_FAIL;
 }
 
 // コマンドアロケータオブジェクト作成

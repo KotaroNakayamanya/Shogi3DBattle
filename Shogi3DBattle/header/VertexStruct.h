@@ -11,4 +11,7 @@ public:
         DirectX::XMFLOAT3 normal;
         DirectX::XMFLOAT2 uv;
     }Vertex;
+
+    VertexStruct(){}
+    ~VertexStruct(){}
 };

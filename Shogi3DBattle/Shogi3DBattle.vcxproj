@@ -22,6 +22,7 @@
     <ClCompile Include="header\DrawArg.h" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Board.cpp" />
     <ClCompile Include="src\CBuffMap.cpp" />
     <ClCompile Include="src\CommandAllocator.cpp" />
     <ClCompile Include="src\CommandList.cpp" />
@@ -55,10 +56,12 @@
     <ClCompile Include="src\TBuff.cpp" />
     <ClCompile Include="src\TResource.cpp" />
     <ClCompile Include="src\VertBuff.cpp" />
+    <ClCompile Include="src\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
     <ClInclude Include="header\Application.h" />
+    <ClInclude Include="header\Board.h" />
     <ClInclude Include="header\CBuffMap.h" />
     <ClInclude Include="header\CommandAllocator.h" />
     <ClInclude Include="header\CommandList.h" />
@@ -100,6 +103,7 @@
     <ClInclude Include="header\TextureStruct.h" />
     <ClInclude Include="header\TResource.h" />
     <ClInclude Include="header\VertBuff.h" />
+    <ClInclude Include="header\Vertex.h" />
     <ClInclude Include="header\VertexArg.h" />
     <ClInclude Include="header\VertexStruct.h" />
   </ItemGroup>

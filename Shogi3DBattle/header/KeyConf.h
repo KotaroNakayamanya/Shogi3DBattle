@@ -10,10 +10,10 @@ private:
     // キーと操作ボタンの対応
     std::map<WPARAM, unsigned char> _keyConf
     {
-        {'w', ControllerButton::up},
-        {'a', ControllerButton::left},
-        {'s', ControllerButton::down},
-        {'d', ControllerButton::right}
+        {'W', ControllerButton::up},
+        {'A', ControllerButton::left},
+        {'S', ControllerButton::down},
+        {'D', ControllerButton::right}
     };
 
 public:

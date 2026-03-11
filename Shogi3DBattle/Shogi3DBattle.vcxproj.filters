@@ -73,12 +73,6 @@
     <Filter Include="ソース ファイル\input_handler">
       <UniqueIdentifier>{79f60200-9c50-49ab-8d6c-22fc61ba1bf6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\piece">
-      <UniqueIdentifier>{2bd42877-1574-4e0f-a8f7-2818e3cb5618}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\piece">
-      <UniqueIdentifier>{3d481703-f3c4-41a4-b0ea-af4422b539b1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\DX12\csu\const">
       <UniqueIdentifier>{1f71074d-b8ae-44d3-871f-5d2af0338ab6}</UniqueIdentifier>
     </Filter>
@@ -139,6 +133,24 @@
     <Filter Include="ヘッダー ファイル\DX12\vertex">
       <UniqueIdentifier>{c0680ff0-3293-4293-86a1-750dfae9104f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\shogi_object">
+      <UniqueIdentifier>{1d831363-e1a4-4b1f-9d15-cf0fc9915b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\shogi_object\piece">
+      <UniqueIdentifier>{3d481703-f3c4-41a4-b0ea-af4422b539b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\shogi_object\board">
+      <UniqueIdentifier>{dca7bc76-6bfd-47e8-b136-fe2cf963029c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\shogi_object">
+      <UniqueIdentifier>{24c688ce-29a1-456a-8d9d-779860539e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\shogi_object\piece">
+      <UniqueIdentifier>{2bd42877-1574-4e0f-a8f7-2818e3cb5618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\shogi_object\board">
+      <UniqueIdentifier>{87a704ed-e82c-4da5-8b2a-c2805a1f4977}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -184,10 +196,10 @@
       <Filter>ソース ファイル\command</Filter>
     </ClCompile>
     <ClCompile Include="src\Piece.cpp">
-      <Filter>ソース ファイル\piece</Filter>
+      <Filter>ソース ファイル\shogi_object\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\Pawn.cpp">
-      <Filter>ソース ファイル\piece</Filter>
+      <Filter>ソース ファイル\shogi_object\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\CBuff.cpp">
       <Filter>ソース ファイル\dx12\csu\const</Filter>
@@ -249,6 +261,12 @@
     <ClCompile Include="src\IdxBuff.cpp">
       <Filter>ソース ファイル\dx12\vertex</Filter>
     </ClCompile>
+    <ClCompile Include="src\Vertex.cpp">
+      <Filter>ソース ファイル\shogi_object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board.cpp">
+      <Filter>ソース ファイル\shogi_object\board</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -309,7 +327,7 @@
       <Filter>ヘッダー ファイル\input_handler</Filter>
     </ClInclude>
     <ClInclude Include="header\Piece.h">
-      <Filter>ヘッダー ファイル\piece</Filter>
+      <Filter>ヘッダー ファイル\shogi_object\piece</Filter>
     </ClInclude>
     <ClInclude Include="header\ICommand.h">
       <Filter>ヘッダー ファイル\command</Filter>
@@ -318,7 +336,7 @@
       <Filter>ヘッダー ファイル\command</Filter>
     </ClInclude>
     <ClInclude Include="header\Pawn.h">
-      <Filter>ヘッダー ファイル\piece</Filter>
+      <Filter>ヘッダー ファイル\shogi_object\piece</Filter>
     </ClInclude>
     <ClInclude Include="header\CBuff.h">
       <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
@@ -385,6 +403,12 @@
     </ClInclude>
     <ClInclude Include="header\DXGIFactoryArg.h">
       <Filter>ヘッダー ファイル\arg</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Board.h">
+      <Filter>ヘッダー ファイル\shogi_object\board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Vertex.h">
+      <Filter>ヘッダー ファイル\shogi_object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
