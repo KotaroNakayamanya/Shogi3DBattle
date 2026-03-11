@@ -128,13 +128,13 @@ HRESULT DX12::CreateCSUHeapObj()
     return _csuHeap->CreateHeap(arg);
 }
 
-// ヒープ作成用引数
+// CSVヒープ作成用引数
 HeapArg::CreateCSUHeapArg DX12::GetCreateCSUHeapArg()
 {
     HeapArg::CreateCSUHeapArg arg = {};
 
     arg.device = _device->GetDevice();
-    arg.buff1 = _cBuff->GetBuff();
+    arg.buff1 = _constBuff->GetBuff();
     arg.buff2 = _tBuff->GetTBuff();
   //arg.buff3 = nullptr;
 
@@ -170,15 +170,15 @@ HRESULT DX12::CreateTBuffObj()
 HRESULT DX12::CreateCBuffObj()
 {
     // コンスタントバッファオブジェクト作成
-    _cBuff = std::make_unique<CBuff>();
-    return _cBuff->CreateCBuffObj(_device->GetDevice(), _pawn->GetVerticesByteSize());
+    _constBuff = std::make_unique<ConstBuff>();
+    return _constBuff->CreateCBuffObj(_device->GetDevice(), _pawn->GetVerticesByteSize());
 }
 
 // コンスタントバッファマップオブジェクト作成
 HRESULT DX12::CreateCBuffMapObj()
 {
-    _cBuffMap = std::make_unique<CBuffMap>();
-    return _cBuffMap->MapCBuff(_cBuff->GetBuff());
+    _constBuffMap = std::make_unique<ConstBuffMap>();
+    return _constBuffMap->MapCBuff(_constBuff->GetBuff());
 }
 
 // テクスチャオブジェクト作成用引数
@@ -268,7 +268,10 @@ void DX12::ExeDX12()
     _draw->PrepareRenderTarget();
 
     // 頂点を変換
-    _cBuffMap->WriteMat(_pawn->GetWorldMat());
+    _constBuffMap->WriteMat(
+        _pawn->GetWorldMat(),
+        _viewMat->GetViewMat(),
+        _projMat->GetProjMat());
 
     // コマンドセット
     SetCommand();
@@ -386,6 +389,9 @@ DX12::DX12() {
 #ifdef _DEBUG
     ::EnableDebugLayer();
 #endif
+
+    _viewMat = std::make_unique<ViewMat>();
+    _projMat = std::make_unique<ProjMat>();
 }
 
 DX12::~DX12(){}

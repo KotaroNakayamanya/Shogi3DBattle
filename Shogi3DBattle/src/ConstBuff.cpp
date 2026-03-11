@@ -1,7 +1,7 @@
-#include"CBuff.h"
+#include"ConstBuff.h"
 
 // コンスタントオブジェクト作成
-HRESULT CBuff::CreateCBuffObj(ID3D12Device* device, UINT verticesByteSize)
+HRESULT ConstBuff::CreateCBuffObj(ID3D12Device* device, UINT verticesByteSize)
 {
     D3D12_HEAP_PROPERTIES heapProp =
         GetHeapProp();
@@ -14,11 +14,11 @@ HRESULT CBuff::CreateCBuffObj(ID3D12Device* device, UINT verticesByteSize)
         &resourceDesc,
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
-        IID_PPV_ARGS(_cBuff.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(_constBuff.ReleaseAndGetAddressOf()));
 }
 
 // ヒーププロパティ
-D3D12_HEAP_PROPERTIES CBuff::GetHeapProp()
+D3D12_HEAP_PROPERTIES ConstBuff::GetHeapProp()
 {
     D3D12_HEAP_PROPERTIES prop = {};
 
@@ -33,7 +33,7 @@ D3D12_HEAP_PROPERTIES CBuff::GetHeapProp()
 }
 
 // リソースディスクリプタ
-D3D12_RESOURCE_DESC CBuff::GetResourceDesc(UINT verticesByte)
+D3D12_RESOURCE_DESC ConstBuff::GetResourceDesc(UINT verticesByte)
 {
     D3D12_RESOURCE_DESC desc = {};
 
@@ -63,10 +63,10 @@ D3D12_RESOURCE_DESC CBuff::GetResourceDesc(UINT verticesByte)
 
 
 // バッファを返す
-ID3D12Resource* CBuff::GetBuff(){return _cBuff.Get();}
+ID3D12Resource* ConstBuff::GetBuff(){return _constBuff.Get();}
 
 
 
 
-CBuff::CBuff(){}
-CBuff::~CBuff(){}
+ConstBuff::ConstBuff(){}
+ConstBuff::~ConstBuff(){}

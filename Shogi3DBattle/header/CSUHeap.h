@@ -10,9 +10,9 @@ class CSUHeap
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    ComPtr<ID3D12DescriptorHeap> _heap; // CBV,SRV,UAVヒープ
+    ComPtr<ID3D12DescriptorHeap> _csuHeap; // CBV,SRV,UAVヒープ
 
-    D3D12_DESCRIPTOR_HEAP_DESC GetHeapDesc(); // ヒープディスクリプタ
+    D3D12_DESCRIPTOR_HEAP_DESC GetCSUHeapDesc(); // ヒープディスクリプタ
 
     void CreateCBV(ID3D12Device* device, ID3D12Resource* cbvBuff); // CBV作成
     void CreateSRV(ID3D12Device* device, ID3D12Resource* srvBuff); // SRV作成

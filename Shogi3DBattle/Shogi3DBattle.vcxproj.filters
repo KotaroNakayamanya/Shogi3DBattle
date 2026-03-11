@@ -201,12 +201,6 @@
     <ClCompile Include="src\Pawn.cpp">
       <Filter>ソース ファイル\shogi_object\piece</Filter>
     </ClCompile>
-    <ClCompile Include="src\CBuff.cpp">
-      <Filter>ソース ファイル\dx12\csu\const</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CBuffMap.cpp">
-      <Filter>ソース ファイル\dx12\csu\const</Filter>
-    </ClCompile>
     <ClCompile Include="src\TBuff.cpp">
       <Filter>ソース ファイル\dx12\csu\texture</Filter>
     </ClCompile>
@@ -266,6 +260,18 @@
     </ClCompile>
     <ClCompile Include="src\Board.cpp">
       <Filter>ソース ファイル\shogi_object\board</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConstBuffMap.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConstBuff.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ViewMat.cpp">
+      <Filter>ソース ファイル\dx12\csu\const</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProjMat.cpp">
+      <Filter>ソース ファイル\dx12\csu\const</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -338,12 +344,6 @@
     <ClInclude Include="header\Pawn.h">
       <Filter>ヘッダー ファイル\shogi_object\piece</Filter>
     </ClInclude>
-    <ClInclude Include="header\CBuff.h">
-      <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
-    </ClInclude>
-    <ClInclude Include="header\CBuffMap.h">
-      <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
-    </ClInclude>
     <ClInclude Include="header\TBuff.h">
       <Filter>ヘッダー ファイル\DX12\csu\texture</Filter>
     </ClInclude>
@@ -409,6 +409,18 @@
     </ClInclude>
     <ClInclude Include="header\Vertex.h">
       <Filter>ヘッダー ファイル\shogi_object</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ConstBuffMap.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ConstBuff.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ViewMat.h">
+      <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ProjMat.h">
+      <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

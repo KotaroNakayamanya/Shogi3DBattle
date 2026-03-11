@@ -12,11 +12,13 @@
 #include"VertBuff.h"
 #include"IdxBuff.h"
 #include"Pawn.h"
-#include"CBuff.h"
-#include"CBuffMap.h"
+#include"ConstBuff.h"
+#include"ConstBuffMap.h"
 #include"CSUHeap.h"
 #include"RootSignature.h"
 #include"Pipeline.h"
+#include"ViewMat.h"
+#include"ProjMat.h"
 
 #include"DrawArg.h"
 #include"TextureArg.h"
@@ -68,16 +70,24 @@ private:
     TextureArg::CreateTextureObjArg    // テクスチャバッファオブジェクト作成用引数
         GetCreateTBuffObjArg();
 
-    std::unique_ptr<CBuff> _cBuff; // コンスタントバッファオブジェクト
-    HRESULT CreateCBuffObj();      // コンスタントバッファオブジェクト作成
+    std::unique_ptr<ConstBuff> _constBuff; // コンスタントバッファオブジェクト
+    HRESULT CreateCBuffObj();              // コンスタントバッファオブジェクト作成
 
-    std::unique_ptr<CBuffMap> _cBuffMap; // コンスタントバッファマップオブジェクト
-    HRESULT CreateCBuffMapObj();     // コンスタントバッファマップオブジェクト作成
+    std::unique_ptr<ConstBuffMap> _constBuffMap; // コンスタントバッファマップオブジェクト
+    HRESULT CreateCBuffMapObj();                 // コンスタントバッファマップオブジェクト作成
 
     std::unique_ptr<CSUHeap> _csuHeap; // CSUヒープオブジェクト
     HRESULT CreateCSUHeapObj();     // CSUヒープオブジェクト作成
     HeapArg::CreateCSUHeapArg // CSUヒープオブジェクト作成用引数
-        GetCreateCSUHeapArg();  
+        GetCreateCSUHeapArg();
+
+    std::unique_ptr<ViewMat> _viewMat;
+
+    std::unique_ptr<ProjMat> _projMat;
+
+
+
+
 
     DXGI_SAMPLE_DESC GetSampleDesc(); // サンプリングディスクリプタ
  

@@ -7,11 +7,11 @@ HRESULT CSUHeap::CreateHeap(HeapArg::CreateCSUHeapArg arg)
     HRESULT result;
 
     // ヒープ作成
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetHeapDesc();
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetCSUHeapDesc();
 
     result = arg.device->CreateDescriptorHeap(
         &heapDesc,
-        IID_PPV_ARGS(_heap.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(_csuHeap.ReleaseAndGetAddressOf()));
     if (FAILED(result))
     {
         assert(false); return E_FAIL;
@@ -28,20 +28,20 @@ HRESULT CSUHeap::CreateHeap(HeapArg::CreateCSUHeapArg arg)
 // CBV作成
 void CSUHeap::CreateCBV(ID3D12Device* device, ID3D12Resource* cbvBuff)
 {
-    auto handle = _heap->GetCPUDescriptorHandleForHeapStart();
+    auto csuHandle = _csuHeap->GetCPUDescriptorHandleForHeapStart();
 
     D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = GetCBVDesc(cbvBuff);
 
     device->CreateConstantBufferView(
         &cbvDesc,
-        handle);
+        csuHandle);
 }
 
 // SRV作成
 void CSUHeap::CreateSRV(ID3D12Device* device, ID3D12Resource* srvBuff)
 {
     
-    auto handle = _heap->GetCPUDescriptorHandleForHeapStart();
+    auto handle = _csuHeap->GetCPUDescriptorHandleForHeapStart();
     handle.ptr += device->GetDescriptorHandleIncrementSize(
                     D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
@@ -57,7 +57,7 @@ void CSUHeap::CreateSRV(ID3D12Device* device, ID3D12Resource* srvBuff)
 
 
 // ヒープディスクリプタ
-D3D12_DESCRIPTOR_HEAP_DESC CSUHeap::GetHeapDesc()
+D3D12_DESCRIPTOR_HEAP_DESC CSUHeap::GetCSUHeapDesc()
 {
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
 
@@ -103,7 +103,7 @@ D3D12_CONSTANT_BUFFER_VIEW_DESC CSUHeap::GetCBVDesc(ID3D12Resource* cbvBuff)
 // ヒープを渡す
 ID3D12DescriptorHeap* CSUHeap::GetHeap()
 {
-    return _heap.Get();
+    return _csuHeap.Get();
 }
 
 
