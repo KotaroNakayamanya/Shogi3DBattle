@@ -14,7 +14,7 @@ HRESULT RTVHeap::CreateHeap(
 
     result = device->CreateDescriptorHeap(
         &heapDesc,
-        IID_PPV_ARGS(_heap.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(_rtvHeap.ReleaseAndGetAddressOf()));
     if (FAILED(result))
     {
         assert(false); return result;
@@ -36,7 +36,7 @@ HRESULT RTVHeap::CreateRTV(
 
     // ヒープの先頭アドレスを取得しておく
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle =
-        _heap->GetCPUDescriptorHandleForHeapStart();
+        _rtvHeap->GetCPUDescriptorHandleForHeapStart();
 
     for (int i = 0; i < buffNum; i++)
     {
@@ -69,6 +69,12 @@ HRESULT RTVHeap::CreateRTV(
         IID_PPV_ARGS(_rtvs[i].ReleaseAndGetAddressOf()));
 }
 
+// RTVハンドルを返す
+ D3D12_CPU_DESCRIPTOR_HANDLE RTVHeap::GetRTVStartHandle()
+{
+    return _rtvHeap->GetCPUDescriptorHandleForHeapStart();
+}
+
 
 
 
@@ -98,7 +104,7 @@ void RTVHeap::ClearRTV()
 // ヒープを返す
 ID3D12DescriptorHeap* RTVHeap::GetHeap()
 {
-    return _heap.Get();
+    return _rtvHeap.Get();
 }
 
 // RTVを返す

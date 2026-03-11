@@ -12,8 +12,8 @@ public:
         ID3D12Device*  device;
         IDXGIFactory6* dxgiFactory;
         HWND hwnd;
-        UINT width;
-        UINT height;
+        UINT windowWidth;
+        UINT windowHeight;
         UINT buffNum;
 
     }CreateDrawObjArg;
@@ -26,9 +26,6 @@ public:
         ID3D12DescriptorHeap* heap;
         UINT offset;
 
-        D3D12_VIEWPORT viewport;
-        D3D12_RECT     scissorRect;
-
         D3D12_PRIMITIVE_TOPOLOGY topology;
         D3D12_VERTEX_BUFFER_VIEW vertexBuffView;
         D3D12_INDEX_BUFFER_VIEW  indexBuffView;
@@ -38,12 +35,12 @@ public:
 
     }SetCommandArg;
 
-    // コマンド実行用引数
-    typedef struct ExeDrawArg
-    {
-        D3D12_RESOURCE_BARRIER resourceBarrier;
+    //// コマンド実行用引数
+    //typedef struct ExeDrawArg
+    //{
+    //    D3D12_RESOURCE_BARRIER resourceBarrier;
 
-    }ExeDrawArg;
+    //}ExeDrawArg;
 
     // スワップチェーン作成用引数
     typedef struct CreateSwapChainArg

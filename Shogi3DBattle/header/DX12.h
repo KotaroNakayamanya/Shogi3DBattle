@@ -9,15 +9,14 @@
 #include"TBuff.h"
 #include"TResource.h"
 #include"Draw.h"
-#include"Vertex.h"
+#include"VertBuff.h"
+#include"IdxBuff.h"
 #include"Pawn.h"
 #include"CBuff.h"
 #include"CBuffMap.h"
 #include"CSUHeap.h"
 #include"RootSignature.h"
 #include"Pipeline.h"
-#include"DSBuff.h"
-#include"DSVHeap.h"
 
 #include"DrawArg.h"
 #include"TextureArg.h"
@@ -50,10 +49,13 @@ private:
     std::unique_ptr<Shader> _shader; // シェーダーオブジェクト
     HRESULT CreateShaderObj();       // シェーダーオブジェクト作成
 
-    std::unique_ptr<Vertex> _vertex; // 頂点オブジェクト
-    HRESULT CreateVertexObj();       // 頂点オブジェクト作成
-    VertexArg::GetCreateVertexObjArg // 頂点オブジェクト作成用引数
-        GetCreateVertexObjArg();
+    std::unique_ptr<VertBuff> _vertBuff; // 頂点バッファオブジェクト
+    HRESULT CreateVertBuffObj();         // 頂点バッファオブジェクト作成
+    VertexArg::GetCreateVertexObjArg     // 頂点バッファオブジェクト作成用引数
+        GetCreateVertObjArg();
+
+    std::unique_ptr<IdxBuff> _idxBuff; // インデックスバッファオブジェクト
+    HRESULT CreateIdxBuffObj();       // インデックスバッファオブジェクト作成
 
     std::unique_ptr<RootSignature> _rootSignature; // ルートシグネチャオブジェクト
     HRESULT CreateRootSignatureObj();              // ルートシグネチャオブジェクト作成
@@ -79,11 +81,11 @@ private:
     HeapArg::CreateCSUHeapArg // CSUヒープオブジェクト作成用引数
         GetCreateCSUHeapArg();  
 
-    std::unique_ptr<DSBuff> _dsBuff; // デプスステンシルバッファ
-    HRESULT CreateDSBuffObj();       // デプスステンシルバッファ作成
+    //std::unique_ptr<DSBuff> _dsBuff; // デプスステンシルバッファ
+    //HRESULT CreateDSBuffObj();       // デプスステンシルバッファ作成
 
-    std::unique_ptr<DSVHeap> _dsvHeap; // デプスステンシルヒープ
-    HRESULT CreateDSVHeapObj();        // デプスステンシルヒープ作成
+    //std::unique_ptr<DSVHeap> _dsvHeap; // デプスステンシルヒープ
+    //HRESULT CreateDSVHeapObj();        // デプスステンシルヒープ作成
 
     DXGI_SAMPLE_DESC GetSampleDesc(); // サンプリングディスクリプタ
   
@@ -119,12 +121,18 @@ private:
     //    GetPrepareRenderTargetArg();
     DrawArg::SetCommandArg // コマンドセット用引数
         GetSetCommandArg();
-    DrawArg::ExeDrawArg // コマンド実行用引数
-        GetExeDrawArg();
+    //DrawArg::ExeDrawArg // コマンド実行用引数
+    //    GetExeDrawArg();
     
 public:
     bool CreateDX12Obj(HWND hwnd); // DirectX12オブジェクト作成
     void ExeDX12(); // DirectX12実行処理
+
+    /// <summary>
+    Piece* GetPawn();
+    /// </summary>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
 
     void ProcessChangeWindowSize( // ウインドウサイズ変更処理
         UINT width, UINT height);

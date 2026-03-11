@@ -51,6 +51,12 @@ DXGI_SWAP_CHAIN_DESC1 SwapChain::GetSwapChainDesc(
     return desc;
 }
 
+// 現在のバックバッファインデックスを返す
+UINT SwapChain::GetCurrentBackBufferIdx()
+{
+    return _swapChain->GetCurrentBackBufferIndex();
+}
+
 // スワップチェーン更新
 HRESULT SwapChain::UpdateSwapChain(UINT width, UINT height)
 {
@@ -64,11 +70,20 @@ HRESULT SwapChain::UpdateSwapChain(UINT width, UINT height)
     return S_OK;
 }
 
-// スワップチェーンを返す
-IDXGISwapChain4* SwapChain::GetSwapChain()
+
+
+
+// 画面フリップ
+void SwapChain::Flip()
 {
-    return _swapChain.Get();
+    _swapChain->Present(1, 0);
 }
+
+
+
+
+// スワップチェーンを返す
+IDXGISwapChain4* SwapChain::GetSwapChain(){return _swapChain.Get();}
 
 SwapChain::SwapChain(){}
 SwapChain::~SwapChain(){}

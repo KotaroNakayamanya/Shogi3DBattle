@@ -26,20 +26,41 @@ HRESULT Draw::CreateDrawObj(DrawArg::CreateDrawObjArg arg)
     }
 
     // スワップチェーンオブジェクト作成
-    if (FAILED(CreateSwapChainObj(arg.dxgiFactory, arg.hwnd, arg.width, arg.height)))
+    if (FAILED(CreateSwapChainObj(arg.dxgiFactory, arg.hwnd, arg.windowWidth, arg.windowHeight)))
     {
         assert(false); return E_FAIL;
     }
-    // ヒープオブジェクト作成
-    if (FAILED(CreateHeapObj(arg.device)))
+    // RTVヒープオブジェクト作成
+    if (FAILED(CreateRTVHeapObj(arg.device)))
     {
         assert(false); return E_FAIL;
     }
     // RTV作成
-    if (FAILED(_heap->CreateRTV(arg.device, _swapChain->GetSwapChain(), arg.buffNum)))
+    if (FAILED(_rtvHeap->CreateRTV(arg.device, _swapChain->GetSwapChain(), arg.buffNum)))
     {
         assert(false); return E_FAIL;
     }
+
+    // デプスステンシルバッファオブジェクト作成
+    if (FAILED(CreateDSBuffObj(arg.device, arg.windowWidth, arg.windowHeight)))
+    {
+        assert(false); return false;
+    }
+    // DSVヒープオブジェクト作成
+    if (FAILED(CreateDSVHeapObj(arg.device)))
+    {
+        assert(false); return false;
+    }
+
+    // ビューポート作成
+    CreateViewports(arg.windowWidth, arg.windowHeight);
+    // シザー矩形作成
+    CreateScissorRects(arg.windowWidth, arg.windowHeight);
+    // RTVバイト数取得
+    _rtvOffset = arg.device->GetDescriptorHandleIncrementSize(
+            D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+    return S_OK;
 }
 
 // コマンドアロケータオブジェクト作成
@@ -109,72 +130,111 @@ HRESULT Draw::CreateFenceObj(ID3D12Device* device)
 }
 
 // ヒープオブジェクト作成
-HRESULT Draw::CreateHeapObj(ID3D12Device* device)
+HRESULT Draw::CreateRTVHeapObj(ID3D12Device* device)
 {
     //_heap = std::make_unique<RTVHeap>();
-    _heap.reset(new RTVHeap());
-    return _heap->CreateHeap(
+    _rtvHeap.reset(new RTVHeap());
+    return _rtvHeap->CreateHeap(
         device,
         _swapChain->GetSwapChain(),
         _buffNum);
+}
+
+// デプスステンシルバッファ作成
+HRESULT Draw::CreateDSBuffObj(
+    ID3D12Device* device,
+    UINT windowWidth,
+    UINT windowHeight)
+{
+    _dsBuff = std::make_unique<DSBuff>();
+    return _dsBuff->CreateDSBuffObj(
+        device, windowWidth, windowHeight);
+}
+
+// DSVヒープ作成
+HRESULT Draw::CreateDSVHeapObj(
+    ID3D12Device* device)
+{
+    _dsvHeap = std::make_unique<DSVHeap>();
+    return _dsvHeap->CreateDSVHeap(
+        device, _dsBuff->GetDSBuff());
+}
+
+// ビューポート作成
+void Draw::CreateViewports(UINT windowWidth, UINT windowHeight)
+{
+    _viewport.Width    = windowWidth;  // 横
+    _viewport.Height   = windowHeight; // 縦
+    _viewport.TopLeftX = 0; // 左上横位置
+    _viewport.TopLeftY = 0; // 左上縦位置
+    _viewport.MaxDepth = 1.0f; // 深度最大値
+    _viewport.MinDepth = 0.0f; // 深度最小値
+}
+
+// シザー矩形作成
+void Draw::CreateScissorRects(UINT windowWidth, UINT windowHeight)
+{
+    _scissorRect.left = 0;              // 左
+    _scissorRect.right = windowWidth;   // 右
+    _scissorRect.top = 0;               // 上
+    _scissorRect.bottom = windowHeight; // 下
+}
+
+// リソースバリア基本設定作成
+void Draw::CreateBasiceResourceBarrier()
+{
+    _basicResourceBarrier.Type =
+        D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    _basicResourceBarrier.Flags =
+        D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    _basicResourceBarrier.Transition.Subresource =
+        D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 }
 
 
 
 
 // レンダーターゲット準備
-void Draw::PrepareRenderTarget(
-    UINT rtvOffset,
-    D3D12_RESOURCE_BARRIER resourceBarrier,
-    ID3D12DescriptorHeap* dsvHeap)
+void Draw::PrepareRenderTarget()
 {
-    // バックバッファに対応するRTVをレンダーターゲットに設定
-    auto backBufferIdx = _swapChain->GetSwapChain()->GetCurrentBackBufferIndex();
-    auto rtvHandle = _heap->GetHeap()->GetCPUDescriptorHandleForHeapStart();
-    rtvHandle.ptr += backBufferIdx * rtvOffset;
+    // バックバッファインデックス取得
+    auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
 
-    auto dsvHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
+    // ハンドル取得
+    auto rtvHandle = _rtvHeap->GetRTVStartHandle();
+    //auto dsvHandle = _dsvHeap->GetCPUDescriptorHandleForHeapStart();
+    auto dsvHandle = _dsvHeap->GetDSVStartHandle();
+    rtvHandle.ptr += backBufferIdx * _rtvOffset;
 
-    ChangeRTVBarrierToRenderTarget(resourceBarrier);
-    _commandList->GetCommandList()->OMSetRenderTargets(1, &rtvHandle, true, &dsvHandle);
-    // デプスステンシルバッファクリア
-    _commandList->GetCommandList()->ClearDepthStencilView(
-        dsvHandle,
-        D3D12_CLEAR_FLAG_DEPTH,
-        1.0f, 0, 0, nullptr);
+    // RTVをレンダーターゲットに変更
+    ChangeRTVBarrierToRenderTarget(backBufferIdx);
+
+     // バックバッファをレンダーターゲットに設定
+    _commandList->SetRenderTarget(rtvHandle, dsvHandle);
 
     // レンダーターゲットクリア
-    ClearRenderTarget(rtvHandle);
+    _commandList->ClearRenderTarget(rtvHandle);
+     // デプスステンシルクリア
+    _commandList->ClearDepthStencil(dsvHandle); 
 }
 
 // RTVリソースをレンダーターゲットに変更
-void Draw::ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier)
+void Draw::ChangeRTVBarrierToRenderTarget(UINT backBufferIdx)
 {
-    D3D12_RESOURCE_BARRIER barrier = resourceBarrier;
+    D3D12_RESOURCE_BARRIER resourceBarrier = _basicResourceBarrier;
 
-    auto backBufferIndex = _swapChain->GetSwapChain()->GetCurrentBackBufferIndex();
-    auto rtv = _heap->GetRTV(backBufferIndex);
+    auto rtv = _rtvHeap->GetRTV(backBufferIdx);
 
-    barrier.Transition.pResource =
+    resourceBarrier.Transition.pResource =
         rtv;
-    barrier.Transition.StateBefore =
+    resourceBarrier.Transition.StateBefore =
         D3D12_RESOURCE_STATE_PRESENT;
-    barrier.Transition.StateAfter  =
+    resourceBarrier.Transition.StateAfter  =
         D3D12_RESOURCE_STATE_RENDER_TARGET;
 
-    _commandList->GetCommandList()->ResourceBarrier(
-        _buffNum - 1,
-        &barrier);
+    _commandList->SetResourceBarrier(resourceBarrier);
 }
 
-// 画面クリア
-void Draw::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE handle)
-{
-    float clearRTVColor[] =
-        {0.0f, 0.3f, 0.0f, 1.0f};
-    _commandList->GetCommandList()->ClearRenderTargetView(
-        handle, clearRTVColor, 0, nullptr);
-}
 
 
 
@@ -184,6 +244,7 @@ void Draw::SetCommand(DrawArg::SetCommandArg arg)
 {
     ID3D12GraphicsCommandList* commandList =
         _commandList->GetCommandList();
+
     // パイプラインセット
     commandList->SetPipelineState(arg.pipelineState);
     // ルートシグネチャセット
@@ -200,9 +261,9 @@ void Draw::SetCommand(DrawArg::SetCommandArg arg)
         1,
         handle);
     // ビューポートセット
-    commandList->RSSetViewports(1, &arg.viewport);
+    commandList->RSSetViewports(1, &_viewport);
     // シザー矩形セット
-    commandList->RSSetScissorRects(1, &arg.scissorRect);
+    commandList->RSSetScissorRects(1, &_scissorRect);
     // トポロジーセット
     commandList->IASetPrimitiveTopology(arg.topology);
     // 頂点バッファセット
@@ -211,33 +272,41 @@ void Draw::SetCommand(DrawArg::SetCommandArg arg)
     commandList->IASetIndexBuffer(&arg.indexBuffView);
     // 描画命令セット
     commandList->DrawIndexedInstanced(arg.vertexCount, arg.objCount, 0, 0, 0);
+
+
+
+    ////////////
+    //D3D12_VIEWPORT aaa = arg.viewport;
+    //aaa.Width = 300;
+    //commandList->RSSetViewports(1, &aaa);
+    //commandList->DrawIndexedInstanced(arg.vertexCount, arg.objCount, 0, 0, 0);
+    //aaa.Width = 700;
+    //commandList->RSSetViewports(1, &aaa);
+    //commandList->DrawIndexedInstanced(arg.vertexCount, arg.objCount, 0, 0, 0);
 }
 
 
 
 
 // 描画実行
-void Draw::ExeDraw(DrawArg::ExeDrawArg arg)
+void Draw::ExeDraw()
 {
+     // バックバッファインデックス取得
+    auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
     
-    // バックバッファに対応するRTVを表示画面に設定
-    ChangeRTVBarrierToPresent(arg.resourceBarrier);
-
-    // コマンド実行
-    ExeCommand();
-
-    // 画面スワップ
-    _swapChain->GetSwapChain()->Present(1, 0);
+    
+    ChangeRTVBarrierToPresent(backBufferIdx); // RTVを表示画面に設定
+    ExeCommand(); // コマンド実行
+    _swapChain->Flip(); // 画面フリップ
 
 }
 
 // RTVリソースを画面表示に変更
-void Draw::ChangeRTVBarrierToPresent(D3D12_RESOURCE_BARRIER resourceBarrier)
+void Draw::ChangeRTVBarrierToPresent(UINT backBufferIdx)
 {
-    D3D12_RESOURCE_BARRIER barrier = resourceBarrier;
+    D3D12_RESOURCE_BARRIER barrier = _basicResourceBarrier;;
 
-    auto backBufferIndex = _swapChain->GetSwapChain()->GetCurrentBackBufferIndex();
-    auto rtv = _heap->GetRTV(backBufferIndex);
+    auto rtv = _rtvHeap->GetRTV(backBufferIdx);
 
     barrier.Transition.pResource =
         rtv;
@@ -251,17 +320,22 @@ void Draw::ChangeRTVBarrierToPresent(D3D12_RESOURCE_BARRIER resourceBarrier)
         &barrier);
 }
 
+
+
+
 // コマンド実行
 void Draw::ExeCommand()
 {
-    _commandList->GetCommandList()->Close();
+    _commandList->GetCommandList()->Close(); // コマンドクローズ
 
-    ID3D12CommandList* commandLists[] = {_commandList->GetCommandList()};
-    _commandQueue->GetCommandQueue()->ExecuteCommandLists(1, commandLists);
+    ID3D12CommandList* commandLists[] = {_commandList->GetCommandList()}; // リストに格納
+    UINT listNum = sizeof(commandLists) / sizeof(ID3D12CommandList); // リスト数取得
 
-    WaitProcessWithFence();
+    _commandQueue->GetCommandQueue()->ExecuteCommandLists(listNum, commandLists); // コマンドキュー実行
 
-    ResetCommand();
+    WaitProcessWithFence(); // フェンスによる同期処理
+
+    ResetCommand(); // コマンドリセット
 }
 
 // フェンスによる同期制御
@@ -301,13 +375,13 @@ HRESULT Draw::UpdateDrawConf(
 {
     WaitProcessWithFence(); // GPUが処理中であれば待つ
     
-    _heap->ClearRTV(); // RTV破棄
+    _rtvHeap->ClearRTV(); // RTV破棄
     if(FAILED(_swapChain->UpdateSwapChain( // スワップチェーン更新
         width, height)))
     {
         assert(false); return E_FAIL;
     }
-    if (FAILED(_heap->CreateRTV( // RTV再作成
+    if (FAILED(_rtvHeap->CreateRTV( // RTV再作成
         device, _swapChain->GetSwapChain(), buffNum)))
     {
         assert(false); return E_FAIL;

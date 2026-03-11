@@ -3,12 +3,12 @@
 #include"Move.h"
 #include"Piece.h"
 
-class MoveForward : public Move
+class MoveLeft : public Move
 {
 public:
     void Exe() override;  // é¿çs
     void Undo() override; // é¿çséÊÇËè¡Çµ
 
-    MoveForward(Piece* piece);
-    ~MoveForward();
+    MoveLeft(Piece* piece);
+    ~MoveLeft();
 };

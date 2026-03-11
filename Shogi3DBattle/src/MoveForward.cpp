@@ -3,7 +3,7 @@
 // é¿çs
 void MoveForward::Exe()
 {
-
+    _piece->MoveY(0.1f);
 }
 // é¿çséÊÇËè¡Çµ
 void MoveForward::Undo()
@@ -11,5 +11,8 @@ void MoveForward::Undo()
 
 }
 
-MoveForward::MoveForward(){}
+
+
+
+MoveForward::MoveForward(Piece* piece) : Move(piece){}
 MoveForward::~MoveForward(){}

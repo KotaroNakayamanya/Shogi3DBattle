@@ -14,7 +14,7 @@ bool Application::Init()
         return false;
 
     // インプットハンドラ作成(初期は動ける状態）
-    _inputHandler = std::make_unique<InputHandler>();
+    _inputHandler = std::make_unique<InputHandler>(_dx12->GetPawn());
 
     return true;
 }
@@ -38,6 +38,7 @@ void Application::Run()
             break;
         }
 
+        _inputHandler->ExeOperation(); // 操作開始
         _dx12->ExeDX12();
     }
 }
@@ -77,20 +78,35 @@ LRESULT CALLBACK WindowProcedure(
 
 
     case WM_LBUTTONDOWN: // 左クリック
-        inputHandler->ExeLClick();
-        break;
+        inputHandler->MemoryLClick();
+        return 0;
+
+    case WM_LBUTTONUP: // 左クリック解除
+        inputHandler->RemoveLClick();
+        return 0;
+
 
     case WM_RBUTTONDOWN: // 右クリック
-        inputHandler->ExeRClick();  
-        break;
+        inputHandler->MemoryRClick();  
+        return 0;
+
+    case WM_RBUTTONUP: // 右クリック解除
+        inputHandler->RemoveRClick();  
+        return 0;
 
     case WM_MOUSEMOVE: // マウス移動
         //inputHandler->ExeMouseMove();
-        break;
+        return 0;
 
     case WM_CHAR: // キー入力
-        inputHandler->ExeInputKey(wParam);
-        break;
+        inputHandler->MemoryInputKey(wParam);
+        return 0;
+
+    case WM_KEYUP: // キーから指を離した
+        inputHandler->ClearInputMemory();
+        return 0;
+
+        
 
 
     case WM_DESTROY: // ウインドウ破棄

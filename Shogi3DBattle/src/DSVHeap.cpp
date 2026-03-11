@@ -66,6 +66,15 @@ D3D12_DEPTH_STENCIL_VIEW_DESC DSVHeap::GetDSVDesc()
 
 
 
+// DSVハンドルを返す
+D3D12_CPU_DESCRIPTOR_HANDLE DSVHeap::GetDSVStartHandle()
+{
+    return _dsvHeap->GetCPUDescriptorHandleForHeapStart();
+}
+
+
+
+
 // DSVヒープを返す
 ID3D12DescriptorHeap* DSVHeap::GetDSVHeap(){return _dsvHeap.Get();}
 

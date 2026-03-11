@@ -8,7 +8,7 @@ class KeyConf
 {
 private:
     // キーと操作ボタンの対応
-    std::map<WPARAM, ControllerButton> _keyConf
+    std::map<WPARAM, unsigned char> _keyConf
     {
         {'w', ControllerButton::up},
         {'a', ControllerButton::left},
@@ -18,7 +18,7 @@ private:
 
 public:
     // キーを割り当てられた操作ボタンに変更
-    ControllerButton convertKeyToControllerButton(WPARAM input);
+    unsigned char convertKeyToControllerButton(WPARAM input);
 
     KeyConf();
     ~KeyConf();

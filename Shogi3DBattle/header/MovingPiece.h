@@ -4,10 +4,15 @@
 #include"ISceneState.h"
 #include"ICommand.h"
 
+#include"Piece.h"
+
 class MovingPiece : public ISceneState
 {
 private:
     std::unique_ptr<ICommand> _moveForward;
+    std::unique_ptr<ICommand> _moveLeft;
+    std::unique_ptr<ICommand> _moveBack;
+    std::unique_ptr<ICommand> _moveRight;
 
 public:
     ISceneState* ExeDecisionButton() override;  // 決定ボタン処理
@@ -19,6 +24,6 @@ public:
     ISceneState* ExeDownButton()  override; // 下ボタン処理
     ISceneState* ExeRightButton() override; // 右ボタン処理
 
-    MovingPiece();
+    MovingPiece(Piece* piece);
     ~MovingPiece();
 };

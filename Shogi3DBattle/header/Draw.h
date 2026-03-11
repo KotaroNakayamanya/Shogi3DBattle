@@ -8,8 +8,11 @@
 #include"CommandList.h"
 #include"CommandQueue.h"
 #include"SwapChain.h"
-#include"Fence.h"
 #include"RTVHeap.h"
+#include"DSBuff.h"
+#include"DSVHeap.h"
+#include"Fence.h"
+
 
 #include"DrawArg.h"
 
@@ -17,6 +20,7 @@ class Draw
 {
 private:
     UINT _buffNum;  // バッファー数（スワップチェーン作成に利用）
+    UINT _rtvOffset; // RTVバイト数
 
     std::unique_ptr<CommandAllocator> _commandAllocator;     // コマンドアロケータオブジェクト
     HRESULT CreateCommandAllocatorObj(ID3D12Device* device); // コマンドアロケータオブジェクト作成
@@ -31,29 +35,51 @@ private:
     HRESULT CreateSwapChainObj(            // スワップチェーンオブジェクト作成
         IDXGIFactory6* dxgiFactory,
         HWND hwnd,
-        UINT width,
-        UINT height);
+        UINT windowWidth,
+        UINT windowHeight);
     DrawArg::CreateSwapChainArg GetCreateSwapChainArg( // スワップチェーン作成用引数
         IDXGIFactory6* dxgiFactory,
         ID3D12CommandQueue* commandQueue,
         HWND hwnd,
-        UINT width,
-        UINT height);
+        UINT windowWidth,
+        UINT windowHeight);
 
-    std::unique_ptr<Fence> _fence;         // コマンドキューオブジェクト
-    HRESULT CreateFenceObj(ID3D12Device* device); // コマンドキューオブジェクト作成
+    std::unique_ptr<DSBuff> _dsBuff; // デプスステンシルバッファ
+    HRESULT CreateDSBuffObj(         // デプスステンシルバッファ作成
+    ID3D12Device* device,
+    UINT windowWidth,
+    UINT windowHeight);
+    std::unique_ptr<DSVHeap> _dsvHeap;              // デプスステンシルヒープ
+    HRESULT CreateDSVHeapObj(ID3D12Device* device); // デプスステンシルヒープ作成
 
-    std::unique_ptr<RTVHeap> _heap;                 // ヒープオブジェクト
-    HRESULT CreateHeapObj(ID3D12Device* device); // ヒープオブジェクト作成 
-
+    std::unique_ptr<RTVHeap> _rtvHeap;              // RTVヒープオブジェクト
+    HRESULT CreateRTVHeapObj(ID3D12Device* device); // RTVヒープオブジェクト作成 
     HRESULT CreateRTV( // RTV作成
         ID3D12Device* device,
         IDXGISwapChain4* swapChain,
         UINT buffNum);
+    
+
+    std::unique_ptr<Fence> _fence;                // フェンスオブジェクト
+    HRESULT CreateFenceObj(ID3D12Device* device); // フェンスオブジェクト作成
 
 
-    void ChangeRTVBarrierToRenderTarget(D3D12_RESOURCE_BARRIER resourceBarrier);
-    void ChangeRTVBarrierToPresent     (D3D12_RESOURCE_BARRIER resourceBarrier);
+
+
+    D3D12_VIEWPORT _viewport; // ビューポート
+    void CreateViewports(     // ビューポート作成
+        UINT windowWidth, UINT windowHeight);
+
+    D3D12_RECT _scissorRect; // シザー矩形
+    void CreateScissorRects( // シザー矩形作成
+        UINT windowWidth, UINT windowHeight);
+
+    D3D12_RESOURCE_BARRIER _basicResourceBarrier; // 基本リソースバリア
+    void CreateBasiceResourceBarrier();           // 基本リソースバリア作成
+
+
+    void ChangeRTVBarrierToRenderTarget(UINT backBufferIdx);
+    void ChangeRTVBarrierToPresent     (UINT backBufferIdx);
 
     void ExeCommand(); // コマンド実行
     void ResetCommand  (); // コマンドリセット
@@ -68,13 +94,15 @@ private:
 public:
     HRESULT CreateDrawObj(DrawArg::CreateDrawObjArg arg); // 描画オブジェクト生成
 
-    void PrepareRenderTarget( // レンダーターゲットの準備
-        UINT rtvOffset,
-        D3D12_RESOURCE_BARRIER resourceBarrier,
-        ID3D12DescriptorHeap* dsvHeap);
+    void PrepareRenderTarget(); // レンダーターゲットの準備
+        //UINT rtvOffset,
+        //D3D12_RESOURCE_BARRIER resourceBarrier,
+        //ID3D12DescriptorHeap* dsvHeap);
 
     void SetCommand(DrawArg::SetCommandArg arg); // コマンドセット
-    void ExeDraw(DrawArg::ExeDrawArg arg); // 描画実行
+    //void ExeDraw(DrawArg::ExeDrawArg arg); // 描画実行
+
+    void ExeDraw(); // 描画実行
 
     HRESULT UpdateDrawConf( //描画設定更新
         ID3D12Device* device,

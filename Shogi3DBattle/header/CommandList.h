@@ -14,7 +14,16 @@ private:
 public:
     HRESULT CreateCommandList( // コマンドリスト作成
         ID3D12Device* device,
-        ID3D12CommandAllocator* commandAllocator); 
+        ID3D12CommandAllocator* commandAllocator);
+
+    void SetRenderTarget( // レンダーターゲットセット
+        D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle,
+        D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
+
+    void ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle); // レンダーターゲットクリア
+    void ClearDepthStencil(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle); // デプスステンシルクリア
+
+    void SetResourceBarrier(D3D12_RESOURCE_BARRIER resourceBarrier); // リソースバリアセット
 
     ID3D12GraphicsCommandList* GetCommandList(); // コマンドリストを返す
 

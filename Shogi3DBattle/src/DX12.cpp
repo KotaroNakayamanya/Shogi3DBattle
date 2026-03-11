@@ -56,11 +56,28 @@ bool DX12::CreateDX12Obj(HWND hwnd)
         assert(false); return false;
     }
 
-    // 頂点オブジェクト作成
-    if (FAILED(CreateVertexObj()))
+    // 頂点バッファオブジェクト作成
+    if (FAILED(CreateVertBuffObj()))
     {
         assert(false); return false;
     }
+    // インデックスオブジェクト作成
+    if (FAILED(CreateIdxBuffObj()))
+    {
+        assert(false); return false;
+    }
+
+    // 頂点バッファに書き込み
+    if (FAILED(_vertBuff->WriteVertBuff(_pawn->GetVerticesPtr())))
+    {
+        assert(false); return false;
+    }
+    // インデックスバッファに書き込み
+    if (FAILED(_idxBuff->WriteIdxBuff(_pawn->GetIndicesPtr())))
+    {
+        assert(false); return false;
+    }
+
 
     // テクスチャオブジェクト作成
     if (FAILED(CreateTBuffObj()))
@@ -79,17 +96,6 @@ bool DX12::CreateDX12Obj(HWND hwnd)
     }
     // CSUヒープオブジェクト作成
     if (FAILED(CreateCSUHeapObj()))
-    {
-        assert(false); return false;
-    }
-
-    // デプスステンシルバッファオブジェクト作成
-    if (FAILED(CreateDSBuffObj()))
-    {
-        assert(false); return false;
-    }
-    // デプスステンシルヒープオブジェクト作成
-    if (FAILED(CreateDSVHeapObj()))
     {
         assert(false); return false;
     }
@@ -154,8 +160,8 @@ DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg(HWND hwnd)
         _dxgiFactory->GetDXGIFactory();
     arg.hwnd =
         hwnd;
-    arg.width = 1280; // 初期値
-    arg.height = 720; // 初期値
+    arg.windowWidth = 1280; // 初期値
+    arg.windowHeight = 720; // 初期値
     arg.buffNum = _buffNum;
 
     return arg;
@@ -245,29 +251,34 @@ DXGI_SAMPLE_DESC DX12::GetSampleDesc()
     return desc;
 }
 
-// 頂点オブジェクト作成
-HRESULT DX12::CreateVertexObj()
+// 頂点バッファオブジェクト作成
+HRESULT DX12::CreateVertBuffObj()
 {
-    _vertex = std::make_unique<Vertex>();
-
-    VertexArg::GetCreateVertexObjArg arg =
-        GetCreateVertexObjArg();
-
-    return _vertex->CreateVertexObj(arg);
+    _vertBuff = std::make_unique<VertBuff>();
+    return _vertBuff->CreateVertBuff(
+        _device->GetDevice(), _pawn->GetVerticesByteSize());
 }
 
-// 頂点オブジェクト作成用関数
-VertexArg::GetCreateVertexObjArg DX12::GetCreateVertexObjArg()
+//// 頂点オブジェクト作成用関数
+//VertexArg::GetCreateVertexObjArg DX12::GetCreateVertObjArg()
+//{
+//    VertexArg::GetCreateVertexObjArg arg = {};
+//
+//    arg.device = _device->GetDevice();
+//    arg.vertexByte  = _pawn->GetVerticesByteSize();
+//    arg.vertexPtr   = _pawn->GetVerticesPtr();
+//    arg.indicesByte = _pawn->GetIndicesByteSize();
+//    arg.indexPtr    = _pawn->GetIndicesPtr();
+//
+//    return arg;
+//}
+
+// インデックスバッファオブジェクト作成
+HRESULT DX12::CreateIdxBuffObj()
 {
-    VertexArg::GetCreateVertexObjArg arg = {};
-
-    arg.device = _device->GetDevice();
-    arg.vertexByte  = _pawn->GetVerticesByteSize();
-    arg.vertexPtr   = _pawn->GetVerticesPtr();
-    arg.indicesByte = _pawn->GetIndicesByteSize();
-    arg.indexPtr    = _pawn->GetIndicesPtr();
-
-    return arg;
+    _idxBuff = std::make_unique<IdxBuff>();
+    return _idxBuff->CreateIdxBuff(
+        _device->GetDevice(), _pawn->GetIndicesByteSize());
 }
 
 // シェーダーバイナリ作成
@@ -275,22 +286,6 @@ HRESULT DX12::CreateShaderObj()
 {
     _shader = std::make_unique<Shader>();
     return _shader->CreateShaderBlob();
-}
-
-// デプスステンシルバッファ作成
-HRESULT DX12::CreateDSBuffObj()
-{
-    _dsBuff = std::make_unique<DSBuff>();
-    return _dsBuff->CreateDSBuffObj(
-        _device->GetDevice(), _windowWidth, _windowHeight);
-}
-
-// デプスステンシルヒープ作成
-HRESULT DX12::CreateDSVHeapObj()
-{
-    _dsvHeap = std::make_unique<DSVHeap>();
-    return _dsvHeap->CreateDSVHeap(
-        _device->GetDevice(), _dsBuff->GetDSBuff());
 }
 
 // ルートシグネチャオブジェクト作成
@@ -329,72 +324,49 @@ PipelineArg::CreatePipelineStateArg DX12::GetCreatePipelineObjArg()
     return arg;
 }
 
-
-
-float angle = 0.0f;
-
-
 // コマンド実行
 void DX12::ExeDX12()
 {
     // レンダーターゲットの準備をする
-    PrepareRenderTarget();
+    _draw->PrepareRenderTarget();
 
     // 頂点を変換
-    angle += 0.01f;
-    _cBuffMap->RotationY(angle);
+    _cBuffMap->WriteMat(_pawn->GetWorldMat());
 
     // コマンドセット
     SetCommand();
+
     // 描画実行
     ExeDraw();
-
-    
-
     return;
 }
 
-// レンダーターゲットの準備（Drawクラス）
-void DX12::PrepareRenderTarget()
-{
-    UINT rtvOffset = _device->GetDevice()->GetDescriptorHandleIncrementSize(
-            D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-        
-    _draw->PrepareRenderTarget(
-        rtvOffset,
-        GetResourceBarrier(),
-        _dsvHeap->GetDSVHeap());
-}
-
-//// レンダーターゲット準備用引数
-//DrawArg::PrepareRenderTargetArg DX12::GetPrepareRenderTargetArg()
+//// レンダーターゲットの準備（Drawクラス）
+//void DX12::PrepareRenderTarget()
 //{
-//    DrawArg::PrepareRenderTargetArg arg = {};
-//
-//    arg.resourceBarrier =
-//        GetResourceBarrier();
-//    arg.rtvOffset = 
-//        _device->GetDevice()->GetDescriptorHandleIncrementSize(
-//            D3D12_DESCRIPTOR_HEAP_TYPE_RTV); 
+//    //UINT rtvOffset = _device->GetDevice()->GetDescriptorHandleIncrementSize(
+//    //        D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 //        
-//
-//    return arg;
+//    _draw->PrepareRenderTarget(
+//        //rtvOffset,
+//        //GetResourceBarrier(),
+//        _dsvHeap->GetDSVHeap());
 //}
 
-// リソースバリア
-D3D12_RESOURCE_BARRIER DX12::GetResourceBarrier()
-{
-    D3D12_RESOURCE_BARRIER desc;
-
-    desc.Type =
-        D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    desc.Flags =
-        D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    desc.Transition.Subresource =
-        D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-
-    return desc;  
-}
+//// リソースバリア
+//D3D12_RESOURCE_BARRIER DX12::GetResourceBarrier()
+//{
+//    D3D12_RESOURCE_BARRIER desc;
+//
+//    desc.Type =
+//        D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+//    desc.Flags =
+//        D3D12_RESOURCE_BARRIER_FLAG_NONE;
+//    desc.Transition.Subresource =
+//        D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+//
+//    return desc;  
+//}
 
 // コマンドセット（Drawクラス）
 void DX12::SetCommand()
@@ -419,10 +391,10 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
         = _csuHeap->GetHeap();;
     arg.offset =
         _device->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-    arg.viewport =
-        GetViewports();
-    arg.scissorRect =
-        GetScissorRects();
+    //arg.viewport =
+    //    GetViewports();
+    //arg.scissorRect =
+    //    GetScissorRects();
     arg.topology =
         D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
     arg.vertexBuffView =
@@ -437,33 +409,33 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
     return arg;
 }
 
-// ビューポートセット
-D3D12_VIEWPORT DX12::GetViewports()
-{
-    D3D12_VIEWPORT viewport = {};
+//// ビューポートセット
+//D3D12_VIEWPORT DX12::GetViewports()
+//{
+//    D3D12_VIEWPORT viewport = {};
+//
+//    viewport.Width    = _windowWidth;
+//    viewport.Height   = _windowHeight;
+//    viewport.TopLeftX = 0;
+//    viewport.TopLeftY = 0;
+//    viewport.MaxDepth = 1.0f; // 深度最大値
+//    viewport.MinDepth = 0.0f; // 深度最小値
+//
+//    return viewport;
+//}
 
-    viewport.Width    = _windowWidth;
-    viewport.Height   = _windowHeight;
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.MaxDepth = 1.0f; // 深度最大値
-    viewport.MinDepth = 0.0f; // 深度最小値
-
-    return viewport;
-}
-
-// シザー矩形セット
-D3D12_RECT DX12::GetScissorRects()
-{
-    D3D12_RECT scissorRect = {};
-
-    scissorRect.left = 0;
-    scissorRect.right = _windowWidth;
-    scissorRect.top = 0;
-    scissorRect.bottom = _windowHeight;
-    
-    return scissorRect;
-}
+//// シザー矩形セット
+//D3D12_RECT DX12::GetScissorRects()
+//{
+//    D3D12_RECT scissorRect = {};
+//
+//    scissorRect.left = 0;
+//    scissorRect.right = _windowWidth;
+//    scissorRect.top = 0;
+//    scissorRect.bottom = _windowHeight;
+//    
+//    return scissorRect;
+//}
 
 // 頂点バッファビュー
 D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBuffView()
@@ -471,7 +443,7 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBuffView()
     D3D12_VERTEX_BUFFER_VIEW view;
 
     ComPtr<ID3D12Resource> vertexBuff =
-        _vertex->GetVertexBuff();
+        _vertBuff->GetVertBuff();
 
     UINT vertexByteSize   = _pawn->GetVertexByteSize();
     UINT verticesByteSize = _pawn->GetVerticesByteSize();
@@ -492,7 +464,7 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBuffView()
     D3D12_INDEX_BUFFER_VIEW view;
 
     ComPtr<ID3D12Resource> indexBuff =
-        _vertex->GetIndexBuff();
+        _idxBuff->GetIdxBuff();
 
     UINT indicesByte = _pawn->GetIndicesByteSize();
 
@@ -509,23 +481,31 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBuffView()
 // 描画実行（Drawクラス）
 void DX12::ExeDraw()
 {
-    DrawArg::ExeDrawArg arg =
-        GetExeDrawArg();
+    //DrawArg::ExeDrawArg arg =
+    //    GetExeDrawArg();
         
-    _draw->ExeDraw(arg);
+    _draw->ExeDraw();
 }
 
-// コマンド実行用引数
-DrawArg::ExeDrawArg DX12::GetExeDrawArg()
+//// コマンド実行用引数
+//DrawArg::ExeDrawArg DX12::GetExeDrawArg()
+//{
+//    DrawArg::ExeDrawArg arg = {};
+//
+//    arg.resourceBarrier =
+//        GetResourceBarrier();
+//
+//    return arg;
+//}
+
+
+
+//////
+Piece* DX12::GetPawn()
 {
-    DrawArg::ExeDrawArg arg = {};
-
-    arg.resourceBarrier =
-        GetResourceBarrier();
-
-    return arg;
+    return _pawn.get();
 }
-
+//////
 
 
 

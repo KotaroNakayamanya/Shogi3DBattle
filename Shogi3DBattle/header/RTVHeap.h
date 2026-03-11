@@ -12,7 +12,7 @@ class RTVHeap
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    ComPtr<ID3D12DescriptorHeap> _heap; // RTVヒープ
+    ComPtr<ID3D12DescriptorHeap> _rtvHeap; // RTVヒープ
     std::vector<ComPtr<ID3D12Resource>> _rtvs; // RTV
 
 
@@ -32,6 +32,8 @@ public:
         ID3D12Device* device,
         IDXGISwapChain4* swapChain,
         UINT buffNum);
+
+    D3D12_CPU_DESCRIPTOR_HANDLE GetRTVStartHandle(); // RTVヒープのハンドルを返す
 
     void ClearRTV(); // RTVを破棄する
 

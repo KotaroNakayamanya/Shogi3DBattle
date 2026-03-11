@@ -20,7 +20,11 @@ public:
     HRESULT CreateSwapChain( // スワップチェーン作成
         DrawArg::CreateSwapChainArg arg);
 
-    HRESULT UpdateSwapChain(UINT width, UINT height);
+    UINT GetCurrentBackBufferIdx(); // 現在のバックバッファインデックスを返す
+
+    void Flip(); // 画面フリップ
+
+    HRESULT UpdateSwapChain(UINT width, UINT height); // スワップチェーン更新
 
     IDXGISwapChain4* GetSwapChain(); // スワップチェーンを返す
 

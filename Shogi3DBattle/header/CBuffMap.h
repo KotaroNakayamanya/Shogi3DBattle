@@ -10,7 +10,8 @@ private:
 
 public:
     HRESULT MapCBuff(ID3D12Resource* _cBuff); // コンスタントバッファをマップ
-    void RotationY(float pi);
+
+    void WriteMat(DirectX::XMMATRIX mat); // 変換行列を書き込む
 
     CBuffMap();
     ~CBuffMap();

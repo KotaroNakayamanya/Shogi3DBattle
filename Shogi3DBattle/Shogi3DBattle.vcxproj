@@ -36,10 +36,14 @@
     <ClCompile Include="src\CSUHeap.cpp" />
     <ClCompile Include="src\Fence.cpp" />
     <ClCompile Include="src\GameWindow.cpp" />
+    <ClCompile Include="src\IdxBuff.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyConf.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MoveBack.cpp" />
     <ClCompile Include="src\MoveForward.cpp" />
+    <ClCompile Include="src\MoveLeft.cpp" />
+    <ClCompile Include="src\MoveRight.cpp" />
     <ClCompile Include="src\MovingPiece.cpp" />
     <ClCompile Include="src\Pawn.cpp" />
     <ClCompile Include="src\Piece.cpp" />
@@ -50,7 +54,7 @@
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\TBuff.cpp" />
     <ClCompile Include="src\TResource.cpp" />
-    <ClCompile Include="src\Vertex.cpp" />
+    <ClCompile Include="src\VertBuff.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
@@ -72,9 +76,14 @@
     <ClInclude Include="header\CSUHeap.h" />
     <ClInclude Include="header\HeapArg.h" />
     <ClInclude Include="header\ICommand.h" />
+    <ClInclude Include="header\IdxBuff.h" />
     <ClInclude Include="header\InputHandler.h" />
     <ClInclude Include="header\KeyConf.h" />
+    <ClInclude Include="header\Move.h" />
+    <ClInclude Include="header\MoveBack.h" />
     <ClInclude Include="header\MoveForward.h" />
+    <ClInclude Include="header\MoveLeft.h" />
+    <ClInclude Include="header\MoveRight.h" />
     <ClInclude Include="header\MovingPiece.h" />
     <ClInclude Include="header\Pawn.h" />
     <ClInclude Include="header\Piece.h" />
@@ -89,7 +98,7 @@
     <ClInclude Include="header\TextureArg.h" />
     <ClInclude Include="header\TextureStruct.h" />
     <ClInclude Include="header\TResource.h" />
-    <ClInclude Include="header\Vertex.h" />
+    <ClInclude Include="header\VertBuff.h" />
     <ClInclude Include="header\VertexArg.h" />
     <ClInclude Include="header\VertexStruct.h" />
   </ItemGroup>
