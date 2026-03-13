@@ -7,21 +7,8 @@
 template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-// シェーダーオブジェクト作成
-HRESULT Device::CreateShaderObj(Shader* shaderObj)
-{
-    if (FAILED(CreateVShaderBlob(shaderObj))) goto failed; // 頂点シェーダバイナリ作成
-    if (FAILED(CreatePShaderBlob(shaderObj))) goto failed; // ピクセルシェーダバイナリ作成
-
-    return S_OK;
-
-failed:
-    assert(false);
-    return E_FAIL;
-}
-
 // 頂点シェーダバイナリ作成
-HRESULT Device::CreateVShaderBlob(Shader* shaderObj)
+HRESULT Device::CreateVShader(VShader* vShaderObj)
 {
     ComPtr<ID3DBlob> errBlob;
 
@@ -33,12 +20,12 @@ HRESULT Device::CreateVShaderBlob(Shader* shaderObj)
         "vs_5_1",
         D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
         0,
-        shaderObj->_vShaderBlob.ReleaseAndGetAddressOf(),
-        errBlob                .ReleaseAndGetAddressOf());
+        vShaderObj->_vShaderBlob.ReleaseAndGetAddressOf(),
+        errBlob                 .ReleaseAndGetAddressOf());
 }
 
 // ピクセルシェーダバイナリ作成
-HRESULT Device::CreatePShaderBlob(Shader* shaderObj)
+HRESULT Device::CreatePShader(PShader* pShaderObj)
 {
     ComPtr<ID3DBlob> errBlob;
 
@@ -50,8 +37,8 @@ HRESULT Device::CreatePShaderBlob(Shader* shaderObj)
         "ps_5_1",
         D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
         0,
-        shaderObj->_pShaderBlob.ReleaseAndGetAddressOf(),
-        errBlob                .ReleaseAndGetAddressOf());
+        pShaderObj->_pShaderBlob.ReleaseAndGetAddressOf(),
+        errBlob                 .ReleaseAndGetAddressOf());
 }
 
 

@@ -32,9 +32,8 @@ bool DX12::CreateDX12Obj(HWND hwnd)
 
     // 描画オブジェクト作成
     if (FAILED(CreateDrawObj(hwnd))) goto failed;
-
-    
-    if (FAILED(_device->CreateShaderObj(_shader.get()))) goto failed; // シェーダーバイナリオブジェクト作成
+    if (FAILED(_device->CreateVShader(_vShader.get()))) goto failed; // 頂点シェーダーバイナリオブジェクト作成
+    if (FAILED(_device->CreatePShader(_pShader.get()))) goto failed; // ピクセルシェーダーバイナリオブジェクト作成
     // 頂点集合作成
     if (FAILED(CreateVertexSets())) goto failed;
     if (FAILED(_device->CreateVertBuff(_vertBuff.get(), _pawn->GetVerticesByteSize()))) goto failed; // 頂点バッファオブジェクト作成
@@ -185,14 +184,6 @@ DXGI_SAMPLE_DESC DX12::GetSampleDesc()
     return desc;
 }
 
-//// 頂点バッファオブジェクト作成
-//HRESULT DX12::CreateVertBuffObj()
-//{
-//    _vertBuff = std::make_unique<VertBuff>();
-//    return _vertBuff->CreateVertBuff(
-//        _device->GetDevice(), _pawn->GetVerticesByteSize());
-//}
-
 // インデックスバッファオブジェクト作成
 HRESULT DX12::CreateIdxBuffObj()
 {
@@ -226,8 +217,8 @@ PipelineArg::CreatePipelineStateArg DX12::GetCreatePipelineObjArg()
 
     arg.device = _device->GetDevice();
     arg.rootSignature = _rootSignature->GetRootSignature();
-    arg.vertexShaderBlob = _shader->GetVertexShaderBlob();
-    arg.pixelShaderBlob  = _shader->GetPixelShaderBlob();
+    arg.vertexShaderBlob = _vShader->GetVShaderBlob();
+    arg.pixelShaderBlob  = _pShader->GetPShaderBlob();
     arg.sampleDesc = GetSampleDesc();
 
     return arg;
@@ -368,7 +359,8 @@ DX12::DX12() {
 
     _adapter = std::make_unique<Adapter>();
     _device = std::make_unique<Device>();
-    _shader = std::make_unique<Shader>();
+    _vShader = std::make_unique<VShader>();
+    _pShader = std::make_unique<PShader>();
     _vertBuff = std::make_unique<VertBuff>();
 }
 

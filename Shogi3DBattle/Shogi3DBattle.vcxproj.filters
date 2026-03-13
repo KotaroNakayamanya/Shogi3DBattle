@@ -252,9 +252,6 @@
     <ClCompile Include="src\Pipeline.cpp">
       <Filter>ソース ファイル\dx12\pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader.cpp">
-      <Filter>ソース ファイル\dx12\shader</Filter>
-    </ClCompile>
     <ClCompile Include="src\VertBuff.cpp">
       <Filter>ソース ファイル\dx12\vertex</Filter>
     </ClCompile>
@@ -287,6 +284,12 @@
     </ClCompile>
     <ClCompile Include="src\ViewRotation.cpp">
       <Filter>ソース ファイル\mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PShader.cpp">
+      <Filter>ソース ファイル\dx12\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VShader.cpp">
+      <Filter>ソース ファイル\dx12\shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -407,9 +410,6 @@
     <ClInclude Include="header\RootSignature.h">
       <Filter>ヘッダー ファイル\DX12\root_signature</Filter>
     </ClInclude>
-    <ClInclude Include="header\Shader.h">
-      <Filter>ヘッダー ファイル\DX12\shader</Filter>
-    </ClInclude>
     <ClInclude Include="header\VertBuff.h">
       <Filter>ヘッダー ファイル\DX12\vertex</Filter>
     </ClInclude>
@@ -445,6 +445,12 @@
     </ClInclude>
     <ClInclude Include="header\Vertex.h">
       <Filter>ヘッダー ファイル\shogi_obj</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PShader.h">
+      <Filter>ヘッダー ファイル\DX12\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="header\VShader.h">
+      <Filter>ヘッダー ファイル\DX12\shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

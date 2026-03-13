@@ -5,7 +5,9 @@
 #include"DXGIFactory.h"
 #include"Adapter.h"
 #include"Device.h"
-#include"Shader.h"
+//#include"Shader.h"
+#include"VShader.h"
+#include"PShader.h"
 #include"TBuff.h"
 #include"TResource.h"
 #include"Draw.h"
@@ -46,7 +48,8 @@ private:
     DrawArg::CreateDrawObjArg // 描画オブジェクト作成用引数
         GetCreateDrawObjArg(HWND hwnd);
 
-    std::unique_ptr<Shader> _shader; // シェーダーオブジェクト
+    std::unique_ptr<VShader> _vShader; // 頂点シェーダーオブジェクト
+    std::unique_ptr<PShader> _pShader; // ピクセルシェーダーオブジェクト
     std::unique_ptr<VertBuff> _vertBuff; // 頂点バッファオブジェクト
 
     std::unique_ptr<IdxBuff> _idxBuff; // インデックスバッファオブジェクト

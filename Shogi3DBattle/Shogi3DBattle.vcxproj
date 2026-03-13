@@ -51,9 +51,9 @@
     <ClCompile Include="src\Piece.cpp" />
     <ClCompile Include="src\Pipeline.cpp" />
     <ClCompile Include="src\ProjMat.cpp" />
+    <ClCompile Include="src\PShader.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\RTVHeap.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\ShogiObj.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\TBuff.cpp" />
@@ -62,6 +62,7 @@
     <ClCompile Include="src\Vertex.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
     <ClCompile Include="src\ViewRotation.cpp" />
+    <ClCompile Include="src\VShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
@@ -101,10 +102,10 @@
     <ClInclude Include="header\Pipeline.h" />
     <ClInclude Include="header\PipelineArg.h" />
     <ClInclude Include="header\ProjMat.h" />
+    <ClInclude Include="header\PShader.h" />
     <ClInclude Include="header\RootSignature.h" />
     <ClInclude Include="header\RTVHeap.h" />
     <ClInclude Include="header\ISceneState.h" />
-    <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\ShogiObj.h" />
     <ClInclude Include="header\SwapChain.h" />
     <ClInclude Include="header\TBuff.h" />
@@ -116,6 +117,7 @@
     <ClInclude Include="header\VertexArg.h" />
     <ClInclude Include="header\VertexStruct.h" />
     <ClInclude Include="header\ViewMat.h" />
+    <ClInclude Include="header\VShader.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\PixelShader.hlsl">

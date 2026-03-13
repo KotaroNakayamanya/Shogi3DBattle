@@ -3,7 +3,7 @@
 #include<d3dcompiler.h>
 #include<wrl.h>
 
-class Shader
+class PShader
 {
     friend class Device; // DirectX3Dデバイス参照可能
     
@@ -11,13 +11,11 @@ class Shader
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    ComPtr<ID3DBlob> _vShaderBlob; // 頂点シェーダーバイナリオブジェクト
     ComPtr<ID3DBlob> _pShaderBlob; // ピクセルシェーダバイナリオブジェクト
 
 public:
-    ID3DBlob* GetVertexShaderBlob(); // 頂点シェーダーバイナリを渡す
-    ID3DBlob* GetPixelShaderBlob();  // ピクセルシェーダーバイナリを渡す
+    ID3DBlob* GetPShaderBlob();  // ピクセルシェーダーバイナリを渡す
 
-    Shader();
-    ~Shader();
+    PShader();
+    ~PShader();
 };
