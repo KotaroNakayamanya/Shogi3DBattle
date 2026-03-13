@@ -1,7 +1,7 @@
 #include"ConstBuffMap.h"
 
 // コンスタントバッファをマップ
-HRESULT ConstBuffMap::MapCBuff(ID3D12Resource* _constBuff)
+HRESULT ConstBuffMap::MapConstBuff(ID3D12Resource* _constBuff)
 {
     return _constBuff->Map(0, nullptr, (void**)&_constBuffMap);
 }

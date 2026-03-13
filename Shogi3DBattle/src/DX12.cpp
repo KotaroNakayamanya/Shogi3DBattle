@@ -44,10 +44,12 @@ bool DX12::CreateDX12Obj(HWND hwnd)
     
     if (FAILED(_device->CreateTexBuff(_texBuff.get()))) goto failed; // テクスチャオブジェクト作成
     if (FAILED(_device->CreateConstBuff(_constBuff.get(), _pawn->GetVerticesByteSize()))) goto failed; // コンスタントバッファオブジェクト作成
-    // コンスタントバッファマップオブジェクト作成
-    if (FAILED(CreateCBuffMapObj())) goto failed;
+
+    if (FAILED(_constBuffMap->MapConstBuff(_constBuff->GetBuff()))) goto failed; // コンスタントバッファをマップ
+
     // CSUヒープオブジェクト作成
     if (FAILED(CreateCSUHeapObj())) goto failed;
+
     // ルートシグネチャオブジェクト作成
     if (FAILED(CreateRootSignatureObj())) goto failed;
     // パイプラインオブジェクト作成
@@ -141,32 +143,6 @@ HRESULT DX12::CreateVertexSets()
     _pawn = std::make_unique<Pawn>();
 
     return S_OK;
-}
-
-//// テクスチャオブジェクト作成
-//HRESULT DX12::CreateTBuffObj()
-//{
-//    _texBuff = std::make_unique<TexBuff>();
-//
-//    TextureArg::CreateTextureObjArg arg =
-//        GetCreateTBuffObjArg();
-//    
-//    return _texBuff->CreateTexBuffObj(arg);
-//}
-
-//// コンスタントオブジェクト作成
-//HRESULT DX12::CreateCBuffObj()
-//{
-//    // コンスタントバッファオブジェクト作成
-//    _constBuff = std::make_unique<ConstBuff>();
-//    return _constBuff->CreateCBuffObj(_device->GetDevice(), _pawn->GetVerticesByteSize());
-//}
-
-// コンスタントバッファマップオブジェクト作成
-HRESULT DX12::CreateCBuffMapObj()
-{
-    _constBuffMap = std::make_unique<ConstBuffMap>();
-    return _constBuffMap->MapCBuff(_constBuff->GetBuff());
 }
 
 // サンプリングディスクリプタ
@@ -345,15 +321,16 @@ DX12::DX12() {
     _viewMat = std::make_unique<ViewMat>();
     _projMat = std::make_unique<ProjMat>();
 
-    _dxgiFactory = std::make_unique<DXGIFactory>();
-    _adapter     = std::make_unique<Adapter>();
-    _device      = std::make_unique<Device>();
-    _vShader     = std::make_unique<VShader>();
-    _pShader     = std::make_unique<PShader>();
-    _vertBuff    = std::make_unique<VertBuff>();
-    _idxBuff     = std::make_unique<IdxBuff>();
-    _texBuff     = std::make_unique<TexBuff>();
-    _constBuff   = std::make_unique<ConstBuff>();
+    _dxgiFactory  = std::make_unique<DXGIFactory>();
+    _adapter      = std::make_unique<Adapter>();
+    _device       = std::make_unique<Device>();
+    _vShader      = std::make_unique<VShader>();
+    _pShader      = std::make_unique<PShader>();
+    _vertBuff     = std::make_unique<VertBuff>();
+    _idxBuff      = std::make_unique<IdxBuff>();
+    _texBuff      = std::make_unique<TexBuff>();
+    _constBuff    = std::make_unique<ConstBuff>();
+    _constBuffMap = std::make_unique<ConstBuffMap>();
 }
 
 DX12::~DX12(){}
