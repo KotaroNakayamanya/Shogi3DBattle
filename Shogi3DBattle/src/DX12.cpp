@@ -37,8 +37,7 @@ bool DX12::CreateDX12Obj(HWND hwnd)
     if (FAILED(_device->CreateShaderObj(_shader.get()))) goto failed; // シェーダーバイナリオブジェクト作成
     // 頂点集合作成
     if (FAILED(CreateVertexSets())) goto failed;
-    // 頂点バッファオブジェクト作成
-    if (FAILED(CreateVertBuffObj())) goto failed;
+    if (FAILED(_device->CreateVertBuff(_vertBuff.get(), _pawn->GetVerticesByteSize()))) goto failed; // 頂点バッファオブジェクト作成
     // インデックスオブジェクト作成
     if (FAILED(CreateIdxBuffObj())) goto failed;
     // 頂点バッファに書き込み
@@ -186,13 +185,13 @@ DXGI_SAMPLE_DESC DX12::GetSampleDesc()
     return desc;
 }
 
-// 頂点バッファオブジェクト作成
-HRESULT DX12::CreateVertBuffObj()
-{
-    _vertBuff = std::make_unique<VertBuff>();
-    return _vertBuff->CreateVertBuff(
-        _device->GetDevice(), _pawn->GetVerticesByteSize());
-}
+//// 頂点バッファオブジェクト作成
+//HRESULT DX12::CreateVertBuffObj()
+//{
+//    _vertBuff = std::make_unique<VertBuff>();
+//    return _vertBuff->CreateVertBuff(
+//        _device->GetDevice(), _pawn->GetVerticesByteSize());
+//}
 
 // インデックスバッファオブジェクト作成
 HRESULT DX12::CreateIdxBuffObj()
@@ -370,6 +369,7 @@ DX12::DX12() {
     _adapter = std::make_unique<Adapter>();
     _device = std::make_unique<Device>();
     _shader = std::make_unique<Shader>();
+    _vertBuff = std::make_unique<VertBuff>();
 }
 
 DX12::~DX12(){}
