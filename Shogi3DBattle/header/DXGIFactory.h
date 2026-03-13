@@ -1,9 +1,7 @@
 #pragma once
 
-#include<wrl.h>
-#include<vector>
-
 #include"Adapter.h"
+#include"Device.h"
 #include"SwapChain.h"
 
 #include"DXGIFactoryArg.h"
@@ -25,7 +23,7 @@ public:
     HRESULT CreateDXGIFactory(); // DXGIファクトリー作成
 
     HRESULT CreateAdapter(Adapter* adapterObj); // 使用するアダプター作成
-
+    HRESULT CreateDevice(Device* deviceObj, Adapter* adapterObj); // Direct3Dデバイス作成
     HRESULT CreateSwapChain( // スワップチェーン作成
        SwapChain* swapChainObj, DXGIFactoryArg::CreateSwapChainArg arg);
 

@@ -25,10 +25,8 @@ bool DX12::CreateDX12Obj(HWND hwnd)
 {
     // DXGIファクトリーオブジェクト作成
     if (FAILED(CreateDXGIFactoryObj())) goto failed;
-    // アダプターオブジェクト作成
-    if (FAILED(CreateAdapterObj())) goto failed;
-    // デバイスオブジェクト作成
-    if (FAILED(CreateDeviceObj())) goto failed;
+    if (FAILED(_dxgiFactory->CreateAdapter(_adapter.get()))) goto failed; // アダプターオブジェクト作成
+    if (FAILED(_dxgiFactory->CreateDevice(_device.get(), _adapter.get()))) goto failed; // デバイスオブジェクト作成
 
     _adapter.reset(); // アダプター破棄
 
@@ -36,7 +34,6 @@ bool DX12::CreateDX12Obj(HWND hwnd)
     if (FAILED(CreateDrawObj(hwnd))) goto failed;
 
     
-    //if (FAILED(CreateShaderObj())) goto failed;
     if (FAILED(_device->CreateShaderObj(_shader.get()))) goto failed; // シェーダーバイナリオブジェクト作成
     // 頂点集合作成
     if (FAILED(CreateVertexSets())) goto failed;
@@ -74,22 +71,6 @@ HRESULT DX12::CreateDXGIFactoryObj()
     _dxgiFactory = std::make_unique<DXGIFactory>();
 
     return _dxgiFactory->CreateDXGIFactory();
-}
-
-// アダプターオブジェクト作成
-HRESULT DX12::CreateAdapterObj()
-{
-    _adapter = std::make_unique<Adapter>();
-
-    return _dxgiFactory->CreateAdapter(_adapter.get());
-}
-
-// デバイスオブジェクト作成
-HRESULT DX12::CreateDeviceObj()
-{
-    _device = std::make_unique<Device>();
-    
-    return _device->CreateDevice(_adapter->GetAdapter());
 }
 
 // 描画オブジェクト作成（Drawクラス）
@@ -220,13 +201,6 @@ HRESULT DX12::CreateIdxBuffObj()
     return _idxBuff->CreateIdxBuff(
         _device->GetDevice(), _pawn->GetIndicesByteSize());
 }
-
-//// シェーダーバイナリ作成
-//HRESULT DX12::CreateShaderObj()
-//{
-//    _shader = std::make_unique<Shader>();
-//    return _shader->CreateShaderBlob();
-//}
 
 // ルートシグネチャオブジェクト作成
 HRESULT DX12::CreateRootSignatureObj()
@@ -393,6 +367,8 @@ DX12::DX12() {
     _viewMat = std::make_unique<ViewMat>();
     _projMat = std::make_unique<ProjMat>();
 
+    _adapter = std::make_unique<Adapter>();
+    _device = std::make_unique<Device>();
     _shader = std::make_unique<Shader>();
 }
 

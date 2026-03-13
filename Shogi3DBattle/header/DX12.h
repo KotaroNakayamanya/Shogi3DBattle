@@ -38,10 +38,8 @@ private:
     HRESULT CreateDXGIFactoryObj();            // DXGIファクトリ作成
 
     std::unique_ptr<Adapter> _adapter; // アダプターオブジェクト
-    HRESULT CreateAdapterObj();        // アダプターオブジェクト作成
 
     std::unique_ptr<Device> _device; // Direct3Dデバイスオブジェクト
-    HRESULT CreateDeviceObj();       // Direct3Dデバイスオブジェクト作成
 
     std::unique_ptr<Draw> _draw; // 描画オブジェクト
     HRESULT CreateDrawObj(HWND hwnd); // 描画オブジェクト作成
@@ -49,7 +47,6 @@ private:
         GetCreateDrawObjArg(HWND hwnd);
 
     std::unique_ptr<Shader> _shader; // シェーダーオブジェクト
-    //HRESULT CreateShaderObj();       // シェーダーオブジェクト作成
 
     std::unique_ptr<VertBuff> _vertBuff; // 頂点バッファオブジェクト
     HRESULT CreateVertBuffObj();         // 頂点バッファオブジェクト作成
