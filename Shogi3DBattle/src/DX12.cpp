@@ -363,16 +363,8 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBuffView()
 
 
 //////
-Piece* DX12::GetPawn()
-{
-    return _pawn.get();
-}
-
-// ビュー行列を返す
-ViewMat* DX12::GetViewMat()
-{
-    return _viewMat.get();
-}
+Piece* DX12::GetPawn(){return _pawn.get();} // 歩を返す}
+ViewMat* DX12::GetViewMat(){return _viewMat.get();} // ビュー行列を返す
 //////
 
 

@@ -1,22 +1,21 @@
 ﻿#include"Application.h"
+#include"cassert"
 
 // 初期処理
 bool Application::Init()
 {
-    // ゲームウインドウ作成
-    _gameWindow = std::make_unique<GameWindow>();
-    if(_gameWindow->CreateGameWindow() == false)
-        return false;
+    
 
-    // DirectX12オブジェクト作成
-    _dx12 = std::make_unique<DX12>();
-    if(_dx12->CreateDX12Obj(_gameWindow->GetHWND()) == false)
-        return false;
+    if(_gameWindow->CreateGameWindow() == false) goto failed;    // ゲームウインドウ作成
+    if(_dx12->CreateDX12Obj(_gameWindow->GetHWND()) == false) goto failed; // DirectX12オブジェクト作成
 
-    // インプットハンドラ作成(初期は動ける状態）
-    _inputHandler = std::make_unique<InputHandler>();
+    _inputHandler = std::make_unique<InputHandler>(); // インプットハンドラ作成(初期は動ける状態）
 
     return true;
+
+failed:
+    assert(false);
+    return false;
 }
 
 // 実行処理
@@ -56,34 +55,16 @@ void Application::Exit()
 void Application::ProcessChangeWindowSize()
 {
     // DirectX12オブジェクトへ処理を頼む
-    _dx12->ProcessChangeWindowSize(_width, _height);
+    _dx12->ProcessChangeWindowSize(_gameWindow->GetWindowWidth(), _gameWindow->GetWindowHeight());
 }
 
-DX12* Application::GetDX12()
-{
-    return _dx12.get();
-}
+GameWindow* Application::GetGameWindow(){return _gameWindow.get();} // ゲームウインドウオブジェクトを返す
+DX12* Application::GetDX12(){return _dx12.get();} // DX12オブジェクトを返す}
+InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // インプットハンドラを返す
+HWND Application::GetHWND(){return _gameWindow->GetHWND();} // ウインドウハンドルを返す
+UINT Application::GetWindowWidth(){return _gameWindow->GetWindowWidth();}   // ウインドウ横サイズを返す
+UINT Application::GetWindowHeight(){return _gameWindow->GetWindowHeight();} // ウインドウ縦サイズを返す
 
-// インプットハンドラを返す
-InputHandler* Application::GetInputHandler()
-{
-    return _inputHandler.get();
-}
-
-UINT Application::GetWindowWidth()
-{
-    return _gameWindow->GetWindowWidth();
-}
-UINT Application::GetWindowHeight()
-{
-    return _gameWindow->GetWindowHeight();
-}
-
-// ウインドウハンドルを返す
-HWND Application::GetHWND()
-{
-    return _gameWindow->GetHWND();
-}
 
 
 // シングルトンインスタンスを返す
@@ -93,7 +74,11 @@ Application& Application::GetInstance()
     return instance;
 }
 
-Application::Application(){}
+Application::Application()
+{
+    _gameWindow = std::make_unique<GameWindow>();
+    _dx12 = std::make_unique<DX12>();    
+}
 Application::~Application(){}
 
 
@@ -103,20 +88,18 @@ Application::~Application(){}
 LRESULT CALLBACK WindowProcedure(
      HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    // アプリケーションインスタンス取得
-    Application& app = Application::GetInstance();
-    // インプットハンドラ取得
-    InputHandler* inputHandler = app.GetInputHandler();
-
-
-
+    Application& app = Application::GetInstance(); // アプリケーションインスタンス取得
+    InputHandler* inputHandler = app.GetInputHandler(); // インプットハンドラ取得
+    
     static bool isCursorPositionedWindowCenter = false; // カーソル位置が画面中央にセットされているか
 
     switch(msg){
 
     case WM_GETMINMAXINFO: // ウインドウサイズ制限
     {
-        RECT windowRect = {0, 0, app.GetWindowWidth(), app.GetWindowHeight()};
+        GameWindow* gameWindow = app.GetGameWindow(); // ゲームウインドウ取得
+
+        RECT windowRect = {0, 0, gameWindow->GetWindowWidth(), gameWindow->GetWindowHeight()};
         AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, false); // クライアント領域調整
 
         UINT windowWidth = windowRect.right - windowRect.left;
@@ -129,6 +112,7 @@ LRESULT CALLBACK WindowProcedure(
             pmmi->ptMaxTrackSize.x = windowWidth;
             pmmi->ptMinTrackSize.y = windowHeight;
             pmmi->ptMaxTrackSize.y = windowHeight;
+
         }
         break;
     }
@@ -136,6 +120,7 @@ LRESULT CALLBACK WindowProcedure(
 
     case WM_ACTIVATEAPP: // ウインドウアクティブ
         isCursorPositionedWindowCenter = false; // カーソルが飛んでいる可能性があるためfalseとする
+        ClipCursor(nullptr);
         inputHandler->ClearInputMemory();
         return 0;
         
@@ -174,6 +159,7 @@ LRESULT CALLBACK WindowProcedure(
         RECT clientRect;
         GetClientRect(hwnd, &clientRect);
 
+
         int clientCenterXPos = (clientRect.right  - clientRect.left) / 2;
         int clientCenterYPos = (clientRect.bottom - clientRect.top)  / 2;
 
@@ -193,12 +179,42 @@ LRESULT CALLBACK WindowProcedure(
         POINT centerXY = {clientCenterXPos, clientCenterYPos,};
         ClientToScreen(hwnd, &centerXY);
 
+        
         SetCursorPos(centerXY.x, centerXY.y); // カーソルをウインドウ中央にセット
         isCursorPositionedWindowCenter = true; // カーソル中央をtrue
+        
+
+        // ウインドウの外側にカーソルがあっても無理矢理画面内に入れる
+        POINT nya1 = {clientRect.left, clientRect.top};
+        POINT nya2 = {clientRect.right, clientRect.bottom};
+        ClientToScreen(hwnd, &nya1);
+        ClientToScreen(hwnd, &nya2);
+        RECT rc;
+        SetRect(&rc, nya1.x, nya1.y, nya2.x, nya2.y);
+        ClipCursor(&rc);
 
 
+        // カーソルを透明に
+        BYTE AND[] = {0};
+        BYTE XOR[] = {0};
+        HCURSOR cursor;
+        cursor = CreateCursor(
+             nullptr,
+             0, // カーソル横中心点
+             0, // カーソル縦中心点
+             1, // カーソル横サイズ
+             1, // カーソル縦サイズ
+             AND,     // AND mask 
+             XOR);   // XOR mask );
+        SetCursor(cursor);
+
+        //cursor = LoadCursor(nullptr, IDC_ARROW);
+        //SetCursor(cursor);
+        
         return 0;
     }
+        
+
 
     default:
         break;

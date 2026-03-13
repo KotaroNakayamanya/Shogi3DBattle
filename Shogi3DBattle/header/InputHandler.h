@@ -33,7 +33,6 @@ public:
 
     void ClearInputMemory(); // “ü—ÍƒNƒŠƒA
 
-    //InputHandler(Piece* piece);
     InputHandler();
     ~InputHandler();
 };

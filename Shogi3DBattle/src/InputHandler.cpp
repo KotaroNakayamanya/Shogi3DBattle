@@ -83,16 +83,10 @@ void InputHandler::SetSceneState(ISceneState* sceneState)
 }
 
 
-//InputHandler::InputHandler(Piece* piece)
-//{
-//    _sceneState = std::make_unique<MovingPiece>(piece);
-//    _keyConf    = std::make_unique<KeyConf>();
-//}
 
 InputHandler::InputHandler()
 {
     Piece*   piece   = Application::GetInstance().GetDX12()->GetPawn();
-    //ViewMat* viewMat;
 
     _sceneState = std::make_unique<MovingPiece>(piece);
     _keyConf    = std::make_unique<KeyConf>();

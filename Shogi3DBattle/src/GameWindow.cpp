@@ -49,12 +49,6 @@ void GameWindow::DisplayWindow()
     ShowWindow(_hwnd, SW_SHOW);
 }
 
-// ウインドウハンドルを返す 
-HWND GameWindow::GetHWND()
-{
-    return _hwnd;
-}
-
 // クラス破棄
 void GameWindow::DestroyClass()
 {
@@ -64,20 +58,11 @@ void GameWindow::DestroyClass()
 
 
 
-// ウインドウ横サイズを返す
-UINT GameWindow::GetWindowWidth()
-{
-    return _windowWidth;
-}
-
-// ウインドウ縦サイズを返す
-UINT GameWindow::GetWindowHeight()
-{
-    return _windowHeight;
-}
-
-
-
+HWND GameWindow::GetHWND(){return _hwnd;} // ウインドウハンドルを返す 
+void GameWindow::SetWindowWidth (UINT windowWidth){_windowWidth = windowWidth;}    // ウインドウ横サイズセット
+UINT GameWindow::GetWindowWidth(){return _windowWidth;}                            // ウインドウ横サイズを返す
+void GameWindow::SetWindowHeight(UINT windowHeight){_windowHeight = windowHeight;} // ウインドウ縦サイズセット
+UINT GameWindow::GetWindowHeight(){return _windowHeight;}                          // ウインドウ縦サイズを返す
 
 GameWindow::GameWindow(){}
 GameWindow::~GameWindow(){}
