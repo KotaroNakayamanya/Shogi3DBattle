@@ -37,8 +37,7 @@ bool DX12::CreateDX12Obj(HWND hwnd)
     // 頂点集合作成
     if (FAILED(CreateVertexSets())) goto failed;
     if (FAILED(_device->CreateVertBuff(_vertBuff.get(), _pawn->GetVerticesByteSize()))) goto failed; // 頂点バッファオブジェクト作成
-    // インデックスオブジェクト作成
-    if (FAILED(CreateIdxBuffObj())) goto failed;
+    if (FAILED(_device->CreateIdxBuff (_idxBuff.get(),  _pawn->GetVerticesByteSize()))) goto failed; // インデックスバッファオブジェクト作成
     // 頂点バッファに書き込み
     if (FAILED(_vertBuff->WriteVertBuff(_pawn->GetVerticesPtr()))) goto failed;
     // インデックスバッファに書き込み
@@ -182,14 +181,6 @@ DXGI_SAMPLE_DESC DX12::GetSampleDesc()
     desc.Quality = 0; // クオリティ（0は最低）
 
     return desc;
-}
-
-// インデックスバッファオブジェクト作成
-HRESULT DX12::CreateIdxBuffObj()
-{
-    _idxBuff = std::make_unique<IdxBuff>();
-    return _idxBuff->CreateIdxBuff(
-        _device->GetDevice(), _pawn->GetIndicesByteSize());
 }
 
 // ルートシグネチャオブジェクト作成
@@ -362,6 +353,7 @@ DX12::DX12() {
     _vShader = std::make_unique<VShader>();
     _pShader = std::make_unique<PShader>();
     _vertBuff = std::make_unique<VertBuff>();
+    _idxBuff  = std::make_unique<IdxBuff>();
 }
 
 DX12::~DX12(){}

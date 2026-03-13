@@ -53,7 +53,6 @@ private:
     std::unique_ptr<VertBuff> _vertBuff; // 頂点バッファオブジェクト
 
     std::unique_ptr<IdxBuff> _idxBuff; // インデックスバッファオブジェクト
-    HRESULT CreateIdxBuffObj();       // インデックスバッファオブジェクト作成
 
     std::unique_ptr<RootSignature> _rootSignature; // ルートシグネチャオブジェクト
     HRESULT CreateRootSignatureObj();              // ルートシグネチャオブジェクト作成

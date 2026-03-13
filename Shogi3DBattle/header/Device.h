@@ -4,6 +4,7 @@
 #include"VShader.h"
 #include"PShader.h"
 #include"VertBuff.h"
+#include"IdxBuff.h"
 
 class Device
 {
@@ -22,6 +23,7 @@ public:
     HRESULT CreateVShader(VShader* vShaderObj); // 頂点シェーダーオブジェクト作成
     HRESULT CreatePShader(PShader* pShaderObj); // ピクセルシェーダーオブジェクト作成
     HRESULT CreateVertBuff(VertBuff* vertBuffObj, UINT byteSize); // 頂点バッファ作成
+    HRESULT CreateIdxBuff (IdxBuff* idxBuffObj,   UINT byteSize); // インデックスバッファ作成
 
     ID3D12Device* GetDevice(); // Direct3Dデバイスを渡す
 

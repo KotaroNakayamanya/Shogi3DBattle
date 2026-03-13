@@ -59,6 +59,22 @@ HRESULT Device::CreateVertBuff(VertBuff* vertBuffObj, UINT byteSize)
         IID_PPV_ARGS(vertBuffObj->_vertBuff.ReleaseAndGetAddressOf()));
 }
 
+// インデックスバッファ作成
+HRESULT Device::CreateIdxBuff(IdxBuff* idxBuffObj, UINT byteSize)
+{
+    D3D12_HEAP_PROPERTIES heapProp = GetHeapProp();
+    D3D12_RESOURCE_DESC resourceDesc = GetResourceDesc(byteSize);
+
+    return _device->CreateCommittedResource(
+        &heapProp,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(idxBuffObj->_idxBuff.ReleaseAndGetAddressOf()));
+
+}
+
 // ヒーププロパティ
 D3D12_HEAP_PROPERTIES Device::GetHeapProp()
 {
