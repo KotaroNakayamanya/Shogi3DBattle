@@ -5,24 +5,18 @@
 
 class Shader
 {
+    friend class Device; // DirectX3Dデバイス参照可能
+    
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    ComPtr<ID3DBlob> _vertexShaderBlob; // 頂点シェーダーバイナリオブジェクト
-    ComPtr<ID3DBlob> _pixelShaderBlob; // ピクセルシェーダバイナリオブジェクト
-
-
-    HRESULT CreateVertexShaderBlob(); // 頂点シェーダロード
-    HRESULT CreatePixelShaderBlob();  // ピクセルシェーダロード
+    ComPtr<ID3DBlob> _vShaderBlob; // 頂点シェーダーバイナリオブジェクト
+    ComPtr<ID3DBlob> _pShaderBlob; // ピクセルシェーダバイナリオブジェクト
 
 public:
-    // シェーダーバイナリ作成
-    HRESULT CreateShaderBlob(); 
-    // 頂点シェーダーバイナリを渡す
-    ID3DBlob* GetVertexShaderBlob();
-    // ピクセルシェーダーバイナリを渡す
-    ID3DBlob* GetPixelShaderBlob();
+    ID3DBlob* GetVertexShaderBlob(); // 頂点シェーダーバイナリを渡す
+    ID3DBlob* GetPixelShaderBlob();  // ピクセルシェーダーバイナリを渡す
 
     Shader();
     ~Shader();

@@ -29,7 +29,6 @@ public:
     ISceneState* ExeRightButton()    override; // 右ボタン処理
     ISceneState* ExeMouseMove(int xMove, int yMove) override; // カーソル操作処理
 
-    //MovingPiece(Piece* piece);
     MovingPiece(Piece* piece);
     ~MovingPiece();
 };

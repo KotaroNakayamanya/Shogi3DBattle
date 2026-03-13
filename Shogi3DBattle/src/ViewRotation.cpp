@@ -25,5 +25,4 @@ ViewRotation::ViewRotation(ViewMat* viewMat)
 {
     _viewMat = viewMat;
 }
-//ViewRotation::ViewRotation(){}
 ViewRotation::~ViewRotation(){}

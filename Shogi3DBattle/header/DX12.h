@@ -49,7 +49,7 @@ private:
         GetCreateDrawObjArg(HWND hwnd);
 
     std::unique_ptr<Shader> _shader; // シェーダーオブジェクト
-    HRESULT CreateShaderObj();       // シェーダーオブジェクト作成
+    //HRESULT CreateShaderObj();       // シェーダーオブジェクト作成
 
     std::unique_ptr<VertBuff> _vertBuff; // 頂点バッファオブジェクト
     HRESULT CreateVertBuffObj();         // 頂点バッファオブジェクト作成

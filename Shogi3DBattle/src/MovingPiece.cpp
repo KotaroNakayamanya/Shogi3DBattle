@@ -67,7 +67,7 @@ MovingPiece::MovingPiece(Piece* piece)
     _moveBack    = std::make_unique<MoveBack>(piece);
     _moveRight   = std::make_unique<MoveRight>(piece);
 
-    ViewMat* viewMat = app.GetDX12()->GetViewMat();
+    ViewMat* viewMat = app.GetViewMat();
     _mouseMove   = std::make_unique<ViewRotation>(viewMat);
 
     

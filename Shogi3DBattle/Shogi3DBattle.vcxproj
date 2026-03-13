@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cpp\ViewRotation.cpp" />
     <ClCompile Include="header\DrawArg.h" />
     <ClCompile Include="header\ViewRotation.h" />
     <ClCompile Include="src\Adapter.cpp" />
@@ -55,12 +54,14 @@
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\RTVHeap.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\ShogiObj.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\TBuff.cpp" />
     <ClCompile Include="src\TResource.cpp" />
     <ClCompile Include="src\VertBuff.cpp" />
     <ClCompile Include="src\Vertex.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
+    <ClCompile Include="src\ViewRotation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
@@ -104,6 +105,7 @@
     <ClInclude Include="header\RTVHeap.h" />
     <ClInclude Include="header\ISceneState.h" />
     <ClInclude Include="header\Shader.h" />
+    <ClInclude Include="header\ShogiObj.h" />
     <ClInclude Include="header\SwapChain.h" />
     <ClInclude Include="header\TBuff.h" />
     <ClInclude Include="header\TextureArg.h" />

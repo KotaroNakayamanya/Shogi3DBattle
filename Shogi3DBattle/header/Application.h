@@ -3,13 +3,15 @@
 #include"GameWindow.h"
 #include"DX12.h"
 #include"InputHandler.h"
+#include"ShogiObj.h"
 
 class Application
 {
 private:
     std::unique_ptr<GameWindow> _gameWindow; // ゲームウインドウオブジェクト
     std::unique_ptr<DX12> _dx12; // DX12オブジェクト
-    std::unique_ptr<InputHandler> _inputHandler; // インプットハンドラ
+    //std::unique_ptr<ShogiObj> _shogi; // 将棋オブジェクト
+    std::unique_ptr<InputHandler> _inputHandler; // インプットハンドラオブジェクト
 
     Application(); // デフォルトコンストラクタ禁止
     Application(const Application&) = delete; // コピー禁止
@@ -29,7 +31,7 @@ public:
     UINT GetWindowWidth();  // ウインドウ横サイズを返す
     UINT GetWindowHeight(); // ウインドウ縦サイズを返す
     
-    ViewMat* GetViewMat;
+    ViewMat* GetViewMat();
 
     void ProcessChangeWindowSize(); // 画面サイズ変更処理
 

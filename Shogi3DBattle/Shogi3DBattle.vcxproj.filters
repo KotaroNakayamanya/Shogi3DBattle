@@ -133,29 +133,29 @@
     <Filter Include="ヘッダー ファイル\DX12\vertex">
       <UniqueIdentifier>{c0680ff0-3293-4293-86a1-750dfae9104f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\shogi_object">
-      <UniqueIdentifier>{1d831363-e1a4-4b1f-9d15-cf0fc9915b12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\shogi_object\piece">
-      <UniqueIdentifier>{3d481703-f3c4-41a4-b0ea-af4422b539b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\shogi_object\board">
-      <UniqueIdentifier>{dca7bc76-6bfd-47e8-b136-fe2cf963029c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\shogi_object">
-      <UniqueIdentifier>{24c688ce-29a1-456a-8d9d-779860539e89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\shogi_object\piece">
-      <UniqueIdentifier>{2bd42877-1574-4e0f-a8f7-2818e3cb5618}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\shogi_object\board">
-      <UniqueIdentifier>{87a704ed-e82c-4da5-8b2a-c2805a1f4977}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\mouse">
       <UniqueIdentifier>{4432fb4b-b6dc-4503-bd59-b99cd6648243}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\mouse">
       <UniqueIdentifier>{b76c6a0a-e60e-43d5-8adb-0a2a34f1d0cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\shogi_obj">
+      <UniqueIdentifier>{6376bcf5-0473-4c76-b5a4-46d9742c14d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\shogi_obj\board">
+      <UniqueIdentifier>{87a704ed-e82c-4da5-8b2a-c2805a1f4977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\shogi_obj\piece">
+      <UniqueIdentifier>{2bd42877-1574-4e0f-a8f7-2818e3cb5618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\shogi_obj">
+      <UniqueIdentifier>{1d831363-e1a4-4b1f-9d15-cf0fc9915b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\shogi_obj\piece">
+      <UniqueIdentifier>{3d481703-f3c4-41a4-b0ea-af4422b539b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\shogi_obj\board">
+      <UniqueIdentifier>{dca7bc76-6bfd-47e8-b136-fe2cf963029c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -202,10 +202,10 @@
       <Filter>ソース ファイル\command</Filter>
     </ClCompile>
     <ClCompile Include="src\Piece.cpp">
-      <Filter>ソース ファイル\shogi_object\piece</Filter>
+      <Filter>ソース ファイル\shogi_obj\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\Pawn.cpp">
-      <Filter>ソース ファイル\shogi_object\piece</Filter>
+      <Filter>ソース ファイル\shogi_obj\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\TBuff.cpp">
       <Filter>ソース ファイル\dx12\csu\texture</Filter>
@@ -262,10 +262,10 @@
       <Filter>ソース ファイル\dx12\vertex</Filter>
     </ClCompile>
     <ClCompile Include="src\Vertex.cpp">
-      <Filter>ソース ファイル\shogi_object</Filter>
+      <Filter>ソース ファイル\shogi_obj</Filter>
     </ClCompile>
     <ClCompile Include="src\Board.cpp">
-      <Filter>ソース ファイル\shogi_object\board</Filter>
+      <Filter>ソース ファイル\shogi_obj\board</Filter>
     </ClCompile>
     <ClCompile Include="src\ViewMat.cpp">
       <Filter>ソース ファイル\dx12\csu\const</Filter>
@@ -282,7 +282,10 @@
     <ClCompile Include="header\ViewRotation.h">
       <Filter>ヘッダー ファイル\mouse</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\ViewRotation.cpp">
+    <ClCompile Include="src\ShogiObj.cpp">
+      <Filter>ソース ファイル\shogi_obj</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ViewRotation.cpp">
       <Filter>ソース ファイル\mouse</Filter>
     </ClCompile>
   </ItemGroup>
@@ -345,7 +348,7 @@
       <Filter>ヘッダー ファイル\input_handler</Filter>
     </ClInclude>
     <ClInclude Include="header\Piece.h">
-      <Filter>ヘッダー ファイル\shogi_object\piece</Filter>
+      <Filter>ヘッダー ファイル\shogi_obj\piece</Filter>
     </ClInclude>
     <ClInclude Include="header\ICommand.h">
       <Filter>ヘッダー ファイル\command</Filter>
@@ -354,7 +357,7 @@
       <Filter>ヘッダー ファイル\command</Filter>
     </ClInclude>
     <ClInclude Include="header\Pawn.h">
-      <Filter>ヘッダー ファイル\shogi_object\piece</Filter>
+      <Filter>ヘッダー ファイル\shogi_obj\piece</Filter>
     </ClInclude>
     <ClInclude Include="header\TBuff.h">
       <Filter>ヘッダー ファイル\DX12\csu\texture</Filter>
@@ -417,10 +420,7 @@
       <Filter>ヘッダー ファイル\arg</Filter>
     </ClInclude>
     <ClInclude Include="header\Board.h">
-      <Filter>ヘッダー ファイル\shogi_object\board</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Vertex.h">
-      <Filter>ヘッダー ファイル\shogi_object</Filter>
+      <Filter>ヘッダー ファイル\shogi_obj\board</Filter>
     </ClInclude>
     <ClInclude Include="header\ConstBuffMap.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -439,6 +439,12 @@
     </ClInclude>
     <ClInclude Include="header\CursorMove.h">
       <Filter>ヘッダー ファイル\mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ShogiObj.h">
+      <Filter>ヘッダー ファイル\shogi_obj</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Vertex.h">
+      <Filter>ヘッダー ファイル\shogi_obj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -58,29 +58,6 @@ void Application::ProcessChangeWindowSize()
     _dx12->ProcessChangeWindowSize(_gameWindow->GetWindowWidth(), _gameWindow->GetWindowHeight());
 }
 
-GameWindow* Application::GetGameWindow(){return _gameWindow.get();} // ゲームウインドウオブジェクトを返す
-DX12* Application::GetDX12(){return _dx12.get();} // DX12オブジェクトを返す}
-InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // インプットハンドラを返す
-HWND Application::GetHWND(){return _gameWindow->GetHWND();} // ウインドウハンドルを返す
-UINT Application::GetWindowWidth(){return _gameWindow->GetWindowWidth();}   // ウインドウ横サイズを返す
-UINT Application::GetWindowHeight(){return _gameWindow->GetWindowHeight();} // ウインドウ縦サイズを返す
-
-
-
-// シングルトンインスタンスを返す
-Application& Application::GetInstance()
-{
-    static Application instance;
-    return instance;
-}
-
-Application::Application()
-{
-    _gameWindow = std::make_unique<GameWindow>();
-    _dx12 = std::make_unique<DX12>();    
-}
-Application::~Application(){}
-
 
 
 
@@ -222,3 +199,29 @@ LRESULT CALLBACK WindowProcedure(
 
     return DefWindowProc(hwnd, msg, wParam, lParam);
 }
+
+
+
+
+GameWindow* Application::GetGameWindow(){return _gameWindow.get();} // ゲームウインドウオブジェクトを返す
+DX12* Application::GetDX12(){return _dx12.get();} // DX12オブジェクトを返す}
+InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // インプットハンドラを返す
+HWND Application::GetHWND(){return _gameWindow->GetHWND();} // ウインドウハンドルを返す
+UINT Application::GetWindowWidth(){return _gameWindow->GetWindowWidth();}   // ウインドウ横サイズを返す
+UINT Application::GetWindowHeight(){return _gameWindow->GetWindowHeight();} // ウインドウ縦サイズを返す
+ViewMat* Application::GetViewMat(){return _dx12->GetViewMat();} // ビュー行列を返す
+
+// シングルトンインスタンスを返す
+Application& Application::GetInstance()
+{
+    static Application instance;
+    return instance;
+}
+
+Application::Application()
+{
+    _gameWindow = std::make_unique<GameWindow>();
+    _dx12 = std::make_unique<DX12>();
+    //_shogi = std::make_unique<ShogiObj>();
+}
+Application::~Application(){}

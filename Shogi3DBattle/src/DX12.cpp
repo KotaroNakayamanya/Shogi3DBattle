@@ -34,8 +34,10 @@ bool DX12::CreateDX12Obj(HWND hwnd)
 
     // 描画オブジェクト作成
     if (FAILED(CreateDrawObj(hwnd))) goto failed;
-    // シェーダーバイナリオブジェクト作成
-    if (FAILED(CreateShaderObj())) goto failed;
+
+    
+    //if (FAILED(CreateShaderObj())) goto failed;
+    if (FAILED(_device->CreateShaderObj(_shader.get()))) goto failed; // シェーダーバイナリオブジェクト作成
     // 頂点集合作成
     if (FAILED(CreateVertexSets())) goto failed;
     // 頂点バッファオブジェクト作成
@@ -219,12 +221,12 @@ HRESULT DX12::CreateIdxBuffObj()
         _device->GetDevice(), _pawn->GetIndicesByteSize());
 }
 
-// シェーダーバイナリ作成
-HRESULT DX12::CreateShaderObj()
-{
-    _shader = std::make_unique<Shader>();
-    return _shader->CreateShaderBlob();
-}
+//// シェーダーバイナリ作成
+//HRESULT DX12::CreateShaderObj()
+//{
+//    _shader = std::make_unique<Shader>();
+//    return _shader->CreateShaderBlob();
+//}
 
 // ルートシグネチャオブジェクト作成
 HRESULT DX12::CreateRootSignatureObj()
@@ -390,6 +392,8 @@ DX12::DX12() {
 
     _viewMat = std::make_unique<ViewMat>();
     _projMat = std::make_unique<ProjMat>();
+
+    _shader = std::make_unique<Shader>();
 }
 
 DX12::~DX12(){}
