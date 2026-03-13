@@ -52,8 +52,8 @@ bool DX12::CreateDX12Obj(HWND hwnd)
     _device->CreateCBV(_cbv.get(), _csuHeap.get(), _constBuff.get()); // CBV作成
     _device->CreateSRV(_srv.get(), _csuHeap.get(), _texBuff.get());   // SRV作成
 
-    // ルートシグネチャオブジェクト作成
-    if (FAILED(CreateRootSignatureObj())) goto failed;
+    
+    if (FAILED(_device->CreateRootSignature(_rootSignature.get()))) goto failed; // ルートシグネチャオブジェクト作成
     // パイプラインオブジェクト作成
     if (FAILED(CreatePipelineObj())) goto failed;
 
@@ -134,14 +134,6 @@ DXGI_SAMPLE_DESC DX12::GetSampleDesc()
     desc.Quality = 0; // クオリティ（0は最低）
 
     return desc;
-}
-
-// ルートシグネチャオブジェクト作成
-HRESULT DX12::CreateRootSignatureObj()
-{
-    _rootSignature = std::make_unique<RootSignature>();
-
-    return _rootSignature->CreateRootSignatureObj(_device->GetDevice());
 }
 
 // パイプラインオブジェクト作成
@@ -301,19 +293,20 @@ DX12::DX12() {
     _viewMat = std::make_unique<ViewMat>();
     _projMat = std::make_unique<ProjMat>();
 
-    _dxgiFactory  = std::make_unique<DXGIFactory>();
-    _adapter      = std::make_unique<Adapter>();
-    _device       = std::make_unique<Device>();
-    _vShader      = std::make_unique<VShader>();
-    _pShader      = std::make_unique<PShader>();
-    _vertBuff     = std::make_unique<VertBuff>();
-    _idxBuff      = std::make_unique<IdxBuff>();
-    _texBuff      = std::make_unique<TexBuff>();
-    _constBuff    = std::make_unique<ConstBuff>();
-    _constBuffMap = std::make_unique<ConstBuffMap>();
-    _csuHeap      = std::make_unique<CSUHeap>();
-    _cbv          = std::make_unique<CBV>();
-    _srv          = std::make_unique<SRV>();
+    _dxgiFactory   = std::make_unique<DXGIFactory>();
+    _adapter       = std::make_unique<Adapter>();
+    _device        = std::make_unique<Device>();
+    _vShader       = std::make_unique<VShader>();
+    _pShader       = std::make_unique<PShader>();
+    _vertBuff      = std::make_unique<VertBuff>();
+    _idxBuff       = std::make_unique<IdxBuff>();
+    _texBuff       = std::make_unique<TexBuff>();
+    _constBuff     = std::make_unique<ConstBuff>();
+    _constBuffMap  = std::make_unique<ConstBuffMap>();
+    _csuHeap       = std::make_unique<CSUHeap>();
+    _cbv           = std::make_unique<CBV>();
+    _srv           = std::make_unique<SRV>();
+    _rootSignature = std::make_unique<RootSignature>();
 }
 
 DX12::~DX12(){}
