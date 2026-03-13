@@ -8,7 +8,7 @@
 //#include"Shader.h"
 #include"VShader.h"
 #include"PShader.h"
-#include"TBuff.h"
+#include"TexBuff.h"
 #include"TResource.h"
 #include"Draw.h"
 #include"VertBuff.h"
@@ -37,7 +37,8 @@ private:
     const int _buffNum = 2; // 描画に使用する画面数
 
     std::unique_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリーオブジェクト
-    HRESULT CreateDXGIFactoryObj();            // DXGIファクトリ作成
+    HRESULT CreateDXGIFactory(); // DXGIファクトリー作成
+    //HRESULT CreateDXGIFactoryObj();            // DXGIファクトリ作成
 
     std::unique_ptr<Adapter> _adapter; // アダプターオブジェクト
 
@@ -62,7 +63,7 @@ private:
     PipelineArg::CreatePipelineStateArg  // パイプラインオブジェクト作成用引数
         GetCreatePipelineObjArg(); 
 
-    std::unique_ptr<TBuff> _tBuff; // テクスチャバッファオブジェクト
+    std::unique_ptr<TexBuff> _tBuff; // テクスチャバッファオブジェクト
     HRESULT CreateTBuffObj();    // テクスチャバッファオブジェクト作成
     TextureArg::CreateTextureObjArg    // テクスチャバッファオブジェクト作成用引数
         GetCreateTBuffObjArg();

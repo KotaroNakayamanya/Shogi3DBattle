@@ -1,10 +1,10 @@
 #pragma once
 
-//#include"Shader.h"
 #include"VShader.h"
 #include"PShader.h"
 #include"VertBuff.h"
 #include"IdxBuff.h"
+#include"TexBuff.h"
 
 class Device
 {
@@ -24,6 +24,7 @@ public:
     HRESULT CreatePShader(PShader* pShaderObj); // ピクセルシェーダーオブジェクト作成
     HRESULT CreateVertBuff(VertBuff* vertBuffObj, UINT byteSize); // 頂点バッファ作成
     HRESULT CreateIdxBuff (IdxBuff* idxBuffObj,   UINT byteSize); // インデックスバッファ作成
+    HRESULT CreateTexBuffObj(TexBuff* texBuffObj); // テクスチャバッファオブジェクト作成
 
     ID3D12Device* GetDevice(); // Direct3Dデバイスを渡す
 

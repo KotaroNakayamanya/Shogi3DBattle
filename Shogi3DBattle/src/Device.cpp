@@ -119,6 +119,24 @@ D3D12_RESOURCE_DESC Device::GetResourceDesc(UINT byteSize)
 
 
 
+//
+//// テクスチャバッファオブジェクト作成
+//HRESULT Device::CreateTexBuffObj(TexBuff* texBuff)
+//{
+//    D3D12_HEAP_PROPERTIES heapProp = GetHeapProp();
+//    D3D12_RESOURCE_DESC resourceDesc = GetResourceDesc(arg.sampleDesc);
+// 
+//    return _device->CreateCommittedResource(
+//        &heapProp,
+//        D3D12_HEAP_FLAG_NONE,
+//        &resourceDesc,
+//        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
+//        nullptr,
+//        IID_PPV_ARGS(texBuff->_texBuff.ReleaseAndGetAddressOf()));
+//}
+
+
+
 
 // Direct3Dデバイスを渡す
 ID3D12Device* Device::GetDevice()

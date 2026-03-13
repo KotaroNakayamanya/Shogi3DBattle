@@ -5,27 +5,6 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d12.lib")
 
-// DXGIファクトリー作成
-HRESULT DXGIFactory::CreateDXGIFactory()
-{
-    HRESULT result;
-
-    // デバッグモードのときは詳細を表示させるファクトリーを使用する
-#ifdef _DEBUG
-    result = CreateDXGIFactory2(
-        DXGI_CREATE_FACTORY_DEBUG,
-        IID_PPV_ARGS(_dxgiFactory.ReleaseAndGetAddressOf()));
-#else
-    result = CreateDXGIFactory1(
-        IID_PPV_ARGS(_dxgiFactory.ReleaseAndGetAddressOf()));
-#endif
-
-    return result;
-}
-
-
-
-
 // 使用するアダプター作成
 HRESULT DXGIFactory::CreateAdapter(Adapter* adapterObj)
 {
@@ -87,40 +66,6 @@ std::vector<ComPtr<IDXGIAdapter>> DXGIFactory::GetCanUseAdapters()
     return adapters;
 }
 
-
-
-
-// Direct3Dデバイス作成
-HRESULT DXGIFactory::CreateDevice(Device* deviceObj, Adapter* adapterObj)
-{
-    std::array<D3D_FEATURE_LEVEL, 5> featureLevels = // GPU機能レベルを列挙
-    {
-        D3D_FEATURE_LEVEL_12_2,
-        D3D_FEATURE_LEVEL_12_1,
-        D3D_FEATURE_LEVEL_12_0,
-        D3D_FEATURE_LEVEL_11_1,
-        D3D_FEATURE_LEVEL_11_0
-    };
-
-    // GPU機能レベルの配列順にデバイス作成を試みる
-    HRESULT result;
-    std::find_if(featureLevels.begin(), featureLevels.end(),
-        [&deviceObj, &result, &adapterObj](D3D_FEATURE_LEVEL featureLevel)
-        {
-            result = D3D12CreateDevice(
-                adapterObj->GetAdapter(),
-                featureLevel,
-                IID_PPV_ARGS(deviceObj->_device.ReleaseAndGetAddressOf()));
-
-            return result == S_OK; // 作成できたら戻る
-        });
-
-    return result;
-}
-
-
-
-
 // スワップチェーン作成
 HRESULT DXGIFactory::CreateSwapChain(
     SwapChain* swapChainObj, DXGIFactoryArg::CreateSwapChainArg arg)
@@ -171,6 +116,37 @@ DXGI_SWAP_CHAIN_DESC1 DXGIFactory::GetSwapChainDesc(
         DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
     return desc;
+}
+
+
+
+
+// Direct3Dデバイス作成
+HRESULT DXGIFactory::CreateDevice(Device* deviceObj, Adapter* adapterObj)
+{
+    std::array<D3D_FEATURE_LEVEL, 5> featureLevels = // GPU機能レベルを列挙
+    {
+        D3D_FEATURE_LEVEL_12_2,
+        D3D_FEATURE_LEVEL_12_1,
+        D3D_FEATURE_LEVEL_12_0,
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0
+    };
+
+    // GPU機能レベルの配列順にデバイス作成を試みる
+    HRESULT result;
+    std::find_if(featureLevels.begin(), featureLevels.end(),
+        [&deviceObj, &result, &adapterObj](D3D_FEATURE_LEVEL featureLevel)
+        {
+            result = D3D12CreateDevice(
+                adapterObj->GetAdapter(),
+                featureLevel,
+                IID_PPV_ARGS(deviceObj->_device.ReleaseAndGetAddressOf()));
+
+            return result == S_OK; // 作成できたら戻る
+        });
+
+    return result;
 }
 
 

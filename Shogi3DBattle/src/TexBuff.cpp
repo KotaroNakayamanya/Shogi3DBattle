@@ -1,4 +1,4 @@
-#include"TBuff.h"
+#include"TexBuff.h"
 
 #include<vector>
 #include<cassert>
@@ -6,7 +6,7 @@
 #include "TextureStruct.h"
 
 // テクスチャバッファオブジェクト作成
-HRESULT TBuff::CreateTBuffObj(TextureArg::CreateTextureObjArg arg)
+HRESULT TexBuff::CreateTexBuffObj(TextureArg::CreateTextureObjArg arg)
 {
     D3D12_HEAP_PROPERTIES heapProp = GetHeapProp();
     D3D12_RESOURCE_DESC resourceDesc = GetResourceDesc(arg.sampleDesc);
@@ -17,11 +17,11 @@ HRESULT TBuff::CreateTBuffObj(TextureArg::CreateTextureObjArg arg)
         &resourceDesc,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
         nullptr,
-        IID_PPV_ARGS(_tBuff.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(_texBuff.ReleaseAndGetAddressOf()));
 }
 
 // テクスチャヒーププロパティ
-D3D12_HEAP_PROPERTIES TBuff::GetHeapProp()
+D3D12_HEAP_PROPERTIES TexBuff::GetHeapProp()
 {
     D3D12_HEAP_PROPERTIES prop = {};
 
@@ -40,7 +40,7 @@ D3D12_HEAP_PROPERTIES TBuff::GetHeapProp()
 }
 
 // テクスチャリソースディスクリプタ
-D3D12_RESOURCE_DESC TBuff::GetResourceDesc(DXGI_SAMPLE_DESC sampleDesc)
+D3D12_RESOURCE_DESC TexBuff::GetResourceDesc(DXGI_SAMPLE_DESC sampleDesc)
 {
     D3D12_RESOURCE_DESC desc = {};
 
@@ -66,14 +66,7 @@ D3D12_RESOURCE_DESC TBuff::GetResourceDesc(DXGI_SAMPLE_DESC sampleDesc)
     return desc;
 }
 
+ID3D12Resource* TexBuff::GetTexBuff(){return _texBuff.Get();} // バッファを渡す
 
-
-
-// バッファを渡す
-ID3D12Resource* TBuff::GetTBuff(){return _tBuff.Get();}
-
-
-
-
-TBuff::TBuff(){}
-TBuff::~TBuff(){}
+TexBuff::TexBuff(){}
+TexBuff::~TexBuff(){}

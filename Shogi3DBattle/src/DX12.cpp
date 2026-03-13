@@ -23,8 +23,7 @@ namespace {
 // DirectX12初期設定
 bool DX12::CreateDX12Obj(HWND hwnd)
 {
-    // DXGIファクトリーオブジェクト作成
-    if (FAILED(CreateDXGIFactoryObj())) goto failed;
+    if (FAILED(CreateDXGIFactory())) goto failed; // DXGIファクトリーオブジェクト作成
     if (FAILED(_dxgiFactory->CreateAdapter(_adapter.get()))) goto failed; // アダプターオブジェクト作成
     if (FAILED(_dxgiFactory->CreateDevice(_device.get(), _adapter.get()))) goto failed; // デバイスオブジェクト作成
 
@@ -38,10 +37,10 @@ bool DX12::CreateDX12Obj(HWND hwnd)
     if (FAILED(CreateVertexSets())) goto failed;
     if (FAILED(_device->CreateVertBuff(_vertBuff.get(), _pawn->GetVerticesByteSize()))) goto failed; // 頂点バッファオブジェクト作成
     if (FAILED(_device->CreateIdxBuff (_idxBuff.get(),  _pawn->GetVerticesByteSize()))) goto failed; // インデックスバッファオブジェクト作成
-    // 頂点バッファに書き込み
-    if (FAILED(_vertBuff->WriteVertBuff(_pawn->GetVerticesPtr()))) goto failed;
-    // インデックスバッファに書き込み
-    if (FAILED(_idxBuff->WriteIdxBuff(_pawn->GetIndicesPtr()))) goto failed;
+    
+    if (FAILED(_vertBuff->WriteVertBuff(_pawn->GetVerticesPtr()))) goto failed; // 頂点バッファに書き込み
+    if (FAILED(_idxBuff->WriteIdxBuff  (_pawn->GetIndicesPtr())))  goto failed; // インデックスバッファに書き込み
+
     // テクスチャオブジェクト作成
     if (FAILED(CreateTBuffObj())) goto failed;
     // コンスタントバッファオブジェクト作成
@@ -62,12 +61,30 @@ failed:
     return false;
 }
 
-// DXGIファクトリオブジェクト作成
-HRESULT DX12::CreateDXGIFactoryObj()
-{
-    _dxgiFactory = std::make_unique<DXGIFactory>();
+//// DXGIファクトリオブジェクト作成
+//HRESULT DX12::CreateDXGIFactoryObj()
+//{
+//    _dxgiFactory = std::make_unique<DXGIFactory>();
+//
+//    return _dxgiFactory->CreateDXGIFactory();
+//}
 
-    return _dxgiFactory->CreateDXGIFactory();
+// DXGIファクトリー作成
+HRESULT DX12::CreateDXGIFactory()
+{
+    HRESULT result;
+
+    // デバッグモードのときは詳細を表示させるファクトリーを使用する
+#ifdef _DEBUG
+    result = CreateDXGIFactory2(
+        DXGI_CREATE_FACTORY_DEBUG,
+        IID_PPV_ARGS(_dxgiFactory->_dxgiFactory.ReleaseAndGetAddressOf()));
+#else
+    result = CreateDXGIFactory1(
+        IID_PPV_ARGS(_dxgiFactory->_dxgiFactory.ReleaseAndGetAddressOf()));
+#endif
+
+    return result;
 }
 
 // 描画オブジェクト作成（Drawクラス）
@@ -115,7 +132,7 @@ HeapArg::CreateCSUHeapArg DX12::GetCreateCSUHeapArg()
 
     arg.device = _device->GetDevice();
     arg.buff1 = _constBuff->GetBuff();
-    arg.buff2 = _tBuff->GetTBuff();
+    arg.buff2 = _tBuff->GetTexBuff();
   //arg.buff3 = nullptr;
 
     return arg;
@@ -138,12 +155,12 @@ HRESULT DX12::CreateVertexSets()
 // テクスチャオブジェクト作成
 HRESULT DX12::CreateTBuffObj()
 {
-    _tBuff = std::make_unique<TBuff>();
+    _tBuff = std::make_unique<TexBuff>();
 
     TextureArg::CreateTextureObjArg arg =
         GetCreateTBuffObjArg();
     
-    return _tBuff->CreateTBuffObj(arg);
+    return _tBuff->CreateTexBuffObj(arg);
 }
 
 // コンスタントオブジェクト作成
@@ -348,12 +365,13 @@ DX12::DX12() {
     _viewMat = std::make_unique<ViewMat>();
     _projMat = std::make_unique<ProjMat>();
 
-    _adapter = std::make_unique<Adapter>();
-    _device = std::make_unique<Device>();
-    _vShader = std::make_unique<VShader>();
-    _pShader = std::make_unique<PShader>();
-    _vertBuff = std::make_unique<VertBuff>();
-    _idxBuff  = std::make_unique<IdxBuff>();
+    _dxgiFactory = std::make_unique<DXGIFactory>();
+    _adapter     = std::make_unique<Adapter>();
+    _device      = std::make_unique<Device>();
+    _vShader     = std::make_unique<VShader>();
+    _pShader     = std::make_unique<PShader>();
+    _vertBuff    = std::make_unique<VertBuff>();
+    _idxBuff     = std::make_unique<IdxBuff>();
 }
 
 DX12::~DX12(){}
