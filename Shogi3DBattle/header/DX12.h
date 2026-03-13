@@ -38,11 +38,9 @@ private:
 
     std::unique_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリーオブジェクト
     HRESULT CreateDXGIFactory(); // DXGIファクトリー作成
-    //HRESULT CreateDXGIFactoryObj();            // DXGIファクトリ作成
 
     std::unique_ptr<Adapter> _adapter; // アダプターオブジェクト
-
-    std::unique_ptr<Device> _device; // Direct3Dデバイスオブジェクト
+    std::unique_ptr<Device>  _device; // Direct3Dデバイスオブジェクト
 
     std::unique_ptr<Draw> _draw; // 描画オブジェクト
     HRESULT CreateDrawObj(HWND hwnd); // 描画オブジェクト作成
@@ -51,9 +49,9 @@ private:
 
     std::unique_ptr<VShader> _vShader; // 頂点シェーダーオブジェクト
     std::unique_ptr<PShader> _pShader; // ピクセルシェーダーオブジェクト
-    std::unique_ptr<VertBuff> _vertBuff; // 頂点バッファオブジェクト
 
-    std::unique_ptr<IdxBuff> _idxBuff; // インデックスバッファオブジェクト
+    std::unique_ptr<VertBuff> _vertBuff; // 頂点バッファオブジェクト
+    std::unique_ptr<IdxBuff>  _idxBuff;  // インデックスバッファオブジェクト
 
     std::unique_ptr<RootSignature> _rootSignature; // ルートシグネチャオブジェクト
     HRESULT CreateRootSignatureObj();              // ルートシグネチャオブジェクト作成
@@ -63,10 +61,7 @@ private:
     PipelineArg::CreatePipelineStateArg  // パイプラインオブジェクト作成用引数
         GetCreatePipelineObjArg(); 
 
-    std::unique_ptr<TexBuff> _tBuff; // テクスチャバッファオブジェクト
-    HRESULT CreateTBuffObj();    // テクスチャバッファオブジェクト作成
-    TextureArg::CreateTextureObjArg    // テクスチャバッファオブジェクト作成用引数
-        GetCreateTBuffObjArg();
+    std::unique_ptr<TexBuff> _texBuff; // テクスチャバッファオブジェクト
 
     std::unique_ptr<ConstBuff> _constBuff; // コンスタントバッファオブジェクト
     HRESULT CreateCBuffObj();              // コンスタントバッファオブジェクト作成

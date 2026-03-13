@@ -464,9 +464,6 @@
     <ClInclude Include="header\Device.h">
       <Filter>ヘッダー ファイル\DX12\factory\device</Filter>
     </ClInclude>
-    <ClInclude Include="header\DeviceFactory.h">
-      <Filter>ヘッダー ファイル\DX12\factory\device</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\VertexShader.hlsl">

@@ -41,8 +41,8 @@ bool DX12::CreateDX12Obj(HWND hwnd)
     if (FAILED(_vertBuff->WriteVertBuff(_pawn->GetVerticesPtr()))) goto failed; // 頂点バッファに書き込み
     if (FAILED(_idxBuff->WriteIdxBuff  (_pawn->GetIndicesPtr())))  goto failed; // インデックスバッファに書き込み
 
-    // テクスチャオブジェクト作成
-    if (FAILED(CreateTBuffObj())) goto failed;
+    
+    if (FAILED(_device->CreateTexBuff(_texBuff.get()))) goto failed; // テクスチャオブジェクト作成
     // コンスタントバッファオブジェクト作成
     if (FAILED(CreateCBuffObj())) goto failed;
     // コンスタントバッファマップオブジェクト作成
@@ -132,7 +132,7 @@ HeapArg::CreateCSUHeapArg DX12::GetCreateCSUHeapArg()
 
     arg.device = _device->GetDevice();
     arg.buff1 = _constBuff->GetBuff();
-    arg.buff2 = _tBuff->GetTexBuff();
+    arg.buff2 = _texBuff->GetTexBuff();
   //arg.buff3 = nullptr;
 
     return arg;
@@ -152,16 +152,16 @@ HRESULT DX12::CreateVertexSets()
     return S_OK;
 }
 
-// テクスチャオブジェクト作成
-HRESULT DX12::CreateTBuffObj()
-{
-    _tBuff = std::make_unique<TexBuff>();
-
-    TextureArg::CreateTextureObjArg arg =
-        GetCreateTBuffObjArg();
-    
-    return _tBuff->CreateTexBuffObj(arg);
-}
+//// テクスチャオブジェクト作成
+//HRESULT DX12::CreateTBuffObj()
+//{
+//    _texBuff = std::make_unique<TexBuff>();
+//
+//    TextureArg::CreateTextureObjArg arg =
+//        GetCreateTBuffObjArg();
+//    
+//    return _texBuff->CreateTexBuffObj(arg);
+//}
 
 // コンスタントオブジェクト作成
 HRESULT DX12::CreateCBuffObj()
@@ -176,17 +176,6 @@ HRESULT DX12::CreateCBuffMapObj()
 {
     _constBuffMap = std::make_unique<ConstBuffMap>();
     return _constBuffMap->MapCBuff(_constBuff->GetBuff());
-}
-
-// テクスチャオブジェクト作成用引数
-TextureArg::CreateTextureObjArg DX12::GetCreateTBuffObjArg()
-{
-    TextureArg::CreateTextureObjArg arg = {};
-
-    arg.device = _device->GetDevice();
-    arg.sampleDesc = GetSampleDesc();
-
-    return arg;
 }
 
 // サンプリングディスクリプタ
@@ -372,6 +361,7 @@ DX12::DX12() {
     _pShader     = std::make_unique<PShader>();
     _vertBuff    = std::make_unique<VertBuff>();
     _idxBuff     = std::make_unique<IdxBuff>();
+    _texBuff     = std::make_unique<TexBuff>();
 }
 
 DX12::~DX12(){}

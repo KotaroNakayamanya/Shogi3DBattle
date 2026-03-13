@@ -47,8 +47,8 @@ HRESULT Device::CreatePShader(PShader* pShaderObj)
 // 頂点バッファ作成
 HRESULT Device::CreateVertBuff(VertBuff* vertBuffObj, UINT byteSize)
 {
-    D3D12_HEAP_PROPERTIES heapProp = GetHeapProp();
-    D3D12_RESOURCE_DESC resourceDesc = GetResourceDesc(byteSize);
+    D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
+    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(byteSize);
 
     return _device->CreateCommittedResource(
         &heapProp,
@@ -62,8 +62,8 @@ HRESULT Device::CreateVertBuff(VertBuff* vertBuffObj, UINT byteSize)
 // インデックスバッファ作成
 HRESULT Device::CreateIdxBuff(IdxBuff* idxBuffObj, UINT byteSize)
 {
-    D3D12_HEAP_PROPERTIES heapProp = GetHeapProp();
-    D3D12_RESOURCE_DESC resourceDesc = GetResourceDesc(byteSize);
+    D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
+    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(byteSize);
 
     return _device->CreateCommittedResource(
         &heapProp,
@@ -75,8 +75,8 @@ HRESULT Device::CreateIdxBuff(IdxBuff* idxBuffObj, UINT byteSize)
 
 }
 
-// ヒーププロパティ
-D3D12_HEAP_PROPERTIES Device::GetHeapProp()
+// 頂点ヒーププロパティ
+D3D12_HEAP_PROPERTIES Device::GetVertHeapProp()
 {
     D3D12_HEAP_PROPERTIES prop = {};
 
@@ -90,8 +90,8 @@ D3D12_HEAP_PROPERTIES Device::GetHeapProp()
     return prop;
 }
 
-// リソースディスクリプタ
-D3D12_RESOURCE_DESC Device::GetResourceDesc(UINT byteSize)
+// 頂点リソースディスクリプタ
+D3D12_RESOURCE_DESC Device::GetVertResourceDesc(UINT byteSize)
 {
     D3D12_RESOURCE_DESC desc = {};
 
@@ -119,20 +119,123 @@ D3D12_RESOURCE_DESC Device::GetResourceDesc(UINT byteSize)
 
 
 
-//
-//// テクスチャバッファオブジェクト作成
-//HRESULT Device::CreateTexBuffObj(TexBuff* texBuff)
+
+// テクスチャバッファオブジェクト作成
+HRESULT Device::CreateTexBuff(TexBuff* texBuff)
+{
+    D3D12_HEAP_PROPERTIES heapProp = GetTexHeapProp();
+    D3D12_RESOURCE_DESC resourceDesc = GetTexResourceDesc();
+ 
+    return _device->CreateCommittedResource(
+        &heapProp,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
+        nullptr,
+        IID_PPV_ARGS(texBuff->_texBuff.ReleaseAndGetAddressOf()));
+}
+
+// テクスチャヒーププロパティ
+D3D12_HEAP_PROPERTIES Device::GetTexHeapProp()
+{
+    D3D12_HEAP_PROPERTIES prop = {};
+
+    prop.Type =
+        D3D12_HEAP_TYPE_CUSTOM;
+    prop.CPUPageProperty =
+        D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+    prop.MemoryPoolPreference = // 転送L0
+        D3D12_MEMORY_POOL_L0;
+    prop.CreationNodeMask =
+        0;
+    prop.VisibleNodeMask =
+        0;
+
+    return prop;
+}
+
+// テクスチャリソースディスクリプタ
+D3D12_RESOURCE_DESC Device::GetTexResourceDesc()
+{
+    D3D12_RESOURCE_DESC desc = {};
+
+    desc.Dimension =
+        D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    desc.Height =
+        256;
+    desc.Width =
+        256;
+    desc.DepthOrArraySize =
+        1;
+    desc.MipLevels =
+        1;
+    desc.Format =
+        DXGI_FORMAT_R8G8B8A8_UNORM;  
+    desc.Layout =
+        D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    desc.Flags =
+        D3D12_RESOURCE_FLAG_NONE;
+    desc.SampleDesc =
+        GetSampleDesc();
+
+    return desc;
+}
+
+// サンプリングディスクリプタ
+DXGI_SAMPLE_DESC Device::GetSampleDesc()
+{
+    DXGI_SAMPLE_DESC desc = {};
+
+    desc.Count   = 1; // サンプリング数
+    desc.Quality = 0; // クオリティ（0は最低）
+
+    return desc;
+}
+
+//// テクスチャヒーププロパティ
+//D3D12_HEAP_PROPERTIES TexBuff::GetHeapProp()
 //{
-//    D3D12_HEAP_PROPERTIES heapProp = GetHeapProp();
-//    D3D12_RESOURCE_DESC resourceDesc = GetResourceDesc(arg.sampleDesc);
-// 
-//    return _device->CreateCommittedResource(
-//        &heapProp,
-//        D3D12_HEAP_FLAG_NONE,
-//        &resourceDesc,
-//        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
-//        nullptr,
-//        IID_PPV_ARGS(texBuff->_texBuff.ReleaseAndGetAddressOf()));
+//    D3D12_HEAP_PROPERTIES prop = {};
+//
+//    prop.Type =
+//        D3D12_HEAP_TYPE_CUSTOM;
+//    prop.CPUPageProperty =
+//        D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+//    prop.MemoryPoolPreference = // 転送L0
+//        D3D12_MEMORY_POOL_L0;
+//    prop.CreationNodeMask =
+//        0;
+//    prop.VisibleNodeMask =
+//        0;
+//
+//    return prop;
+//}
+//
+//// テクスチャリソースディスクリプタ
+//D3D12_RESOURCE_DESC TexBuff::GetResourceDesc(DXGI_SAMPLE_DESC sampleDesc)
+//{
+//    D3D12_RESOURCE_DESC desc = {};
+//
+//    desc.Dimension =
+//        D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+//    desc.Height =
+//        256;
+//    desc.Width =
+//        256;
+//    desc.DepthOrArraySize =
+//        1;
+//    desc.MipLevels =
+//        1;
+//    desc.Format =
+//        DXGI_FORMAT_R8G8B8A8_UNORM;  
+//    desc.Layout =
+//        D3D12_TEXTURE_LAYOUT_UNKNOWN;
+//    desc.Flags =
+//        D3D12_RESOURCE_FLAG_NONE;
+//    desc.SampleDesc =
+//        sampleDesc;
+//
+//    return desc;
 //}
 
 

@@ -75,7 +75,6 @@
     <ClInclude Include="header\ConstBuff.h" />
     <ClInclude Include="header\CursorMove.h" />
     <ClInclude Include="header\Device.h" />
-    <ClInclude Include="header\DeviceFactory.h" />
     <ClInclude Include="header\DSBuff.h" />
     <ClInclude Include="header\DSVHeap.h" />
     <ClInclude Include="header\DXGIFactoryArg.h" />
