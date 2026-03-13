@@ -43,8 +43,7 @@ bool DX12::CreateDX12Obj(HWND hwnd)
 
     
     if (FAILED(_device->CreateTexBuff(_texBuff.get()))) goto failed; // テクスチャオブジェクト作成
-    // コンスタントバッファオブジェクト作成
-    if (FAILED(CreateCBuffObj())) goto failed;
+    if (FAILED(_device->CreateConstBuff(_constBuff.get(), _pawn->GetVerticesByteSize()))) goto failed; // コンスタントバッファオブジェクト作成
     // コンスタントバッファマップオブジェクト作成
     if (FAILED(CreateCBuffMapObj())) goto failed;
     // CSUヒープオブジェクト作成
@@ -60,14 +59,6 @@ failed:
     assert(false);
     return false;
 }
-
-//// DXGIファクトリオブジェクト作成
-//HRESULT DX12::CreateDXGIFactoryObj()
-//{
-//    _dxgiFactory = std::make_unique<DXGIFactory>();
-//
-//    return _dxgiFactory->CreateDXGIFactory();
-//}
 
 // DXGIファクトリー作成
 HRESULT DX12::CreateDXGIFactory()
@@ -163,13 +154,13 @@ HRESULT DX12::CreateVertexSets()
 //    return _texBuff->CreateTexBuffObj(arg);
 //}
 
-// コンスタントオブジェクト作成
-HRESULT DX12::CreateCBuffObj()
-{
-    // コンスタントバッファオブジェクト作成
-    _constBuff = std::make_unique<ConstBuff>();
-    return _constBuff->CreateCBuffObj(_device->GetDevice(), _pawn->GetVerticesByteSize());
-}
+//// コンスタントオブジェクト作成
+//HRESULT DX12::CreateCBuffObj()
+//{
+//    // コンスタントバッファオブジェクト作成
+//    _constBuff = std::make_unique<ConstBuff>();
+//    return _constBuff->CreateCBuffObj(_device->GetDevice(), _pawn->GetVerticesByteSize());
+//}
 
 // コンスタントバッファマップオブジェクト作成
 HRESULT DX12::CreateCBuffMapObj()
@@ -362,6 +353,7 @@ DX12::DX12() {
     _vertBuff    = std::make_unique<VertBuff>();
     _idxBuff     = std::make_unique<IdxBuff>();
     _texBuff     = std::make_unique<TexBuff>();
+    _constBuff   = std::make_unique<ConstBuff>();
 }
 
 DX12::~DX12(){}
