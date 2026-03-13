@@ -54,8 +54,11 @@ bool DX12::CreateDX12Obj(HWND hwnd)
 
     
     if (FAILED(_device->CreateRootSignature(_rootSignature.get()))) goto failed; // ルートシグネチャオブジェクト作成
+    _device->CreateInputLayout(_inputLayout.get()); // 入力レイアウト作成
+
     // パイプラインオブジェクト作成
-    if (FAILED(CreatePipelineObj())) goto failed;
+    /*if (FAILED(CreatePipelineObj())) goto failed;*/
+    if (FAILED(_device->CreatePipeline(_pipeline.get(), _rootSignature.get(), _inputLayout.get(), _vShader.get(), _pShader.get()))) goto failed;
 
     return true;
 
@@ -134,30 +137,6 @@ DXGI_SAMPLE_DESC DX12::GetSampleDesc()
     desc.Quality = 0; // クオリティ（0は最低）
 
     return desc;
-}
-
-// パイプラインオブジェクト作成
-HRESULT DX12::CreatePipelineObj()
-{
-    _pipeline = std::make_unique<Pipeline>();
-
-    PipelineArg::CreatePipelineStateArg arg =
-        GetCreatePipelineObjArg();
-
-    return _pipeline->CreatePipelineState(arg);
-}
-
-PipelineArg::CreatePipelineStateArg DX12::GetCreatePipelineObjArg()
-{
-    PipelineArg::CreatePipelineStateArg arg = {};
-
-    arg.device = _device->GetDevice();
-    arg.rootSignature = _rootSignature->GetRootSignature();
-    arg.vertexShaderBlob = _vShader->GetVShaderBlob();
-    arg.pixelShaderBlob  = _pShader->GetPShaderBlob();
-    arg.sampleDesc = GetSampleDesc();
-
-    return arg;
 }
 
 
@@ -307,6 +286,8 @@ DX12::DX12() {
     _cbv           = std::make_unique<CBV>();
     _srv           = std::make_unique<SRV>();
     _rootSignature = std::make_unique<RootSignature>();
+    _inputLayout   = std::make_unique<InputLayout>();
+    _pipeline      = std::make_unique<Pipeline>();
 }
 
 DX12::~DX12(){}

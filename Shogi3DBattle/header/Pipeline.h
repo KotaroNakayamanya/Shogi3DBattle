@@ -8,6 +8,8 @@
 
 class Pipeline
 {
+    friend class Device; // Direct3Dデバイスから参照可能
+
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 private:
@@ -31,7 +33,7 @@ private:
 
 
 public:
-    HRESULT CreatePipelineState(PipelineArg::CreatePipelineStateArg arg); // パイプラインステート作成
+    //HRESULT CreatePipelineState(PipelineArg::CreatePipelineStateArg arg); // パイプラインステート作成
     ID3D12PipelineState* GetPipelineState(); // パイプラインステートを渡す
 
     Pipeline();

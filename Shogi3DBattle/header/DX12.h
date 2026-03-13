@@ -74,6 +74,9 @@ private:
     std::unique_ptr<CBV> _cbv; // コンスタントバッファビュー
     std::unique_ptr<SRV> _srv; // シェーダーリソースビュー
 
+    std::unique_ptr<InputLayout> _inputLayout; // 入力レイアウト
+
+
     std::unique_ptr<ViewMat> _viewMat;
 
     std::unique_ptr<ProjMat> _projMat;

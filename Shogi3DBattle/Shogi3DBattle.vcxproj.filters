@@ -309,6 +309,9 @@
     <ClCompile Include="src\SRV.cpp">
       <Filter>ソース ファイル\dx12\csu</Filter>
     </ClCompile>
+    <ClCompile Include="src\InputLayout.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -327,9 +330,6 @@
       <Filter>ヘッダー ファイル\arg</Filter>
     </ClInclude>
     <ClInclude Include="header\VertexArg.h">
-      <Filter>ヘッダー ファイル\arg</Filter>
-    </ClInclude>
-    <ClInclude Include="header\HeapArg.h">
       <Filter>ヘッダー ファイル\arg</Filter>
     </ClInclude>
     <ClInclude Include="header\PipelineArg.h">
@@ -475,6 +475,12 @@
     </ClInclude>
     <ClInclude Include="header\SRV.h">
       <Filter>ヘッダー ファイル\DX12\csu</Filter>
+    </ClInclude>
+    <ClInclude Include="header\InputLayout.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\HeapArg.h">
+      <Filter>ヘッダー ファイル\arg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

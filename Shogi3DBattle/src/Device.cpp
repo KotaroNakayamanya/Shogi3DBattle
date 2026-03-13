@@ -9,7 +9,7 @@ template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 // 頂点シェーダバイナリ作成
-HRESULT Device::CreateVShader(VShader* vShaderObj)
+HRESULT Device::CreateVShader(VShader* vShader)
 {
     ComPtr<ID3DBlob> errBlob;
 
@@ -21,12 +21,12 @@ HRESULT Device::CreateVShader(VShader* vShaderObj)
         "vs_5_1",
         D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
         0,
-        vShaderObj->_vShaderBlob.ReleaseAndGetAddressOf(),
-        errBlob                 .ReleaseAndGetAddressOf());
+        vShader->_vShaderBlob.ReleaseAndGetAddressOf(),
+        errBlob              .ReleaseAndGetAddressOf());
 }
 
 // ピクセルシェーダバイナリ作成
-HRESULT Device::CreatePShader(PShader* pShaderObj)
+HRESULT Device::CreatePShader(PShader* pShader)
 {
     ComPtr<ID3DBlob> errBlob;
 
@@ -38,15 +38,15 @@ HRESULT Device::CreatePShader(PShader* pShaderObj)
         "ps_5_1",
         D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
         0,
-        pShaderObj->_pShaderBlob.ReleaseAndGetAddressOf(),
-        errBlob                 .ReleaseAndGetAddressOf());
+        pShader->_pShaderBlob.ReleaseAndGetAddressOf(),
+        errBlob              .ReleaseAndGetAddressOf());
 }
 
 
 
 
 // 頂点バッファ作成
-HRESULT Device::CreateVertBuff(VertBuff* vertBuffObj, UINT byteSize)
+HRESULT Device::CreateVertBuff(VertBuff* vertBuff, UINT byteSize)
 {
     D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
     D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(byteSize);
@@ -57,11 +57,11 @@ HRESULT Device::CreateVertBuff(VertBuff* vertBuffObj, UINT byteSize)
         &resourceDesc,
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
-        IID_PPV_ARGS(vertBuffObj->_vertBuff.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(vertBuff->_vertBuff.ReleaseAndGetAddressOf()));
 }
 
 // インデックスバッファ作成
-HRESULT Device::CreateIdxBuff(IdxBuff* idxBuffObj, UINT byteSize)
+HRESULT Device::CreateIdxBuff(IdxBuff* idxBuff, UINT byteSize)
 {
     D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
     D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(byteSize);
@@ -72,7 +72,7 @@ HRESULT Device::CreateIdxBuff(IdxBuff* idxBuffObj, UINT byteSize)
         &resourceDesc,
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
-        IID_PPV_ARGS(idxBuffObj->_idxBuff.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(idxBuff->_idxBuff.ReleaseAndGetAddressOf()));
 
 }
 
@@ -197,7 +197,7 @@ DXGI_SAMPLE_DESC Device::GetSampleDesc()
 
 
 // コンスタントオブジェクト作成
-HRESULT Device::CreateConstBuff(ConstBuff* constBuffObj, UINT verticesByteSize)
+HRESULT Device::CreateConstBuff(ConstBuff* constBuff, UINT verticesByteSize)
 {
     D3D12_HEAP_PROPERTIES heapProp =
         GetConstHeapProp();
@@ -210,7 +210,7 @@ HRESULT Device::CreateConstBuff(ConstBuff* constBuffObj, UINT verticesByteSize)
         &resourceDesc,
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
-        IID_PPV_ARGS(constBuffObj->_constBuff.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(constBuff->_constBuff.ReleaseAndGetAddressOf()));
 }
 
 // ヒーププロパティ
@@ -536,9 +536,6 @@ std::vector<D3D12_STATIC_SAMPLER_DESC> Device::GetSamplerDescs(UINT samplerNum)
     return descs;
 }
 
-
-
-
 // ルートシグネチャディスクリプタのメモリ解放
 void Device::DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc)
 {
@@ -549,6 +546,216 @@ void Device::DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc)
     delete[rangesNum]  desc->pParameters->DescriptorTable.pDescriptorRanges;
     delete[paramNum]   desc->pParameters;
     delete[samplerNum] desc->pStaticSamplers;
+}
+
+
+
+
+// 入力レイアウト作成
+void Device::CreateInputLayout(InputLayout* inputLayout)
+{
+    auto& layout = inputLayout->_inputLayout;
+
+    layout.resize(3);
+
+    layout[0] =
+    { // 頂点
+        "POSITION",
+        0,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+    layout[1] =
+    { // 法線
+        "NORMAL",
+        0,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+    layout[2] = 
+    { // uv
+        "TEXCOORD",
+        0,
+        DXGI_FORMAT_R32G32_FLOAT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+}
+
+
+
+
+// パイプラインステート作成
+HRESULT Device::CreatePipeline(
+    Pipeline* pipeline,
+    RootSignature* rootSignature,
+    InputLayout* inputLayout,
+    VShader* vShader,
+    PShader* pShader)
+{
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC desc =
+        GetPipelineStateDesc(
+            rootSignature->_rootSignature.Get(),
+            inputLayout->_inputLayout,
+            vShader->_vShaderBlob.Get(),
+            pShader->_pShaderBlob.Get());
+
+    return _device->CreateGraphicsPipelineState(
+        &desc,
+        IID_PPV_ARGS(pipeline->_pipelineState.ReleaseAndGetAddressOf()));
+}
+
+// パイプラインステートディスクリプタ
+D3D12_GRAPHICS_PIPELINE_STATE_DESC Device::GetPipelineStateDesc(
+    ID3D12RootSignature* rootSignature,
+    std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout,
+    ID3DBlob* vShader,
+    ID3DBlob* pShader)
+{
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};   
+    
+    desc.pRootSignature =
+        rootSignature;
+    desc.InputLayout =
+        GetInputLayoutDesc(inputLayout);
+    desc.VS =
+        GetVertexShaderDesc(vShader);
+    desc.PS =
+        GetPixelShaderDesc(pShader);
+    desc.SampleMask =
+        D3D12_DEFAULT_SAMPLE_MASK;
+    desc.BlendState =
+        GetBlendStateDesc();
+    desc.RasterizerState =
+        GetRasterizerDesc();
+    desc.IBStripCutValue =
+        D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;
+    desc.PrimitiveTopologyType =
+        D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    desc.NumRenderTargets =
+        1;
+    desc.RTVFormats[0] =
+        DXGI_FORMAT_R8G8B8A8_UNORM;
+    desc.SampleDesc =
+        GetSampleDesc();
+    desc.DepthStencilState =
+        GetDepthStencilDesc();
+    desc.DSVFormat = // 32ビットfloat値を深度値に使用
+        DXGI_FORMAT_D32_FLOAT;
+
+    return desc;
+}
+
+// インプットレイアウトディスクリプタ
+D3D12_INPUT_LAYOUT_DESC Device::GetInputLayoutDesc(
+    std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout)
+{
+    D3D12_INPUT_LAYOUT_DESC desc = {};
+
+    desc.pInputElementDescs =
+        inputLayout.data();
+    desc.NumElements =
+        inputLayout.size();
+ 
+    return desc;
+}
+
+// 頂点シェーダディスクリプタ
+D3D12_SHADER_BYTECODE Device::GetVertexShaderDesc(
+    ID3DBlob* vertexShaderBlob)
+{
+    D3D12_SHADER_BYTECODE desc = {};
+
+    desc.pShaderBytecode =
+        vertexShaderBlob->GetBufferPointer();
+    desc.BytecodeLength =
+        vertexShaderBlob->GetBufferSize();
+
+    return desc;
+}
+
+// ピクセルシェーダディスクリプタ
+D3D12_SHADER_BYTECODE Device::GetPixelShaderDesc(
+    ID3DBlob* pixelShaderBlob)
+{
+    D3D12_SHADER_BYTECODE desc = {};
+
+    desc.pShaderBytecode =
+        pixelShaderBlob->GetBufferPointer();
+    desc.BytecodeLength =
+        pixelShaderBlob->GetBufferSize();
+
+    return desc;
+}
+
+// ブレンドステートディスクリプタ
+D3D12_BLEND_DESC Device::GetBlendStateDesc()
+{
+    D3D12_BLEND_DESC desc = {};
+
+    desc.AlphaToCoverageEnable =
+        false;
+    desc.IndependentBlendEnable =
+        false;
+    desc.RenderTarget[0] = 
+        GetRenderTargetBlendDesc();
+
+    return desc;
+}
+
+// レンダーターゲットステートディスクリプタ
+D3D12_RENDER_TARGET_BLEND_DESC Device::GetRenderTargetBlendDesc()
+{
+    D3D12_RENDER_TARGET_BLEND_DESC desc = {};
+
+    desc.BlendEnable =
+        false;
+    desc.LogicOpEnable =
+        false;
+    desc.RenderTargetWriteMask =
+        D3D12_COLOR_WRITE_ENABLE_ALL;
+
+    return desc;
+}
+
+// ラスタライザディスクリプタ
+D3D12_RASTERIZER_DESC Device::GetRasterizerDesc()
+{
+    D3D12_RASTERIZER_DESC desc = {};
+
+    desc.MultisampleEnable =
+        false;
+    desc.CullMode = // カリング　裏側は塗らない
+        D3D12_CULL_MODE_BACK;
+    desc.FillMode =
+        D3D12_FILL_MODE_SOLID;
+    desc.DepthClipEnable =
+        true;
+
+    return desc;
+}
+
+// デプスステンシルディスクリプタ
+D3D12_DEPTH_STENCIL_DESC Device::GetDepthStencilDesc()
+{
+    D3D12_DEPTH_STENCIL_DESC desc = {};
+
+    desc.DepthEnable = // デプスステンシルバッファを利用
+        true;
+    desc.DepthWriteMask = // ピクセル描画時に深度値を書き込む
+        D3D12_DEPTH_WRITE_MASK_ALL;
+    desc.DepthFunc = // 深度値が小さいほうを採用
+        D3D12_COMPARISON_FUNC_LESS;
+
+    return desc;
 }
 
 

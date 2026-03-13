@@ -41,6 +41,7 @@
     <ClCompile Include="src\GameWindow.cpp" />
     <ClCompile Include="src\IdxBuff.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
+    <ClCompile Include="src\InputLayout.cpp" />
     <ClCompile Include="src\KeyConf.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MoveBack.cpp" />
@@ -93,6 +94,7 @@
     <ClInclude Include="header\IdxBuff.h" />
     <ClInclude Include="header\IMouse.h" />
     <ClInclude Include="header\InputHandler.h" />
+    <ClInclude Include="header\InputLayout.h" />
     <ClInclude Include="header\KeyConf.h" />
     <ClInclude Include="header\Move.h" />
     <ClInclude Include="header\MoveBack.h" />

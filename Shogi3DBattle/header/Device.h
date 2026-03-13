@@ -10,6 +10,8 @@
 #include"CBV.h"
 #include"SRV.h"
 #include"RootSignature.h"
+#include"InputLayout.h"
+#include"Pipeline.h"
 
 class Device
 {
@@ -87,17 +89,40 @@ private:
     std::vector<D3D12_STATIC_SAMPLER_DESC> GetSamplerDescs(UINT samplerNum); // サンプラーディスクリプタ
     void DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc); // ディスクリプタで使用されたメモリ開放
 
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC GetPipelineStateDesc( // パイプラインステートディスクリプタ
+        ID3D12RootSignature* rootSignature,
+        std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout,
+        ID3DBlob* vShader,
+        ID3DBlob* pShader); 
+    D3D12_SHADER_BYTECODE GetVertexShaderDesc( // 頂点シェーダーディスクリプタ
+        ID3DBlob* vertexShaderBlob);
+    D3D12_SHADER_BYTECODE GetPixelShaderDesc(  // ピクセルシェーダーディスクリプタ
+        ID3DBlob* pixelShaderBlob);
+    D3D12_BLEND_DESC GetBlendStateDesc();                      // ブレンドステートディスクリプタ
+    D3D12_RENDER_TARGET_BLEND_DESC GetRenderTargetBlendDesc(); // レンダーターゲットブレンドディスクリプタ
+    D3D12_RASTERIZER_DESC GetRasterizerDesc();                 // ラスタライザディスクリプタ
+    D3D12_INPUT_LAYOUT_DESC GetInputLayoutDesc(                // インプットレイアウトディスクリプタ
+        std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout);
+    D3D12_DEPTH_STENCIL_DESC GetDepthStencilDesc(); // デプスステンシルディスクリプタ
+
 public:
-    HRESULT CreateVShader(VShader* vShaderObj); // 頂点シェーダーオブジェクト作成
-    HRESULT CreatePShader(PShader* pShaderObj); // ピクセルシェーダーオブジェクト作成
-    HRESULT CreateVertBuff(VertBuff* vertBuffObj, UINT byteSize); // 頂点バッファ作成
-    HRESULT CreateIdxBuff (IdxBuff* idxBuffObj,   UINT byteSize); // インデックスバッファ作成
-    HRESULT CreateTexBuff(TexBuff* texBuffObj); // テクスチャバッファオブジェクト作成
-    HRESULT CreateConstBuff(ConstBuff* constBuffObj, UINT byteSize); // コンスタントオブジェクト作成
+    HRESULT CreateVShader(VShader* vShader); // 頂点シェーダーオブジェクト作成
+    HRESULT CreatePShader(PShader* pShader); // ピクセルシェーダーオブジェクト作成
+    HRESULT CreateVertBuff(VertBuff* vertBuff, UINT byteSize); // 頂点バッファ作成
+    HRESULT CreateIdxBuff (IdxBuff* idxBuff,   UINT byteSize); // インデックスバッファ作成
+    HRESULT CreateTexBuff(TexBuff* texBuff); // テクスチャバッファオブジェクト作成
+    HRESULT CreateConstBuff(ConstBuff* constBuff, UINT byteSize); // コンスタントオブジェクト作成
     HRESULT CreateCSUHeap(CSUHeap* csuHeap); // CSUヒープ作成
     void CreateCBV(CBV* cbv, CSUHeap* csuHeap, ConstBuff* constBuff); // CBV作成
     void CreateSRV(SRV* srv, CSUHeap* csuHeap, TexBuff* texBuff); // SRV作成
-    HRESULT CreateRootSignature(RootSignature* rootSignature); // ルートシグネチャ作成  
+    HRESULT CreateRootSignature(RootSignature* rootSignature); // ルートシグネチャ作成
+    void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成
+    HRESULT CreatePipeline( // パイプラインステート作成
+        Pipeline* pipeline,
+        RootSignature* rootSignature,
+        InputLayout* inputLayout,
+        VShader* vShader,
+        PShader* pShader);
 
     ID3D12Device* GetDevice(); // Direct3Dデバイスを渡す
 
