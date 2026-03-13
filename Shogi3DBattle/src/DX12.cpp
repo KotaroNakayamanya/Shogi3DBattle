@@ -47,8 +47,10 @@ bool DX12::CreateDX12Obj(HWND hwnd)
 
     if (FAILED(_constBuffMap->MapConstBuff(_constBuff->GetBuff()))) goto failed; // コンスタントバッファをマップ
 
-    // CSUヒープオブジェクト作成
-    if (FAILED(CreateCSUHeapObj())) goto failed;
+    
+    if (FAILED(_device->CreateCSUHeap(_csuHeap.get()))) goto failed; // CSUヒープオブジェクト作成
+    _device->CreateCBV(_cbv.get(), _csuHeap.get(), _constBuff.get()); // CBV作成
+    _device->CreateSRV(_srv.get(), _csuHeap.get(), _texBuff.get());   // SRV作成
 
     // ルートシグネチャオブジェクト作成
     if (FAILED(CreateRootSignatureObj())) goto failed;
@@ -105,28 +107,6 @@ DrawArg::CreateDrawObjArg DX12::GetCreateDrawObjArg(HWND hwnd)
     arg.windowWidth = 1280; // 初期値
     arg.windowHeight = 720; // 初期値
     arg.buffNum = _buffNum;
-
-    return arg;
-}
-
-// ヒープ作成
-HRESULT DX12::CreateCSUHeapObj()
-{
-    _csuHeap = std::make_unique<CSUHeap>();
-
-    HeapArg::CreateCSUHeapArg arg = GetCreateCSUHeapArg();
-    return _csuHeap->CreateHeap(arg);
-}
-
-// CSVヒープ作成用引数
-HeapArg::CreateCSUHeapArg DX12::GetCreateCSUHeapArg()
-{
-    HeapArg::CreateCSUHeapArg arg = {};
-
-    arg.device = _device->GetDevice();
-    arg.buff1 = _constBuff->GetBuff();
-    arg.buff2 = _texBuff->GetTexBuff();
-  //arg.buff3 = nullptr;
 
     return arg;
 }
@@ -231,7 +211,7 @@ DrawArg::SetCommandArg DX12::GetSetCommandArg()
     arg.rootSignature =
         _rootSignature->GetRootSignature();
     arg.csuHeap
-        = _csuHeap->GetHeap();;
+        = _csuHeap->GetCSUHeap();
     arg.offset =
         _device->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     arg.topology =
@@ -331,6 +311,9 @@ DX12::DX12() {
     _texBuff      = std::make_unique<TexBuff>();
     _constBuff    = std::make_unique<ConstBuff>();
     _constBuffMap = std::make_unique<ConstBuffMap>();
+    _csuHeap      = std::make_unique<CSUHeap>();
+    _cbv          = std::make_unique<CBV>();
+    _srv          = std::make_unique<SRV>();
 }
 
 DX12::~DX12(){}

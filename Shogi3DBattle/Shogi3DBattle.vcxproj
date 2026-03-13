@@ -24,6 +24,7 @@
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Board.cpp" />
+    <ClCompile Include="src\CBV.cpp" />
     <ClCompile Include="src\ConstBuffMap.cpp" />
     <ClCompile Include="src\CommandAllocator.cpp" />
     <ClCompile Include="src\CommandList.cpp" />
@@ -55,6 +56,7 @@
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\RTVHeap.cpp" />
     <ClCompile Include="src\ShogiObj.cpp" />
+    <ClCompile Include="src\SRV.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\TexBuff.cpp" />
     <ClCompile Include="src\TResource.cpp" />
@@ -68,6 +70,7 @@
     <ClInclude Include="header\Adapter.h" />
     <ClInclude Include="header\Application.h" />
     <ClInclude Include="header\Board.h" />
+    <ClInclude Include="header\CBV.h" />
     <ClInclude Include="header\ConstBuffMap.h" />
     <ClInclude Include="header\CommandAllocator.h" />
     <ClInclude Include="header\CommandList.h" />
@@ -107,6 +110,7 @@
     <ClInclude Include="header\RTVHeap.h" />
     <ClInclude Include="header\ISceneState.h" />
     <ClInclude Include="header\ShogiObj.h" />
+    <ClInclude Include="header\SRV.h" />
     <ClInclude Include="header\SwapChain.h" />
     <ClInclude Include="header\TexBuff.h" />
     <ClInclude Include="header\TextureArg.h" />

@@ -257,6 +257,97 @@ D3D12_RESOURCE_DESC Device::GetConstResourceDesc(UINT verticesByte)
 
 
 
+// ヒープ作成
+HRESULT Device::CreateCSUHeap(CSUHeap* csuHeap)
+{
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetCSUHeapDesc();
+
+    return _device->CreateDescriptorHeap(
+        &heapDesc,
+        IID_PPV_ARGS(csuHeap->_csuHeap.ReleaseAndGetAddressOf()));    
+
+    return S_OK;
+}
+
+// ヒープディスクリプタ
+D3D12_DESCRIPTOR_HEAP_DESC Device::GetCSUHeapDesc()
+{
+    D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+
+    desc.Type = // SRV, CBV用
+        D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    desc.NodeMask =
+        0;
+    desc.NumDescriptors =
+        2;
+    desc.Flags = // シェーダから使用可能
+        D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+    return desc;
+}
+
+// CBV作成
+void Device::CreateCBV(CBV* cbv, CSUHeap* csuHeap, ConstBuff* constBuff)
+{
+    cbv->_cbvHandle = csuHeap->GetCSUHeap()->GetCPUDescriptorHandleForHeapStart();
+
+    D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = GetCBVDesc(constBuff->_constBuff.Get());
+
+    _device->CreateConstantBufferView(
+        &cbvDesc,
+        cbv->_cbvHandle);
+}
+
+// CBVディスクリプタ
+D3D12_CONSTANT_BUFFER_VIEW_DESC Device::GetCBVDesc(ID3D12Resource* constBuff) 
+{
+    D3D12_CONSTANT_BUFFER_VIEW_DESC desc = {};
+
+    desc.BufferLocation = constBuff->GetGPUVirtualAddress();
+    desc.SizeInBytes = constBuff->GetDesc().Width * constBuff->GetDesc().Height;
+
+    return desc;
+}
+
+// SRV作成
+void Device::CreateSRV(SRV* srv, CSUHeap* csuHeap, TexBuff* texBuff)
+{
+    
+    srv->_srvHandle = csuHeap->GetCSUHeap()->GetCPUDescriptorHandleForHeapStart();
+    srv->_srvHandle.ptr += _device->GetDescriptorHandleIncrementSize(
+                    D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = GetSRVDesc();
+
+    _device->CreateShaderResourceView(
+        texBuff->_texBuff.Get(),
+        &srvDesc,
+        srv->_srvHandle);
+}
+
+// SRVディスクリプタ
+D3D12_SHADER_RESOURCE_VIEW_DESC Device::GetSRVDesc()
+{
+    D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
+    desc.Format =
+        DXGI_FORMAT_R8G8B8A8_UNORM;
+    desc.Shader4ComponentMapping =
+        D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    desc.ViewDimension =
+        D3D12_SRV_DIMENSION_TEXTURE2D;
+    desc.Texture2D.MipLevels =
+        1;
+
+    return desc;
+}
+
+
+
+
+
+
+
+
 // Direct3Dデバイスを渡す
 ID3D12Device* Device::GetDevice()
 {

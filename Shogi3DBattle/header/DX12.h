@@ -5,7 +5,6 @@
 #include"DXGIFactory.h"
 #include"Adapter.h"
 #include"Device.h"
-//#include"Shader.h"
 #include"VShader.h"
 #include"PShader.h"
 #include"TexBuff.h"
@@ -17,6 +16,8 @@
 #include"ConstBuff.h"
 #include"ConstBuffMap.h"
 #include"CSUHeap.h"
+#include"CBV.h"
+#include"SRV.h"
 #include"RootSignature.h"
 #include"Pipeline.h"
 #include"ViewMat.h"
@@ -70,9 +71,8 @@ private:
     HRESULT CreateCBuffMapObj();                 // コンスタントバッファマップオブジェクト作成
 
     std::unique_ptr<CSUHeap> _csuHeap; // CSUヒープオブジェクト
-    HRESULT CreateCSUHeapObj();     // CSUヒープオブジェクト作成
-    HeapArg::CreateCSUHeapArg // CSUヒープオブジェクト作成用引数
-        GetCreateCSUHeapArg();
+    std::unique_ptr<CBV> _cbv; // コンスタントバッファビュー
+    std::unique_ptr<SRV> _srv; // シェーダーリソースビュー
 
     std::unique_ptr<ViewMat> _viewMat;
 

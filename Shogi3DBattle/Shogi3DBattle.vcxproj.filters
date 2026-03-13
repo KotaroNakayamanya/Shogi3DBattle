@@ -303,6 +303,12 @@
     <ClCompile Include="src\DXGIFactory.cpp">
       <Filter>ソース ファイル\dx12\factory\dxgi</Filter>
     </ClCompile>
+    <ClCompile Include="src\CBV.cpp">
+      <Filter>ソース ファイル\dx12\csu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SRV.cpp">
+      <Filter>ソース ファイル\dx12\csu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -463,6 +469,12 @@
     </ClInclude>
     <ClInclude Include="header\Device.h">
       <Filter>ヘッダー ファイル\DX12\factory\device</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CBV.h">
+      <Filter>ヘッダー ファイル\DX12\csu</Filter>
+    </ClInclude>
+    <ClInclude Include="header\SRV.h">
+      <Filter>ヘッダー ファイル\DX12\csu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
