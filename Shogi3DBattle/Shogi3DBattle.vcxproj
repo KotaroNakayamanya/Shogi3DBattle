@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cpp\ViewRotation.cpp" />
     <ClCompile Include="header\DrawArg.h" />
+    <ClCompile Include="header\ViewRotation.h" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Board.cpp" />
@@ -69,6 +71,7 @@
     <ClInclude Include="header\CommandList.h" />
     <ClInclude Include="header\CommandQueue.h" />
     <ClInclude Include="header\ConstBuff.h" />
+    <ClInclude Include="header\CursorMove.h" />
     <ClInclude Include="header\Device.h" />
     <ClInclude Include="header\DSBuff.h" />
     <ClInclude Include="header\DSVHeap.h" />
@@ -83,6 +86,7 @@
     <ClInclude Include="header\HeapArg.h" />
     <ClInclude Include="header\ICommand.h" />
     <ClInclude Include="header\IdxBuff.h" />
+    <ClInclude Include="header\IMouse.h" />
     <ClInclude Include="header\InputHandler.h" />
     <ClInclude Include="header\KeyConf.h" />
     <ClInclude Include="header\Move.h" />

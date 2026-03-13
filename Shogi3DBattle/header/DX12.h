@@ -120,10 +120,11 @@ public:
     void ExeDX12(); // DirectX12実行処理
 
     /// <summary>
-    Piece* GetPawn();
+    Piece* GetPawn(); // ポーンを返す
     /// </summary>
     /// <param name="width"></param>
     /// <param name="height"></param>
+    ViewMat* GetViewMat(); // ビュー行列を返す
 
     void ProcessChangeWindowSize( // ウインドウサイズ変更処理
         UINT width, UINT height);

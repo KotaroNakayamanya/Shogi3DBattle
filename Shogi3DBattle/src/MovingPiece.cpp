@@ -3,6 +3,8 @@
 #include"MoveLeft.h"
 #include"MoveBack.h"
 #include"MoveRight.h"
+#include"ViewRotation.h"
+#include"Application.h"
 
 // 決定ボタン処理
 ISceneState* MovingPiece::ExeDecisionButton()
@@ -13,12 +15,7 @@ ISceneState* MovingPiece::ExeDecisionButton()
 // キャンセルボタン処理
 ISceneState* MovingPiece::ExeCancelButton()
 {
-    return this;
-}
-
-// カーソル操作処理
-ISceneState* MovingPiece::ExeCursorOperation()
-{
+    DestroyWindow(_hwnd);
     return this;
 }
 
@@ -49,16 +46,31 @@ ISceneState* MovingPiece::ExeRightButton()
     return this;
 }
 
+// カーソル操作処理
+ISceneState* MovingPiece::ExeMouseMove(int xMove, int yMove)
+{
+    _mouseMove->Exe(xMove, yMove);
+    return this;
+}
 
 
 
-
-MovingPiece::~MovingPiece(){}
 
 MovingPiece::MovingPiece(Piece* piece)
 {
-    _moveForward.reset(new MoveForward(piece));
-    _moveLeft   .reset(new MoveLeft   (piece));
-    _moveBack   .reset(new MoveBack   (piece));
-    _moveRight  .reset(new MoveRight  (piece));
+    Application& app = Application::GetInstance();
+
+    _hwnd = app.GetHWND();
+   
+    _moveForward = std::make_unique<MoveForward>(piece);
+    _moveLeft    = std::make_unique<MoveLeft>(piece);
+    _moveBack    = std::make_unique<MoveBack>(piece);
+    _moveRight   = std::make_unique<MoveRight>(piece);
+
+    ViewMat* viewMat = app.GetDX12()->GetViewMat();
+    _mouseMove   = std::make_unique<ViewRotation>(viewMat);
+
+    
 }
+
+MovingPiece::~MovingPiece(){}

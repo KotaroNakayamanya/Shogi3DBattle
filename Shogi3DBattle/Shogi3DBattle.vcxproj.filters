@@ -151,6 +151,12 @@
     <Filter Include="ヘッダー ファイル\shogi_object\board">
       <UniqueIdentifier>{87a704ed-e82c-4da5-8b2a-c2805a1f4977}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\mouse">
+      <UniqueIdentifier>{4432fb4b-b6dc-4503-bd59-b99cd6648243}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\mouse">
+      <UniqueIdentifier>{b76c6a0a-e60e-43d5-8adb-0a2a34f1d0cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -261,17 +267,23 @@
     <ClCompile Include="src\Board.cpp">
       <Filter>ソース ファイル\shogi_object\board</Filter>
     </ClCompile>
-    <ClCompile Include="src\ConstBuffMap.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ConstBuff.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\ViewMat.cpp">
       <Filter>ソース ファイル\dx12\csu\const</Filter>
     </ClCompile>
     <ClCompile Include="src\ProjMat.cpp">
       <Filter>ソース ファイル\dx12\csu\const</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConstBuff.cpp">
+      <Filter>ソース ファイル\dx12\csu\const</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConstBuffMap.cpp">
+      <Filter>ソース ファイル\dx12\csu\const</Filter>
+    </ClCompile>
+    <ClCompile Include="header\ViewRotation.h">
+      <Filter>ヘッダー ファイル\mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\ViewRotation.cpp">
+      <Filter>ソース ファイル\mouse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -421,6 +433,12 @@
     </ClInclude>
     <ClInclude Include="header\ProjMat.h">
       <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IMouse.h">
+      <Filter>ヘッダー ファイル\mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CursorMove.h">
+      <Filter>ヘッダー ファイル\mouse</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

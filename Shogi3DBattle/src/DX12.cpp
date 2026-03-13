@@ -367,6 +367,12 @@ Piece* DX12::GetPawn()
 {
     return _pawn.get();
 }
+
+// ビュー行列を返す
+ViewMat* DX12::GetViewMat()
+{
+    return _viewMat.get();
+}
 //////
 
 
