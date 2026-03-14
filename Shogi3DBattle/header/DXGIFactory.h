@@ -1,11 +1,10 @@
 #pragma once
 
-#include<memory>
-
-
+//#include<memory>
 #include"Adapter.h"
 #include"Device.h"
 #include"SwapChain.h"
+#include"GameWindow.h"
 
 #include"DXGIFactoryArg.h"
 
@@ -28,8 +27,12 @@ private:
 public:
     HRESULT CreateAdapter(Adapter* adapterObj); // 使用するアダプター作成
     HRESULT CreateDevice(Device* deviceObj, Adapter* adapterObj); // Direct3Dデバイス作成
+    //HRESULT CreateSwapChain(SwapChain* swapChain, DXGIFactoryArg::CreateSwapChainArg arg); // スワップチェーン作成
     HRESULT CreateSwapChain( // スワップチェーン作成
-       SwapChain* swapChainObj, DXGIFactoryArg::CreateSwapChainArg arg);
+        SwapChain* swapChain,
+        ComQueue* comQueue,
+        GameWindow* gameWindow);
+
 
 
     DXGIFactory();

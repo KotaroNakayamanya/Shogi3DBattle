@@ -22,9 +22,6 @@
     <Filter Include="ヘッダー ファイル\DX12\Draw">
       <UniqueIdentifier>{a1d326ce-5bcb-4661-9b4b-7ab29a5b5c58}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\arg">
-      <UniqueIdentifier>{25b51312-ac09-4327-bb0d-63a1e0e5aff7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\DX12\csu">
       <UniqueIdentifier>{8e35ec3d-b74e-4de4-8151-9baa1815ee54}</UniqueIdentifier>
     </Filter>
@@ -154,9 +151,6 @@
     <Filter Include="ソース ファイル\dx12\factory">
       <UniqueIdentifier>{d56446de-5916-40ca-8a50-ebdc1a846640}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\dx12\factory\device">
-      <UniqueIdentifier>{2c7af551-259d-4c5d-b4f0-2010ff7a97de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\DX12\factory">
       <UniqueIdentifier>{6d263b71-0dea-41db-9e59-bcba584d3926}</UniqueIdentifier>
     </Filter>
@@ -166,9 +160,6 @@
     <Filter Include="ヘッダー ファイル\DX12\factory\dxgi">
       <UniqueIdentifier>{ab7f19d6-8f72-4310-ba78-c38a4ef41ff9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\dx12\factory\dxgi">
-      <UniqueIdentifier>{fbbc6c2e-b223-43f9-9ec5-5021f6bf09d3}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -176,12 +167,6 @@
     </ClCompile>
     <ClCompile Include="src\DX12.cpp">
       <Filter>ソース ファイル\dx12</Filter>
-    </ClCompile>
-    <ClCompile Include="header\DrawArg.h">
-      <Filter>ヘッダー ファイル\arg</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Draw.cpp">
-      <Filter>ソース ファイル\dx12\draw</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>ソース ファイル</Filter>
@@ -191,9 +176,6 @@
     </ClCompile>
     <ClCompile Include="src\CSUHeap.cpp">
       <Filter>ソース ファイル\dx12\csu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Device.cpp">
-      <Filter>ソース ファイル\dx12\factory\device</Filter>
     </ClCompile>
     <ClCompile Include="src\GameWindow.cpp">
       <Filter>ソース ファイル\game_window</Filter>
@@ -219,15 +201,6 @@
     <ClCompile Include="src\TexBuff.cpp">
       <Filter>ソース ファイル\dx12\csu\texture</Filter>
     </ClCompile>
-    <ClCompile Include="src\TResource.cpp">
-      <Filter>ソース ファイル\dx12\csu\texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DSBuff.cpp">
-      <Filter>ソース ファイル\dx12\draw\depth_stencil</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DSVHeap.cpp">
-      <Filter>ソース ファイル\dx12\draw\depth_stencil</Filter>
-    </ClCompile>
     <ClCompile Include="src\MoveBack.cpp">
       <Filter>ソース ファイル\command</Filter>
     </ClCompile>
@@ -237,19 +210,16 @@
     <ClCompile Include="src\MoveRight.cpp">
       <Filter>ソース ファイル\command</Filter>
     </ClCompile>
-    <ClCompile Include="src\RTVHeap.cpp">
-      <Filter>ソース ファイル\dx12\draw\render_target</Filter>
-    </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>ソース ファイル\dx12\draw\render_target</Filter>
     </ClCompile>
-    <ClCompile Include="src\CommandAllocator.cpp">
+    <ClCompile Include="src\ComAllocator.cpp">
       <Filter>ソース ファイル\dx12\draw\command</Filter>
     </ClCompile>
-    <ClCompile Include="src\CommandList.cpp">
+    <ClCompile Include="src\ComList.cpp">
       <Filter>ソース ファイル\dx12\draw\command</Filter>
     </ClCompile>
-    <ClCompile Include="src\CommandQueue.cpp">
+    <ClCompile Include="src\ComQueue.cpp">
       <Filter>ソース ファイル\dx12\draw\command</Filter>
     </ClCompile>
     <ClCompile Include="src\Fence.cpp">
@@ -300,17 +270,29 @@
     <ClCompile Include="src\VShader.cpp">
       <Filter>ソース ファイル\dx12\shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\DXGIFactory.cpp">
-      <Filter>ソース ファイル\dx12\factory\dxgi</Filter>
-    </ClCompile>
     <ClCompile Include="src\CBV.cpp">
       <Filter>ソース ファイル\dx12\csu</Filter>
     </ClCompile>
     <ClCompile Include="src\SRV.cpp">
       <Filter>ソース ファイル\dx12\csu</Filter>
     </ClCompile>
-    <ClCompile Include="src\InputLayout.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="src\RTV.cpp">
+      <Filter>ソース ファイル\dx12\draw\render_target</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DSV.cpp">
+      <Filter>ソース ファイル\dx12\draw\depth_stencil</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Viewport.cpp">
+      <Filter>ソース ファイル\dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScissorRect.cpp">
+      <Filter>ソース ファイル\dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Device.cpp">
+      <Filter>ソース ファイル\dx12\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DXGIFactory.cpp">
+      <Filter>ソース ファイル\dx12\factory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -326,20 +308,8 @@
     <ClInclude Include="header\DX12.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="header\TextureArg.h">
-      <Filter>ヘッダー ファイル\arg</Filter>
-    </ClInclude>
-    <ClInclude Include="header\VertexArg.h">
-      <Filter>ヘッダー ファイル\arg</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PipelineArg.h">
-      <Filter>ヘッダー ファイル\arg</Filter>
-    </ClInclude>
     <ClInclude Include="header\Adapter.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Draw.h">
-      <Filter>ヘッダー ファイル\DX12\Draw</Filter>
     </ClInclude>
     <ClInclude Include="header\CSUHeap.h">
       <Filter>ヘッダー ファイル\DX12\csu</Filter>
@@ -380,9 +350,6 @@
     <ClInclude Include="header\TexBuff.h">
       <Filter>ヘッダー ファイル\DX12\csu\texture</Filter>
     </ClInclude>
-    <ClInclude Include="header\TResource.h">
-      <Filter>ヘッダー ファイル\DX12\csu\texture</Filter>
-    </ClInclude>
     <ClInclude Include="header\DSBuff.h">
       <Filter>ヘッダー ファイル\DX12\Draw\depth_stencil</Filter>
     </ClInclude>
@@ -407,13 +374,13 @@
     <ClInclude Include="header\SwapChain.h">
       <Filter>ヘッダー ファイル\DX12\Draw\render_target</Filter>
     </ClInclude>
-    <ClInclude Include="header\CommandAllocator.h">
+    <ClInclude Include="header\ComAllocator.h">
       <Filter>ヘッダー ファイル\DX12\Draw\command</Filter>
     </ClInclude>
-    <ClInclude Include="header\CommandList.h">
+    <ClInclude Include="header\ComList.h">
       <Filter>ヘッダー ファイル\DX12\Draw\command</Filter>
     </ClInclude>
-    <ClInclude Include="header\CommandQueue.h">
+    <ClInclude Include="header\ComQueue.h">
       <Filter>ヘッダー ファイル\DX12\Draw\command</Filter>
     </ClInclude>
     <ClInclude Include="header\Fence.h">
@@ -430,9 +397,6 @@
     </ClInclude>
     <ClInclude Include="header\IdxBuff.h">
       <Filter>ヘッダー ファイル\DX12\vertex</Filter>
-    </ClInclude>
-    <ClInclude Include="header\DXGIFactoryArg.h">
-      <Filter>ヘッダー ファイル\arg</Filter>
     </ClInclude>
     <ClInclude Include="header\Board.h">
       <Filter>ヘッダー ファイル\shogi_obj\board</Filter>
@@ -479,8 +443,17 @@
     <ClInclude Include="header\InputLayout.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="header\HeapArg.h">
-      <Filter>ヘッダー ファイル\arg</Filter>
+    <ClInclude Include="header\RTV.h">
+      <Filter>ヘッダー ファイル\DX12\Draw\render_target</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DSV.h">
+      <Filter>ヘッダー ファイル\DX12\Draw\depth_stencil</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Viewport.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ScissorRect.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

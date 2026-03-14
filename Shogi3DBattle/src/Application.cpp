@@ -7,7 +7,7 @@ bool Application::Init()
     
 
     if(_gameWindow->CreateGameWindow() == false) goto failed;    // ゲームウインドウ作成
-    if(_dx12->CreateDX12Obj(_gameWindow->GetHWND()) == false) goto failed; // DirectX12オブジェクト作成
+    if(_dx12->CreateDX12Obj(_gameWindow.get()) == false) goto failed; // DirectX12オブジェクト作成
 
     _inputHandler = std::make_unique<InputHandler>(); // インプットハンドラ作成(初期は動ける状態）
 
@@ -51,12 +51,12 @@ void Application::Exit()
 
 
 
-// 画面サイズ変更処理
-void Application::ProcessChangeWindowSize()
-{
-    // DirectX12オブジェクトへ処理を頼む
-    _dx12->ProcessChangeWindowSize(_gameWindow->GetWindowWidth(), _gameWindow->GetWindowHeight());
-}
+//// 画面サイズ変更処理
+//void Application::ProcessChangeWindowSize()
+//{
+//    // DirectX12オブジェクトへ処理を頼む
+//    _dx12->ProcessChangeWindowSize(_gameWindow->GetWindowWidth(), _gameWindow->GetWindowHeight());
+//}
 
 
 

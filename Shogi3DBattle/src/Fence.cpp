@@ -1,25 +1,8 @@
 #include"Fence.h"
 
-// フェンス作成
-HRESULT Fence::CreateFence(ID3D12Device* device)
-{
-    return device->CreateFence(
-        _fenceVal,
-        D3D12_FENCE_FLAG_NONE,
-        IID_PPV_ARGS(_fence.ReleaseAndGetAddressOf()));
-}
+ID3D12Fence* Fence::GetFence(){return _fence.Get();} // フェンスを返す
+UINT Fence::GetFenceVal(){return _fenceVal;} // フェンス値を返す
 
-// フェンスを返す
-ID3D12Fence* Fence::GetFence()
-{
-    return _fence.Get();
-}
-
-// フェンス値を返す
-UINT Fence::GetFenceVal()
-{
-    return _fenceVal;
-}
 // フェンス値をインクリメントして返す
 UINT Fence::GetIncrementFenceVal()
 {

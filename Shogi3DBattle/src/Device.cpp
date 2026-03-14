@@ -5,6 +5,266 @@
 
 #pragma comment(lib, "d3dcompiler.lib")
 
+// コマンドアロケータオブジェクト作成
+HRESULT Device::CreateComAllocator(ComAllocator* comAllocator)
+{
+    return _device->CreateCommandAllocator(
+        D3D12_COMMAND_LIST_TYPE_DIRECT,
+        IID_PPV_ARGS(comAllocator->_comAllocator.ReleaseAndGetAddressOf()));
+}
+
+
+
+
+// コマンドリスト作成
+HRESULT Device::CreateComList(ComList* comList, ComAllocator* comAllocator)
+{
+    return _device->CreateCommandList(
+        0,
+        D3D12_COMMAND_LIST_TYPE_DIRECT,
+        comAllocator->_comAllocator.Get(),
+        nullptr,
+        IID_PPV_ARGS(comList->_comList.ReleaseAndGetAddressOf()));
+}
+
+
+
+
+// コマンドキュー作成
+HRESULT Device::CreateComQueue(ComQueue* comQueue)
+{
+    D3D12_COMMAND_QUEUE_DESC commandQueueDesc = GetComQueueDesc();
+
+    return _device->CreateCommandQueue(
+        &commandQueueDesc,
+        IID_PPV_ARGS(comQueue->_comQueue.ReleaseAndGetAddressOf()));
+}
+
+// コマンドキューディスクリプタ
+D3D12_COMMAND_QUEUE_DESC Device::GetComQueueDesc()
+{
+    D3D12_COMMAND_QUEUE_DESC desc = {};
+
+    desc.Type =    // コマンドリストタイプの種類
+        D3D12_COMMAND_LIST_TYPE_DIRECT;
+    desc.Priority = // アプリケーション優先度 通常
+        D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
+    desc.Flags = // タイムアウトなし
+        D3D12_COMMAND_QUEUE_FLAG_NONE; 
+    desc.NodeMask =
+        0;
+
+    return desc;
+}
+
+
+
+
+// RTVヒープ作成
+HRESULT Device::CreateRTVHeap(RTVHeap* rtvHeap, SwapChain* swapChain)
+{
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetRTVHeapDesc(swapChain->GetRTBuffNum());
+
+    return _device->CreateDescriptorHeap(
+        &heapDesc,
+        IID_PPV_ARGS(rtvHeap->_rtvHeap.ReleaseAndGetAddressOf()));
+}
+
+// RTVヒープディスクリプタ
+D3D12_DESCRIPTOR_HEAP_DESC Device::GetRTVHeapDesc(UINT rtBuffNum)
+{
+    D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+    desc.Type = // タイプ RTV
+        D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+    desc.NodeMask =
+        0;
+    desc.NumDescriptors = // レンダーターゲットバッファ数
+        rtBuffNum;
+    desc.Flags =
+        D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+
+    return desc;
+}
+
+
+
+
+// RTV作成
+HRESULT Device::CreateRTV(RTV* rtv, RTVHeap* rtvHeap, SwapChain* swapChain, UINT i)
+{
+    HRESULT result;
+
+    result =  swapChain->GetSwapChain()->GetBuffer(
+        i, 
+        IID_PPV_ARGS(rtv->_rtv.ReleaseAndGetAddressOf()));
+    if(FAILED(result)) return result;
+
+    // RTVヒープの中のどこのアドレスに入れるか計算する
+    auto rtvHandle = rtvHeap->_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+    auto rtvOffset = _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    rtvHandle.ptr += rtvOffset * i;
+
+    _device->CreateRenderTargetView(
+        rtv->_rtv.Get(),
+        nullptr,
+        rtvHandle);
+
+    rtv->_rtvHandle = rtvHandle;
+
+    return S_OK;
+}
+
+
+
+
+// デプスステンシルバッファ作成
+HRESULT Device::CreateDSBuff(DSBuff* dsBuff, GameWindow* gameWindow)
+{
+    D3D12_HEAP_PROPERTIES heapProp =
+        GetDSHeapProp();
+    D3D12_RESOURCE_DESC resourceDesc =
+        GetDSResourceDesc(gameWindow->GetWindowWidth(), gameWindow->GetWindowHeight());
+    D3D12_CLEAR_VALUE clearValue =
+        GetClearValue();
+ 
+    return _device->CreateCommittedResource(
+        &heapProp,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE, 
+        &clearValue,
+        IID_PPV_ARGS(dsBuff->_dsBuff.ReleaseAndGetAddressOf()));
+}
+
+// デプスステンシルヒーププロパティ
+D3D12_HEAP_PROPERTIES Device::GetDSHeapProp()
+{
+    D3D12_HEAP_PROPERTIES prop = {};
+
+    prop.Type =
+        D3D12_HEAP_TYPE_DEFAULT;
+    prop.CPUPageProperty =
+        D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    prop.MemoryPoolPreference =
+        D3D12_MEMORY_POOL_UNKNOWN;
+
+    return prop;
+}
+
+// デプスステンシルリソースディスクリプタ
+D3D12_RESOURCE_DESC Device::GetDSResourceDesc(
+    UINT windowWidth, UINT windowHeight)
+{
+    D3D12_RESOURCE_DESC desc = {};
+
+    desc.Dimension =
+        D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    desc.Width =
+        windowWidth;
+    desc.Height =
+        windowHeight;
+    desc.DepthOrArraySize =
+        1;
+    desc.Format = // 深度値書き込み用
+        DXGI_FORMAT_D32_FLOAT;  
+    desc.Layout =
+        D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    desc.Flags = // デプスステンシルとして使用
+        D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+    desc.SampleDesc =
+        GetSampleDesc();
+
+    return desc;
+}
+
+// クリアバリュー
+D3D12_CLEAR_VALUE Device::GetClearValue()
+{
+    D3D12_CLEAR_VALUE clearValue = {};
+
+    clearValue.DepthStencil.Depth = // 深さの初期値を最大値に
+        1.0f;
+    clearValue.Format = // float値
+        DXGI_FORMAT_D32_FLOAT;
+
+    return clearValue;
+}
+
+
+
+
+// デプスステンシルヒープ作成
+HRESULT Device::CreateDSVHeap(DSVHeap* dsvHeap)
+{
+    D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = GetDSVHeapDesc();
+
+    return _device->CreateDescriptorHeap(
+        &dsvHeapDesc,
+        IID_PPV_ARGS(dsvHeap->_dsvHeap.ReleaseAndGetAddressOf()));
+}
+
+// DSVヒープディスクリプタ
+D3D12_DESCRIPTOR_HEAP_DESC Device::GetDSVHeapDesc()
+{
+    D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+
+    desc.NumDescriptors =
+        1;
+    desc.Type =
+        D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+
+    return desc;
+}
+
+
+
+
+// DSV作成
+void Device::CreateDSV(DSV* dsv, DSVHeap* dsvHeap, DSBuff* dsBuff)
+{
+    D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc =  GetDSVDesc();
+
+    auto dsvHandle = dsvHeap->_dsvHeap->GetCPUDescriptorHandleForHeapStart();
+
+    _device->CreateDepthStencilView(
+        dsBuff->_dsBuff.Get(),
+        &dsvDesc,
+        dsvHandle);
+
+    dsv->_dsvHandle = dsvHandle;
+}
+
+
+// DSVディスクリプタ
+D3D12_DEPTH_STENCIL_VIEW_DESC Device::GetDSVDesc()
+{
+    D3D12_DEPTH_STENCIL_VIEW_DESC desc = {};
+
+    desc.Format = // float値
+        DXGI_FORMAT_D32_FLOAT;
+    desc.ViewDimension = // 2Dテクスチャ
+        D3D12_DSV_DIMENSION_TEXTURE2D;
+    desc.Flags =
+        D3D12_DSV_FLAG_NONE;
+
+    return desc;
+}
+
+
+
+
+// フェンス作成
+HRESULT Device::CreateFence(Fence* fence)
+{
+    return _device->CreateFence(
+        fence->_fenceVal,
+        D3D12_FENCE_FLAG_NONE,
+        IID_PPV_ARGS(fence->_fence.ReleaseAndGetAddressOf()));
+}
+
+
+
+
 template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -258,7 +518,7 @@ D3D12_RESOURCE_DESC Device::GetConstResourceDesc(UINT verticesByte)
 
 
 
-// ヒープ作成
+// CSUヒープ作成
 HRESULT Device::CreateCSUHeap(CSUHeap* csuHeap)
 {
     D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetCSUHeapDesc();
@@ -270,7 +530,7 @@ HRESULT Device::CreateCSUHeap(CSUHeap* csuHeap)
     return S_OK;
 }
 
-// ヒープディスクリプタ
+// CSUヒープディスクリプタ
 D3D12_DESCRIPTOR_HEAP_DESC Device::GetCSUHeapDesc()
 {
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
@@ -290,13 +550,16 @@ D3D12_DESCRIPTOR_HEAP_DESC Device::GetCSUHeapDesc()
 // CBV作成
 void Device::CreateCBV(CBV* cbv, CSUHeap* csuHeap, ConstBuff* constBuff)
 {
-    cbv->_cbvHandle = csuHeap->GetCSUHeap()->GetCPUDescriptorHandleForHeapStart();
-
     D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = GetCBVDesc(constBuff->_constBuff.Get());
+
+    auto cbvHandle = csuHeap->_csuHeap->GetCPUDescriptorHandleForHeapStart();
 
     _device->CreateConstantBufferView(
         &cbvDesc,
-        cbv->_cbvHandle);
+        cbvHandle);
+
+    // GPUハンドル取得
+    cbv->_cbvHandle = csuHeap->_csuHeap->GetGPUDescriptorHandleForHeapStart();
 }
 
 // CBVディスクリプタ
@@ -314,16 +577,21 @@ D3D12_CONSTANT_BUFFER_VIEW_DESC Device::GetCBVDesc(ID3D12Resource* constBuff)
 void Device::CreateSRV(SRV* srv, CSUHeap* csuHeap, TexBuff* texBuff)
 {
     
-    srv->_srvHandle = csuHeap->GetCSUHeap()->GetCPUDescriptorHandleForHeapStart();
-    srv->_srvHandle.ptr += _device->GetDescriptorHandleIncrementSize(
+    auto srvHandle = csuHeap->_csuHeap->GetCPUDescriptorHandleForHeapStart();
+    auto offset    = _device->GetDescriptorHandleIncrementSize(
                     D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    srvHandle.ptr += offset;
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = GetSRVDesc();
 
     _device->CreateShaderResourceView(
         texBuff->_texBuff.Get(),
         &srvDesc,
-        srv->_srvHandle);
+        srvHandle);
+
+    // GPUハンドル取得
+    srv->_srvHandle = csuHeap->_csuHeap->GetGPUDescriptorHandleForHeapStart();
+    srv->_srvHandle.ptr +=  offset;
 }
 
 // SRVディスクリプタ
@@ -412,32 +680,30 @@ std::vector<D3D12_ROOT_PARAMETER> Device::GetRootParams(UINT paramNum)
 {
     std::vector<D3D12_ROOT_PARAMETER> descs = {};
     descs.resize(paramNum);
-
-    std::unique_ptr<RangeTypeState> state;
  
     // CBV
-    state.reset(new RangeTypeCBV(1));
     descs[0].ParameterType = // ディスクリプタテーブル
         D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
     descs[0].ShaderVisibility = // 頂点シェーダで利用可能
         D3D12_SHADER_VISIBILITY_VERTEX;
     descs[0].DescriptorTable =
-        GetDescTable(state.get());
+        GetDescTable(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1);
 
     // SRV
-    state.reset(new RangeTypeSRV(1));
     descs[1].ParameterType = // ディスクリプタテーブル
         D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
     descs[1].ShaderVisibility = // ピクセルシェーダで利用可能
         D3D12_SHADER_VISIBILITY_PIXEL;
     descs[1].DescriptorTable =
-        GetDescTable(state.get());
+        GetDescTable(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1);
 
     return descs;
 }
 
 // ディスクリプタテーブル
-D3D12_ROOT_DESCRIPTOR_TABLE Device::GetDescTable(RangeTypeState* rangeType)
+D3D12_ROOT_DESCRIPTOR_TABLE Device::GetDescTable(
+    D3D12_DESCRIPTOR_RANGE_TYPE rangeType,
+    UINT rangeNum)
 {
     D3D12_ROOT_DESCRIPTOR_TABLE desc = {};
 
@@ -445,56 +711,31 @@ D3D12_ROOT_DESCRIPTOR_TABLE Device::GetDescTable(RangeTypeState* rangeType)
         new std::vector<D3D12_DESCRIPTOR_RANGE>;
 
     // 派生クラスのオーバーライドが呼ばれる
-    *descRangePtr = rangeType->GetDescRanges();
+    *descRangePtr = GetDescRanges(rangeType, rangeNum);
 
     desc.pDescriptorRanges =
         descRangePtr->data();
     desc.NumDescriptorRanges =
-        rangeType->GetRangeNum();;
+        rangeNum;
 
     return desc;
 }
 
-
-
-
-// CBVディスクリプタレンジ
-std::vector<D3D12_DESCRIPTOR_RANGE> Device::RangeTypeCBV::GetCBVDescRanges()
+// ディスクリプタレンジ
+std::vector<D3D12_DESCRIPTOR_RANGE> Device::GetDescRanges(
+    D3D12_DESCRIPTOR_RANGE_TYPE rangeType,
+    UINT rangeNum)
 {
     std::vector<D3D12_DESCRIPTOR_RANGE> descs = {};
-    descs.resize(GetRangeNum());
+    descs.resize(rangeNum);
 
     UINT slotNo = 0;
     for (auto& desc : descs)
     {
         desc.NumDescriptors = // ディスクリプタ数
             1;
-        desc.RangeType = // タイプ：CRV
-            D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-        desc.BaseShaderRegister = // スロット0から
-            slotNo;
-        desc.OffsetInDescriptorsFromTableStart =
-            D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-        slotNo++;
-    }
-    
-    return descs;
-}
-
-// SRVディスクリプタレンジ
-std::vector<D3D12_DESCRIPTOR_RANGE> Device::RangeTypeSRV::GetSRVDescRanges()
-{
-    std::vector<D3D12_DESCRIPTOR_RANGE> descs = {};
-    descs.resize(GetRangeNum());
-
-    UINT slotNo = 0;
-    for (auto& desc : descs)
-    {
-        desc.NumDescriptors = // ディスクリプタ数
-            1;
-        desc.RangeType = // タイプ：SRV
-            D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+        desc.RangeType = // タイプ
+            rangeType;
         desc.BaseShaderRegister = // スロット0から
             slotNo;
         desc.OffsetInDescriptorsFromTableStart =
@@ -539,13 +780,16 @@ std::vector<D3D12_STATIC_SAMPLER_DESC> Device::GetSamplerDescs(UINT samplerNum)
 // ルートシグネチャディスクリプタのメモリ解放
 void Device::DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc)
 {
-    UINT rangesNum  = desc->pParameters->DescriptorTable.NumDescriptorRanges;
-    UINT paramNum   = desc->NumParameters;
-    UINT samplerNum = desc->NumStaticSamplers;
+    UINT paramNum   = desc->NumParameters;     // ルートパラメータ数
+    for (int i = 0; i < paramNum; i++) // ルートパラメータごとのディスクリプタレンジを解放する
+    {
+        UINT rangesNum  = desc->pParameters[i].DescriptorTable.NumDescriptorRanges;
+        delete[rangesNum]  desc->pParameters[i].DescriptorTable.pDescriptorRanges; // ディスクリプタレンジ解放
+    }
+    delete[paramNum]   desc->pParameters; // ルートパラメータ解放
 
-    delete[rangesNum]  desc->pParameters->DescriptorTable.pDescriptorRanges;
-    delete[paramNum]   desc->pParameters;
-    delete[samplerNum] desc->pStaticSamplers;
+    UINT samplerNum = desc->NumStaticSamplers; // サンプラー数
+    delete[samplerNum] desc->pStaticSamplers; // サンプラー解放
 }
 
 

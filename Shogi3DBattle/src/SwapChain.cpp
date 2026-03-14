@@ -19,23 +19,16 @@ HRESULT SwapChain::UpdateSwapChain(UINT width, UINT height)
     return S_OK;
 }
 
-
-
-
 // 画面フリップ
 void SwapChain::Flip()
 {
     _swapChain->Present(1, 0);
 }
 
-
-
-
 // スワップチェーンを返す
 IDXGISwapChain4* SwapChain::GetSwapChain(){return _swapChain.Get();}
-
-
-
+// レンダーターゲットバッファ数を返す
+UINT SwapChain::GetRTBuffNum(){return _rtBuffNum;}
 
 SwapChain::SwapChain(){}
 SwapChain::~SwapChain(){}

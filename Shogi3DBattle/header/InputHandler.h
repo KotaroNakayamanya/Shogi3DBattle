@@ -1,11 +1,7 @@
 #pragma once
 
-#include<Windows.h>
-#include<memory>
 #include"IsceneState.h"
 #include"KeyConf.h"
-
-#include"Piece.h"
 
 class InputHandler
 {

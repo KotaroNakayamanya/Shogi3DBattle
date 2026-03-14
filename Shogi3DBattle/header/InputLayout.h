@@ -11,6 +11,6 @@ private:
     std::vector<D3D12_INPUT_ELEMENT_DESC> _inputLayout;
 
 public:
-    InputLayout();
-    ~InputLayout();
+    InputLayout(){}
+    ~InputLayout(){}
 };

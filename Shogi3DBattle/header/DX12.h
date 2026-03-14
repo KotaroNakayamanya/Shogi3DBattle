@@ -1,118 +1,90 @@
 ﻿#pragma once
 
 #include<memory>
-
 #include"DXGIFactory.h"
-#include"Adapter.h"
 #include"Device.h"
-#include"VShader.h"
-#include"PShader.h"
-#include"TexBuff.h"
-#include"TResource.h"
-#include"Draw.h"
-#include"VertBuff.h"
-#include"IdxBuff.h"
-#include"Pawn.h"
-#include"ConstBuff.h"
+
+#include"Viewport.h"
+#include"ScissorRect.h"
+
 #include"ConstBuffMap.h"
-#include"CSUHeap.h"
-#include"CBV.h"
-#include"SRV.h"
-#include"RootSignature.h"
-#include"Pipeline.h"
 #include"ViewMat.h"
 #include"ProjMat.h"
-
-#include"DrawArg.h"
-#include"TextureArg.h"
-#include"VertexArg.h"
-#include"HeapArg.h"
-#include"PipelineArg.h"
+#include"Pawn.h"
 
 class DX12
 {
 private:
-    UINT _windowWidth = 1280;
-    UINT _windowHeight = 720;
+    const int _rtBuffNum = 2; // 描画に使用する画面数
 
-    const int _buffNum = 2; // 描画に使用する画面数
+    std::unique_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリー
+    std::unique_ptr<Adapter> _adapter; // アダプター
+    std::unique_ptr<Device>  _device; // Direct3Dデバイス
 
-    std::unique_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリーオブジェクト
-    HRESULT CreateDXGIFactory(); // DXGIファクトリー作成
+    std::unique_ptr<ComAllocator> _comAllocator; // コマンドアロケータ
+    std::unique_ptr<ComList> _comList; // コマンドリスト
+    std::unique_ptr<ComQueue> _comQueue; // コマンドリスト
+    std::unique_ptr<SwapChain> _swapChain; // スワップチェーン
+    std::unique_ptr<RTVHeap> _rtvHeap; // RTVヒープ
+    std::vector<std::unique_ptr<RTV>> _rtvs; // RTV
+    std::unique_ptr<DSBuff> _dsBuff; // デプスステンシルバッファ
+    std::unique_ptr<DSVHeap> _dsvHeap; // デプスステンシルヒープ
+    std::unique_ptr<DSV> _dsv; // デプスステンシルビュー
+    std::unique_ptr<Fence> _fence; // フェンス
 
-    std::unique_ptr<Adapter> _adapter; // アダプターオブジェクト
-    std::unique_ptr<Device>  _device; // Direct3Dデバイスオブジェクト
+    std::unique_ptr<Viewport> _viewport; // ビューポート
+    std::unique_ptr<ScissorRect> _scissorRect; // シザー矩形
 
-    std::unique_ptr<Draw> _draw; // 描画オブジェクト
-    HRESULT CreateDrawObj(HWND hwnd); // 描画オブジェクト作成
-    DrawArg::CreateDrawObjArg // 描画オブジェクト作成用引数
-        GetCreateDrawObjArg(HWND hwnd);
-
-    std::unique_ptr<VShader> _vShader; // 頂点シェーダーオブジェクト
-    std::unique_ptr<PShader> _pShader; // ピクセルシェーダーオブジェクト
-
-    std::unique_ptr<VertBuff> _vertBuff; // 頂点バッファオブジェクト
-    std::unique_ptr<IdxBuff>  _idxBuff;  // インデックスバッファオブジェクト
-
-    std::unique_ptr<RootSignature> _rootSignature; // ルートシグネチャオブジェクト
-    HRESULT CreateRootSignatureObj();              // ルートシグネチャオブジェクト作成
-
-    std::unique_ptr<Pipeline> _pipeline; // パイプラインオブジェクト
-    HRESULT CreatePipelineObj();         // パイプラインオブジェクト作成
-    PipelineArg::CreatePipelineStateArg  // パイプラインオブジェクト作成用引数
-        GetCreatePipelineObjArg(); 
-
-    std::unique_ptr<TexBuff> _texBuff; // テクスチャバッファオブジェクト
-
-    std::unique_ptr<ConstBuff> _constBuff; // コンスタントバッファオブジェクト
-    HRESULT CreateCBuffObj();              // コンスタントバッファオブジェクト作成
-
-    std::unique_ptr<ConstBuffMap> _constBuffMap; // コンスタントバッファマップオブジェクト
-    HRESULT CreateCBuffMapObj();                 // コンスタントバッファマップオブジェクト作成
-
-    std::unique_ptr<CSUHeap> _csuHeap; // CSUヒープオブジェクト
+    std::unique_ptr<VShader> _vShader; // 頂点シェーダー
+    std::unique_ptr<PShader> _pShader; // ピクセルシェーダー
+    std::unique_ptr<VertBuff> _vertBuff; // 頂点バッファ
+    std::unique_ptr<IdxBuff>  _idxBuff;  // インデックスバッファ
+    std::unique_ptr<InputLayout> _inputLayout; // 入力レイアウト
+    std::unique_ptr<RootSignature> _rootSignature; // ルートシグネチャ
+    std::unique_ptr<Pipeline> _pipeline; // パイプライン
+    std::unique_ptr<TexBuff> _texBuff; // テクスチャバッファ
+    std::unique_ptr<ConstBuff> _constBuff; // コンスタントバッファ
+    std::unique_ptr<ConstBuffMap> _constBuffMap; // コンスタントバッファマップ
+    std::unique_ptr<CSUHeap> _csuHeap; // CSUヒープ
     std::unique_ptr<CBV> _cbv; // コンスタントバッファビュー
     std::unique_ptr<SRV> _srv; // シェーダーリソースビュー
+    std::unique_ptr<ViewMat> _viewMat; // ビュー行列
+    std::unique_ptr<ProjMat> _projMat; // プロジェクション行列
 
-    std::unique_ptr<InputLayout> _inputLayout; // 入力レイアウト
-
-
-    std::unique_ptr<ViewMat> _viewMat;
-
-    std::unique_ptr<ProjMat> _projMat;
-
-
-
-
+    HRESULT CreateDXGIFactory(); // DXGIファクトリー作成
 
     DXGI_SAMPLE_DESC GetSampleDesc(); // サンプリングディスクリプタ
- 
 
-    
+
+
+
+
     void PrepareRenderTarget(); // レンダーターゲットの準備
+    void ChangeRTVBarrierToRenderTarget(RTV* rtv);
+    void ChangeRTVBarrierToPresent     (RTV* rtv);
+    // リソースバリア基本設定
+    D3D12_RESOURCE_BARRIER GetBasiceResourceBarrier();
 
     // コマンドセット
     void SetCommand();
+    D3D12_VERTEX_BUFFER_VIEW GetVertexBuffView();
+    D3D12_INDEX_BUFFER_VIEW GetIndexBuffView();
+
+    void ExeCommand();
 
     // 駒オブジェクト
     std::unique_ptr<Pawn> _pawn;
     HRESULT CreateVertexSets();
     
-    // コマンドセット
-    D3D12_VERTEX_BUFFER_VIEW GetVertexBuffView();
-    D3D12_INDEX_BUFFER_VIEW GetIndexBuffView();
+   
 
 
     void ExeDraw();
     void ResetCommand();
     void WaitProcessWithFence();
-
-
-    DrawArg::SetCommandArg // コマンドセット用引数
-        GetSetCommandArg();
     
 public:
-    bool CreateDX12Obj(HWND hwnd); // DirectX12オブジェクト作成
+    bool CreateDX12Obj(GameWindow* gameWindow); // DirectX12オブジェクト作成
     void ExeDX12(); // DirectX12実行処理
 
     /// <summary>
