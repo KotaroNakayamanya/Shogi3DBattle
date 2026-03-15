@@ -1,8 +1,8 @@
 #pragma once
 
-#include"ComAllocator.h"
-#include"ComList.h"
-#include"ComQueue.h"
+#include"CmdAllocator.h"
+#include"CmdList.h"
+#include"CmdQueue.h"
 #include"SwapChain.h"
 #include"RTVHeap.h"
 #include"GameWindow.h"
@@ -34,7 +34,7 @@ class Device
 private:
     ComPtr<ID3D12Device> _device; // Direct3Dデバイス
 
-    D3D12_COMMAND_QUEUE_DESC GetComQueueDesc(); // コマンドキューディスクリプタ
+    D3D12_COMMAND_QUEUE_DESC GetCmdQueueDesc(); // コマンドキューディスクリプタ
     D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc(UINT rtBuffNum); // RTVヒープディスクリプタ
 
     D3D12_HEAP_PROPERTIES GetVertHeapProp(); // 頂点ヒーププロパティ
@@ -89,9 +89,9 @@ private:
     D3D12_DEPTH_STENCIL_DESC GetDepthStencilDesc(); // デプスステンシルディスクリプタ
 
 public:
-    HRESULT CreateComAllocator(ComAllocator* comAllocator); // コマンドアロケータ作成
-    HRESULT CreateComList(ComList* comList, ComAllocator* comAllocator); // コマンドリスト作成
-    HRESULT CreateComQueue(ComQueue* comQueue); // コマンドキュー作成
+    HRESULT CreateCmdAllocator(CmdAllocator* comAllocator); // コマンドアロケータ作成
+    HRESULT CreateCmdList(CmdList* comList, CmdAllocator* comAllocator); // コマンドリスト作成
+    HRESULT CreateCmdQueue(CmdQueue* comQueue); // コマンドキュー作成
     HRESULT CreateRTVHeap(RTVHeap* rtvHeap, SwapChain* swapChain); // RTVヒープ作成
     HRESULT CreateRTV(RTV* rtv, RTVHeap* rtvHeap, SwapChain* swapChain, UINT i); // RTV作成
     HRESULT CreateDSBuff(DSBuff* dsBuff, GameWindow* gameWindow); // デプスステンシルバッファ作成

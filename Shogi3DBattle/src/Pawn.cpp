@@ -12,7 +12,7 @@ Pawn::Pawn()
         arg.height * 0.7f;
     arg.thickness    = 0.4f; // ‹î‚ÌŒú‚Ý
 
-    SetPieceVertices(arg);
+    CreatePieceVertices(arg);
 }
 
 Pawn::~Pawn(){}

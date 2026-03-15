@@ -1,7 +1,7 @@
 #include"Piece.h"
 
 // ‹î‚Ì’¸“_W‡ì¬
-void Piece::SetPieceVertices(CreatePieceVerticesArg arg)
+void Piece::CreatePieceVertices(CreatePieceVerticesArg arg)
 {
     float bottomWidth  = arg.bottomWidth;
     float cornerWidth  = arg.cornerWidth;

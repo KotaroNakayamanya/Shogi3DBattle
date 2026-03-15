@@ -69,7 +69,7 @@ std::vector<ComPtr<IDXGIAdapter>> DXGIFactory::GetCanUseAdapters()
 // スワップチェーン作成
 HRESULT DXGIFactory::CreateSwapChain(
     SwapChain* swapChain,
-    ComQueue* comQueue,
+    CmdQueue* cmdQueue,
     GameWindow* gameWindow)
 {
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = GetSwapChainDesc(
@@ -77,7 +77,7 @@ HRESULT DXGIFactory::CreateSwapChain(
 
 
     return _dxgiFactory->CreateSwapChainForHwnd(
-        comQueue->GetComQueue(),
+        cmdQueue->GetCmdQueue(),
         gameWindow->GetHWND(),
         &swapChainDesc,
         nullptr,

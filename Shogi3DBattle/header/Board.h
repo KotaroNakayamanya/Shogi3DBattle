@@ -1,9 +1,9 @@
 #pragma once
 
-#include"Vertex.h"
+#include"ShogiObj.h"
 #include"VertexStruct.h"
 
-class Board : public Vertex
+class Board : public ShogiObj
 {
 private:
     enum BoardSize

@@ -1,9 +1,9 @@
 #pragma once
 
-#include"Vertex.h"
+#include"ShogiObj.h"
 #include"VertexStruct.h"
 
-class Piece : public Vertex
+class Piece : public ShogiObj
 {
 protected:
     DirectX::XMMATRIX _worldMat; // ワールド行列
@@ -18,7 +18,7 @@ protected:
 
     }CreatePieceVerticesArg;
 
-    void SetPieceVertices(CreatePieceVerticesArg arg); // 駒の頂点集合作成
+    void CreatePieceVertices(CreatePieceVerticesArg arg); // 駒の頂点集合作成
 
 public:
     void MoveX(float x); // x軸方向に動くようにワールド行列を変換する

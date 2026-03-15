@@ -6,42 +6,42 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 // コマンドアロケータオブジェクト作成
-HRESULT Device::CreateComAllocator(ComAllocator* comAllocator)
+HRESULT Device::CreateCmdAllocator(CmdAllocator* cmdAllocator)
 {
     return _device->CreateCommandAllocator(
         D3D12_COMMAND_LIST_TYPE_DIRECT,
-        IID_PPV_ARGS(comAllocator->_comAllocator.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(cmdAllocator->_cmdAllocator.ReleaseAndGetAddressOf()));
 }
 
 
 
 
 // コマンドリスト作成
-HRESULT Device::CreateComList(ComList* comList, ComAllocator* comAllocator)
+HRESULT Device::CreateCmdList(CmdList* cmdList, CmdAllocator* cmdAllocator)
 {
     return _device->CreateCommandList(
         0,
         D3D12_COMMAND_LIST_TYPE_DIRECT,
-        comAllocator->_comAllocator.Get(),
+        cmdAllocator->_cmdAllocator.Get(),
         nullptr,
-        IID_PPV_ARGS(comList->_comList.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(cmdList->_cmdList.ReleaseAndGetAddressOf()));
 }
 
 
 
 
 // コマンドキュー作成
-HRESULT Device::CreateComQueue(ComQueue* comQueue)
+HRESULT Device::CreateCmdQueue(CmdQueue* cmdQueue)
 {
-    D3D12_COMMAND_QUEUE_DESC commandQueueDesc = GetComQueueDesc();
+    D3D12_COMMAND_QUEUE_DESC cmdQueueDesc = GetCmdQueueDesc();
 
     return _device->CreateCommandQueue(
-        &commandQueueDesc,
-        IID_PPV_ARGS(comQueue->_comQueue.ReleaseAndGetAddressOf()));
+        &cmdQueueDesc,
+        IID_PPV_ARGS(cmdQueue->_cmdQueue.ReleaseAndGetAddressOf()));
 }
 
 // コマンドキューディスクリプタ
-D3D12_COMMAND_QUEUE_DESC Device::GetComQueueDesc()
+D3D12_COMMAND_QUEUE_DESC Device::GetCmdQueueDesc()
 {
     D3D12_COMMAND_QUEUE_DESC desc = {};
 

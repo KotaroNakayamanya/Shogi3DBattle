@@ -2,9 +2,9 @@
 
 #include<d3d12.h>
 #include<wrl.h>
-#include"Vertex.h"
+#include"ShogiObj.h"
 
-class ComList
+class CmdList
 {
     friend class Device; // Direct3Dから参照可能
 
@@ -12,7 +12,7 @@ class ComList
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    ComPtr<ID3D12GraphicsCommandList> _comList; // コマンドリスト
+    ComPtr<ID3D12GraphicsCommandList> _cmdList; // コマンドリスト
 
 public:
     void SetResourceBarrier( // リソースバリアセット
@@ -29,23 +29,23 @@ public:
     void SetDescriptorTable( // ディスクリプタテーブルセット
         UINT i, D3D12_GPU_DESCRIPTOR_HANDLE handle);
 
-    void SetViewports(D3D12_VIEWPORT* viewports); // ビューポートセット
-    void SetScissorRects(D3D12_RECT* scissorRects); // シザー矩形セット
+    void SetViewports(UINT num, D3D12_VIEWPORT* viewports); // ビューポートセット
+    void SetScissorRects(UINT num, D3D12_RECT* scissorRects); // シザー矩形セット
 
     void SetTopology(D3D_PRIMITIVE_TOPOLOGY topology); // トポロジーセット
 
-    void SetVertBuffViews(D3D12_VERTEX_BUFFER_VIEW* vertBuffViews); // 頂点バッファビューセット
-    void SetIdxBuffView(D3D12_INDEX_BUFFER_VIEW idxBuffViews);    // インデックスバッファビューセット
+    void SetVertBuffViews(UINT num, D3D12_VERTEX_BUFFER_VIEW* vertBuffViews); // 頂点バッファビューセット
+    void SetIdxBuffView(D3D12_INDEX_BUFFER_VIEW idxBuffView);    // インデックスバッファビューセット
 
-    void SetDrawWithIdx(Vertex* vertex); // インデックス描画セット
+    void SetDrawWithIdx(ShogiObj* shogiObj); // インデックス描画セット
 
     void ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle); // レンダーターゲットクリア
     void ClearDepthStencil(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle); // デプスステンシルクリア
 
     
 
-    ID3D12GraphicsCommandList* GetComList(); // コマンドリストを返す
+    ID3D12GraphicsCommandList* GetCmdList(); // コマンドリストを返す
 
-    ComList();
-    ~ComList();
+    CmdList();
+    ~CmdList();
 };

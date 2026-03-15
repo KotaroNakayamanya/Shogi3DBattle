@@ -1,0 +1,100 @@
+#include"CmdList.h"
+
+// レンダーターゲットセット
+void CmdList::SetRenderTarget(
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle,
+    D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
+{
+    _cmdList->OMSetRenderTargets(1, &rtvHandle, true, &dsvHandle);
+}
+
+// デプスステンシルクリア
+void CmdList::ClearDepthStencil(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
+{
+    _cmdList->ClearDepthStencilView(
+        dsvHandle,
+        D3D12_CLEAR_FLAG_DEPTH,
+        1.0f, 0, 0, nullptr);
+}
+
+// レンダーターゲットクリア
+void CmdList::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle)
+{
+    float clearRTVColor[] =
+        {0.0f, 0.3f, 0.0f, 1.0f};
+    _cmdList->ClearRenderTargetView(
+        rtvHandle, clearRTVColor, 0, nullptr);
+}
+
+// パイプラインセット
+void CmdList::SetPipeline(ID3D12PipelineState* pipelineState)
+{
+    _cmdList->SetPipelineState(pipelineState);
+}
+
+// ルートシグネチャセット
+void CmdList::SetRootSignature(ID3D12RootSignature* rootSignature)
+{
+    _cmdList->SetGraphicsRootSignature(rootSignature);
+}
+
+// リソースバリアセット
+void CmdList::SetResourceBarrier(D3D12_RESOURCE_BARRIER resourceBarrier)
+{
+    _cmdList->ResourceBarrier(1, &resourceBarrier);
+}
+
+// CSUヒープセット
+void CmdList::SetCSUHeaps(ID3D12DescriptorHeap** csuHeaps)
+{
+    auto heapNum = sizeof(csuHeaps) / sizeof(ID3D12DescriptorHeap*);
+    _cmdList->SetDescriptorHeaps(heapNum, csuHeaps);
+}
+
+// ディスクリプタテーブルセット
+void CmdList::SetDescriptorTable(UINT i, D3D12_GPU_DESCRIPTOR_HANDLE handle)
+{
+    _cmdList->SetGraphicsRootDescriptorTable(i, handle);
+}
+
+// ビューポートセット
+void CmdList::SetViewports(UINT num, D3D12_VIEWPORT* viewports)
+{
+    _cmdList->RSSetViewports(num, viewports);
+}
+
+// シザー矩形セット
+void CmdList::SetScissorRects(UINT num, D3D12_RECT* scissorRects)
+{
+    _cmdList->RSSetScissorRects(num, scissorRects);
+}
+
+// トポロジーセット
+void CmdList::SetTopology(D3D_PRIMITIVE_TOPOLOGY topology)
+{
+    _cmdList->IASetPrimitiveTopology(topology);
+}
+
+// 頂点バッファビューセット
+void CmdList::SetVertBuffViews(UINT num, D3D12_VERTEX_BUFFER_VIEW* vertBuffViews)
+{
+    _cmdList->IASetVertexBuffers(0, num, vertBuffViews);
+}
+
+// インデックスバッファビューセット
+void CmdList::SetIdxBuffView(D3D12_INDEX_BUFFER_VIEW idxBuffView)
+{
+    _cmdList->IASetIndexBuffer(&idxBuffView);
+}
+
+// インデックス描画セット
+void CmdList::SetDrawWithIdx(ShogiObj* shogiObj)
+{
+    _cmdList->DrawIndexedInstanced(shogiObj->GetIdxNum(), 1, 0, 0, 0);
+}
+
+// コマンドリストを返す
+ID3D12GraphicsCommandList* CmdList::GetCmdList(){return _cmdList.Get();}
+
+CmdList::CmdList(){}
+CmdList::~CmdList(){}

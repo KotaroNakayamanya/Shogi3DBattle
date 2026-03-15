@@ -22,7 +22,14 @@ HRESULT VertBuff::WriteVertBuff(std::vector<VertexStruct::Vertex> vertexPtr)
     return S_OK;
 }
 
-ID3D12Resource* VertBuff::GetVertBuff(){return _vertBuff.Get();} // 頂点バッファを返す
+// 頂点バッファアドレスを返す
+D3D12_GPU_VIRTUAL_ADDRESS VertBuff::GetAddress()
+{
+    return _vertBuff->GetGPUVirtualAddress();
+}
+
+// 頂点バッファを返す
+ID3D12Resource* VertBuff::GetVertBuff(){return _vertBuff.Get();}
 
 VertBuff::VertBuff(){}
 VertBuff::~VertBuff(){}

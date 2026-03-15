@@ -18,6 +18,8 @@ private:
 
 public:
     HRESULT WriteVertBuff(std::vector<VertexStruct::Vertex> vertexPtr); // 頂点バッファに書き込み
+    D3D12_GPU_VIRTUAL_ADDRESS GetAddress(); // 頂点バッファアドレスを返す
+
     ID3D12Resource* GetVertBuff(); // 頂点バッファを返す
 
     VertBuff();

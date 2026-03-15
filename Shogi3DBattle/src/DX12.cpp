@@ -30,12 +30,12 @@ bool DX12::CreateDX12Obj(GameWindow* gameWindow)
     _adapter.reset(); // アダプター破棄
 
     // コマンド作成
-    if (FAILED(_device->CreateComAllocator(_comAllocator.get()))) goto failed; // コマンドアロケータ作成
-    if (FAILED(_device->CreateComList(_comList.get(), _comAllocator.get()))) goto failed; // コマンドリスト作成
-    if (FAILED(_device->CreateComQueue(_comQueue.get()))) goto failed; // コマンドキュー作成
+    if (FAILED(_device->CreateCmdAllocator(_cmdAllocator.get()))) goto failed; // コマンドアロケータ作成
+    if (FAILED(_device->CreateCmdList(_cmdList.get(), _cmdAllocator.get()))) goto failed; // コマンドリスト作成
+    if (FAILED(_device->CreateCmdQueue(_cmdQueue.get()))) goto failed; // コマンドキュー作成
 
     // スワップチェーン作成
-    if (FAILED(_dxgiFactory->CreateSwapChain(_swapChain.get(), _comQueue.get(), gameWindow))) goto failed;
+    if (FAILED(_dxgiFactory->CreateSwapChain(_swapChain.get(), _cmdQueue.get(), gameWindow))) goto failed;
     // RTVヒープ作成
     if (FAILED(_device->CreateRTVHeap(_rtvHeap.get(), _swapChain.get()))) goto failed;
     // RTV作成
@@ -146,7 +146,9 @@ void DX12::ExeDX12()
     // レンダーターゲットの準備をする
     PrepareRenderTarget();
 
-    // 頂点を変換
+    // ワールド行列を変換
+
+    // ビュープロジェクション行列をバッファに書き込み
     _constBuffMap->WriteMat(
         _pawn->GetWorldMat(),
         _viewMat->GetViewMat(),
@@ -175,12 +177,12 @@ void DX12::PrepareRenderTarget()
     ChangeRTVBarrierToRenderTarget(_rtvs[backBufferIdx].get());
 
      // バックバッファをレンダーターゲットに設定
-    _comList->SetRenderTarget(rtvHandle, dsvHandle);
+    _cmdList->SetRenderTarget(rtvHandle, dsvHandle);
 
     // レンダーターゲットクリア
-    _comList->ClearRenderTarget(rtvHandle);
+    _cmdList->ClearRenderTarget(rtvHandle);
      // デプスステンシルクリア
-    _comList->ClearDepthStencil(dsvHandle); 
+    _cmdList->ClearDepthStencil(dsvHandle); 
 }
 
 // RTVリソースをレンダーターゲットに変更
@@ -196,7 +198,7 @@ void DX12::ChangeRTVBarrierToRenderTarget(RTV* rtv)
     resourceBarrier.Transition.StateAfter  =
         D3D12_RESOURCE_STATE_RENDER_TARGET;
 
-    _comList->SetResourceBarrier(resourceBarrier);
+    _cmdList->SetResourceBarrier(resourceBarrier);
 }
 
 // リソースバリア基本設定
@@ -221,51 +223,39 @@ D3D12_RESOURCE_BARRIER DX12::GetBasiceResourceBarrier()
 // コマンドセット（Drawクラス）
 void DX12::SetCommand()
 {
-    //DrawArg::SetCommandArg arg =
-    //    GetSetCommandArg();
-
-    //_draw->SetCommand(arg);
-
-    //ID3D12GraphicsCommandList* commandList =
-    //_commandList->GetCommandList();
-
     // パイプラインセット
-    _comList->SetPipeline(_pipeline->GetPipelineState());
+    _cmdList->SetPipeline(_pipeline->GetPipelineState());
 
     // ルートシグネチャセット
-    _comList->SetRootSignature(_rootSignature->GetRootSignature());
+    _cmdList->SetRootSignature(_rootSignature->GetRootSignature());
 
     // CBV,SRVヒープセット
     ID3D12DescriptorHeap* csuHeaps[] = {_csuHeap->GetCSUHeap()};
-    _comList->SetCSUHeaps(csuHeaps); 
+    _cmdList->SetCSUHeaps(csuHeaps); 
     // ルートパラメータとディスクリプタヒープ関連付け
-    //auto csuHandle = arg.csuHeap->GetGPUDescriptorHandleForHeapStart();
-    _comList->SetDescriptorTable(0, _cbv->GetCBVHandle()); // CBV
-    //_comList->
-    //csuHandle.ptr += arg.offset;
-    _comList->SetDescriptorTable(1, _srv->GetSRVHandle()); // SRV
+    _cmdList->SetDescriptorTable(0, _cbv->GetCBVHandle()); // CBV
+    _cmdList->SetDescriptorTable(1, _srv->GetSRVHandle()); // SRV
 
     // ビューポートセット
     D3D12_VIEWPORT viewports[] = {_viewport->GetViewport()};
-    _comList->SetViewports(viewports);
-    //_comList->RSSetViewports(1, viewports);
+    auto viewportNum = sizeof(viewports) / sizeof(D3D12_VIEWPORT);
+    _cmdList->SetViewports(viewportNum, viewports);
 
     // シザー矩形セット
     D3D12_RECT scissorRects[] = {_scissorRect->GetScissorRect()};
-    _comList->SetScissorRects(scissorRects);
+    auto scissorRectNum = sizeof(scissorRects) / sizeof(D3D12_RECT);
+    _cmdList->SetScissorRects(scissorRectNum, scissorRects);
 
     // トポロジーセット
-    //_comList->IASetPrimitiveTopology(arg.topology);
-    _comList->SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    _cmdList->SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     // 頂点バッファビューセット
-    //commandList->IASetVertexBuffers(0, 1, &arg.vertexBuffView);
     D3D12_VERTEX_BUFFER_VIEW vertBuffViews[] = {GetVertexBuffView()};
-    _comList->SetVertBuffViews(vertBuffViews);
+    auto vertBuffViewNum = sizeof(vertBuffViews) / sizeof(D3D12_VERTEX_BUFFER_VIEW);
+    _cmdList->SetVertBuffViews(vertBuffViewNum, vertBuffViews);
     // インデックスバッファセット
-    _comList->SetIdxBuffView(GetIndexBuffView());
+    _cmdList->SetIdxBuffView(GetIndexBuffView());
     // インデックス描画セット
-    //commandList->DrawIndexedInstanced(arg.vertexCount, arg.objCount, 0, 0, 0);
-    _comList->SetDrawWithIdx(_pawn.get());
+    _cmdList->SetDrawWithIdx(_pawn.get());
 
 
 
@@ -285,14 +275,14 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBuffView()
 {
     D3D12_VERTEX_BUFFER_VIEW view;
 
-    ComPtr<ID3D12Resource> vertexBuff =
-        _vertBuff->GetVertBuff();
+    //ComPtr<ID3D12Resource> vertexBuff =
+    //    _vertBuff->GetVertBuff();
 
     UINT vertexByteSize   = _pawn->GetVertexByteSize();
     UINT verticesByteSize = _pawn->GetVerticesByteSize();
 
     view.BufferLocation =
-        vertexBuff->GetGPUVirtualAddress();
+        _vertBuff->GetAddress();
     view.SizeInBytes =
         verticesByteSize; // 注意
     view.StrideInBytes =
@@ -350,7 +340,7 @@ void DX12::ChangeRTVBarrierToPresent(RTV* rtv)
     barrier.Transition.StateAfter  =
         D3D12_RESOURCE_STATE_PRESENT;
 
-    _comList->SetResourceBarrier(barrier);
+    _cmdList->SetResourceBarrier(barrier);
 }
 
 
@@ -359,12 +349,12 @@ void DX12::ChangeRTVBarrierToPresent(RTV* rtv)
 // コマンド実行
 void DX12::ExeCommand()
 {
-    _comList->GetComList()->Close(); // コマンドクローズ
+    _cmdList->GetCmdList()->Close(); // コマンドクローズ
 
-    ID3D12CommandList* commandLists[] = {_comList->GetComList()}; // リストに格納
+    ID3D12CommandList* commandLists[] = {_cmdList->GetCmdList()}; // リストに格納
     UINT listNum = sizeof(commandLists) / sizeof(ID3D12CommandList); // リスト数取得
 
-    _comQueue->GetComQueue()->ExecuteCommandLists(listNum, commandLists); // コマンドキュー実行
+    _cmdQueue->GetCmdQueue()->ExecuteCommandLists(listNum, commandLists); // コマンドキュー実行
 
     WaitProcessWithFence(); // フェンスによる同期処理
 
@@ -375,7 +365,7 @@ void DX12::ExeCommand()
 void DX12::WaitProcessWithFence()
 {
     // GPU処理完了後のフェンスの値を設定
-    _comQueue->GetComQueue()->Signal(_fence->GetFence(), _fence->GetIncrementFenceVal());
+    _cmdQueue->GetCmdQueue()->Signal(_fence->GetFence(), _fence->GetIncrementFenceVal());
 
     while (_fence->GetFence()->GetCompletedValue() != _fence->GetFenceVal())
     {
@@ -390,10 +380,10 @@ void DX12::WaitProcessWithFence()
 void DX12::ResetCommand()
 {
     ID3D12CommandAllocator* commandAllocator =
-        _comAllocator->GetCommandAllocator();
+        _cmdAllocator->GetCmdAllocator();
 
     commandAllocator->Reset();
-    _comList->GetComList()->Reset(commandAllocator, nullptr);
+    _cmdList->GetCmdList()->Reset(commandAllocator, nullptr);
 }
 
 
@@ -456,9 +446,9 @@ DX12::DX12() {
     _adapter     = std::make_unique<Adapter>();
     _device      = std::make_unique<Device>();
 
-    _comAllocator = std::make_unique<ComAllocator>();
-    _comList      = std::make_unique<ComList>();
-    _comQueue     = std::make_unique<ComQueue>();
+    _cmdAllocator = std::make_unique<CmdAllocator>();
+    _cmdList      = std::make_unique<CmdList>();
+    _cmdQueue     = std::make_unique<CmdQueue>();
 
     _swapChain = std::make_unique<SwapChain>();
 

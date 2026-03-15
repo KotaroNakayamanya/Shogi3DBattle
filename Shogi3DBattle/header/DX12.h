@@ -18,12 +18,12 @@ private:
     const int _rtBuffNum = 2; // 描画に使用する画面数
 
     std::unique_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリー
-    std::unique_ptr<Adapter> _adapter; // アダプター
-    std::unique_ptr<Device>  _device; // Direct3Dデバイス
+    std::unique_ptr<Adapter>     _adapter;     // アダプター
+    std::unique_ptr<Device>      _device;      // Direct3Dデバイス
 
-    std::unique_ptr<ComAllocator> _comAllocator; // コマンドアロケータ
-    std::unique_ptr<ComList> _comList; // コマンドリスト
-    std::unique_ptr<ComQueue> _comQueue; // コマンドリスト
+    std::unique_ptr<CmdAllocator> _cmdAllocator; // コマンドアロケータ
+    std::unique_ptr<CmdList> _cmdList; // コマンドリスト
+    std::unique_ptr<CmdQueue> _cmdQueue; // コマンドリスト
     std::unique_ptr<SwapChain> _swapChain; // スワップチェーン
     std::unique_ptr<RTVHeap> _rtvHeap; // RTVヒープ
     std::vector<std::unique_ptr<RTV>> _rtvs; // RTV

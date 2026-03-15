@@ -7,8 +7,8 @@ Output VShader(
 {
     Output output;
     
-    output.svpos = mul(mat, pos);
-    output.normal = normal;
+    output.svpos = mul(viewProjMat, mul(worldMat, pos));
+    output.normal = mul(worldMat, normal);
     output.uv = uv;
     
     return output;

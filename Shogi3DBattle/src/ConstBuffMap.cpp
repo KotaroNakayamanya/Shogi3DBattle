@@ -12,7 +12,11 @@ void ConstBuffMap::WriteMat(
     DirectX::XMMATRIX viewMat,
     DirectX::XMMATRIX projMat)
 {
-    *_constBuffMap = worldMat * viewMat * projMat;
+    //*_constBuffMap = worldMat * viewMat * projMat;
+
+    _constBuffMap->worldMat    = worldMat;
+    _constBuffMap->viewProjMat = viewMat * projMat;
+
 }
 
 ConstBuffMap::ConstBuffMap(){}
