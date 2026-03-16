@@ -23,7 +23,6 @@
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Board.cpp" />
-    <ClCompile Include="src\CBV.cpp" />
     <ClCompile Include="src\CmdAllocator.cpp" />
     <ClCompile Include="src\CmdList.cpp" />
     <ClCompile Include="src\CmdQueue.cpp" />
@@ -39,6 +38,7 @@
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyConf.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\GameObj.cpp" />
     <ClCompile Include="src\MoveBack.cpp" />
     <ClCompile Include="src\MoveForward.cpp" />
     <ClCompile Include="src\MoveLeft.cpp" />
@@ -66,7 +66,6 @@
     <ClInclude Include="header\Adapter.h" />
     <ClInclude Include="header\Application.h" />
     <ClInclude Include="header\Board.h" />
-    <ClInclude Include="header\CBV.h" />
     <ClInclude Include="header\CmdAllocator.h" />
     <ClInclude Include="header\CmdList.h" />
     <ClInclude Include="header\CmdQueue.h" />
@@ -88,6 +87,7 @@
     <ClInclude Include="header\InputHandler.h" />
     <ClInclude Include="header\InputLayout.h" />
     <ClInclude Include="header\KeyConf.h" />
+    <ClInclude Include="header\GameObj.h" />
     <ClInclude Include="header\Move.h" />
     <ClInclude Include="header\MoveBack.h" />
     <ClInclude Include="header\MoveForward.h" />

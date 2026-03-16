@@ -18,11 +18,13 @@
 #include"TexBuff.h"
 #include"ConstBuff.h"
 #include"CSUHeap.h"
-#include"CBV.h"
-#include"SRV.h"
+//#include"SRV.h"
 #include"RootSignature.h"
 #include"InputLayout.h"
 #include"Pipeline.h"
+
+#include"Board.h"
+#include"Piece.h"
 
 class Device
 {
@@ -45,7 +47,7 @@ private:
     DXGI_SAMPLE_DESC GetSampleDesc(); // サンプリングディスクリプタ
 
     D3D12_HEAP_PROPERTIES GetConstHeapProp(); // コンスタントヒーププロパティ
-    D3D12_RESOURCE_DESC GetConstResourceDesc(UINT byteSize); // コンスタントリソースディスクリプタ
+    D3D12_RESOURCE_DESC GetConstResourceDesc(UINT pieceNum); // コンスタントリソースディスクリプタ
 
     D3D12_HEAP_PROPERTIES GetDSHeapProp(); // デプスステンシルヒーププロパティ
     D3D12_RESOURCE_DESC GetDSResourceDesc( // デプスステンシルリソースディスクリプタ
@@ -55,8 +57,8 @@ private:
     D3D12_DESCRIPTOR_HEAP_DESC GetDSVHeapDesc(); // DSVヒープディスクリプタ
     D3D12_DEPTH_STENCIL_VIEW_DESC GetDSVDesc(); // DSVディスクリプタ
 
-    D3D12_DESCRIPTOR_HEAP_DESC GetCSUHeapDesc(); // CSUヒープディスクリプタ
-    D3D12_CONSTANT_BUFFER_VIEW_DESC GetCBVDesc(ID3D12Resource* cbvBuff); // CBVディスクリプタ
+    D3D12_DESCRIPTOR_HEAP_DESC GetCSUHeapDesc(UINT descNum); // CSUヒープディスクリプタ
+    D3D12_CONSTANT_BUFFER_VIEW_DESC GetCBVDesc(ID3D12Resource* constBuff); // CBVディスクリプタ
     D3D12_SHADER_RESOURCE_VIEW_DESC GetSRVDesc(); // SRVディスクリプタ
 
     ComPtr<ID3DBlob> GetRootSignatureBlob(); // ルートシグネチャBlob取得
@@ -101,20 +103,18 @@ public:
 
     HRESULT CreateVShader(VShader* vShader); // 頂点シェーダー作成
     HRESULT CreatePShader(PShader* pShader); // ピクセルシェーダー作成
-    template<typename... ShogiObjs>
-    HRESULT CreateVertBuff(VertBuff* vertBuff, ShogiObjs... shogiObjs); // 頂点バッファ作成
-    template<typename... ShogiObjs>
-    HRESULT CreateIdxBuff (IdxBuff* idxBuff,   ShogiObjs... shogiObjs); // インデックスバッファ作成
-    //HRESULT CreateVertBuff(VertBuff* vertBuff, ShogiObj* shogiObj); // 頂点バッファ作成
-    //HRESULT CreateIdxBuff (IdxBuff* idxBuff,   ShogiObj* shogiObj); // インデックスバッファ作成
+    HRESULT CreateVertBuff(VertBuff* vertBuff, Board* board, Piece* piece); // 頂点バッファ作成
+    HRESULT CreateIdxBuff (IdxBuff* idxBuff,   Board* board, Piece* piece); // インデックスバッファ作成
 
+
+    HRESULT CreateConstBuff(ConstBuff* constBuff, UINT pieceNum); // コンスタントバッファ作成
     HRESULT CreateTexBuff(TexBuff* texBuff); // テクスチャバッファ作成
 
-    HRESULT CreateConstBuff(ConstBuff* constBuff, ShogiObj* shogiObj); // コンスタントバッファ作成
-
     HRESULT CreateCSUHeap(CSUHeap* csuHeap); // CSUヒープ作成
-    void    CreateCBV(CBV* cbv, CSUHeap* csuHeap, ConstBuff* constBuff); // CBV作成
-    void    CreateSRV(SRV* srv, CSUHeap* csuHeap, TexBuff* texBuff); // SRV作成
+    void    CreateCBV(CSUHeap* csuHeap, ConstBuff* constBuff); // CBV作成
+    //void    CreateCBV(CBV* cbv, CSUHeap* csuHeap, ConstBuff* constBuff); // CBV作成
+    void    CreateSRV(CSUHeap* csuHeap, TexBuff* texBuff); // SRV作成
+    //void    CreateSRV(SRV* srv, CSUHeap* csuHeap, TexBuff* texBuff); // SRV作成
 
     HRESULT CreateRootSignature(RootSignature* rootSignature); // ルートシグネチャ作成
     void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成

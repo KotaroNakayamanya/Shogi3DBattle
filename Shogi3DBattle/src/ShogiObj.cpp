@@ -1,5 +1,8 @@
 #include"ShogiObj.h"
 
+ void ShogiObj::SetVertices(std::vector<VertexStruct::Vertex> vertices){_vertices = vertices;}
+ void ShogiObj::SetIndices(std::vector<unsigned short> indices){_indices = indices;}
+
 // 頂点集合ポインタを返す
 std::vector<VertexStruct::Vertex> ShogiObj::GetVertices(){return _vertices;}
 // 頂点１つ分のバイトサイズを返す

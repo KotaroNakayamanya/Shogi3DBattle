@@ -6,8 +6,9 @@ bool Application::Init()
 {
     
 
-    if(_gameWindow->CreateGameWindow() == false) goto failed;    // ゲームウインドウ作成
-    if(_dx12->CreateDX12Obj(_gameWindow.get()) == false) goto failed; // DirectX12オブジェクト作成
+    if(_gameWindow->InitGameWindow() == false) goto failed;    // ゲームウインドウ初期処理
+    //_gameObj->InitGameObj(); // 将棋盤作成
+    if(_dx12->InitDX12(_gameWindow.get()) == false) goto failed; // DirectX12初期処理
 
     _inputHandler = std::make_unique<InputHandler>(); // インプットハンドラ作成(初期は動ける状態）
 
@@ -222,6 +223,5 @@ Application::Application()
 {
     _gameWindow = std::make_unique<GameWindow>();
     _dx12 = std::make_unique<DX12>();
-    //_shogi = std::make_unique<ShogiObj>();
 }
 Application::~Application(){}

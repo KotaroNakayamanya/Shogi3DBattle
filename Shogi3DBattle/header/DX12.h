@@ -46,8 +46,7 @@ private:
     std::unique_ptr<TexBuff> _texBuff; // テクスチャバッファ
     std::unique_ptr<ConstBuff> _constBuff; // コンスタントバッファ
     std::unique_ptr<CSUHeap> _csuHeap; // CSUヒープ
-    std::unique_ptr<CBV> _cbv; // コンスタントバッファビュー
-    std::unique_ptr<SRV> _srv; // シェーダーリソースビュー
+   // std::unique_ptr<SRV> _srv; // シェーダーリソースビュー
     std::unique_ptr<ViewMat> _viewMat; // ビュー行列
     std::unique_ptr<ProjMat> _projMat; // プロジェクション行列
 
@@ -74,8 +73,14 @@ private:
     void ExeCommand();
 
     // 駒オブジェクト
-    std::unique_ptr<Pawn>  _pawn;
     std::unique_ptr<Board> _board;
+    std::unique_ptr<Pawn>  _pawn;
+    
+
+    void CreateBoard(); // 将棋盤作成
+    void CreatePiece(); // 歩 作成
+
+    void SetCmdDrawObj(ShogiObj* shogiObj);
     
    
 
@@ -85,7 +90,8 @@ private:
     void WaitProcessWithFence();
     
 public:
-    bool CreateDX12Obj(GameWindow* gameWindow); // DirectX12オブジェクト作成
+    //bool InitDX12(GameWindow* gameWindow); // DirectX12初期作成
+    bool InitDX12(GameWindow* gameWindow); // DirectX12初期作成
     void ExeDX12(); // DirectX12実行処理
 
     /// <summary>

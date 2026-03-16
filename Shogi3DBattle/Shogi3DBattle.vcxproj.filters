@@ -282,11 +282,11 @@
     <ClCompile Include="src\SRV.cpp">
       <Filter>ソース ファイル\dx12\csu\texture</Filter>
     </ClCompile>
-    <ClCompile Include="src\CBV.cpp">
-      <Filter>ソース ファイル\dx12\csu\const</Filter>
-    </ClCompile>
     <ClCompile Include="src\ShogiObj.cpp">
       <Filter>ソース ファイル\shogi_obj</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObj.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -440,8 +440,8 @@
     <ClInclude Include="header\ConstBuff.h">
       <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
     </ClInclude>
-    <ClInclude Include="header\CBV.h">
-      <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
+    <ClInclude Include="header\GameObj.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

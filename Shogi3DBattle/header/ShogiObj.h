@@ -9,11 +9,14 @@ class ShogiObj
 protected:
     std::vector<VertexStruct::Vertex> _vertices; // 頂点集合
     std::vector<unsigned short>       _indices;  // 頂点インデックス
-    DirectX::XMMATRIX                 _worldMat; // ワールド行列
+    DirectX::XMMATRIX                 _worldMat = DirectX::XMMatrixIdentity(); // ワールド行列
     D3D12_GPU_VIRTUAL_ADDRESS         _vertAddress; // 頂点アドレス
     D3D12_GPU_VIRTUAL_ADDRESS         _idxAddress;  // インデックスアドレス
 
 public:
+    void SetVertices(std::vector<VertexStruct::Vertex> vertices);
+    void SetIndices(std::vector<unsigned short> indices);
+
     std::vector<VertexStruct::Vertex> GetVertices(); // 頂点集合を返す
     unsigned int GetVertexByteSize();   // 頂点１つ分のバイトサイズを返す
     unsigned int GetVerticesByteSize(); // 頂点集合全体のバイトサイズを返す

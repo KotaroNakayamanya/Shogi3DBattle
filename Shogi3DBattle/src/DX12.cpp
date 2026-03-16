@@ -20,8 +20,8 @@ namespace {
 }
 
 
-// DirectX12オブジェクト作成
-bool DX12::CreateDX12Obj(GameWindow* gameWindow)
+// DirectX12初期処理
+bool DX12::InitDX12(GameWindow* gameWindow)
 {
     // ファクトリー系作成
     if (FAILED(CreateDXGIFactory())) goto failed; // DXGIファクトリー作成
@@ -65,32 +65,37 @@ bool DX12::CreateDX12Obj(GameWindow* gameWindow)
     if (FAILED(_device->CreatePShader(_pShader.get()))) goto failed; // ピクセルシェーダーバイナリオブジェクト作成
 
     // 頂点・インデックスバッファ作成
-    if (FAILED(_device->CreateVertBuff<ShogiObj*>(_vertBuff.get(), _pawn.get()))) goto failed; // 頂点バッファ作成
-    //if (FAILED(_device->CreateVertBuff(_vertBuff.get(), _pawn.get()))) goto failed; // 頂点バッファ作成
-    if (FAILED(_device->CreateIdxBuff <ShogiObj*>(_idxBuff.get(),  _pawn.get()))) goto failed; // インデックスバッファ作成
-    //if (FAILED(_device->CreateIdxBuff (_idxBuff.get(),  _pawn.get()))) goto failed; // インデックスバッファ作成
-    if (FAILED(_idxBuff ->WriteToIdxBuff (_pawn.get())))  goto failed; // インデックスバッファに書き込み
-    if (FAILED(_vertBuff->WriteToVertBuff(_pawn.get()))) goto failed; // 頂点バッファに書き込み
+    CreateBoard();
+    CreatePiece();
+    if (FAILED(_device->CreateVertBuff(_vertBuff.get(), _board.get(), _pawn.get()))) goto failed; // 頂点バッファ作成
+    if (FAILED(_device->CreateIdxBuff (_idxBuff.get(),  _board.get(), _pawn.get()))) goto failed; // インデックスバッファ作成
+    if (FAILED(_vertBuff->WriteToVertBuff(_board.get(), _pawn.get()))) goto failed; // 頂点バッファに書き込み
+    if (FAILED(_idxBuff ->WriteToIdxBuff (_board.get(), _pawn.get())))  goto failed; // インデックスバッファに書き込み
     _device->CreateInputLayout(_inputLayout.get()); // 入力レイアウト（頂点バッファの中身の内訳）作成
 
     // 将棋オブジェクトにGPUアドレスを付与
     D3D12_GPU_VIRTUAL_ADDRESS vertBuffAddress, idxBuffAddress;
+
     vertBuffAddress  = _vertBuff->GetAddress();
     idxBuffAddress   = _idxBuff ->GetAddress();
+    _board->SetVertAddress(vertBuffAddress);
+    _board->SetIdxAddress (idxBuffAddress);
+
+    vertBuffAddress += _board->GetVerticesByteSize(); // 将棋盤のバイトサイズを足してずらす
+    idxBuffAddress  += _board->GetIndicesByteSize();  
     _pawn->SetVertAddress(vertBuffAddress);
     _pawn->SetIdxAddress (idxBuffAddress);
 
 
     // コンスタントバッファ、テクスチャバッファ作成
-    if (FAILED(_device->CreateConstBuff( // コンスタントバッファ作成
-        _constBuff.get(),
-        _pawn.get()))) goto failed;
+    if (FAILED(_device->CreateConstBuff(_constBuff.get(), 1))) goto failed; // コンスタントバッファ作成
     if (FAILED(_device->CreateTexBuff(_texBuff.get()))) goto failed; // テクスチャバッファ作成
 
     // CBV, SRV作成
     if (FAILED(_device->CreateCSUHeap(_csuHeap.get()))) goto failed; // CSUヒープオブジェクト作成
-    _device->CreateCBV(_cbv.get(), _csuHeap.get(), _constBuff.get()); // CBV作成
-    _device->CreateSRV(_srv.get(), _csuHeap.get(), _texBuff.get());   // SRV作成
+    _device->CreateCBV(_csuHeap.get(), _constBuff.get()); // CBV作成
+    _device->CreateSRV(_csuHeap.get(), _texBuff.get());   // SRV作成
+    //_device->CreateSRV(_srv.get(), _csuHeap.get(), _texBuff.get());   // SRV作成
 
     
     if (FAILED(_device->CreateRootSignature(_rootSignature.get()))) goto failed; // ルートシグネチャオブジェクト作成
@@ -130,6 +135,160 @@ HRESULT DX12::CreateDXGIFactory()
     return result;
 }
 
+void DX12::CreateBoard()
+{
+    std::vector<VertexStruct::Vertex> vertices;
+
+    vertices =
+    {   // 上面図
+
+        // 前面
+        {{ 0.0f,  0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, 0}, // 左下
+        {{50.0f,  0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, 0}, // 右下
+        {{ 0.0f, 50.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, 0}, // 左上
+        {{50.0f, 50.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, 0}, // 右上
+
+        // 背面
+        {{ 0.0f,  0.0f, 3.0f}, {0.0f, 0.0f, -20.0f}, {0.0f, 0.0f}, 0}, // 左下
+        {{50.0f,  0.0f, 3.0f}, {0.0f, 0.0f, -20.0f}, {0.0f, 0.0f}, 0}, // 右下
+        {{ 0.0f, 50.0f, 3.0f}, {0.0f, 0.0f, -20.0f}, {0.0f, 0.0f}, 0}, // 左上
+        {{50.0f, 50.0f, 3.0f}, {0.0f, 0.0f, -20.0f}, {0.0f, 0.0f}, 0}  // 右上
+    };
+
+    _board->SetVertices(vertices);
+
+
+    std::vector<unsigned short> indices;
+
+    enum BoardVertName // 将棋盤の頂点に名前を付ける
+    {
+        // 前面
+        frontLeftBottom,  // 左下
+        frontRightBottom, // 右下
+        frontLeftTop,     // 左上
+        frontRightTop,    // 右上
+
+        // 背面
+        backLeftBottom,  // 左下
+        backRightBottom, // 右下
+        backLeftTop,     // 左上
+        backRightTop,    // 右上
+    };
+
+    indices =
+    {
+        // 前面
+        frontRightBottom, frontLeftBottom,  frontLeftTop,
+        frontLeftTop,     frontRightTop,    frontRightBottom,     
+        
+        // 上側面
+        frontRightTop, frontLeftTop, backLeftTop, 
+        backLeftTop,   backRightTop, frontRightTop,
+
+        // 右側面
+        frontRightBottom, frontRightTop,   backRightTop,
+        backRightTop,     backRightBottom, frontRightBottom,
+
+        // 下側面
+        frontLeftBottom, frontRightBottom, backRightBottom,
+        backRightBottom, backLeftBottom,   frontLeftBottom,
+
+        // 左側面
+        frontLeftTop, frontLeftBottom, backLeftBottom,
+        backLeftBottom, backLeftTop, frontLeftTop,
+
+        // 背面
+        backRightBottom, backLeftBottom, backLeftTop,
+        backLeftTop,     backRightTop,   backRightBottom
+    };
+    _board->SetIndices(indices);
+}
+void DX12::CreatePiece()
+{
+    std::vector<VertexStruct::Vertex> vertices;
+
+    float bottomWidth  = 0.9f;          // 底面の横の長さ
+    float cornerWidth  = 0.7f;          // 角部分の横の長さ
+    float height       = 0.9f;          // 高さ
+    float cornerHeight = height * 0.7f; // 角部分の高さ（高さを基準に調整）
+    float thickness    = 0.4f;          // 駒の厚み
+
+    vertices = // 頂点集合
+    {   // 上面図と考えて指定
+        // 前面
+        {{-bottomWidth, -height,       -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, 1}, // 左下
+        {{ bottomWidth, -height,       -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, 1}, // 右下
+        {{-cornerWidth,  cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, 1}, // 左上
+        {{ cornerWidth,  cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, 1}, // 右上
+        {{ 0.0f,         height,       -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, 1}, // 上    
+
+        // 裏面
+        {{-bottomWidth, -height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, 1}, // 左下
+        {{ bottomWidth, -height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, 1}, // 右下
+        {{-cornerWidth,  cornerHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, 1}, // 左上
+        {{ cornerWidth,  cornerHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, 1}, // 右上
+        {{ 0.0f,         height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, 1}, // 上
+    };
+
+    _pawn->SetVertices(vertices);
+
+
+    std::vector<unsigned short> indices;
+
+    enum PieceVertName // 駒の頂点に名前を付ける
+    {
+        // 前面
+        frontLeftBottom,  // 左下
+        frontRightBottom, // 右下
+        frontLeftTop,     // 左上
+        frontRightTop,    // 右上
+        frontTop,         // 上
+
+        // 背面
+        backLeftBottom,  // 左下
+        backRightBottom, // 右下
+        backLeftTop,     // 左上
+        backRightTop,    // 右上
+        backTop          // 上
+    };
+
+    indices = // インデックス集合
+    {
+        // 前面
+        frontRightBottom, frontLeftBottom, frontLeftTop,     // 右下　左下　左上
+        frontLeftTop,     frontRightTop,   frontRightBottom, // 左上　右上 右下
+        frontTop,         frontRightTop,   frontLeftTop,     // 右上　左上　上
+
+        // 裏面
+        backLeftBottom,  backRightBottom, backLeftTop, // 左下　右下　左上
+        backRightBottom, backRightTop,    backLeftTop, // 右下　右上　左上
+        backLeftTop,     backRightTop,    backTop,     // 左上　右上　上
+
+        // 側面上左
+        frontTop, frontLeftTop, backLeftTop, // 前面上　前面左上　背面左上
+        backTop,  frontTop,     backLeftTop, // 背面上　前面上　　背面左上
+
+        // 側面上右
+        backTop,  backRightTop, frontRightTop, // 背面上　背面右上　前面右上
+        frontTop, backTop,      frontRightTop, // 前面上　背面上　　前面右上　
+
+
+        // 側面右
+        frontRightBottom, frontRightTop, backRightBottom, // 背面右下　前面右上　背面右下
+        frontRightTop,    backRightTop,  backRightBottom, // 背面右上　背面右上　背面右下
+
+        // 側面左
+        backLeftBottom, backLeftTop,  frontLeftBottom, // 背面左下　背面左上　前面左下
+        backLeftTop,    frontLeftTop, frontLeftBottom, // 背面左上　前面左上　前面左下
+
+        // 底面
+        frontLeftBottom, frontRightBottom, backRightBottom, // 前面左下　前面右下　背面右下
+        frontLeftBottom, backRightBottom, backLeftBottom    // 前面左下　背面右下　背面左下
+    };
+
+    _pawn->SetIndices(indices);
+ }
+
 
 
 
@@ -140,12 +299,6 @@ void DX12::ExeDX12()
     PrepareRenderTarget();
 
     // ワールド行列を変換
-
-    // ワールド行列、ビュープロジェクション行列をコンスタントバッファに書き込み
-    _constBuff->WriteToConstBuff(
-        _pawn.get(),
-        _viewMat.get(),
-        _projMat.get());
 
     // コマンドセット
     SetCommand();
@@ -228,15 +381,11 @@ void DX12::SetCommand()
     _cmdList->SetCSUHeaps(csuHeapNum, csuHeaps); 
 
     // ルートパラメータとディスクリプタ関連付け
-    _cmdList->SetDescriptorTable(0, _cbv->GetCBVHandle()); // CBV
-    _cmdList->SetDescriptorTable(1, _srv->GetSRVHandle()); // SRV
-
-    // 頂点バッファビューセット
-    D3D12_VERTEX_BUFFER_VIEW vertBuffViews[] = {GetVertBuffView(_pawn.get())};
-    auto vertBuffViewNum = sizeof(vertBuffViews) / sizeof(D3D12_VERTEX_BUFFER_VIEW);
-    _cmdList->SetVertBuffViews(vertBuffViewNum, vertBuffViews);
-    // インデックスバッファセット
-    _cmdList->SetIdxBuffView(GetIdxBuffView(_pawn.get()));
+    //_cmdList->SetDescriptorTable(0, _cbv->GetCBVHandle()); // CBV
+    auto handle = _csuHeap->GetCSUHeap()->GetGPUDescriptorHandleForHeapStart();
+    _cmdList->SetDescriptorTable(0, handle); // CBV
+    handle.ptr += _device->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    _cmdList->SetDescriptorTable(1, handle); // SRV
 
     // トポロジーセット
     _cmdList->SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -250,10 +399,33 @@ void DX12::SetCommand()
     D3D12_RECT scissorRects[] = {_scissorRect->GetScissorRect()};
     auto scissorRectNum = sizeof(scissorRects) / sizeof(D3D12_RECT);
     _cmdList->SetScissorRects(scissorRectNum, scissorRects);
+
+        // ワールド行列、ビュープロジェクション行列をコンスタントバッファに書き込み
+    _constBuff->WriteToConstBuff(
+        _board.get(),
+        _pawn.get(),
+        _viewMat.get(),
+        _projMat.get());
+
+
+    // 将棋オブジェクト描画命令セット
+    SetCmdDrawObj(_pawn.get());
+    SetCmdDrawObj(_board.get());
+
+        //_constBuff->WriteToConstBuff(
+        //_board.get(),
+        //_viewMat.get(),
+        //_projMat.get());
     
 
-    // インデックス描画セット
-    _cmdList->SetDrawWithIdx(_pawn.get());
+    //// 頂点バッファビューセット
+    //D3D12_VERTEX_BUFFER_VIEW vertBuffViews[] = {GetVertBuffView(_pawn.get())};
+    //auto vertBuffViewNum = sizeof(vertBuffViews) / sizeof(D3D12_VERTEX_BUFFER_VIEW);
+    //_cmdList->SetVertBuffViews(vertBuffViewNum, vertBuffViews);
+    //// インデックスバッファセット
+    //_cmdList->SetIdxBuffView(GetIdxBuffView(_pawn.get()));
+    //// インデックス描画セット
+    //_cmdList->SetDrawWithIdx(_pawn.get());
 }
 
 // 頂点バッファビュー
@@ -285,43 +457,22 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(ShogiObj* shogiObj)
 
     return view;
 }
-//// 頂点バッファビュー
-//D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBuffView()
-//{
-//    D3D12_VERTEX_BUFFER_VIEW view;
-//
-//    //ComPtr<ID3D12Resource> vertexBuff =
-//    //    _vertBuff->GetVertBuff();
-//
-//    UINT vertexByteSize   = _pawn->GetVertexByteSize();
-//    UINT verticesByteSize = _pawn->GetVerticesByteSize();
-//
-//    view.BufferLocation =
-//        _vertBuff->GetAddress();
-//    view.SizeInBytes =
-//        verticesByteSize; // 注意
-//    view.StrideInBytes =
-//        vertexByteSize; // 注意
-//
-//    return view;
-//}
-//
-//// インデックスバッファビュー
-//D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBuffView()
-//{
-//    D3D12_INDEX_BUFFER_VIEW view;
-//
-//    UINT indicesByte = _pawn->GetIndicesByteSize();
-//
-//    view.BufferLocation =
-//        _idxBuff->GetAddress();
-//    view.Format =
-//        DXGI_FORMAT_R16_UINT;
-//    view.SizeInBytes =
-//        indicesByte;
-//
-//    return view;
-//}
+
+// オブジェクト描画命令セット
+void DX12::SetCmdDrawObj(ShogiObj* shogiObj)
+{
+
+    // 頂点バッファビューセット
+    D3D12_VERTEX_BUFFER_VIEW vertBuffViews[] = {GetVertBuffView(shogiObj)};
+    auto vertBuffViewNum = sizeof(vertBuffViews) / sizeof(D3D12_VERTEX_BUFFER_VIEW);
+    _cmdList->SetVertBuffViews(vertBuffViewNum, vertBuffViews);
+
+    // インデックスバッファセット
+    _cmdList->SetIdxBuffView(GetIdxBuffView(shogiObj));
+
+    // インデックス描画セット
+    _cmdList->SetDrawWithIdx(shogiObj);
+}
 
 
 
@@ -483,8 +634,7 @@ DX12::DX12() {
     _constBuff     = std::make_unique<ConstBuff>();
 
     _csuHeap       = std::make_unique<CSUHeap>();
-    _cbv           = std::make_unique<CBV>();
-    _srv           = std::make_unique<SRV>();
+    //_srv           = std::make_unique<SRV>();
     _rootSignature = std::make_unique<RootSignature>();
     _inputLayout   = std::make_unique<InputLayout>();
     _pipeline      = std::make_unique<Pipeline>();

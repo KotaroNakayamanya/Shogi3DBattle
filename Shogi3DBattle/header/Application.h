@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include"GameWindow.h"
+//#include"GameObj.h"
 #include"DX12.h"
 #include"InputHandler.h"
 
@@ -8,10 +9,10 @@
 class Application
 {
 private:
-    std::unique_ptr<GameWindow> _gameWindow; // ゲームウインドウオブジェクト
-    std::unique_ptr<DX12> _dx12; // DX12オブジェクト
-    //std::unique_ptr<ShogiObj> _shogi; // 将棋オブジェクト
-    std::unique_ptr<InputHandler> _inputHandler; // インプットハンドラオブジェクト
+    std::unique_ptr<GameWindow> _gameWindow; // ゲームウインドウ
+    //std::unique_ptr<GameObj> _gameObj; // ゲームオブジェクト
+    std::unique_ptr<DX12> _dx12; // DirectX
+    std::unique_ptr<InputHandler> _inputHandler; // インプットハンドラ
 
     Application(); // デフォルトコンストラクタ禁止
     Application(const Application&) = delete; // コピー禁止

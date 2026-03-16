@@ -10,6 +10,7 @@ public:
         DirectX::XMFLOAT3 pos;
         DirectX::XMFLOAT3 normal;
         DirectX::XMFLOAT2 uv;
+        UINT idx;
     }Vertex;
 
     VertexStruct(){}

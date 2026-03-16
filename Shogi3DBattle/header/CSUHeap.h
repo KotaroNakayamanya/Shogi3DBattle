@@ -12,6 +12,8 @@ class CSUHeap
 
 private:
     ComPtr<ID3D12DescriptorHeap> _csuHeap; // CBV,SRV,UAVヒープ
+    UINT _cbvNum; // CBV数
+    UINT _srvNum; // SRV数
    
 public:
     ID3D12DescriptorHeap* GetCSUHeap(); // ヒープを渡す

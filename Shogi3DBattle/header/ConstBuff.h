@@ -2,7 +2,9 @@
 
 #include<d3d12.h>
 #include<wrl.h>
-#include"ShogiObj.h"
+//#include"ShogiObj.h"
+#include"Board.h"
+#include"Piece.h"
 #include"ViewMat.h"
 #include"ProjMat.h"
 
@@ -17,8 +19,9 @@ private:
     ComPtr<ID3D12Resource> _constBuff; // コンスタントバッファ
 
 public:
+    D3D12_GPU_VIRTUAL_ADDRESS GetStartAddress(); // バッファの開始アドレスを返す
     // 変換行列を書き込む
-    void WriteToConstBuff(ShogiObj* shogiObj, ViewMat* viewMat, ProjMat* projMat);
+    void WriteToConstBuff(Board* board, Piece* piece, ViewMat* viewMat, ProjMat* projMat);
 
     ID3D12Resource* GetBuff(); // バッファを返す
 

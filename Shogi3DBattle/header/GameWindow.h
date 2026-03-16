@@ -14,8 +14,7 @@ private:
     void CreateWindowObj();   // ウインドウオブジェクト作成
 
 public:
-    bool CreateGameWindow();  // ゲームウインドウ作成
-
+    bool InitGameWindow();  // ゲームウインドウ初期処理
     void DisplayWindow(); // ウインドウを表示する
     void DestroyClass();  // クラス破棄
 

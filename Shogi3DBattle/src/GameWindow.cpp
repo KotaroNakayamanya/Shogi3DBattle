@@ -3,8 +3,8 @@
 // ウィンドウプロシージャ宣言
 LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-// ウインドウ作成
-bool GameWindow::CreateGameWindow()
+// ゲームウインドウ初期処理
+bool GameWindow::InitGameWindow()
 {
     CreateWindowClass(); // ウインドウクラス作成
     RegisterClassEx(&_windowClass); //ウインドウクラス登録
@@ -42,6 +42,9 @@ void GameWindow::CreateWindowObj()
         _windowClass.hInstance,     // アプリケーションハンドル
         nullptr);                   // 追加パラメータ
 }
+
+
+
 
 // ウインドウを表示する
 void GameWindow::DisplayWindow()
