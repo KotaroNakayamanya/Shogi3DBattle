@@ -6,8 +6,6 @@
 class Piece : public ShogiObj
 {
 protected:
-    DirectX::XMMATRIX _worldMat; // ワールド行列
-
     typedef struct CreatePieceVerticesArg // 駒の頂点集合作成用引数
     {
         float bottomWidth;  // 底面の横の長さ
@@ -22,9 +20,7 @@ protected:
 
 public:
     void MoveX(float x); // x軸方向に動くようにワールド行列を変換する
-    void MoveY(float y); // y軸方向に動くようにワールド行列を変換する
-
-    DirectX::XMMATRIX GetWorldMat(); // ワールド行列を返す  
+    void MoveY(float y); // y軸方向に動くようにワールド行列を変換する      
 
     Piece();
     ~Piece();

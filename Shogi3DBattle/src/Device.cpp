@@ -281,11 +281,11 @@ HRESULT Device::CreateVShader(VShader* vShader)
         "vs_5_1",
         D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
         0,
-        vShader->_vShaderBlob.ReleaseAndGetAddressOf(),
-        errBlob              .ReleaseAndGetAddressOf());
+        vShader->_vShader.ReleaseAndGetAddressOf(),
+        errBlob          .ReleaseAndGetAddressOf());
 }
 
-// ピクセルシェーダバイナリ作成
+// ピクセルシェーダー作成
 HRESULT Device::CreatePShader(PShader* pShader)
 {
     ComPtr<ID3DBlob> errBlob;
@@ -298,18 +298,26 @@ HRESULT Device::CreatePShader(PShader* pShader)
         "ps_5_1",
         D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
         0,
-        pShader->_pShaderBlob.ReleaseAndGetAddressOf(),
-        errBlob              .ReleaseAndGetAddressOf());
+        pShader->_pShader.ReleaseAndGetAddressOf(),
+        errBlob          .ReleaseAndGetAddressOf());
 }
 
 
 
 
 // 頂点バッファ作成
-HRESULT Device::CreateVertBuff(VertBuff* vertBuff, UINT byteSize)
+template<typename... ShogiObjs>
+HRESULT Device::CreateVertBuff(VertBuff* vertBuff, ShogiObjs... shogiObjs)
 {
+    //ShogiObj* shogiObj[] = {shogiObjs...};
+
+    UINT totalByteSize = 0;
+    for (ShogiObj* shogiObj : {shogiObjs...})
+    {
+        totalByteSize += shogiObj->GetVerticesByteSize();
+    }
     D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
-    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(byteSize);
+    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
 
     return _device->CreateCommittedResource(
         &heapProp,
@@ -321,10 +329,17 @@ HRESULT Device::CreateVertBuff(VertBuff* vertBuff, UINT byteSize)
 }
 
 // インデックスバッファ作成
-HRESULT Device::CreateIdxBuff(IdxBuff* idxBuff, UINT byteSize)
+template<typename... ShogiObjs>
+HRESULT Device::CreateIdxBuff(IdxBuff* idxBuff, ShogiObjs... shogiObjs)
 {
+    UINT totalByteSize = 0;
+    for (ShogiObj* shogiObj : {shogiObjs...})
+    {
+        totalByteSize += shogiObj->GetIndicesByteSize();
+    }
+
     D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
-    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(byteSize);
+    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
 
     return _device->CreateCommittedResource(
         &heapProp,
@@ -333,8 +348,84 @@ HRESULT Device::CreateIdxBuff(IdxBuff* idxBuff, UINT byteSize)
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
         IID_PPV_ARGS(idxBuff->_idxBuff.ReleaseAndGetAddressOf()));
-
 }
+
+// テンプレートの明示
+template HRESULT Device::CreateVertBuff<ShogiObj*>(VertBuff* vertBuff, ShogiObj* shogiObj);
+template HRESULT Device::CreateIdxBuff<ShogiObj*>(IdxBuff* idxBuff, ShogiObj* shogiObj);
+//// 頂点バッファ作成
+//template<typename... ShogiObjs>
+//HRESULT Device::CreateVertBuff(VertBuff* vertBuff, ShogiObjs... shogiObjs)
+//{
+//    UINT totalByteSize = 0;
+//    //for (ShogiObj* shogiObj : ...args)
+//    //{
+//    //    totalByteSize += shogiObj->GetVerticesByteSize();
+//    //}
+//    D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
+//    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
+//
+//    return _device->CreateCommittedResource(
+//        &heapProp,
+//        D3D12_HEAP_FLAG_NONE,
+//        &resourceDesc,
+//        D3D12_RESOURCE_STATE_GENERIC_READ,
+//        nullptr,
+//        IID_PPV_ARGS(vertBuff->_vertBuff.ReleaseAndGetAddressOf()));
+//}
+//
+//// インデックスバッファ作成
+//template<typename... ShogiObjs>
+//HRESULT Device::CreateIdxBuff(IdxBuff* idxBuff, ShogiObjs... shogiObjs)
+//{
+//    
+//
+//    UINT totalByteSize = 0;
+//    //for (ShogiObj* shogiObj : ...args)
+//    //{
+//    //    totalByteSize += shogiObj->GetIndicesByteSize();
+//    //}
+//
+//    D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
+//    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
+//
+//    return _device->CreateCommittedResource(
+//        &heapProp,
+//        D3D12_HEAP_FLAG_NONE,
+//        &resourceDesc,
+//        D3D12_RESOURCE_STATE_GENERIC_READ,
+//        nullptr,
+//        IID_PPV_ARGS(idxBuff->_idxBuff.ReleaseAndGetAddressOf()));
+//}
+//// 頂点バッファ作成
+//HRESULT Device::CreateVertBuff(VertBuff* vertBuff, ShogiObj* shogiObj)
+//{
+//    D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
+//    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(shogiObj->GetVerticesByteSize());
+//
+//    return _device->CreateCommittedResource(
+//        &heapProp,
+//        D3D12_HEAP_FLAG_NONE,
+//        &resourceDesc,
+//        D3D12_RESOURCE_STATE_GENERIC_READ,
+//        nullptr,
+//        IID_PPV_ARGS(vertBuff->_vertBuff.ReleaseAndGetAddressOf()));
+//}
+//
+//// インデックスバッファ作成
+//HRESULT Device::CreateIdxBuff(IdxBuff* idxBuff, ShogiObj* shogiObj)
+//{
+//    D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
+//    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(shogiObj->GetIndicesByteSize());
+//
+//    return _device->CreateCommittedResource(
+//        &heapProp,
+//        D3D12_HEAP_FLAG_NONE,
+//        &resourceDesc,
+//        D3D12_RESOURCE_STATE_GENERIC_READ,
+//        nullptr,
+//        IID_PPV_ARGS(idxBuff->_idxBuff.ReleaseAndGetAddressOf()));
+//}
 
 // 頂点ヒーププロパティ
 D3D12_HEAP_PROPERTIES Device::GetVertHeapProp()
@@ -457,12 +548,12 @@ DXGI_SAMPLE_DESC Device::GetSampleDesc()
 
 
 // コンスタントオブジェクト作成
-HRESULT Device::CreateConstBuff(ConstBuff* constBuff, UINT verticesByteSize)
+HRESULT Device::CreateConstBuff(ConstBuff* constBuff, ShogiObj* shogiObj)
 {
     D3D12_HEAP_PROPERTIES heapProp =
         GetConstHeapProp();
     D3D12_RESOURCE_DESC resourceDesc =
-        GetConstResourceDesc(verticesByteSize);
+        GetConstResourceDesc(shogiObj->GetVerticesByteSize());
 
     return _device->CreateCommittedResource(
         &heapProp,
@@ -670,7 +761,7 @@ D3D12_ROOT_SIGNATURE_DESC Device::GetRootSignatureDesc()
     desc.pStaticSamplers =
         samplerDescPtr->data();
     desc.NumStaticSamplers =
-        1;
+        samplerNum;
 
     return desc;
 }
@@ -849,8 +940,8 @@ HRESULT Device::CreatePipeline(
         GetPipelineStateDesc(
             rootSignature->_rootSignature.Get(),
             inputLayout->_inputLayout,
-            vShader->_vShaderBlob.Get(),
-            pShader->_pShaderBlob.Get());
+            vShader->_vShader.Get(),
+            pShader->_pShader.Get());
 
     return _device->CreateGraphicsPipelineState(
         &desc,
@@ -914,14 +1005,14 @@ D3D12_INPUT_LAYOUT_DESC Device::GetInputLayoutDesc(
 
 // 頂点シェーダディスクリプタ
 D3D12_SHADER_BYTECODE Device::GetVertexShaderDesc(
-    ID3DBlob* vertexShaderBlob)
+    ID3DBlob* vertShaderBlob)
 {
     D3D12_SHADER_BYTECODE desc = {};
 
     desc.pShaderBytecode =
-        vertexShaderBlob->GetBufferPointer();
+        vertShaderBlob->GetBufferPointer();
     desc.BytecodeLength =
-        vertexShaderBlob->GetBufferSize();
+        vertShaderBlob->GetBufferSize();
 
     return desc;
 }

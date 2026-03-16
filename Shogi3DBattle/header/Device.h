@@ -101,12 +101,16 @@ public:
 
     HRESULT CreateVShader(VShader* vShader); // 頂点シェーダー作成
     HRESULT CreatePShader(PShader* pShader); // ピクセルシェーダー作成
-    HRESULT CreateVertBuff(VertBuff* vertBuff, UINT byteSize); // 頂点バッファ作成
-    HRESULT CreateIdxBuff (IdxBuff* idxBuff,   UINT byteSize); // インデックスバッファ作成
+    template<typename... ShogiObjs>
+    HRESULT CreateVertBuff(VertBuff* vertBuff, ShogiObjs... shogiObjs); // 頂点バッファ作成
+    template<typename... ShogiObjs>
+    HRESULT CreateIdxBuff (IdxBuff* idxBuff,   ShogiObjs... shogiObjs); // インデックスバッファ作成
+    //HRESULT CreateVertBuff(VertBuff* vertBuff, ShogiObj* shogiObj); // 頂点バッファ作成
+    //HRESULT CreateIdxBuff (IdxBuff* idxBuff,   ShogiObj* shogiObj); // インデックスバッファ作成
 
     HRESULT CreateTexBuff(TexBuff* texBuff); // テクスチャバッファ作成
 
-    HRESULT CreateConstBuff(ConstBuff* constBuff, UINT byteSize); // コンスタントバッファ作成
+    HRESULT CreateConstBuff(ConstBuff* constBuff, ShogiObj* shogiObj); // コンスタントバッファ作成
 
     HRESULT CreateCSUHeap(CSUHeap* csuHeap); // CSUヒープ作成
     void    CreateCBV(CBV* cbv, CSUHeap* csuHeap, ConstBuff* constBuff); // CBV作成

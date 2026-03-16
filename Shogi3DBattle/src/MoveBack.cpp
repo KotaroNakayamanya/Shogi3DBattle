@@ -3,7 +3,7 @@
 // Às
 void MoveBack::Exe()
 {
-    _piece->MoveY(-0.01f);
+    _piece->MoveY(-0.1f);
 }
 // Àsæ‚èÁ‚µ
 void MoveBack::Undo()

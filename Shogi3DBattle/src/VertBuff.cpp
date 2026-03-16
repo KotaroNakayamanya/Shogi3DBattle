@@ -2,20 +2,19 @@
 #include<cassert>
 
 // 頂点バッファに書き込み
-HRESULT VertBuff::WriteVertBuff(std::vector<VertexStruct::Vertex> vertexPtr)
+HRESULT VertBuff::WriteToVertBuff(ShogiObj* shogiObj)
 {
-    VertexStruct::Vertex* vertexMap;
+    VertexStruct::Vertex* vertBuffMap;
 
     HRESULT result = _vertBuff->Map(
-        0, nullptr, (void**)&vertexMap);
+        0, nullptr, (void**)&vertBuffMap);
     if (FAILED(result))
     {
         assert(false); return E_FAIL;
     }
 
-    auto vertices = vertexPtr;
-
-    std::copy(vertices.begin(), vertices.end(), vertexMap);
+    auto vertices = shogiObj->GetVertices();
+    std::copy(vertices.begin(), vertices.end(), vertBuffMap);
 
     _vertBuff->Unmap(0, nullptr);
 

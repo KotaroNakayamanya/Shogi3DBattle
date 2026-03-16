@@ -20,12 +20,15 @@ public:
     void SetRenderTarget( // レンダーターゲットセット
         D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle,
         D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
+    void ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle); // レンダーターゲットクリア
+    void ClearDepthStencil(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle); // デプスステンシルクリア
+
     void SetPipeline( // パイプラインセット
         ID3D12PipelineState* pipelineState);
     void SetRootSignature( // ルートシグネチャセット
         ID3D12RootSignature* rootSignature);
     void SetCSUHeaps( // CSUヒープセット
-        ID3D12DescriptorHeap** csuHeaps);
+        UINT num, ID3D12DescriptorHeap** csuHeaps);
     void SetDescriptorTable( // ディスクリプタテーブルセット
         UINT i, D3D12_GPU_DESCRIPTOR_HANDLE handle);
 
@@ -39,8 +42,7 @@ public:
 
     void SetDrawWithIdx(ShogiObj* shogiObj); // インデックス描画セット
 
-    void ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle); // レンダーターゲットクリア
-    void ClearDepthStencil(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle); // デプスステンシルクリア
+    
 
     
 

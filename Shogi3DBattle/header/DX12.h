@@ -7,10 +7,11 @@
 #include"Viewport.h"
 #include"ScissorRect.h"
 
-#include"ConstBuffMap.h"
 #include"ViewMat.h"
 #include"ProjMat.h"
+
 #include"Pawn.h"
+#include"Board.h"
 
 class DX12
 {
@@ -44,7 +45,6 @@ private:
     std::unique_ptr<Pipeline> _pipeline; // パイプライン
     std::unique_ptr<TexBuff> _texBuff; // テクスチャバッファ
     std::unique_ptr<ConstBuff> _constBuff; // コンスタントバッファ
-    std::unique_ptr<ConstBuffMap> _constBuffMap; // コンスタントバッファマップ
     std::unique_ptr<CSUHeap> _csuHeap; // CSUヒープ
     std::unique_ptr<CBV> _cbv; // コンスタントバッファビュー
     std::unique_ptr<SRV> _srv; // シェーダーリソースビュー
@@ -67,14 +67,15 @@ private:
 
     // コマンドセット
     void SetCommand();
-    D3D12_VERTEX_BUFFER_VIEW GetVertexBuffView();
-    D3D12_INDEX_BUFFER_VIEW GetIndexBuffView();
+
+    D3D12_VERTEX_BUFFER_VIEW GetVertBuffView(ShogiObj* obj); // 頂点バッファビュー
+    D3D12_INDEX_BUFFER_VIEW  GetIdxBuffView (ShogiObj* obj); // インデックスバッファビュー
 
     void ExeCommand();
 
     // 駒オブジェクト
-    std::unique_ptr<Pawn> _pawn;
-    HRESULT CreateVertexSets();
+    std::unique_ptr<Pawn>  _pawn;
+    std::unique_ptr<Board> _board;
     
    
 

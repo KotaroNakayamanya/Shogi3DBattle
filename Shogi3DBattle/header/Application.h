@@ -3,7 +3,7 @@
 #include"GameWindow.h"
 #include"DX12.h"
 #include"InputHandler.h"
-#include"ShogiObj.h"
+
 
 class Application
 {

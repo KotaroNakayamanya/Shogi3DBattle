@@ -246,9 +246,6 @@
     <ClCompile Include="src\ConstBuff.cpp">
       <Filter>ソース ファイル\dx12\csu\const</Filter>
     </ClCompile>
-    <ClCompile Include="src\ConstBuffMap.cpp">
-      <Filter>ソース ファイル\dx12\csu\const</Filter>
-    </ClCompile>
     <ClCompile Include="header\ViewRotation.h">
       <Filter>ヘッダー ファイル\mouse</Filter>
     </ClCompile>
@@ -441,9 +438,6 @@
       <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
     <ClInclude Include="header\ConstBuff.h">
-      <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ConstBuffMap.h">
       <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
     </ClInclude>
     <ClInclude Include="header\CBV.h">

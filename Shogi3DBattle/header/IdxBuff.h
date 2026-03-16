@@ -2,7 +2,7 @@
 
 #include<d3d12.h>
 #include<wrl.h>
-#include<vector>
+#include"ShogiObj.h"
 
 class IdxBuff
 {
@@ -15,8 +15,8 @@ private:
     ComPtr<ID3D12Resource> _idxBuff;  // インデックスバッファ
 
 public:
-    HRESULT WriteIdxBuff(std::vector<unsigned short> indexPtr);  // インデックスに書き込み
-    ID3D12Resource* GetIdxBuff(); // インデックスバッファを返す
+    HRESULT WriteToIdxBuff(ShogiObj* shogiObj);  // インデックスに書き込み
+    D3D12_GPU_VIRTUAL_ADDRESS GetAddress(); // 頂点バッファアドレスを返す
 
     IdxBuff();
     ~IdxBuff();

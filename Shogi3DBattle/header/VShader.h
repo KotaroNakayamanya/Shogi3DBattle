@@ -11,10 +11,10 @@ class VShader
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    ComPtr<ID3DBlob> _vShaderBlob; // 頂点シェーダバイナリオブジェクト
+    ComPtr<ID3DBlob> _vShader; // 頂点シェーダー
 
 public:
-    ID3DBlob* GetVShaderBlob();  // 頂点シェーダーバイナリを渡す
+    ID3DBlob* GetVShader();  // 頂点シェーダーを返す
 
     VShader();
     ~VShader();

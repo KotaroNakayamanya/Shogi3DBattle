@@ -24,7 +24,6 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Board.cpp" />
     <ClCompile Include="src\CBV.cpp" />
-    <ClCompile Include="src\ConstBuffMap.cpp" />
     <ClCompile Include="src\CmdAllocator.cpp" />
     <ClCompile Include="src\CmdList.cpp" />
     <ClCompile Include="src\CmdQueue.cpp" />
@@ -68,7 +67,6 @@
     <ClInclude Include="header\Application.h" />
     <ClInclude Include="header\Board.h" />
     <ClInclude Include="header\CBV.h" />
-    <ClInclude Include="header\ConstBuffMap.h" />
     <ClInclude Include="header\CmdAllocator.h" />
     <ClInclude Include="header\CmdList.h" />
     <ClInclude Include="header\CmdQueue.h" />

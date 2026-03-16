@@ -2,9 +2,7 @@
 
 #include<d3d12.h>
 #include<wrl.h>
-#include<vector>
-
-#include"VertexStruct.h"
+#include"ShogiObj.h"
 
 class VertBuff
 {
@@ -17,7 +15,7 @@ private:
     ComPtr<ID3D12Resource> _vertBuff; // 頂点バッファ
 
 public:
-    HRESULT WriteVertBuff(std::vector<VertexStruct::Vertex> vertexPtr); // 頂点バッファに書き込み
+    HRESULT WriteToVertBuff(ShogiObj* shogiObj); // 頂点バッファに書き込み
     D3D12_GPU_VIRTUAL_ADDRESS GetAddress(); // 頂点バッファアドレスを返す
 
     ID3D12Resource* GetVertBuff(); // 頂点バッファを返す

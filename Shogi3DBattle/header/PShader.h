@@ -11,10 +11,10 @@ class PShader
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    ComPtr<ID3DBlob> _pShaderBlob; // ピクセルシェーダバイナリオブジェクト
+    ComPtr<ID3DBlob> _pShader; // ピクセルシェーダー
 
 public:
-    ID3DBlob* GetPShaderBlob();  // ピクセルシェーダーバイナリを渡す
+    ID3DBlob* GetPShader();  // ピクセルシェーダーを返す
 
     PShader();
     ~PShader();

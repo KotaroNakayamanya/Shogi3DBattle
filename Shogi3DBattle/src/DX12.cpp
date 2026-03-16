@@ -63,22 +63,29 @@ bool DX12::CreateDX12Obj(GameWindow* gameWindow)
     // シェーダー作成
     if (FAILED(_device->CreateVShader(_vShader.get()))) goto failed; // 頂点シェーダーバイナリオブジェクト作成
     if (FAILED(_device->CreatePShader(_pShader.get()))) goto failed; // ピクセルシェーダーバイナリオブジェクト作成
-    
-    if (FAILED(CreateVertexSets())) goto failed; // 頂点集合作成
 
     // 頂点・インデックスバッファ作成
-    if (FAILED(_device->CreateVertBuff(_vertBuff.get(), _pawn->GetVerticesByteSize()))) goto failed; // 頂点バッファ作成
-    if (FAILED(_device->CreateIdxBuff (_idxBuff.get(),  _pawn->GetVerticesByteSize()))) goto failed; // インデックスバッファ作成
-    if (FAILED(_vertBuff->WriteVertBuff(_pawn->GetVerticesPtr()))) goto failed; // 頂点バッファに書き込み
-    if (FAILED(_idxBuff ->WriteIdxBuff (_pawn->GetIndicesPtr())))  goto failed; // インデックスバッファに書き込み
+    if (FAILED(_device->CreateVertBuff<ShogiObj*>(_vertBuff.get(), _pawn.get()))) goto failed; // 頂点バッファ作成
+    //if (FAILED(_device->CreateVertBuff(_vertBuff.get(), _pawn.get()))) goto failed; // 頂点バッファ作成
+    if (FAILED(_device->CreateIdxBuff <ShogiObj*>(_idxBuff.get(),  _pawn.get()))) goto failed; // インデックスバッファ作成
+    //if (FAILED(_device->CreateIdxBuff (_idxBuff.get(),  _pawn.get()))) goto failed; // インデックスバッファ作成
+    if (FAILED(_idxBuff ->WriteToIdxBuff (_pawn.get())))  goto failed; // インデックスバッファに書き込み
+    if (FAILED(_vertBuff->WriteToVertBuff(_pawn.get()))) goto failed; // 頂点バッファに書き込み
     _device->CreateInputLayout(_inputLayout.get()); // 入力レイアウト（頂点バッファの中身の内訳）作成
 
-    // テクスチャバッファ作成
-    if (FAILED(_device->CreateTexBuff(_texBuff.get()))) goto failed; // テクスチャバッファ作成
+    // 将棋オブジェクトにGPUアドレスを付与
+    D3D12_GPU_VIRTUAL_ADDRESS vertBuffAddress, idxBuffAddress;
+    vertBuffAddress  = _vertBuff->GetAddress();
+    idxBuffAddress   = _idxBuff ->GetAddress();
+    _pawn->SetVertAddress(vertBuffAddress);
+    _pawn->SetIdxAddress (idxBuffAddress);
 
-    // コンスタントバッファ（頂点の変換行列を格納するバッファ）作成
-    if (FAILED(_device->CreateConstBuff(_constBuff.get(), _pawn->GetVerticesByteSize()))) goto failed; // コンスタントバッファ作成
-    if (FAILED(_constBuffMap->MapConstBuff(_constBuff->GetBuff()))) goto failed; // コンスタントバッファをマップ
+
+    // コンスタントバッファ、テクスチャバッファ作成
+    if (FAILED(_device->CreateConstBuff( // コンスタントバッファ作成
+        _constBuff.get(),
+        _pawn.get()))) goto failed;
+    if (FAILED(_device->CreateTexBuff(_texBuff.get()))) goto failed; // テクスチャバッファ作成
 
     // CBV, SRV作成
     if (FAILED(_device->CreateCSUHeap(_csuHeap.get()))) goto failed; // CSUヒープオブジェクト作成
@@ -123,20 +130,6 @@ HRESULT DX12::CreateDXGIFactory()
     return result;
 }
 
-// 頂点集合作成
-HRESULT DX12::CreateVertexSets()
-{
-
-    /*std::for_each(_objects.begin(), _objects.end(),
-        [](std::unique_ptr<Object>& object)
-        {
-            object = std::make_unique<Object>();
-        });*/
-    _pawn = std::make_unique<Pawn>();
-
-    return S_OK;
-}
-
 
 
 
@@ -148,11 +141,11 @@ void DX12::ExeDX12()
 
     // ワールド行列を変換
 
-    // ビュープロジェクション行列をバッファに書き込み
-    _constBuffMap->WriteMat(
-        _pawn->GetWorldMat(),
-        _viewMat->GetViewMat(),
-        _projMat->GetProjMat());
+    // ワールド行列、ビュープロジェクション行列をコンスタントバッファに書き込み
+    _constBuff->WriteToConstBuff(
+        _pawn.get(),
+        _viewMat.get(),
+        _projMat.get());
 
     // コマンドセット
     SetCommand();
@@ -231,10 +224,22 @@ void DX12::SetCommand()
 
     // CBV,SRVヒープセット
     ID3D12DescriptorHeap* csuHeaps[] = {_csuHeap->GetCSUHeap()};
-    _cmdList->SetCSUHeaps(csuHeaps); 
-    // ルートパラメータとディスクリプタヒープ関連付け
+    auto csuHeapNum = sizeof(csuHeaps) / sizeof(ID3D12DescriptorHeap*);
+    _cmdList->SetCSUHeaps(csuHeapNum, csuHeaps); 
+
+    // ルートパラメータとディスクリプタ関連付け
     _cmdList->SetDescriptorTable(0, _cbv->GetCBVHandle()); // CBV
     _cmdList->SetDescriptorTable(1, _srv->GetSRVHandle()); // SRV
+
+    // 頂点バッファビューセット
+    D3D12_VERTEX_BUFFER_VIEW vertBuffViews[] = {GetVertBuffView(_pawn.get())};
+    auto vertBuffViewNum = sizeof(vertBuffViews) / sizeof(D3D12_VERTEX_BUFFER_VIEW);
+    _cmdList->SetVertBuffViews(vertBuffViewNum, vertBuffViews);
+    // インデックスバッファセット
+    _cmdList->SetIdxBuffView(GetIdxBuffView(_pawn.get()));
+
+    // トポロジーセット
+    _cmdList->SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // ビューポートセット
     D3D12_VIEWPORT viewports[] = {_viewport->GetViewport()};
@@ -245,71 +250,78 @@ void DX12::SetCommand()
     D3D12_RECT scissorRects[] = {_scissorRect->GetScissorRect()};
     auto scissorRectNum = sizeof(scissorRects) / sizeof(D3D12_RECT);
     _cmdList->SetScissorRects(scissorRectNum, scissorRects);
+    
 
-    // トポロジーセット
-    _cmdList->SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    // 頂点バッファビューセット
-    D3D12_VERTEX_BUFFER_VIEW vertBuffViews[] = {GetVertexBuffView()};
-    auto vertBuffViewNum = sizeof(vertBuffViews) / sizeof(D3D12_VERTEX_BUFFER_VIEW);
-    _cmdList->SetVertBuffViews(vertBuffViewNum, vertBuffViews);
-    // インデックスバッファセット
-    _cmdList->SetIdxBuffView(GetIndexBuffView());
     // インデックス描画セット
     _cmdList->SetDrawWithIdx(_pawn.get());
-
-
-
-    ////////////
-    //D3D12_VIEWPORT aaa = arg.viewport;
-    //aaa.Width = 300;
-    //commandList->RSSetViewports(1, &aaa);
-    //commandList->DrawIndexedInstanced(arg.vertexCount, arg.objCount, 0, 0, 0);
-    //aaa.Width = 700;
-    //commandList->RSSetViewports(1, &aaa);
-    //commandList->DrawIndexedInstanced(arg.vertexCount, arg.objCount, 0, 0, 0);
-
 }
 
 // 頂点バッファビュー
-D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBuffView()
+D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(ShogiObj* shogiObj)
 {
     D3D12_VERTEX_BUFFER_VIEW view;
 
-    //ComPtr<ID3D12Resource> vertexBuff =
-    //    _vertBuff->GetVertBuff();
-
-    UINT vertexByteSize   = _pawn->GetVertexByteSize();
-    UINT verticesByteSize = _pawn->GetVerticesByteSize();
-
     view.BufferLocation =
-        _vertBuff->GetAddress();
+        shogiObj->GetVertAddress();
     view.SizeInBytes =
-        verticesByteSize; // 注意
+        shogiObj->GetVerticesByteSize();
     view.StrideInBytes =
-        vertexByteSize; // 注意
+        shogiObj->GetVertexByteSize();
 
     return view;
 }
 
 // インデックスバッファビュー
-D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBuffView()
+D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(ShogiObj* shogiObj)
 {
     D3D12_INDEX_BUFFER_VIEW view;
 
-    ComPtr<ID3D12Resource> indexBuff =
-        _idxBuff->GetIdxBuff();
-
-    UINT indicesByte = _pawn->GetIndicesByteSize();
-
     view.BufferLocation =
-        indexBuff->GetGPUVirtualAddress();
+        shogiObj->GetIdxAddress();
     view.Format =
         DXGI_FORMAT_R16_UINT;
     view.SizeInBytes =
-        indicesByte;
+        shogiObj->GetIndicesByteSize();
 
     return view;
 }
+//// 頂点バッファビュー
+//D3D12_VERTEX_BUFFER_VIEW DX12::GetVertexBuffView()
+//{
+//    D3D12_VERTEX_BUFFER_VIEW view;
+//
+//    //ComPtr<ID3D12Resource> vertexBuff =
+//    //    _vertBuff->GetVertBuff();
+//
+//    UINT vertexByteSize   = _pawn->GetVertexByteSize();
+//    UINT verticesByteSize = _pawn->GetVerticesByteSize();
+//
+//    view.BufferLocation =
+//        _vertBuff->GetAddress();
+//    view.SizeInBytes =
+//        verticesByteSize; // 注意
+//    view.StrideInBytes =
+//        vertexByteSize; // 注意
+//
+//    return view;
+//}
+//
+//// インデックスバッファビュー
+//D3D12_INDEX_BUFFER_VIEW DX12::GetIndexBuffView()
+//{
+//    D3D12_INDEX_BUFFER_VIEW view;
+//
+//    UINT indicesByte = _pawn->GetIndicesByteSize();
+//
+//    view.BufferLocation =
+//        _idxBuff->GetAddress();
+//    view.Format =
+//        DXGI_FORMAT_R16_UINT;
+//    view.SizeInBytes =
+//        indicesByte;
+//
+//    return view;
+//}
 
 
 
@@ -469,13 +481,16 @@ DX12::DX12() {
     _idxBuff       = std::make_unique<IdxBuff>();
     _texBuff       = std::make_unique<TexBuff>();
     _constBuff     = std::make_unique<ConstBuff>();
-    _constBuffMap  = std::make_unique<ConstBuffMap>();
+
     _csuHeap       = std::make_unique<CSUHeap>();
     _cbv           = std::make_unique<CBV>();
     _srv           = std::make_unique<SRV>();
     _rootSignature = std::make_unique<RootSignature>();
     _inputLayout   = std::make_unique<InputLayout>();
     _pipeline      = std::make_unique<Pipeline>();
+
+    _pawn = std::make_unique<Pawn>();
+    _board = std::make_unique<Board>();
 }
 
 DX12::~DX12(){}

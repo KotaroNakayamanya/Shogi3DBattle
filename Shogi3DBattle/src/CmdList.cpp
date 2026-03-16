@@ -45,10 +45,9 @@ void CmdList::SetResourceBarrier(D3D12_RESOURCE_BARRIER resourceBarrier)
 }
 
 // CSUヒープセット
-void CmdList::SetCSUHeaps(ID3D12DescriptorHeap** csuHeaps)
+void CmdList::SetCSUHeaps(UINT num, ID3D12DescriptorHeap** csuHeaps)
 {
-    auto heapNum = sizeof(csuHeaps) / sizeof(ID3D12DescriptorHeap*);
-    _cmdList->SetDescriptorHeaps(heapNum, csuHeaps);
+    _cmdList->SetDescriptorHeaps(num, csuHeaps);
 }
 
 // ディスクリプタテーブルセット
@@ -66,6 +65,8 @@ void CmdList::SetViewports(UINT num, D3D12_VIEWPORT* viewports)
 // シザー矩形セット
 void CmdList::SetScissorRects(UINT num, D3D12_RECT* scissorRects)
 {
+    auto aaa = scissorRects[0];
+    auto bbb = scissorRects[1];
     _cmdList->RSSetScissorRects(num, scissorRects);
 }
 

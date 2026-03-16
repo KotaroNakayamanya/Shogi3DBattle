@@ -3,7 +3,7 @@
 // Às
 void MoveRight::Exe()
 {
-    _piece->MoveX(0.01f);
+    _piece->MoveX(0.1f);
 }
 // Àsæ‚èÁ‚µ
 void MoveRight::Undo()

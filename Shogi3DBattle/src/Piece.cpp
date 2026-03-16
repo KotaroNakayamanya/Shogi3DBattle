@@ -45,15 +45,6 @@ void Piece::MoveY(float y)
 
 
 
-// ワールド行列を返す
-DirectX::XMMATRIX Piece::GetWorldMat()
-{
-    return _worldMat;
-}
-
-
-
-
 
 Piece::Piece()
 {
@@ -77,11 +68,11 @@ Piece::Piece()
     _indices = // 頂点インデックス
     {
         // 前面
-        frontRightBottom, frontLeftBottom, frontLeftTop,  // 右下　左下　左上
-        frontRightBottom, frontLeftTop,    frontRightTop, // 右下　左上　右上
-        frontRightTop,    frontLeftTop,    frontTop,      // 右上　左上　上
+        frontRightBottom, frontLeftBottom, frontLeftTop,     // 右下　左下　左上
+        frontLeftTop,     frontRightTop,   frontRightBottom, // 左上　右上 右下
+        frontTop,         frontRightTop,   frontLeftTop,     // 右上　左上　上
 
-        //// 裏面
+        // 裏面
         backLeftBottom,  backRightBottom, backLeftTop, // 左下　右下　左上
         backRightBottom, backRightTop,    backLeftTop, // 右下　右上　左上
         backLeftTop,     backRightTop,    backTop,     // 左上　右上　上
