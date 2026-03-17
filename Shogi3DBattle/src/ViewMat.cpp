@@ -14,7 +14,7 @@ DirectX::XMMATRIX ViewMat::GetViewMat()
 // 水平方向に視点を回す
 void ViewMat::RotationH(float x)
 {
-    auto eyeVec      = GetEyeVec(); // 視線対象を原点としたeyeのベクトル
+    auto eyeVec = GetEyeVec(); // 視線対象を原点としたeyeのベクトル
     auto rotationHMat = DirectX::XMMatrixRotationZ(-x); // Z軸を中心に回らせる行列
 
     auto newEyeVec = GetFloat3MulMat(eyeVec, rotationHMat); // ベクトルをZ軸中心に回す
@@ -29,31 +29,25 @@ void ViewMat::RotationV(float y)
     auto eyeVec = GetEyeVec(); // 視線対象を原点としたeyeのベクトル
     auto rotationVMat =  DirectX::XMMatrixRotationX(-y); // X軸を中心に回らせる行列
 
+    // ベクトルを(0, -1, 0)に変換してからx軸を中心に回転する準備をする
 
-
-    // x軸を中心とした回転で垂直方向に回転するため、準備としてeyeVecをx=0とすることのできる回転行列を作る
-
-    auto eyeVec_z0 = eyeVec; // まず、eyeベクトルのz要素を0にしたベクトルを作る
+    // z方向を0にしたeyeベクトルを作成
+    auto eyeVec_z0 = eyeVec;
     eyeVec_z0.z    = 0;
 
-    auto normEyeVec_z0 = GetNormFloat3(eyeVec_z0); // 正規化したeyeベクトルを取得する
+    // xy要素のみのベクトルで正規化
+    auto normEyeVec_z0 = GetNormFloat3(eyeVec_z0);
 
+    // 正規化した者同士の内積はcosθとなる
+    // (0, -1, 0)との内積の値は、yの符号を逆転したもの
     float cos = -normEyeVec_z0.y;
 
+    // θを計算する z軸のマイナス側（上）から見たとき、反時計回りを正として考える
     float pi = normEyeVec_z0.x > 0 ?
-        -std::acos(cos) : std::acos(cos); // zのマイナス側から見たとき、反時計回りを正として考える
+        -std::acos(cos) : std::acos(cos); 
 
-    auto rotationHMat = DirectX::XMMatrixRotationZ(pi); //水平方向回転行列 左手座標のためマイナス
+    auto rotationHMat = DirectX::XMMatrixRotationZ(pi); //水平方向回転行列
     auto rotationHReverseMat = DirectX::XMMatrixRotationZ(-pi); //水平方向回転行列（戻し用）
-        
-
-    
-    // normEyeVec_z0は正規化されていることから、normEyeVec_z0.yは、y軸単位ベクトル(0,1,0)との内積の結果になる
-    // eyeのyはマイナスであることをデフォルトにしたい、
-    // この際、
-    // ①正規化されたもの同士での内積はcosθと同値であるため、【-normEyeVec_z0.y = cosθ】
-    // ②normEyeVec_z0.z = 0, y軸単位ベクトルのz = 0 であることから、【2つのベクトルの角度はx及びyの平面で作られる】
-    // 
     
     auto newEyeVec = eyeVec;
     newEyeVec = GetFloat3MulMat(newEyeVec, rotationHMat);       // ベクトルを水平方向に回転する
@@ -62,6 +56,25 @@ void ViewMat::RotationV(float y)
     auto newEye = GetFloat3AddFloat3(newEyeVec, *_target.get()); // ベクトルを座標に戻す
 
     CheckUpdateEye(newEye);
+}
+
+
+
+
+// 視点移動
+void ViewMat::MoveEye(float x, float y, float z)
+{
+    _eye->x += x;
+    _eye->y += y;
+    _eye->z += z;
+}
+
+// 視線対象移動
+void ViewMat::MoveTarget(float x, float y, float z)
+{
+    _target->x += x;
+    _target->y += y;
+    _target->z += z;
 }
 
 // eye - target でベクトルを取得
@@ -139,6 +152,11 @@ DirectX::XMFLOAT3 ViewMat::GetFloat3FromVec(
 
     return f;
 }
+
+
+
+DirectX::XMFLOAT3* ViewMat::GetEyePtr(){return _eye.get();}
+DirectX::XMFLOAT3* ViewMat::GetTargetPtr(){return _eye.get();}
 
 
 ViewMat::ViewMat()

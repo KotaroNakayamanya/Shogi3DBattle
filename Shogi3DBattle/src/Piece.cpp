@@ -1,35 +1,5 @@
 #include"Piece.h"
 
-//// 駒の頂点集合作成
-//void Piece::CreatePieceVertices(CreatePieceVerticesArg arg)
-//{
-//    float bottomWidth  = arg.bottomWidth;
-//    float cornerWidth  = arg.cornerWidth;
-//    float height       = arg.height;
-//    float cornerHeight = arg.cornerHeight;
-//    float thickness    = arg.thickness;
-//
-//    _vertices =
-//    {   // 上面図と考えて指定
-//        // 前面
-//        {{-bottomWidth, -height,       -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // 左下
-//        {{ bottomWidth, -height,       -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // 右下
-//        {{-cornerWidth,  cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // 左上
-//        {{ cornerWidth,  cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // 右上
-//        {{ 0.0f,         height,       -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // 上    
-//
-//        // 裏面
-//        {{-bottomWidth, -height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}}, // 左下
-//        {{ bottomWidth, -height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}}, // 右下
-//        {{-cornerWidth,  cornerHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}}, // 左上
-//        {{ cornerWidth,  cornerHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}}, // 右上
-//        {{ 0.0f,         height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}}, // 上
-//    };
-//}
-
-
-
-
 // x軸方向に動くようにワールド行列を変換する
 void Piece::MoveX(float x)
 {

@@ -11,8 +11,5 @@ void MoveForward::Undo()
 
 }
 
-
-
-
 MoveForward::MoveForward(Piece* piece) : Move(piece){}
 MoveForward::~MoveForward(){}

@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="header\ViewRotation.h" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Board.cpp" />
@@ -40,9 +39,11 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\GameObj.cpp" />
     <ClCompile Include="src\MoveBack.cpp" />
+    <ClCompile Include="src\MoveEyeForward.cpp" />
     <ClCompile Include="src\MoveForward.cpp" />
     <ClCompile Include="src\MoveLeft.cpp" />
     <ClCompile Include="src\MoveRight.cpp" />
+    <ClCompile Include="src\MoveTargetForward.cpp" />
     <ClCompile Include="src\MovingPiece.cpp" />
     <ClCompile Include="src\Pawn.cpp" />
     <ClCompile Include="src\Piece.cpp" />
@@ -52,7 +53,6 @@
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\RTV.cpp" />
     <ClCompile Include="src\ScissorRect.cpp" />
-    <ClCompile Include="src\SRV.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\TexBuff.cpp" />
     <ClCompile Include="src\VertBuff.cpp" />
@@ -75,6 +75,7 @@
     <ClInclude Include="header\DSBuff.h" />
     <ClInclude Include="header\DSV.h" />
     <ClInclude Include="header\DSVHeap.h" />
+    <ClInclude Include="header\MoveCamera.h" />
     <ClInclude Include="header\GameWindow.h" />
     <ClInclude Include="header\ControllerButton.h" />
     <ClInclude Include="header\DX12.h" />
@@ -90,9 +91,11 @@
     <ClInclude Include="header\GameObj.h" />
     <ClInclude Include="header\Move.h" />
     <ClInclude Include="header\MoveBack.h" />
+    <ClInclude Include="header\MoveEyeForward.h" />
     <ClInclude Include="header\MoveForward.h" />
     <ClInclude Include="header\MoveLeft.h" />
     <ClInclude Include="header\MoveRight.h" />
+    <ClInclude Include="header\MoveTargetForward.h" />
     <ClInclude Include="header\MovingPiece.h" />
     <ClInclude Include="header\Pawn.h" />
     <ClInclude Include="header\Piece.h" />
@@ -104,7 +107,6 @@
     <ClInclude Include="header\RTVHeap.h" />
     <ClInclude Include="header\ISceneState.h" />
     <ClInclude Include="header\ScissorRect.h" />
-    <ClInclude Include="header\SRV.h" />
     <ClInclude Include="header\SwapChain.h" />
     <ClInclude Include="header\TexBuff.h" />
     <ClInclude Include="header\TextureStruct.h" />
@@ -113,6 +115,7 @@
     <ClInclude Include="header\VertexStruct.h" />
     <ClInclude Include="header\ViewMat.h" />
     <ClInclude Include="header\Viewport.h" />
+    <ClInclude Include="header\ViewRotation.h" />
     <ClInclude Include="header\VShader.h" />
   </ItemGroup>
   <ItemGroup>

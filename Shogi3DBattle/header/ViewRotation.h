@@ -16,5 +16,6 @@ public:
     void Exe(int x, int y) override;
 
     ViewRotation(ViewMat* viewMat);
+    //ViewRotation();
     ~ViewRotation();
 };

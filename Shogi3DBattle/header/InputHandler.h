@@ -10,6 +10,8 @@ private:
     std::unique_ptr<KeyConf> _keyConf; // キーコンフィグ
 
     unsigned char _inputMemory = 0; // 入力記録
+    int _cursorX; // カーソル横位置
+    int _cursorY; // カーソル縦位置
     int _cursorXMove; // カーソル横移動距離
     int _cursorYMove; // カーソル縦移動距離
 
@@ -28,6 +30,9 @@ public:
     void MemoryMouseMove(int xMove, int yMove); // マウス移動記録
 
     void ClearInputMemory(); // 入力クリア
+
+    void SetCursorX(int x);
+    void SetCursorY(int y);
 
     InputHandler();
     ~InputHandler();

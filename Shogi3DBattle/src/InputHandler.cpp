@@ -11,6 +11,11 @@ void InputHandler::ExeOperation()
 {
     ISceneState* newSceneState = nullptr;
 
+    if(_inputMemory & ControllerButton::mouseMove) // マウス操作処理
+    {
+        newSceneState = _sceneState->ExeMouseMove(_cursorXMove, _cursorYMove);
+        _inputMemory ^= ControllerButton::mouseMove; // マウス操作終了は明示する
+    }
     if(_inputMemory & ControllerButton::decision)  // 決定ボタン処理
         newSceneState = _sceneState->ExeDecisionButton();
     if(_inputMemory & ControllerButton::cancel)    // キャンセルボタン処理
@@ -23,11 +28,7 @@ void InputHandler::ExeOperation()
         newSceneState = _sceneState->ExeDownButton();
     if(_inputMemory & ControllerButton::right)     // 右ボタン処理
         newSceneState = _sceneState->ExeRightButton();
-    if(_inputMemory & ControllerButton::mouseMove) // マウス操作処理
-    {
-        newSceneState = _sceneState->ExeMouseMove(_cursorXMove, _cursorYMove);
-        _inputMemory ^= ControllerButton::mouseMove; // マウス操作終了は明示する
-    }
+    
        
     CheckUpdateSceneState(newSceneState);
 }
@@ -57,12 +58,23 @@ void InputHandler::RemoveInputKey(WPARAM inputKey)
 }
 
 // マウス移動処理記録
-void InputHandler::MemoryMouseMove(int xMove, int yMove)
+void InputHandler::MemoryMouseMove(int x, int y)
 {
-    _cursorXMove = xMove;
-    _cursorYMove = yMove;
+    _cursorXMove = x - _cursorX;
+    _cursorYMove = _cursorY - y;
+
+    _cursorX = x;
+    _cursorY = y;
+
     _inputMemory |= ControllerButton::mouseMove;
 }
+//// マウス移動処理記録
+//void InputHandler::MemoryMouseMove(int xMove, int yMove)
+//{
+//    _cursorXMove = xMove;
+//    _cursorYMove = yMove;
+//    _inputMemory |= ControllerButton::mouseMove;
+//}
 
 void InputHandler::ClearInputMemory(){_inputMemory = 0;} // 入力クリア
 
@@ -81,6 +93,9 @@ void InputHandler::SetSceneState(ISceneState* sceneState)
 {
     _sceneState.reset(sceneState);
 }
+
+void InputHandler::SetCursorX(int x){_cursorX = x;}
+void InputHandler::SetCursorY(int y){_cursorY = y;}
 
 
 

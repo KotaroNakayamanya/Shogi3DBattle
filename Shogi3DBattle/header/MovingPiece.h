@@ -7,16 +7,23 @@
 #include"Piece.h"
 #include"ViewMat.h"
 #include<Windows.h>
+#include"MoveTargetForward.h"
+#include"MoveEyeForward.h"
 
 class MovingPiece : public ISceneState
 {
 private:
-    std::unique_ptr<ICommand> _moveForward;
-    std::unique_ptr<ICommand> _moveLeft;
-    std::unique_ptr<ICommand> _moveBack;
-    std::unique_ptr<ICommand> _moveRight;
+    Piece* _piece;
+    ViewMat* _viewMat;
+    //std::unique_ptr<ICommand> _moveForward;
+    //std::unique_ptr<ICommand> _moveLeft;
+    //std::unique_ptr<ICommand> _moveBack;
+    //std::unique_ptr<ICommand> _moveRight;
 
-    std::unique_ptr<IMouse>   _mouseMove;
+    //std::unique_ptr<IMouse>   _mouseMove;
+
+    //std::unique_ptr<MoveTargetForward> _moveTargetForward;
+    //std::unique_ptr<MoveEyeForward> _moveEyeForward;
 
     HWND _hwnd;
 
