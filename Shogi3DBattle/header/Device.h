@@ -1,5 +1,7 @@
 #pragma once
 
+#include"Device11.h"
+#include"DeviceContext.h"
 #include"CmdAllocator.h"
 #include"CmdList.h"
 #include"CmdQueue.h"
@@ -18,7 +20,6 @@
 #include"TexBuff.h"
 #include"ConstBuff.h"
 #include"CSUHeap.h"
-//#include"SRV.h"
 #include"RootSignature.h"
 #include"InputLayout.h"
 #include"Pipeline.h"
@@ -94,6 +95,10 @@ public:
     HRESULT CreateCmdAllocator(CmdAllocator* comAllocator); // コマンドアロケータ作成
     HRESULT CreateCmdList(CmdList* comList, CmdAllocator* comAllocator); // コマンドリスト作成
     HRESULT CreateCmdQueue(CmdQueue* comQueue); // コマンドキュー作成
+    HRESULT CreateD3D11( // Direct3D11系作成
+        Device11* device11,
+        DeviceContext* deviceContext,
+        CmdQueue* cmdQueue);
     HRESULT CreateRTVHeap(RTVHeap* rtvHeap, SwapChain* swapChain); // RTVヒープ作成
     HRESULT CreateRTV(RTV* rtv, RTVHeap* rtvHeap, SwapChain* swapChain, UINT i); // RTV作成
     HRESULT CreateDSBuff(DSBuff* dsBuff, GameWindow* gameWindow); // デプスステンシルバッファ作成
@@ -103,8 +108,9 @@ public:
 
     HRESULT CreateVShader(VShader* vShader); // 頂点シェーダー作成
     HRESULT CreatePShader(PShader* pShader); // ピクセルシェーダー作成
-    HRESULT CreateVertBuff(VertBuff* vertBuff, Board* board, Piece* piece); // 頂点バッファ作成
-    HRESULT CreateIdxBuff (IdxBuff* idxBuff,   Board* board, Piece* piece); // インデックスバッファ作成
+
+    HRESULT CreateVertBuff(VertBuff* vertBuff, Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces); // 頂点バッファ作成
+    HRESULT CreateIdxBuff (IdxBuff* idxBuff,   Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces); // インデックスバッファ作成
 
 
     HRESULT CreateConstBuff(ConstBuff* constBuff, UINT pieceNum); // コンスタントバッファ作成

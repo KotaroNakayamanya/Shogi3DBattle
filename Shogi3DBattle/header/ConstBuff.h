@@ -2,7 +2,8 @@
 
 #include<d3d12.h>
 #include<wrl.h>
-//#include"ShogiObj.h"
+#include<memory>
+#include<array>
 #include"Board.h"
 #include"Piece.h"
 #include"ViewMat.h"
@@ -21,7 +22,11 @@ private:
 public:
     D3D12_GPU_VIRTUAL_ADDRESS GetStartAddress(); // バッファの開始アドレスを返す
     // 変換行列を書き込む
-    void WriteToConstBuff(Board* board, Piece* piece, ViewMat* viewMat, ProjMat* projMat);
+    void WriteToConstBuff(
+        Board* board,
+        std::array<std::unique_ptr<Piece>, 40>& pieces,
+        ViewMat* viewMat,
+        ProjMat* projMat);
 
     ID3D12Resource* GetBuff(); // バッファを返す
 

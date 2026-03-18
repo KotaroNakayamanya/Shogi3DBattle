@@ -86,9 +86,13 @@ DirectX::XMFLOAT3 ViewMat::GetEyeVec()
 // 視点アップデートチェック
 void ViewMat::CheckUpdateEye(DirectX::XMFLOAT3 eye)
 {
-    if(eye.z > -4.8f && eye.z < -1.0f)
+    //if(eye.z > -4.8f && eye.z < -1.0f)
         *_eye.get() = eye;
 }
+
+
+
+
 
 // 正規化
 DirectX::XMFLOAT3 ViewMat::GetNormFloat3(

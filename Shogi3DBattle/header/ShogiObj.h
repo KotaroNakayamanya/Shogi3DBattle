@@ -3,6 +3,7 @@
 #include<d3d12.h>
 #include<vector>
 #include"VertexStruct.h"
+#include"ShogiObjIdEnum.h"
 
 class ShogiObj
 {
@@ -12,6 +13,7 @@ protected:
     DirectX::XMMATRIX                 _worldMat = DirectX::XMMatrixIdentity(); // ワールド行列
     D3D12_GPU_VIRTUAL_ADDRESS         _vertAddress; // 頂点アドレス
     D3D12_GPU_VIRTUAL_ADDRESS         _idxAddress;  // インデックスアドレス
+    ShogiObjId _id; // 将棋オブジェクトId
 
 public:
     void SetVertices(std::vector<VertexStruct::Vertex> vertices);
@@ -30,6 +32,8 @@ public:
     D3D12_GPU_VIRTUAL_ADDRESS GetVertAddress();             // 頂点アドレスを返す
     void SetIdxAddress (D3D12_GPU_VIRTUAL_ADDRESS address); // インデックスアドレスセット
     D3D12_GPU_VIRTUAL_ADDRESS GetIdxAddress();              // インデックスアドレスを返す
+    void SetId(ShogiObjId id); // 将棋オブジェクトIDセット
+    ShogiObjId GetId();        // 将棋オブジェクトを返す
 
     DirectX::XMMATRIX GetWorldMat(); // ワールド行列を返す
 

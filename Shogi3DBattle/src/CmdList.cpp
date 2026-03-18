@@ -21,7 +21,7 @@ void CmdList::ClearDepthStencil(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
 void CmdList::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle)
 {
     float clearRTVColor[] =
-        {0.0f, 0.3f, 0.0f, 1.0f};
+        {1.0f, 1.0f, 1.0f, 1.0f};
     _cmdList->ClearRenderTargetView(
         rtvHandle, clearRTVColor, 0, nullptr);
 }
@@ -88,10 +88,15 @@ void CmdList::SetIdxBuffView(D3D12_INDEX_BUFFER_VIEW idxBuffView)
     _cmdList->IASetIndexBuffer(&idxBuffView);
 }
 
+//// インデックス描画セット
+//void CmdList::SetDrawWithIdx(ShogiObj* shogiObj)
+//{
+//    _cmdList->DrawIndexedInstanced(shogiObj->GetIdxNum(), 1, 0, 0, 0);
+//}
 // インデックス描画セット
-void CmdList::SetDrawWithIdx(ShogiObj* shogiObj)
+void CmdList::SetDrawWithIdx(UINT idxNum, UINT objNum)
 {
-    _cmdList->DrawIndexedInstanced(shogiObj->GetIdxNum(), 1, 0, 0, 0);
+    _cmdList->DrawIndexedInstanced(idxNum, objNum, 0, 0, 0);
 }
 
 // コマンドリストを返す

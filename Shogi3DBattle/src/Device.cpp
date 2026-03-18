@@ -3,6 +3,7 @@
 #include<cassert>
 #include<memory>
 
+#pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
 // コマンドアロケータオブジェクト作成
@@ -12,9 +13,6 @@ HRESULT Device::CreateCmdAllocator(CmdAllocator* cmdAllocator)
         D3D12_COMMAND_LIST_TYPE_DIRECT,
         IID_PPV_ARGS(cmdAllocator->_cmdAllocator.ReleaseAndGetAddressOf()));
 }
-
-
-
 
 // コマンドリスト作成
 HRESULT Device::CreateCmdList(CmdList* cmdList, CmdAllocator* cmdAllocator)
@@ -26,9 +24,6 @@ HRESULT Device::CreateCmdList(CmdList* cmdList, CmdAllocator* cmdAllocator)
         nullptr,
         IID_PPV_ARGS(cmdList->_cmdList.ReleaseAndGetAddressOf()));
 }
-
-
-
 
 // コマンドキュー作成
 HRESULT Device::CreateCmdQueue(CmdQueue* cmdQueue)
@@ -55,6 +50,44 @@ D3D12_COMMAND_QUEUE_DESC Device::GetCmdQueueDesc()
         0;
 
     return desc;
+}
+
+
+
+
+// DirectX11系作成
+HRESULT Device::CreateD3D11(
+    Device11* device11,
+    DeviceContext* deviceContext,
+    CmdQueue* cmdQueue)
+{
+    UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+//#ifdef _DEBUG
+//    flags += D3D11_CREATE_DEVICE_DEBUG;
+//#endif
+
+    HRESULT result;
+
+    ComPtr<ID3D11Device> dev11;
+
+    result =  D3D11On12CreateDevice(
+        _device.Get(),
+        flags,
+        nullptr, // 3D12の機能レベル使用
+        0,       // 機能レベル配列サイズ(nullptrのため0）
+        reinterpret_cast<IUnknown**>(cmdQueue->_cmdQueue.GetAddressOf()),
+        1, // キューの個数 1
+        0, // ノードマスク
+        dev11.ReleaseAndGetAddressOf(),
+        /*device11->_device11.ReleaseAndGetAddressOf(),*/
+        deviceContext->_deviceContext.ReleaseAndGetAddressOf(),
+        nullptr); // 機能レベル返却先 nullptr
+    if(FAILED(result)) return result;
+
+
+    result = dev11.As(&device11->_device11);
+
+    return result;
 }
 
 
@@ -305,10 +338,48 @@ HRESULT Device::CreatePShader(PShader* pShader)
 
 
 
+//// 頂点バッファ作成
+//HRESULT Device::CreateVertBuff(VertBuff* vertBuff, Board* board, Piece* piece)
+//{
+//    UINT totalByteSize = board->GetVerticesByteSize() + piece->GetVerticesByteSize();
+//
+//    D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
+//    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
+//
+//    return _device->CreateCommittedResource(
+//        &heapProp,
+//        D3D12_HEAP_FLAG_NONE,
+//        &resourceDesc,
+//        D3D12_RESOURCE_STATE_GENERIC_READ,
+//        nullptr,
+//        IID_PPV_ARGS(vertBuff->_vertBuff.ReleaseAndGetAddressOf()));
+//}
+//
+//// インデックスバッファ作成
+//HRESULT Device::CreateIdxBuff(IdxBuff* idxBuff, Board* board, Piece* piece)
+//{
+//    UINT totalByteSize = board->GetIndicesByteSize() + piece->GetIndicesByteSize();
+//
+//    D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
+//    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
+//
+//    return _device->CreateCommittedResource(
+//        &heapProp,
+//        D3D12_HEAP_FLAG_NONE,
+//        &resourceDesc,
+//        D3D12_RESOURCE_STATE_GENERIC_READ,
+//        nullptr,
+//        IID_PPV_ARGS(idxBuff->_idxBuff.ReleaseAndGetAddressOf()));
+//}
 // 頂点バッファ作成
-HRESULT Device::CreateVertBuff(VertBuff* vertBuff, Board* board, Piece* piece)
+HRESULT Device::CreateVertBuff(VertBuff* vertBuff, Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces)
 {
-    UINT totalByteSize = board->GetVerticesByteSize() + piece->GetVerticesByteSize();
+    //UINT totalByteSize = board->GetVerticesByteSize() + piece->GetVerticesByteSize();
+    UINT totalByteSize = board->GetVerticesByteSize();
+    for (auto& piece : pieces)
+    {
+        totalByteSize += piece->GetVerticesByteSize();
+    }
 
     D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
     D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
@@ -323,9 +394,13 @@ HRESULT Device::CreateVertBuff(VertBuff* vertBuff, Board* board, Piece* piece)
 }
 
 // インデックスバッファ作成
-HRESULT Device::CreateIdxBuff(IdxBuff* idxBuff, Board* board, Piece* piece)
+HRESULT Device::CreateIdxBuff(IdxBuff* idxBuff, Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces)
 {
-    UINT totalByteSize = board->GetIndicesByteSize() + piece->GetIndicesByteSize();
+    UINT totalByteSize = board->GetIndicesByteSize();
+    for (auto& piece : pieces)
+    {
+        totalByteSize += piece->GetVerticesByteSize();
+    }
 
     D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
     D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
@@ -788,11 +863,11 @@ std::vector<D3D12_STATIC_SAMPLER_DESC> Device::GetSamplerDescs(UINT samplerNum)
 
 
     descs[0].AddressU = // 横
-        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
     descs[0].AddressV = // 縦
-        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
     descs[0].AddressW = // 奥行き
-        D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
     descs[0].BorderColor =
         D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
     descs[0].Filter = // 線形補完

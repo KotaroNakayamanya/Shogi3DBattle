@@ -160,6 +160,9 @@
     <Filter Include="ソース ファイル\dx12\render">
       <UniqueIdentifier>{e8a8cd52-ee38-46ad-a4b3-049929804045}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\D2D">
+      <UniqueIdentifier>{2090c6dc-f043-427a-8f9a-553a1063381d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -276,16 +279,28 @@
     <ClCompile Include="src\ShogiObj.cpp">
       <Filter>ソース ファイル\shogi_obj</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameObj.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\MoveEyeForward.cpp">
       <Filter>ソース ファイル\command</Filter>
     </ClCompile>
-    <ClCompile Include="src\MoveTargetForward.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="src\Tex.cpp">
+      <Filter>ソース ファイル\dx12\csu\texture</Filter>
     </ClCompile>
     <ClCompile Include="src\ViewRotation.cpp">
+      <Filter>ソース ファイル\command</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MoveTargetForward.cpp">
+      <Filter>ソース ファイル\command</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Device11.cpp">
+      <Filter>ソース ファイル\dx12\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D2DDeviceContext.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DeviceContext.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DWriteFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -293,7 +308,7 @@
     <ClInclude Include="header\Application.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="header\TextureStruct.h">
+    <ClInclude Include="header\TexStruct.h">
       <Filter>ヘッダー ファイル\struct</Filter>
     </ClInclude>
     <ClInclude Include="header\VertexStruct.h">
@@ -419,9 +434,6 @@
     <ClInclude Include="header\Device.h">
       <Filter>ヘッダー ファイル\DX12\factory\device</Filter>
     </ClInclude>
-    <ClInclude Include="header\InputLayout.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="header\RTV.h">
       <Filter>ヘッダー ファイル\DX12\Draw\render_target</Filter>
     </ClInclude>
@@ -437,19 +449,49 @@
     <ClInclude Include="header\ConstBuff.h">
       <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
     </ClInclude>
-    <ClInclude Include="header\GameObj.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="header\MoveCamera.h">
       <Filter>ヘッダー ファイル\command</Filter>
     </ClInclude>
     <ClInclude Include="header\MoveEyeForward.h">
       <Filter>ヘッダー ファイル\command</Filter>
     </ClInclude>
+    <ClInclude Include="header\Tex.h">
+      <Filter>ヘッダー ファイル\DX12\csu\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="header\InputLayout.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
     <ClInclude Include="header\MoveTargetForward.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\command</Filter>
     </ClInclude>
     <ClInclude Include="header\ViewRotation.h">
+      <Filter>ヘッダー ファイル\command</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ShogiObjIdEnum.h">
+      <Filter>ヘッダー ファイル\shogi_obj\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Device11.h">
+      <Filter>ヘッダー ファイル\DX12\factory\device</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DeviceContext.h">
+      <Filter>ヘッダー ファイル\DX12\factory\device</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DWriteFactory.h">
+      <Filter>ヘッダー ファイル\DX12\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\D2DDeviceContext.h">
+      <Filter>ヘッダー ファイル\DX12\D2D</Filter>
+    </ClInclude>
+    <ClInclude Include="header\WrappedBackBuffer.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\D2DRenderTarget.h">
+      <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DWriteTextFormat.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\D2DSolicColorBrush.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

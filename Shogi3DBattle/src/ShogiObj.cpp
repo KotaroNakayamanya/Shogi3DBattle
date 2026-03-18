@@ -18,6 +18,10 @@ unsigned int ShogiObj::GetIdxNum(){return _indices.size();}
 unsigned int ShogiObj::GetIndexByteSize(){return sizeof(_indices[0]);}
 // 頂点インデックス全体のバイトサイズを返す
 unsigned int ShogiObj::GetIndicesByteSize(){return GetIndexByteSize() * _indices.size();}
+// 将棋オブジェクトIDセット
+void ShogiObj::SetId(ShogiObjId id){_id = id;}
+// 将棋オブジェクトを返す
+ShogiObjId ShogiObj::GetId(){return _id;}
 
 
 DirectX::XMMATRIX ShogiObj::GetWorldMat(){return _worldMat;} // ワールド行列を返す

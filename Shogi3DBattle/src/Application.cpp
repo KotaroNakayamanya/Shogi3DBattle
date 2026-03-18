@@ -9,9 +9,7 @@ bool Application::Init()
     
 
     if(_gameWindow->InitGameWindow() == false) goto failed;    // ゲームウインドウ初期処理
-    //_gameObj->InitGameObj(); // 将棋盤作成
     if(_dx12->InitDX12(_gameWindow.get()) == false) goto failed; // DirectX12初期処理
-
     _inputHandler = std::make_unique<InputHandler>(); // インプットハンドラ作成(初期は動ける状態）
 
     return true;
@@ -20,8 +18,6 @@ failed:
     assert(false);
     return false;
 }
-
-static int count[16 * 16 * 16 * 16] = {0};
 
 // 実行処理
 void Application::Run()
@@ -79,7 +75,7 @@ LRESULT CALLBACK WindowProcedure(
     Application& app = Application::GetInstance(); // アプリケーションインスタンス取得
     InputHandler* inputHandler = app.GetInputHandler(); // インプットハンドラ取得
     
-    static bool isCursorPositionedWindowCenter = false; // カーソル位置が画面中央にセットされているか
+    static bool isCursorInited = false; // カーソル位置が画面中央にセットされているか
 
     static POINT screenLT;
     static POINT screenRB;
@@ -113,7 +109,7 @@ LRESULT CALLBACK WindowProcedure(
     }
 
     case WM_ACTIVATEAPP: // ウインドウアクティブ
-        isCursorPositionedWindowCenter = false; // カーソルが飛んでいる可能性があるためfalseとする
+        isCursorInited = false; // カーソルが飛んでいる可能性があるためfalseとする
         ClipCursor(nullptr);
         inputHandler->ClearInputMemory();
         return 0;
@@ -157,21 +153,12 @@ LRESULT CALLBACK WindowProcedure(
         //int clientCenterXPos = (clientRect.right  - clientRect.left) / 2;
         //int clientCenterYPos = (clientRect.bottom - clientRect.top)  / 2;
 
-        if (isCursorPositionedWindowCenter)
+        if (isCursorInited)
         {
             int x = LOWORD(lParam);   // カーソル動作後の横位置
             int y = HIWORD(lParam);   // カーソル動作後の縦位置
 
-            //int  xMove  = newCursorXPos - clientCenterXPos; // xは元の位置から引いて計算
-            //int  yMove  = clientCenterYPos - newCursorYPos; // yは引き算を逆にして、画面上側を正にする
-
-            //int  xMove  = newCursorXPos; // xは元の位置から引いて計算
-            //int  yMove  = newCursorYPos; // yは引き算を逆にして、画面上側を正にする
-
-            //bool isMove = (xMove != 0) || (yMove != 0); // カーソルに動きがあったかどうかチェック
-
             inputHandler->MemoryMouseMove(x, y);
-            //bool isMove = (xMove != 0) || (yMove != 0); // カーソルに動きがあったかどうかチェック
 
             bool isXNearEdge = x < 50 || x > (app.GetWindowWidth()  - 50);
             bool isYNearEdge = y < 50 || y > (app.GetWindowHeight() - 50);
@@ -186,11 +173,6 @@ LRESULT CALLBACK WindowProcedure(
                 inputHandler->SetCursorX(centerX);
                 inputHandler->SetCursorY(centerY);
             }
-
-
-
-            //if(isMove) // カーソルが動いていたならマウス操作記録
-            //    inputHandler->MemoryMouseMove(xMove, yMove);
         }
         else
         {
@@ -207,10 +189,7 @@ LRESULT CALLBACK WindowProcedure(
                  AND,     // AND mask 
                  XOR);   // XOR mask );
             SetCursor(cursor);
-            //RECT clientRect;
-            //GetClientRect(hwnd, &clientRect);
-            ////POINT screenLT = {clientRect.left, clientRect.top};
-            ////POINT screenRB = {clientRect.right, clientRect.bottom};
+
             RECT clientRect;
             GetClientRect(hwnd, &clientRect);
             screenLT = {clientRect.left,  clientRect.top};
@@ -222,47 +201,8 @@ LRESULT CALLBACK WindowProcedure(
             SetRect(&rc, screenLT.x, screenLT.y, screenRB.x, screenRB.y);
             ClipCursor(&rc);
 
-            isCursorPositionedWindowCenter = true; // カーソル中央をtrue
+            isCursorInited = true; // カーソル中央をtrue
         }
-
-        //RECT clientRect;
-        //GetClientRect(hwnd, &clientRect);
-        //int clientCenterXPos = (clientRect.right  - clientRect.left) / 2;
-        //int clientCenterYPos = (clientRect.bottom - clientRect.top)  / 2;
-        // 
-        //POINT centerXY = {clientCenterXPos, clientCenterYPos,};
-        //ClientToScreen(hwnd, &centerXY);
-
-        //SetCursorPos(centerXY.x, centerXY.y); // カーソルをウインドウ中央にセット
-        //isCursorPositionedWindowCenter = true; // カーソル中央をtrue
-        
-
-        // ウインドウの外側にカーソルがあっても無理矢理画面内に入れる
-        //POINT nya1 = {clientRect.left, clientRect.top};
-        //POINT nya2 = {clientRect.right, clientRect.bottom};
-        //ClientToScreen(hwnd, &nya1);
-        //ClientToScreen(hwnd, &nya2);
-        //RECT rc;
-        //SetRect(&rc, nya1.x, nya1.y, nya2.x, nya2.y);
-        //ClipCursor(&rc);
-
-
-        //// カーソルを透明に
-        //BYTE AND[] = {0};
-        //BYTE XOR[] = {0};
-        //HCURSOR cursor;
-        //cursor = CreateCursor(
-        //     nullptr,
-        //     0, // カーソル横中心点
-        //     0, // カーソル縦中心点
-        //     1, // カーソル横サイズ
-        //     1, // カーソル縦サイズ
-        //     AND,     // AND mask 
-        //     XOR);   // XOR mask );
-        //SetCursor(cursor);
-
-        //cursor = LoadCursor(nullptr, IDC_ARROW);
-        //SetCursor(cursor);
         
         return 0;
     }

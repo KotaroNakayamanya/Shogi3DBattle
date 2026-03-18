@@ -2,7 +2,6 @@
 #include<string>
 #include<array>
 
-#pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d12.lib")
 
 // 使用するアダプター作成

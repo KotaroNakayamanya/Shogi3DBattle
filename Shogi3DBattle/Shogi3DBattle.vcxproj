@@ -26,8 +26,12 @@
     <ClCompile Include="src\CmdList.cpp" />
     <ClCompile Include="src\CmdQueue.cpp" />
     <ClCompile Include="src\ConstBuff.cpp" />
+    <ClCompile Include="src\D2DDeviceContext.cpp" />
     <ClCompile Include="src\Device.cpp" />
+    <ClCompile Include="src\Device11.cpp" />
+    <ClCompile Include="src\DeviceContext.cpp" />
     <ClCompile Include="src\DSV.cpp" />
+    <ClCompile Include="src\DWriteFactory.cpp" />
     <ClCompile Include="src\DX12.cpp" />
     <ClCompile Include="src\DXGIFactory.cpp" />
     <ClCompile Include="src\CSUHeap.cpp" />
@@ -37,7 +41,6 @@
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyConf.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\GameObj.cpp" />
     <ClCompile Include="src\MoveBack.cpp" />
     <ClCompile Include="src\MoveEyeForward.cpp" />
     <ClCompile Include="src\MoveForward.cpp" />
@@ -54,6 +57,7 @@
     <ClCompile Include="src\RTV.cpp" />
     <ClCompile Include="src\ScissorRect.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
+    <ClCompile Include="src\Tex.cpp" />
     <ClCompile Include="src\TexBuff.cpp" />
     <ClCompile Include="src\VertBuff.cpp" />
     <ClCompile Include="src\ShogiObj.cpp" />
@@ -71,7 +75,13 @@
     <ClInclude Include="header\CmdQueue.h" />
     <ClInclude Include="header\ConstBuff.h" />
     <ClInclude Include="header\CursorMove.h" />
+    <ClInclude Include="header\D2DDeviceContext.h" />
+    <ClInclude Include="header\D2DRenderTarget.h" />
+    <ClInclude Include="header\D2DSolicColorBrush.h" />
+    <ClInclude Include="header\DWriteFactory.h" />
     <ClInclude Include="header\Device.h" />
+    <ClInclude Include="header\Device11.h" />
+    <ClInclude Include="header\DeviceContext.h" />
     <ClInclude Include="header\DSBuff.h" />
     <ClInclude Include="header\DSV.h" />
     <ClInclude Include="header\DSVHeap.h" />
@@ -88,7 +98,6 @@
     <ClInclude Include="header\InputHandler.h" />
     <ClInclude Include="header\InputLayout.h" />
     <ClInclude Include="header\KeyConf.h" />
-    <ClInclude Include="header\GameObj.h" />
     <ClInclude Include="header\Move.h" />
     <ClInclude Include="header\MoveBack.h" />
     <ClInclude Include="header\MoveEyeForward.h" />
@@ -107,9 +116,12 @@
     <ClInclude Include="header\RTVHeap.h" />
     <ClInclude Include="header\ISceneState.h" />
     <ClInclude Include="header\ScissorRect.h" />
+    <ClInclude Include="header\ShogiObjIdEnum.h" />
     <ClInclude Include="header\SwapChain.h" />
+    <ClInclude Include="header\Tex.h" />
     <ClInclude Include="header\TexBuff.h" />
-    <ClInclude Include="header\TextureStruct.h" />
+    <ClInclude Include="header\TexStruct.h" />
+    <ClInclude Include="header\DWriteTextFormat.h" />
     <ClInclude Include="header\VertBuff.h" />
     <ClInclude Include="header\ShogiObj.h" />
     <ClInclude Include="header\VertexStruct.h" />
@@ -117,6 +129,7 @@
     <ClInclude Include="header\Viewport.h" />
     <ClInclude Include="header\ViewRotation.h" />
     <ClInclude Include="header\VShader.h" />
+    <ClInclude Include="header\WrappedBackBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\PixelShader.hlsl">
