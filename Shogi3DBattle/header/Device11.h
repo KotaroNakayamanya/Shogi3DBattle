@@ -4,7 +4,7 @@
 #include<memory>
 #include"D2DDeviceContext.h"
 #include"WrappedBackBuffer.h"
-#include"RTV.h"
+#include"BackBuff.h"
 
 class Device11
 {
@@ -20,7 +20,7 @@ public:
     // Direct2Dデバイスコンテキスト作成
     HRESULT CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext);
     // ラップされたバックバッファ作成
-    HRESULT CreateWrappedBackBuffer(WrappedBackBuffer* wrappedBackBuffer, RTV* rtv);
+    HRESULT CreateWrappedBackBuffer(WrappedBackBuffer* wrappedBackBuffer, BackBuff* backBuff);
 
     // ラップされたバックバッファへのレンダリングを許可
     void AcquireWrappedBackBuffer(WrappedBackBuffer* wrappedBackBuffer);

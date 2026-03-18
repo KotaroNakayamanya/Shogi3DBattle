@@ -44,11 +44,11 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     if (FAILED(_device->CreateRTVHeap(_rtvHeap.get(), _swapChain.get()))) goto failed; // RTVヒープ作成
     UINT rtBuffNum; // レンダーターゲット数
     rtBuffNum = _swapChain->GetRTBuffNum();
-    _rtvs.resize(rtBuffNum);
+    _backBuffs.resize(rtBuffNum);
     for (int i = 0; i < rtBuffNum; i++)
     {
-        _rtvs[i] = std::make_unique<RTV>();
-        if (FAILED(_device->CreateRTV(_rtvs[i].get(), _rtvHeap.get(), _swapChain.get(), i))) goto failed; // RTV作成
+        _backBuffs[i] = std::make_unique<BackBuff>();
+        if (FAILED(_device->CreateRTV(_backBuffs[i].get(), _rtvHeap.get(), _swapChain.get(), i))) goto failed; // RTV作成
     }
 
 
@@ -63,7 +63,7 @@ bool DX12::InitDX12(GameWindow* gameWindow)
         _wrappedBackBuffers[i] = std::make_unique<WrappedBackBuffer>();
         _d2dRenderTargets[i]   = std::make_unique<D2DRenderTarget>();
 
-        if (FAILED(_device11->CreateWrappedBackBuffer(_wrappedBackBuffers[i].get(), _rtvs[i].get()))) goto failed; // ラップされたバックバッファ作成
+        if (FAILED(_device11->CreateWrappedBackBuffer(_wrappedBackBuffers[i].get(), _backBuffs[i].get()))) goto failed; // ラップされたバックバッファ作成
         if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dRenderTargets[i].get(), _wrappedBackBuffers[i].get()))) goto failed; // Direct2Dレンダーターゲット作成
     }
     if(FAILED(_d2dDeviceContext->CreateD2DSolidColorBrush(_d2dSolidColorBrush.get()))) goto failed; // ソリッドカラーブラッシュ作成
@@ -134,8 +134,19 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     // コンスタントバッファ、テクスチャバッファ作成
     if (FAILED(_device->CreateConstBuff(_constBuff.get(), 40))) goto failed; // コンスタントバッファ作成
     if (FAILED(_device->CreateTexBuff(_texBuff.get()))) goto failed; // テクスチャバッファ作成
+
     CreateTex(); // テクスチャ作成
     _texBuff->WriteToTexBuff(_tex.get()); // テクスチャをバッファに書き込み
+
+    UINT shogiObjNum;
+    shogiObjNum = 41;
+    _pieceTexBuffs.resize(shogiObjNum);
+    for (int i = 0; i < shogiObjNum; i++)
+    {
+        _pieceTexBuffs[i] = std::make_unique<RenderTexBuff>();
+        if (FAILED(_device->CreateRenderTexBuff(_pieceTexBuffs[i].get()))) goto failed;
+    }
+    
 
 
     // CBV, SRV作成
@@ -387,7 +398,7 @@ void DX12::ExeDX12()
     // レンダーターゲットの準備をする
     PrepareRenderTarget();
 
-    //SetCommand(); // コマンドセット
+    SetCommand(); // コマンドセット
 
     _cmdList->GetCmdList()->Close(); // コマンドクローズ
     ExeCommand(); // コマンド実行
@@ -399,21 +410,12 @@ void DX12::ExeDX12()
 
     
     StartD2D(); // Direct2D開始
-
     // 文字を書く
-    D2D1_RECT_F rect = {1200, 0, 600, 100}; // 左 上 右 下
-
-
-    //_d2dDeviceContext->DrawTextW(
-    //    text,
-    //    rect,
-    //    _dWriteTextFormat->GetDWriteTextFormat(),
-    //    _d2dSolidColorBrush->GetD2DSolidColorBrush());
-    DrawStr(L"歩", rect);
-
+    D2D1_RECT_F rect = {0, 0, 600, 600}; // 左 上 右 下
+    DrawStr(L"歩りゃあ", rect);
     EndD2D(); // Direct2D終了
 
-    ChangeRTVBarrierToPresent(_rtvs[backBufferIdx].get()); // RTVを表示画面に設定
+    ChangeBarrierToPresent(_backBuffs[backBufferIdx].get()); // バックバッファを表示画面に設定
     _cmdList->GetCmdList()->Close(); // コマンドクローズ
     ExeCommand(); // コマンド実行
     WaitProcessWithFence(); // フェンスによる同期処理
@@ -460,29 +462,29 @@ void DX12::PrepareRenderTarget()
     auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
 
     // ハンドル取得
-    auto rtvHandle = _rtvs[backBufferIdx]->GetRTVHandle();
+    auto rtvHandle = _backBuffs[backBufferIdx]->GetRTVHandle();
     auto dsvHandle = _dsv->GetDSVHandle();
 
-    // RTVをレンダーターゲットに変更
-    ChangeRTVBarrierToRenderTarget(_rtvs[backBufferIdx].get());
+    // バックバッファをレンダーターゲットに変更
+    ChangeBarrierToRenderTarget(_backBuffs[backBufferIdx].get());
 
      // バックバッファをレンダーターゲットに設定
     _cmdList->SetRenderTarget(rtvHandle, dsvHandle);
 
     // レンダーターゲットクリア
     _cmdList->ClearRenderTarget(rtvHandle);
-     // デプスステンシルクリア
+    // デプスステンシルクリア
     _cmdList->ClearDepthStencil(dsvHandle); 
 }
 
-// RTVリソースをレンダーターゲットに変更
-void DX12::ChangeRTVBarrierToRenderTarget(RTV* rtv)
+// バックバッファをレンダーターゲットに変更
+void DX12::ChangeBarrierToRenderTarget(BackBuff* backBuff)
 {
     D3D12_RESOURCE_BARRIER resourceBarrier = 
         GetBasiceResourceBarrier();
 
     resourceBarrier.Transition.pResource =
-        rtv->GetRTV();
+        backBuff->GetBackBuff();
     resourceBarrier.Transition.StateBefore =
         D3D12_RESOURCE_STATE_PRESENT;
     resourceBarrier.Transition.StateAfter  =
@@ -652,13 +654,13 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(ShogiObj* shogiObj)
 
 
 // RTVリソースを画面表示に変更
-void DX12::ChangeRTVBarrierToPresent(RTV* rtv)
+void DX12::ChangeBarrierToPresent(BackBuff* backBuff)
 {
     D3D12_RESOURCE_BARRIER barrier =
         GetBasiceResourceBarrier();
 
     barrier.Transition.pResource =
-        rtv->GetRTV();
+        backBuff->GetBackBuff();
     barrier.Transition.StateBefore =
         D3D12_RESOURCE_STATE_RENDER_TARGET;
     barrier.Transition.StateAfter  =

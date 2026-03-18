@@ -43,7 +43,7 @@ private:
     std::unique_ptr<CmdQueue> _cmdQueue; // コマンドリスト
     std::unique_ptr<SwapChain> _swapChain; // スワップチェーン
     std::unique_ptr<RTVHeap> _rtvHeap; // RTVヒープ
-    std::vector<std::unique_ptr<RTV>> _rtvs; // RTV
+    std::vector<std::unique_ptr<BackBuff>> _backBuffs; // バックバッファ
     std::unique_ptr<DSBuff> _dsBuff; // デプスステンシルバッファ
     std::unique_ptr<DSVHeap> _dsvHeap; // デプスステンシルヒープ
     std::unique_ptr<DSV> _dsv; // デプスステンシルビュー
@@ -63,8 +63,12 @@ private:
     std::unique_ptr<Pipeline> _pipeline; // パイプライン
 
     std::unique_ptr<ConstBuff> _constBuff; // コンスタントバッファ
+
     std::unique_ptr<TexBuff>   _texBuff; // テクスチャバッファ
     std::unique_ptr<Tex>       _tex;     // テクスチャ
+
+    std::vector<std::unique_ptr<RenderTexBuff>> _pieceTexBuffs; // 駒テクスチャバッファ
+
     std::unique_ptr<CSUHeap>   _csuHeap; // CSUヒープ
 
     std::unique_ptr<ViewMat> _viewMat; // ビュー行列
@@ -93,8 +97,8 @@ private:
 
 
     void PrepareRenderTarget(); // レンダーターゲットの準備
-    void ChangeRTVBarrierToRenderTarget(RTV* rtv); // レンダーターゲットに変更
-    void ChangeRTVBarrierToPresent     (RTV* rtv); // 画面表示用に変更
+    void ChangeBarrierToRenderTarget(BackBuff* backBuff); // レンダーターゲットに変更
+    void ChangeBarrierToPresent     (BackBuff* backBuff); // 画面表示用に変更
     D3D12_RESOURCE_BARRIER GetBasiceResourceBarrier(); // リソースバリア基本設定
 
     void SetCommand(); // コマンドセット

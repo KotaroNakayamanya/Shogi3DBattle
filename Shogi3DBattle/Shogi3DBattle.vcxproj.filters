@@ -255,7 +255,7 @@
     <ClCompile Include="src\VShader.cpp">
       <Filter>ソース ファイル\dx12\shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\RTV.cpp">
+    <ClCompile Include="src\BackBuff.cpp">
       <Filter>ソース ファイル\dx12\render</Filter>
     </ClCompile>
     <ClCompile Include="src\DSV.cpp">
@@ -301,6 +301,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\DWriteFactory.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTexBuff.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -434,7 +437,7 @@
     <ClInclude Include="header\Device.h">
       <Filter>ヘッダー ファイル\DX12\factory\device</Filter>
     </ClInclude>
-    <ClInclude Include="header\RTV.h">
+    <ClInclude Include="header\BackBuff.h">
       <Filter>ヘッダー ファイル\DX12\Draw\render_target</Filter>
     </ClInclude>
     <ClInclude Include="header\DSV.h">
@@ -492,6 +495,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\D2DSolicColorBrush.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\RenderTexBuff.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

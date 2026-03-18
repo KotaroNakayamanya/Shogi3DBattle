@@ -1,5 +1,6 @@
 #pragma once
 
+#include"RenderTexBuff.h"
 #include"Device11.h"
 #include"DeviceContext.h"
 #include"CmdAllocator.h"
@@ -8,7 +9,7 @@
 #include"SwapChain.h"
 #include"RTVHeap.h"
 #include"GameWindow.h"
-#include"RTV.h"
+#include"BackBuff.h"
 #include"DSBuff.h"
 #include"DSVHeap.h"
 #include"DSV.h"
@@ -50,7 +51,7 @@ private:
     D3D12_HEAP_PROPERTIES GetConstHeapProp(); // コンスタントヒーププロパティ
     D3D12_RESOURCE_DESC GetConstResourceDesc(UINT pieceNum); // コンスタントリソースディスクリプタ
 
-    D3D12_HEAP_PROPERTIES GetDSHeapProp(); // デプスステンシルヒーププロパティ
+    D3D12_HEAP_PROPERTIES GetDefaultHeapProp(); // デフォルトヒーププロパティ
     D3D12_RESOURCE_DESC GetDSResourceDesc( // デプスステンシルリソースディスクリプタ
         UINT windowWidth, UINT windowHeight);   
     D3D12_CLEAR_VALUE GetClearValue(); // クリアバリュー
@@ -100,7 +101,7 @@ public:
         DeviceContext* deviceContext,
         CmdQueue* cmdQueue);
     HRESULT CreateRTVHeap(RTVHeap* rtvHeap, SwapChain* swapChain); // RTVヒープ作成
-    HRESULT CreateRTV(RTV* rtv, RTVHeap* rtvHeap, SwapChain* swapChain, UINT i); // RTV作成
+    HRESULT CreateRTV(BackBuff* backBuff, RTVHeap* rtvHeap, SwapChain* swapChain, UINT i); // RTV作成
     HRESULT CreateDSBuff(DSBuff* dsBuff, GameWindow* gameWindow); // デプスステンシルバッファ作成
     HRESULT CreateDSVHeap(DSVHeap* dsvHeap); // デプスステンシルヒープ作成
     void    CreateDSV(DSV* dsv, DSVHeap* dsvHeap, DSBuff* dsBuff); // DSV作成
@@ -115,12 +116,11 @@ public:
 
     HRESULT CreateConstBuff(ConstBuff* constBuff, UINT pieceNum); // コンスタントバッファ作成
     HRESULT CreateTexBuff(TexBuff* texBuff); // テクスチャバッファ作成
+    HRESULT CreateRenderTexBuff(RenderTexBuff* renderTexBuff); // レンダーターゲット兼テクスチャバッファ作成
 
     HRESULT CreateCSUHeap(CSUHeap* csuHeap); // CSUヒープ作成
     void    CreateCBV(CSUHeap* csuHeap, ConstBuff* constBuff); // CBV作成
-    //void    CreateCBV(CBV* cbv, CSUHeap* csuHeap, ConstBuff* constBuff); // CBV作成
     void    CreateSRV(CSUHeap* csuHeap, TexBuff* texBuff); // SRV作成
-    //void    CreateSRV(SRV* srv, CSUHeap* csuHeap, TexBuff* texBuff); // SRV作成
 
     HRESULT CreateRootSignature(RootSignature* rootSignature); // ルートシグネチャ作成
     void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成

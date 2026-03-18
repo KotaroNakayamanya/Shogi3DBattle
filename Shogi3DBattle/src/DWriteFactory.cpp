@@ -20,15 +20,26 @@ HRESULT DWriteFactory::CreateDWriteTextFormat(
     DWriteTextFormat* dWriteTextFormat,
     std::wstring fontName)
 {
-    return _dWriteFactory->CreateTextFormat(
+    HRESULT result;
+
+    result = _dWriteFactory->CreateTextFormat(
         fontName.c_str(),
         nullptr,
         DWRITE_FONT_WEIGHT_NORMAL,
         DWRITE_FONT_STYLE_NORMAL,
         DWRITE_FONT_STRETCH_NORMAL,
-        100.0f,
+        200.0f,
         L"ja-jp",
         dWriteTextFormat->_dWriteTextFormat.ReleaseAndGetAddressOf());
+    if(FAILED(result)) return result;
+
+    result = dWriteTextFormat->_dWriteTextFormat->SetTextAlignment(
+        DWRITE_TEXT_ALIGNMENT_CENTER);
+    if(FAILED(result)) return result;
+
+    result = dWriteTextFormat->_dWriteTextFormat->SetParagraphAlignment(
+        DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+    if(FAILED(result)) return result;
 }
 
 

@@ -36,10 +36,8 @@ HRESULT D2DDeviceContext::CreateD2DRenderTarget(
 HRESULT D2DDeviceContext::CreateD2DSolidColorBrush(
     D2DSolidColorBrush* d2dSolidColorBrush)
 {
-    D2D1::ColorF color();
-
     return _d2dDeviceContext->CreateSolidColorBrush(
-        D2D1::ColorF(D2D1::ColorF::Black, 0.5f),
+        D2D1::ColorF(D2D1::ColorF::Black, 1.0f),
         d2dSolidColorBrush->_d2dSolidColorBrush.ReleaseAndGetAddressOf());
 }
 

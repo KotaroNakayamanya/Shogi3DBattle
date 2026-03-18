@@ -38,12 +38,12 @@ HRESULT Device11::CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext)
 // ラップされたバックバッファ作成
 HRESULT Device11::CreateWrappedBackBuffer(
     WrappedBackBuffer* wrappedBackBuffer,
-    RTV* rtv)
+    BackBuff* backBuff)
 {
     D3D11_RESOURCE_FLAGS flags = {D3D11_BIND_RENDER_TARGET};
 
     return _device11->CreateWrappedResource(
-        rtv->GetRTV(),
+        backBuff->GetBackBuff(),
         &flags,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_RENDER_TARGET,

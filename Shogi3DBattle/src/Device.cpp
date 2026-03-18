@@ -62,9 +62,9 @@ HRESULT Device::CreateD3D11(
     CmdQueue* cmdQueue)
 {
     UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-//#ifdef _DEBUG
-//    flags += D3D11_CREATE_DEVICE_DEBUG;
-//#endif
+#ifdef _DEBUG
+    flags += D3D11_CREATE_DEVICE_DEBUG;
+#endif
 
     HRESULT result;
 
@@ -79,7 +79,6 @@ HRESULT Device::CreateD3D11(
         1, // キューの個数 1
         0, // ノードマスク
         dev11.ReleaseAndGetAddressOf(),
-        /*device11->_device11.ReleaseAndGetAddressOf(),*/
         deviceContext->_deviceContext.ReleaseAndGetAddressOf(),
         nullptr); // 機能レベル返却先 nullptr
     if(FAILED(result)) return result;
@@ -123,13 +122,13 @@ D3D12_DESCRIPTOR_HEAP_DESC Device::GetRTVHeapDesc(UINT rtBuffNum)
 
 
 // RTV作成
-HRESULT Device::CreateRTV(RTV* rtv, RTVHeap* rtvHeap, SwapChain* swapChain, UINT i)
+HRESULT Device::CreateRTV(BackBuff* backBuff, RTVHeap* rtvHeap, SwapChain* swapChain, UINT i)
 {
     HRESULT result;
 
     result = swapChain->GetSwapChain()->GetBuffer(
         i,
-        IID_PPV_ARGS(rtv->_rtv.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(backBuff->_backBuff.ReleaseAndGetAddressOf()));
     if (FAILED(result)) return result;
 
     // RTVヒープの中のどこのアドレスに入れるか計算する
@@ -138,11 +137,11 @@ HRESULT Device::CreateRTV(RTV* rtv, RTVHeap* rtvHeap, SwapChain* swapChain, UINT
     rtvHandle.ptr += rtvOffset * i;
 
     _device->CreateRenderTargetView(
-        rtv->_rtv.Get(),
+        backBuff->_backBuff.Get(),
         nullptr,
         rtvHandle);
 
-    rtv->_rtvHandle = rtvHandle;
+    backBuff->_rtvHandle = rtvHandle;
 
     return S_OK;
 }
@@ -154,7 +153,7 @@ HRESULT Device::CreateRTV(RTV* rtv, RTVHeap* rtvHeap, SwapChain* swapChain, UINT
 HRESULT Device::CreateDSBuff(DSBuff* dsBuff, GameWindow* gameWindow)
 {
     D3D12_HEAP_PROPERTIES heapProp =
-        GetDSHeapProp();
+        GetDefaultHeapProp();
     D3D12_RESOURCE_DESC resourceDesc =
         GetDSResourceDesc(gameWindow->GetWindowWidth(), gameWindow->GetWindowHeight());
     D3D12_CLEAR_VALUE clearValue =
@@ -169,8 +168,8 @@ HRESULT Device::CreateDSBuff(DSBuff* dsBuff, GameWindow* gameWindow)
         IID_PPV_ARGS(dsBuff->_dsBuff.ReleaseAndGetAddressOf()));
 }
 
-// デプスステンシルヒーププロパティ
-D3D12_HEAP_PROPERTIES Device::GetDSHeapProp()
+// デフォルトヒーププロパティ
+D3D12_HEAP_PROPERTIES Device::GetDefaultHeapProp()
 {
     D3D12_HEAP_PROPERTIES prop = {};
 
@@ -338,39 +337,6 @@ HRESULT Device::CreatePShader(PShader* pShader)
 
 
 
-//// 頂点バッファ作成
-//HRESULT Device::CreateVertBuff(VertBuff* vertBuff, Board* board, Piece* piece)
-//{
-//    UINT totalByteSize = board->GetVerticesByteSize() + piece->GetVerticesByteSize();
-//
-//    D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
-//    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
-//
-//    return _device->CreateCommittedResource(
-//        &heapProp,
-//        D3D12_HEAP_FLAG_NONE,
-//        &resourceDesc,
-//        D3D12_RESOURCE_STATE_GENERIC_READ,
-//        nullptr,
-//        IID_PPV_ARGS(vertBuff->_vertBuff.ReleaseAndGetAddressOf()));
-//}
-//
-//// インデックスバッファ作成
-//HRESULT Device::CreateIdxBuff(IdxBuff* idxBuff, Board* board, Piece* piece)
-//{
-//    UINT totalByteSize = board->GetIndicesByteSize() + piece->GetIndicesByteSize();
-//
-//    D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
-//    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
-//
-//    return _device->CreateCommittedResource(
-//        &heapProp,
-//        D3D12_HEAP_FLAG_NONE,
-//        &resourceDesc,
-//        D3D12_RESOURCE_STATE_GENERIC_READ,
-//        nullptr,
-//        IID_PPV_ARGS(idxBuff->_idxBuff.ReleaseAndGetAddressOf()));
-//}
 // 頂点バッファ作成
 HRESULT Device::CreateVertBuff(VertBuff* vertBuff, Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces)
 {
@@ -533,6 +499,23 @@ DXGI_SAMPLE_DESC Device::GetSampleDesc()
     return desc;
 }
 
+// レンダーターゲット兼テクスチャバッファ作成
+HRESULT Device::CreateRenderTexBuff(RenderTexBuff* renderTexBuff)
+{
+    //D3D12_HEAP_PROPERTIES heapProp = GetDefaultHeapProp();
+    //D3D12_RESOURCE_DESC resourceDesc = GetResourceDesc();
+
+    //return _device->CreateCommittedResource(
+    //    &heapProp,
+    //    D3D12_HEAP_FLAG_NONE,
+    //    &resourceDesc,
+    //    D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
+    //    nullptr,
+    //    IID_PPV_ARGS(renderTexBuff->_renderTexBuff.ReleaseAndGetAddressOf()));
+
+    return S_OK;
+}
+
 
 
 
@@ -665,27 +648,6 @@ D3D12_CONSTANT_BUFFER_VIEW_DESC Device::GetCBVDesc(ID3D12Resource* constBuff)
 
 
 
-
-//// SRV作成
-//void Device::CreateSRV(SRV* srv, CSUHeap* csuHeap, TexBuff* texBuff)
-//{
-//
-//    auto srvHandle = csuHeap->_csuHeap->GetCPUDescriptorHandleForHeapStart();
-//    auto offset = _device->GetDescriptorHandleIncrementSize(
-//        D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-//    srvHandle.ptr += offset; // ディスクリプタ2番目
-//
-//    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = GetSRVDesc();
-//
-//    _device->CreateShaderResourceView(
-//        texBuff->_texBuff.Get(),
-//        &srvDesc,
-//        srvHandle);
-//
-//    // GPUハンドル取得
-//    srv->_srvHandle = csuHeap->_csuHeap->GetGPUDescriptorHandleForHeapStart();
-//    srv->_srvHandle.ptr += offset; // ディスクリプタ2番目
-//}
 // SRV作成
 void Device::CreateSRV(CSUHeap* csuHeap, TexBuff* texBuff)
 {
