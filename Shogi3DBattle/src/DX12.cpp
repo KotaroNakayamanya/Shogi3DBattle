@@ -42,11 +42,12 @@ bool DX12::InitDX12(GameWindow* gameWindow)
 
     // レンダーターゲット系作成
     if (FAILED(_dxgiFactory->CreateSwapChain(_swapChain.get(), _cmdQueue.get(), gameWindow))) goto failed; // スワップチェーン作成
-    if (FAILED(_device->CreateRTVHeap(_rtvHeap.get(), _swapChain.get()))) goto failed; // RTVヒープ作成
-    UINT rtBuffNum; // レンダーターゲット数
-    rtBuffNum = _swapChain->GetRTBuffNum();
-    _backBuffs.resize(rtBuffNum);
-    for (UINT i = 0; i < rtBuffNum; i++)
+    //if (FAILED(_device->CreateRTVHeap(_rtvHeap.get(), _swapChain.get()))) goto failed; // RTVヒープ作成
+    if (FAILED(_device->CreateRTVHeap(_rtvHeap.get(), _swapChain->GetBackBuffNum()))) goto failed; // RTVヒープ作成
+    UINT backBuffNum; // レンダーターゲット数
+    backBuffNum = _swapChain->GetBackBuffNum();
+    _backBuffs.resize(backBuffNum);
+    for (UINT i = 0; i < backBuffNum; i++)
     {
         _backBuffs[i] = std::make_unique<BackBuff>();
         if (FAILED(_device->CreateBackBuff(_backBuffs[i].get(), _swapChain.get(), i))) goto failed; // バックバッファ作成
@@ -58,9 +59,9 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     if (FAILED(CreateDWriteFactory())) goto failed; // DirectWriteファクトリー作成
     if (FAILED(_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.get()))) goto failed; // Direct3D11系作成
     if (FAILED(_device11->CreateD2DDeviceContext(_d2dDeviceContext.get()))) goto failed; // Direct2Dデバイスコンテキスト作成
-    _wrappedBackBuffers.resize(rtBuffNum);
-    _d2dRenderTargets.resize(rtBuffNum);
-    for (UINT i = 0; i < rtBuffNum; i++)
+    _wrappedBackBuffers.resize(backBuffNum);
+    _d2dRenderTargets.resize(backBuffNum);
+    for (UINT i = 0; i < backBuffNum; i++)
     {
         _wrappedBackBuffers[i] = std::make_unique<WrappedBackBuffer>();
         _d2dRenderTargets[i]   = std::make_unique<D2DRenderTarget>();
@@ -189,17 +190,23 @@ HRESULT DX12::CreateDXGIFactory()
 {
     HRESULT result;
 
+    ComPtr<IDXGIFactory6> dxgiFactoryCom
+    ;
+
     // デバッグモードのときは詳細を表示させるファクトリーを使用する
 #ifdef _DEBUG
     result = CreateDXGIFactory2(
         DXGI_CREATE_FACTORY_DEBUG,
-        IID_PPV_ARGS(_dxgiFactory->_dxgiFactory.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(dxgiFactoryCom.ReleaseAndGetAddressOf()));
 #else
     result = CreateDXGIFactory1(
-        IID_PPV_ARGS(_dxgiFactory->_dxgiFactory.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(dxgiFactoryCom.ReleaseAndGetAddressOf()));
 #endif
+    
+    if(FAILED(result)) return result;
 
-    return result;
+    _dxgiFactory->SetDXGIFactory(dxgiFactoryCom);
+    return S_OK;
 }
 
 // DirectWriteファクトリー作成

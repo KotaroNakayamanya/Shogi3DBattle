@@ -5,7 +5,7 @@
 #pragma comment(lib, "d3d12.lib")
 
 // 使用するアダプター作成
-HRESULT DXGIFactory::CreateAdapter(Adapter* adapterObj)
+HRESULT DXGIFactory::CreateAdapter(Adapter* adapter)
 {
     // 探索対象のアダプター名
     std::array<std::wstring, 3> adapterNames =
@@ -22,34 +22,31 @@ HRESULT DXGIFactory::CreateAdapter(Adapter* adapterObj)
     if(canUseAdapters.size() == 0) return E_FAIL;
     
 
-    for(auto& adapter : canUseAdapters)
+    for(auto& adapterCom : canUseAdapters)
     {
         // アダプター名取得
         DXGI_ADAPTER_DESC adapterDesc;
-        adapter->GetDesc(&adapterDesc);
+        adapterCom->GetDesc(&adapterDesc);
         std::wstring descStr = adapterDesc.Description;
 
         // リストに存在するアダプターであれば利用する
         auto it = std::find(adapterNames.begin(), adapterNames.begin(), descStr);
         if (it != adapterNames.end())
         {
-            adapterObj->_adapter = adapter;
+            adapter->SetAdapter(adapterCom);
             goto complete;
         }
     }
 
     // 見つからなければ一番最初のアダプターを利用する
-    adapterObj->_adapter = canUseAdapters[0];
+    adapter->SetAdapter(canUseAdapters[0]);
 
 complete:
     return S_OK;
 }
 
-template<typename T>
-using ComPtr = Microsoft::WRL::ComPtr<T>;
-
-// 使用可能なアダプターを取得
-std::vector<ComPtr<IDXGIAdapter>> DXGIFactory::GetCanUseAdapters()
+// 使用可能なアダプターのリストを取得
+std::vector<Microsoft::WRL::ComPtr<IDXGIAdapter>> DXGIFactory::GetCanUseAdapters()
 {
     std::vector<ComPtr<IDXGIAdapter>> adapters;
     ComPtr<IDXGIAdapter> tmpAdapter;
@@ -71,22 +68,28 @@ HRESULT DXGIFactory::CreateSwapChain(
     CmdQueue* cmdQueue,
     GameWindow* gameWindow)
 {
+    ComPtr<IDXGISwapChain4> swapChainCom;
+
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = GetSwapChainDesc(
-        gameWindow->GetWindowWidth(), gameWindow->GetWindowHeight(), swapChain->_rtBuffNum);
+        gameWindow->GetWindowWidth(), gameWindow->GetWindowHeight(), 2);
 
-
-    return _dxgiFactory->CreateSwapChainForHwnd(
+    HRESULT result;
+    result = _dxgiFactory->CreateSwapChainForHwnd(
         cmdQueue->GetCmdQueue(),
         gameWindow->GetHWND(),
         &swapChainDesc,
         nullptr,
         nullptr,
-        (IDXGISwapChain1**)swapChain->_swapChain.ReleaseAndGetAddressOf());
+        (IDXGISwapChain1**)swapChainCom.ReleaseAndGetAddressOf());
+    if(FAILED(result)) return result;
+
+    swapChain->SetSwapChain(swapChainCom);
+    return S_OK;
 }
 
 // スワップチェーンディスクリプタ
 DXGI_SWAP_CHAIN_DESC1 DXGIFactory::GetSwapChainDesc(
-    UINT windowWidth, UINT windowHeight, UINT rtBuffNum)
+    UINT windowWidth, UINT windowHeight, UINT backBuffNum)
 {
     DXGI_SWAP_CHAIN_DESC1 desc = {};
 
@@ -105,7 +108,7 @@ DXGI_SWAP_CHAIN_DESC1 DXGIFactory::GetSwapChainDesc(
     desc.BufferUsage =
         DXGI_USAGE_BACK_BUFFER;
     desc.BufferCount =
-        rtBuffNum;
+        backBuffNum;
     desc.Scaling =
         DXGI_SCALING_STRETCH;
     desc.SwapEffect =
@@ -122,8 +125,10 @@ DXGI_SWAP_CHAIN_DESC1 DXGIFactory::GetSwapChainDesc(
 
 
 // Direct3Dデバイス作成
-HRESULT DXGIFactory::CreateDevice(Device* deviceObj, Adapter* adapterObj)
+HRESULT DXGIFactory::CreateDevice(Device* device, Adapter* adapter)
 {
+    ComPtr<ID3D12Device> deviceCom;
+
     std::array<D3D_FEATURE_LEVEL, 5> featureLevels = // GPU機能レベルを列挙
     {
         D3D_FEATURE_LEVEL_12_2,
@@ -135,22 +140,28 @@ HRESULT DXGIFactory::CreateDevice(Device* deviceObj, Adapter* adapterObj)
 
     // GPU機能レベルの配列順にデバイス作成を試みる
     HRESULT result;
-    std::find_if(featureLevels.begin(), featureLevels.end(),
-        [&deviceObj, &result, &adapterObj](D3D_FEATURE_LEVEL featureLevel)
+    auto it = std::find_if(featureLevels.begin(), featureLevels.end(),
+        [&deviceCom, &result, &adapter](D3D_FEATURE_LEVEL featureLevel)
         {
             result = D3D12CreateDevice(
-                adapterObj->GetAdapter(),
+                adapter->GetAdapter(),
                 featureLevel,
-                IID_PPV_ARGS(deviceObj->_device.ReleaseAndGetAddressOf()));
+                IID_PPV_ARGS(deviceCom.ReleaseAndGetAddressOf()));
 
             return result == S_OK; // 作成できたら戻る
         });
 
-    return result;
+    if(it == featureLevels.end()) return result; // エラー
+
+    device->SetDevice(deviceCom);
+    return S_OK;;
 }
 
 
 
+
+// DXGIファクトリーComセット
+void DXGIFactory::SetDXGIFactory(ComPtr<IDXGIFactory6> dxgiFactory){_dxgiFactory = dxgiFactory;}
 
 DXGIFactory::DXGIFactory(){}
 DXGIFactory::~DXGIFactory(){}

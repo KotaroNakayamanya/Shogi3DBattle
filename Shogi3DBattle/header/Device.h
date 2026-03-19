@@ -29,8 +29,6 @@
 
 class Device
 {
-    friend class DXGIFactory; // DXGIFactoryから参照可能
-
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -38,7 +36,7 @@ private:
     ComPtr<ID3D12Device> _device; // Direct3Dデバイス
 
     D3D12_COMMAND_QUEUE_DESC GetCmdQueueDesc(); // コマンドキューディスクリプタ
-    D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc(UINT rtBuffNum); // RTVヒープディスクリプタ
+    D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc(UINT rtvNum); // RTVヒープディスクリプタ
 
     D3D12_HEAP_PROPERTIES GetVertHeapProp(); // 頂点ヒーププロパティ
     D3D12_RESOURCE_DESC GetVertResourceDesc(UINT byteSize);  // 頂点リソースディスクリプタ
@@ -99,7 +97,8 @@ public:
         Device11* device11,
         DeviceContext* deviceContext,
         CmdQueue* cmdQueue);
-    HRESULT CreateRTVHeap(RTVHeap* rtvHeap, SwapChain* swapChain); // RTVヒープ作成
+    //HRESULT CreateRTVHeap(RTVHeap* rtvHeap, SwapChain* swapChain); // RTVヒープ作成
+    HRESULT CreateRTVHeap(RTVHeap* rtvHeap, UINT rtvNum); // RTVヒープ作成
     HRESULT CreateBackBuff(BackBuff* backBuff, SwapChain* swapChain, UINT i); // バックバッファ作成
     void    CreateRTV(BackBuff* backBuff, RTVHeap* rtvHeap, UINT i); // RTV作成
     HRESULT CreateDSBuff(DSBuff* dsBuff, GameWindow* gameWindow); // デプスステンシルバッファ作成
@@ -131,7 +130,8 @@ public:
         VShader* vShader,
         PShader* pShader);
 
-    ID3D12Device* GetDevice(); // Direct3Dデバイスを渡す
+    void SetDevice(ComPtr<ID3D12Device> device); // Direct3Dデバイスセット
+    ID3D12Device* GetDevice(); // Direct3Dデバイスを返す
 
     Device();
     ~Device();

@@ -25,10 +25,19 @@ void SwapChain::Flip()
     _swapChain->Present(1, 0);
 }
 
+// バックバッファ数を返す
+UINT SwapChain::GetBackBuffNum()
+{
+    DXGI_SWAP_CHAIN_DESC desc;
+    auto aaa = _swapChain->GetDesc(&desc);
+
+    return desc.BufferCount;
+}
+
+// スワップチェーンセット
+void SwapChain::SetSwapChain(ComPtr<IDXGISwapChain4> swapChain){_swapChain = swapChain;}
 // スワップチェーンを返す
 IDXGISwapChain4* SwapChain::GetSwapChain(){return _swapChain.Get();}
-// レンダーターゲットバッファ数を返す
-UINT SwapChain::GetRTBuffNum(){return _rtBuffNum;}
 
 SwapChain::SwapChain(){}
 SwapChain::~SwapChain(){}

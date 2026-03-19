@@ -12,10 +12,7 @@
 #include"ViewMat.h"
 #include"ProjMat.h"
 
-//#include"Pawn.h"
 #include"Board.h"
-
-//#include"Tex.h"
 
 class DX12
 {

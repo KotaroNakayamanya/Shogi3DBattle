@@ -93,13 +93,13 @@ HRESULT Device::CreateD3D11(
 
 
 // RTVヒープ作成
-HRESULT Device::CreateRTVHeap(RTVHeap* rtvHeap, SwapChain* swapChain)
+HRESULT Device::CreateRTVHeap(RTVHeap* rtvHeap, UINT rtvNum)
 {
     // RTVオフセット取得
     rtvHeap->_rtvOffset =
         _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetRTVHeapDesc(swapChain->GetRTBuffNum());
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = GetRTVHeapDesc(rtvNum);
 
     return _device->CreateDescriptorHeap(
         &heapDesc,
@@ -107,15 +107,15 @@ HRESULT Device::CreateRTVHeap(RTVHeap* rtvHeap, SwapChain* swapChain)
 }
 
 // RTVヒープディスクリプタ
-D3D12_DESCRIPTOR_HEAP_DESC Device::GetRTVHeapDesc(UINT rtBuffNum)
+D3D12_DESCRIPTOR_HEAP_DESC Device::GetRTVHeapDesc(UINT rtvNum)
 {
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
     desc.Type = // タイプ RTV
         D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
     desc.NodeMask =
         0;
-    desc.NumDescriptors = // レンダーターゲットバッファ数
-        rtBuffNum;
+    desc.NumDescriptors =
+        rtvNum;
     desc.Flags =
         D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
@@ -1083,11 +1083,10 @@ D3D12_DEPTH_STENCIL_DESC Device::GetDepthStencilDesc()
 
 
 
-// Direct3Dデバイスを渡す
-ID3D12Device* Device::GetDevice()
-{
-    return _device.Get();
-}
+// Direct3Dデバイスセット
+void Device::SetDevice(ComPtr<ID3D12Device> device){_device = device;}
+// Direct3Dデバイスを返す
+ID3D12Device* Device::GetDevice(){return _device.Get();}
 
 Device::Device() {}
 Device::~Device() {}
