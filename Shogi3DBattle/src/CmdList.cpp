@@ -106,6 +106,11 @@ void CmdList::Reset(CmdAllocator* cmdAllocator)
     _cmdList->Reset(cmdAllocator->GetCmdAllocator(), nullptr);
 }
 
+
+
+
+// コマンドリストセット
+void CmdList::SetCmdList(ComPtr<ID3D12GraphicsCommandList> cmdList){_cmdList = cmdList;}
 // コマンドリストを返す
 ID3D12GraphicsCommandList* CmdList::GetCmdList(){return _cmdList.Get();}
 

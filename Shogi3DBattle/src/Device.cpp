@@ -9,30 +9,51 @@
 // コマンドアロケータオブジェクト作成
 HRESULT Device::CreateCmdAllocator(CmdAllocator* cmdAllocator)
 {
-    return _device->CreateCommandAllocator(
+    ComPtr<ID3D12CommandAllocator> cmdAllocatorCom;
+
+    HRESULT result;
+    result = _device->CreateCommandAllocator(
         D3D12_COMMAND_LIST_TYPE_DIRECT,
-        IID_PPV_ARGS(cmdAllocator->_cmdAllocator.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(cmdAllocatorCom.ReleaseAndGetAddressOf()));
+    if(FAILED(result)) return result;
+
+    cmdAllocator->SetCmdAllocator(cmdAllocatorCom);
+    return S_OK;
 }
 
 // コマンドリスト作成
 HRESULT Device::CreateCmdList(CmdList* cmdList, CmdAllocator* cmdAllocator)
 {
-    return _device->CreateCommandList(
+    ComPtr<ID3D12GraphicsCommandList> cmdListCom;
+
+    HRESULT result;
+    result = _device->CreateCommandList(
         0,
         D3D12_COMMAND_LIST_TYPE_DIRECT,
-        cmdAllocator->_cmdAllocator.Get(),
+        cmdAllocator->GetCmdAllocator(),
         nullptr,
-        IID_PPV_ARGS(cmdList->_cmdList.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(cmdListCom.ReleaseAndGetAddressOf()));
+    if(FAILED(result)) return result;
+
+    cmdList->SetCmdList(cmdListCom);
+    return S_OK;
 }
 
 // コマンドキュー作成
 HRESULT Device::CreateCmdQueue(CmdQueue* cmdQueue)
 {
+    ComPtr<ID3D12CommandQueue> cmdQueueCom;
+
     D3D12_COMMAND_QUEUE_DESC cmdQueueDesc = GetCmdQueueDesc();
 
-    return _device->CreateCommandQueue(
+    HRESULT result;
+    result = _device->CreateCommandQueue(
         &cmdQueueDesc,
-        IID_PPV_ARGS(cmdQueue->_cmdQueue.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(cmdQueueCom.ReleaseAndGetAddressOf()));
+    if(FAILED(result)) return result;
+
+    cmdQueue->SetCmdQueue(cmdQueueCom);
+    return S_OK;
 }
 
 // コマンドキューディスクリプタ
@@ -75,7 +96,7 @@ HRESULT Device::CreateD3D11(
         flags,
         nullptr, // 3D12の機能レベル使用
         0,       // 機能レベル配列サイズ(nullptrのため0）
-        reinterpret_cast<IUnknown**>(cmdQueue->_cmdQueue.GetAddressOf()),
+        reinterpret_cast<IUnknown**>(cmdQueue->GetCmdQueuePtr()),
         1, // キューの個数 1
         0, // ノードマスク
         dev11.ReleaseAndGetAddressOf(),

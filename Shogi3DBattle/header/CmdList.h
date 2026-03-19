@@ -7,8 +7,6 @@
 
 class CmdList
 {
-    friend class Device; // Direct3Dから参照可能
-
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -51,7 +49,7 @@ public:
     
 
     
-
+    void SetCmdList(ComPtr<ID3D12GraphicsCommandList> cmdList); // コマンドリストセット
     ID3D12GraphicsCommandList* GetCmdList(); // コマンドリストを返す
 
     CmdList();

@@ -5,8 +5,6 @@
 
 class CmdAllocator
 {
-    friend class Device; // Direct3Dデバイスから参照可能
-
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -15,6 +13,8 @@ private:
 
 public:
     void Reset(); // コマンドリセット
+
+    void SetCmdAllocator(ComPtr<ID3D12CommandAllocator> cmdAllocator); // コマンドアロケータセット
     ID3D12CommandAllocator* GetCmdAllocator(); // コマンドアロケータを返す
 
     CmdAllocator();
