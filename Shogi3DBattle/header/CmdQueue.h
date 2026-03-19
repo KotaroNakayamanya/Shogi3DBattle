@@ -2,6 +2,7 @@
 
 #include<d3d12.h>
 #include<wrl.h>
+#include"CmdList.h"
 
 class CmdQueue
 {
@@ -13,6 +14,8 @@ private:
     ComPtr<ID3D12CommandQueue> _cmdQueue; // コマンドキュー
 
 public:
+    void ExeCmd(CmdList* cmdList); // コマンド実行
+
     ID3D12CommandQueue* GetCmdQueue(); // コマンドキューを返す
 
     CmdQueue();

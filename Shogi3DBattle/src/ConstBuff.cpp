@@ -1,11 +1,5 @@
 #include"ConstBuff.h"
 
-// バッファの開始アドレスを返す
-D3D12_GPU_VIRTUAL_ADDRESS ConstBuff::GetStartAddress()
-{
-    return _constBuff->GetGPUVirtualAddress();
-}
-
 // 変換行列を書き込む
 void ConstBuff::WriteToConstBuff(
     Board* board,

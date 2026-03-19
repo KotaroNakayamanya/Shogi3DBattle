@@ -4,7 +4,7 @@ class ControllerButton
 {
 public:
     // 2進数の各ビット(0～nビット）で入力状況を記録（１で入力、0で未入力）
-    static enum Button {
+    enum Button {
         decision  = 0b1 << 6, // 決定
         cancel    = 0b1 << 5, // キャンセル
         up        = 0b1 << 4, // 上

@@ -1,7 +1,6 @@
 #pragma once
 
 #include"ShogiObj.h"
-#include"VertexStruct.h"
 
 class Board : public ShogiObj
 {

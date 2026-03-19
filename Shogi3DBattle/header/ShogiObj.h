@@ -2,24 +2,35 @@
 
 #include<d3d12.h>
 #include<vector>
-#include"VertexStruct.h"
+#include<DirectXMath.h>
+//#include"VertStruct.h"
 #include"ShogiObjIdEnum.h"
 
 class ShogiObj
 {
+public:
+    // 頂点の内訳
+    typedef struct Vert
+    {
+        DirectX::XMFLOAT3 pos;
+        DirectX::XMFLOAT3 normal;
+        DirectX::XMFLOAT2 uv;
+        UINT idx;
+    }Vert;
+
 protected:
-    std::vector<VertexStruct::Vertex> _vertices; // 頂点集合
-    std::vector<unsigned short>       _indices;  // 頂点インデックス
-    DirectX::XMMATRIX                 _worldMat = DirectX::XMMatrixIdentity(); // ワールド行列
-    D3D12_GPU_VIRTUAL_ADDRESS         _vertAddress; // 頂点アドレス
-    D3D12_GPU_VIRTUAL_ADDRESS         _idxAddress;  // インデックスアドレス
+    std::vector<Vert> _vertices; // 頂点集合
+    std::vector<unsigned short>   _indices;  // 頂点インデックス
+    DirectX::XMMATRIX             _worldMat = DirectX::XMMatrixIdentity(); // ワールド行列
+    D3D12_GPU_VIRTUAL_ADDRESS     _vertAddress; // 頂点アドレス
+    D3D12_GPU_VIRTUAL_ADDRESS     _idxAddress;  // インデックスアドレス
     ShogiObjId _id; // 将棋オブジェクトId
 
 public:
-    void SetVertices(std::vector<VertexStruct::Vertex> vertices);
+    void SetVertices(std::vector<Vert> vertices);
     void SetIndices(std::vector<unsigned short> indices);
 
-    std::vector<VertexStruct::Vertex> GetVertices(); // 頂点集合を返す
+    std::vector<Vert> GetVertices(); // 頂点集合を返す
     unsigned int GetVertexByteSize();   // 頂点１つ分のバイトサイズを返す
     unsigned int GetVerticesByteSize(); // 頂点集合全体のバイトサイズを返す
 

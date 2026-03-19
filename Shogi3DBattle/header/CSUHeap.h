@@ -12,11 +12,17 @@ class CSUHeap
 
 private:
     ComPtr<ID3D12DescriptorHeap> _csuHeap; // CBV,SRV,UAVヒープ
+    UINT _descOffset; // ディスクリプタオフセット
+
     UINT _cbvNum; // CBV数
     UINT _srvNum; // SRV数
+    UINT _uavNum; // UAV数
    
 public:
-    ID3D12DescriptorHeap* GetCSUHeap(); // ヒープを渡す
+    // 指定された位置のGPUディスクリプタハンドルを返す
+    D3D12_CPU_DESCRIPTOR_HANDLE GetDescHandle(UINT i);
+    // ヒープを返す
+    ID3D12DescriptorHeap* GetCSUHeap();
 
     CSUHeap();
     ~CSUHeap();

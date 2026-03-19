@@ -3,6 +3,7 @@
 #include<d3d12.h>
 #include<wrl.h>
 #include"ShogiObj.h"
+#include"CmdAllocator.h"
 
 class CmdList
 {
@@ -37,11 +38,15 @@ public:
 
     void SetTopology(D3D_PRIMITIVE_TOPOLOGY topology); // トポロジーセット
 
-    void SetVertBuffViews(UINT num, D3D12_VERTEX_BUFFER_VIEW* vertBuffViews); // 頂点バッファビューセット
+    void SetVertBuffView(D3D12_VERTEX_BUFFER_VIEW vertBuffView); // 頂点バッファビューセット
     void SetIdxBuffView(D3D12_INDEX_BUFFER_VIEW idxBuffView);    // インデックスバッファビューセット
 
-    //void SetDrawWithIdx(ShogiObj* shogiObj); // インデックス描画セット
-    void SetDrawWithIdx(UINT idxNum, UINT objNum); // インデックス描画セット
+    void SetDrawWithIdx(ShogiObj* shogiObj); // インデックス描画セット
+
+    void Close(); // コマンドクローズ
+
+    void Reset(CmdAllocator* cmdAllocator); // コマンドリセット
+    
 
     
 

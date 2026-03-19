@@ -2,6 +2,7 @@
 
 #include<algorithm>
 #include<cassert>
+#include<Pawn.h>
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -45,10 +46,11 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     UINT rtBuffNum; // レンダーターゲット数
     rtBuffNum = _swapChain->GetRTBuffNum();
     _backBuffs.resize(rtBuffNum);
-    for (int i = 0; i < rtBuffNum; i++)
+    for (UINT i = 0; i < rtBuffNum; i++)
     {
         _backBuffs[i] = std::make_unique<BackBuff>();
-        if (FAILED(_device->CreateRTV(_backBuffs[i].get(), _rtvHeap.get(), _swapChain.get(), i))) goto failed; // RTV作成
+        if (FAILED(_device->CreateBackBuff(_backBuffs[i].get(), _swapChain.get(), i))) goto failed; // バックバッファ作成
+        _device->CreateRTV(_backBuffs[i].get(), _rtvHeap.get(), i); // RTV作成
     }
 
 
@@ -58,7 +60,7 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     if (FAILED(_device11->CreateD2DDeviceContext(_d2dDeviceContext.get()))) goto failed; // Direct2Dデバイスコンテキスト作成
     _wrappedBackBuffers.resize(rtBuffNum);
     _d2dRenderTargets.resize(rtBuffNum);
-    for (int i = 0; i < rtBuffNum; i++)
+    for (UINT i = 0; i < rtBuffNum; i++)
     {
         _wrappedBackBuffers[i] = std::make_unique<WrappedBackBuffer>();
         _d2dRenderTargets[i]   = std::make_unique<D2DRenderTarget>();
@@ -68,14 +70,13 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     }
     if(FAILED(_d2dDeviceContext->CreateD2DSolidColorBrush(_d2dSolidColorBrush.get()))) goto failed; // ソリッドカラーブラッシュ作成
     if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_dWriteTextFormat.get(), L"メイリオ"))) goto failed; // テキストフォーマット作成
-
     if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed; // 駒のテキストフォーマット作成
 
 
     // デプスステンシル系作成
     if (FAILED(_device->CreateDSBuff(_dsBuff.get(), gameWindow))) goto failed; // デプスステンシルバッファ作成
     if (FAILED(_device->CreateDSVHeap(_dsvHeap.get()))) goto failed; // DSVヒープ作成
-    _device->CreateDSV(_dsv.get(), _dsvHeap.get(), _dsBuff.get()); // DSV作成
+    _device->CreateDSV(_dsvHeap.get(), _dsBuff.get()); // DSV作成
 
 
     // フェンス作成
@@ -112,7 +113,7 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     _device->CreateInputLayout(_inputLayout.get()); // 入力レイアウト（頂点バッファの中身の内訳）作成
 
 
-    // 将棋オブジェクトにGPUアドレスを付与
+    // 将棋オブジェクトに頂点バッファアドレスを付与
     D3D12_GPU_VIRTUAL_ADDRESS vertBuffAddress, idxBuffAddress;
 
     vertBuffAddress  = _vertBuff->GetAddress();
@@ -137,22 +138,29 @@ bool DX12::InitDX12(GameWindow* gameWindow)
 
     CreateTex(); // テクスチャ作成
     _texBuff->WriteToTexBuff(_tex.get()); // テクスチャをバッファに書き込み
-
-    UINT shogiObjNum;
-    shogiObjNum = 41;
-    _pieceTexBuffs.resize(shogiObjNum);
-    for (int i = 0; i < shogiObjNum; i++)
-    {
-        _pieceTexBuffs[i] = std::make_unique<RenderTexBuff>();
-        if (FAILED(_device->CreateRenderTexBuff(_pieceTexBuffs[i].get()))) goto failed;
-    }
     
 
 
     // CBV, SRV作成
-    if (FAILED(_device->CreateCSUHeap(_csuHeap.get()))) goto failed; // CSUヒープオブジェクト作成
+    UINT cbvNum, srvNum, uavNum;
+    cbvNum = 1;
+    srvNum = 1;
+    uavNum = 0;
+    if (FAILED(_device->CreateCSUHeap(_csuHeap.get(), cbvNum, srvNum, uavNum))) goto failed; // CSUヒープオブジェクト作成
     _device->CreateCBV(_csuHeap.get(), _constBuff.get()); // CBV作成
     _device->CreateSRV(_csuHeap.get(), _texBuff.get());   // SRV作成
+
+    // 駒テクスチャ作成
+    UINT shogiTexNum;
+    shogiTexNum = 8 + 6 + 1; // 駒表8種 駒裏6種 将棋盤1
+    _pieceTexBuffs.resize(shogiTexNum);
+    for (UINT i = 0; i < shogiTexNum; i++)
+    {
+        _pieceTexBuffs[i] = std::make_unique<RenderTexBuff>();
+        if (FAILED(_device->CreateRenderTexBuff(_pieceTexBuffs[i].get(), _backBuffs[0].get()))) goto failed; // レンダーターゲットテクスチャ作成
+    }
+    // if (FAILED(_device->CreateRTVHeap(_rtvHeap.get(), _swapChain.get()))) goto failed; // 駒テクスチャRTVヒープ作成
+    
     
 
     // ルートシグネチャオブジェクト作成
@@ -208,7 +216,7 @@ void DX12::CreateBoard(ShogiObjId id)
 {
     _board->SetId(id);
 
-    std::vector<VertexStruct::Vertex> vertices;
+    std::vector<ShogiObj::Vert> vertices;
 
     vertices =
     {   // 上面図
@@ -280,7 +288,7 @@ void DX12::CreateBoard(ShogiObjId id)
 {
     piece->SetId(id);
 
-    std::vector<VertexStruct::Vertex> vertices;
+    std::vector<ShogiObj::Vert> vertices;
 
     float bottomWidth  = 0.9f;          // 底面の横の長さ
     float cornerWidth  = 0.7f;          // 角部分の横の長さ
@@ -392,128 +400,67 @@ void DX12::CreateTex()
 // コマンド実行
 void DX12::ExeDX12()
 {
-    // バックバッファインデックス取得
-    auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
-
-    // レンダーターゲットの準備をする
-    PrepareRenderTarget();
-
-    SetCommand(); // コマンドセット
-
-    _cmdList->GetCmdList()->Close(); // コマンドクローズ
-    ExeCommand(); // コマンド実行
-    WaitProcessWithFence(); // フェンスによる同期処理
-    ResetCommand(); // コマンドリセット
-
-    // 描画実行
-    //ExeDraw();
-
-    
-    StartD2D(); // Direct2D開始
-    // 文字を書く
-    D2D1_RECT_F rect = {0, 0, 600, 600}; // 左 上 右 下
-    DrawStr(L"歩りゃあ", rect);
-    EndD2D(); // Direct2D終了
-
-    ChangeBarrierToPresent(_backBuffs[backBufferIdx].get()); // バックバッファを表示画面に設定
-    _cmdList->GetCmdList()->Close(); // コマンドクローズ
-    ExeCommand(); // コマンド実行
-    WaitProcessWithFence(); // フェンスによる同期処理
-    ResetCommand(); // コマンドリセット
-
+    InitRenderTarget(); // レンダーターゲット初期処理
+    ExeD3D(); // Direct3D処理実行
+    ExeD2D(); // Direct2D処理実行
+    PrepareRenderTargetToFlip(); // 画面フリップ準備処理
     _swapChain->Flip(); // 画面フリップ
 }
 
-// Direct2D開始
-void DX12::StartD2D()
-{
-    auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
 
-    _device11->AcquireWrappedBackBuffer(_wrappedBackBuffers[backBufferIdx].get());
-    _d2dDeviceContext->SetRenderTarget(_d2dRenderTargets[backBufferIdx].get());
-    _d2dDeviceContext->BeginDraw();
-    _d2dDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
-}
 
-// Direct2D終了
-void DX12::EndD2D()
-{
-    auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
 
-    _d2dDeviceContext->EndDraw();
-    _device11->ReleaseWrappedBackBuffer(_wrappedBackBuffers[backBufferIdx].get());
-    _deviceContext->Flash(); // Direct2D描画
-}
-
-// 文字を出力する
-void DX12::DrawStr(std::wstring str, D2D1_RECT_F rect)
-{
-    _d2dDeviceContext->DrawTextW(
-        str,
-        rect,
-        _dWriteTextFormat->GetDWriteTextFormat(),
-        _d2dSolidColorBrush->GetD2DSolidColorBrush());
-}
-
-// レンダーターゲット準備
-void DX12::PrepareRenderTarget()
+// レンダーターゲット初期処理
+void DX12::InitRenderTarget()
 {
     // バックバッファインデックス取得
-    auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
+    _currentBackBuffIdx = _swapChain->GetCurrentBackBufferIdx();
 
-    // ハンドル取得
-    auto rtvHandle = _backBuffs[backBufferIdx]->GetRTVHandle();
-    auto dsvHandle = _dsv->GetDSVHandle();
+    // バックバッファリソースをレンダーターゲットに変更
+    auto resourceBarrier = _rb->GetRBToRenderTarget(_backBuffs[_currentBackBuffIdx]->GetBackBuff());
+    _cmdList->SetResourceBarrier(resourceBarrier);
 
-    // バックバッファをレンダーターゲットに変更
-    ChangeBarrierToRenderTarget(_backBuffs[backBufferIdx].get());
-
-     // バックバッファをレンダーターゲットに設定
+    // バックバッファをレンダーターゲットに設定
+    auto rtvHandle = _rtvHeap->GetRTVHandle(_currentBackBuffIdx);
+    auto dsvHandle = _dsvHeap->GetDSVHandle();
     _cmdList->SetRenderTarget(rtvHandle, dsvHandle);
 
-    // レンダーターゲットクリア
-    _cmdList->ClearRenderTarget(rtvHandle);
-    // デプスステンシルクリア
-    _cmdList->ClearDepthStencil(dsvHandle); 
+    // クリア処理
+    _cmdList->ClearRenderTarget(rtvHandle); // レンダーターゲットクリア
+    _cmdList->ClearDepthStencil(dsvHandle); // デプスステンシルクリア
 }
 
-// バックバッファをレンダーターゲットに変更
-void DX12::ChangeBarrierToRenderTarget(BackBuff* backBuff)
+
+
+
+// Direct3D処理実行
+void DX12::ExeD3D()
 {
-    D3D12_RESOURCE_BARRIER resourceBarrier = 
-        GetBasiceResourceBarrier();
+    Set3DCmd(); // 3Dコマンドセット
 
-    resourceBarrier.Transition.pResource =
-        backBuff->GetBackBuff();
-    resourceBarrier.Transition.StateBefore =
-        D3D12_RESOURCE_STATE_PRESENT;
-    resourceBarrier.Transition.StateAfter  =
-        D3D12_RESOURCE_STATE_RENDER_TARGET;
+    // 将棋盤描画コマンドセット
+    _cmdList->SetIdxBuffView(GetIdxBuffView(_board.get()));
+    SetDrawObjCmd(_board.get());
 
-    _cmdList->SetResourceBarrier(resourceBarrier);
+    // 駒描画コマンドセット
+    _cmdList->SetIdxBuffView(GetIdxBuffView(_pieces[0].get()));
+    for (UINT i = 0; i < 2; i++)
+    {
+        SetDrawObjCmd(_pieces[i].get());
+    }
+
+    // ワールド行列、ビュープロジェクション行列をコンスタントバッファに書き込み
+    _constBuff->WriteToConstBuff(
+        _board.get(),
+        _pieces,
+        _viewMat.get(),
+        _projMat.get());
+
+    ExeCmd(); // コマンド実行
 }
 
-// リソースバリア基本設定
-D3D12_RESOURCE_BARRIER DX12::GetBasiceResourceBarrier()
-{
-    D3D12_RESOURCE_BARRIER barrier = {};
-
-    barrier.Type =
-        D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    barrier.Flags =
-        D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    barrier.Transition.Subresource =
-        D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-
-    return barrier;
-}
-
-
-
-
-
-// コマンドセット（Drawクラス）
-void DX12::SetCommand()
+// 3Dコマンドセット
+void DX12::Set3DCmd()
 {
     // パイプラインセット
     _cmdList->SetPipeline(_pipeline->GetPipelineState());
@@ -544,67 +491,15 @@ void DX12::SetCommand()
     D3D12_RECT scissorRects[] = {_scissorRect->GetScissorRect()};
     auto scissorRectNum = sizeof(scissorRects) / sizeof(D3D12_RECT);
     _cmdList->SetScissorRects(scissorRectNum, scissorRects);
+}
 
-    // ワールド行列、ビュープロジェクション行列をコンスタントバッファに書き込み
-    _constBuff->WriteToConstBuff(
-        _board.get(),
-        _pieces,
-        _viewMat.get(),
-        _projMat.get());
-
-
-    // 将棋オブジェクト描画命令セット
-    //SetCmdDrawObj(_board.get());
-    //SetCmdDrawObj(_pieces[0].get());
-
-
+// オブジェクト描画コマンドセット
+void DX12::SetDrawObjCmd(ShogiObj* shogiObj)
+{
     // 頂点バッファビューセット
-    auto aaa = GetVertBuffView(_board.get());
-    D3D12_VERTEX_BUFFER_VIEW vertBuffViews[] = {aaa};
-    auto vertBuffViewNum = sizeof(vertBuffViews) / sizeof(D3D12_VERTEX_BUFFER_VIEW);
-    _cmdList->SetVertBuffViews(vertBuffViewNum, vertBuffViews);
-    // インデックスバッファビューセット
-    _cmdList->SetIdxBuffView(GetIdxBuffView(_board.get()));
+    _cmdList->SetVertBuffView(GetVertBuffView(shogiObj));
     // インデックス描画セット
-    auto idxNum = _board->GetIdxNum();
-    _cmdList->SetDrawWithIdx(idxNum, 1);
-
-    // 頂点バッファビューセット
-    auto bbb = GetVertBuffView(_pieces[0].get());
-    D3D12_VERTEX_BUFFER_VIEW vertBuffViews2[] = {bbb};
-    auto vertBuffViewNum2 = sizeof(vertBuffViews2) / sizeof(D3D12_VERTEX_BUFFER_VIEW);
-    _cmdList->SetVertBuffViews(vertBuffViewNum2, vertBuffViews2);
-    // インデックスバッファビューセット
-    _cmdList->SetIdxBuffView(GetIdxBuffView(_pieces[0].get()));
-    // インデックス描画セット
-    auto idxNum2 = _pieces[0]->GetIdxNum();
-    _cmdList->SetDrawWithIdx(idxNum2, 1);
-
-        // 頂点バッファビューセット
-    bbb = GetVertBuffView(_pieces[1].get());
-    vertBuffViews2[0] = {bbb};
-    _cmdList->SetVertBuffViews(vertBuffViewNum2, vertBuffViews2);
-    // インデックスバッファビューセット
-    _cmdList->SetIdxBuffView(GetIdxBuffView(_pieces[1].get()));
-    // インデックス描画セット
-    idxNum2 = _pieces[1]->GetIdxNum();
-    _cmdList->SetDrawWithIdx(idxNum2, 1);
-    
-
-        //_constBuff->WriteToConstBuff(
-        //_board.get(),
-        //_viewMat.get(),
-        //_projMat.get());
-    
-
-    //// 頂点バッファビューセット
-    //D3D12_VERTEX_BUFFER_VIEW vertBuffViews[] = {GetVertBuffView(_pawn.get())};
-    //auto vertBuffViewNum = sizeof(vertBuffViews) / sizeof(D3D12_VERTEX_BUFFER_VIEW);
-    //_cmdList->SetVertBuffViews(vertBuffViewNum, vertBuffViews);
-    //// インデックスバッファセット
-    //_cmdList->SetIdxBuffView(GetIdxBuffView(_pawn.get()));
-    //// インデックス描画セット
-    //_cmdList->SetDrawWithIdx(_pawn.get());
+    _cmdList->SetDrawWithIdx(shogiObj);
 }
 
 // 頂点バッファビュー
@@ -612,12 +507,12 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(ShogiObj* shogiObj)
 {
     D3D12_VERTEX_BUFFER_VIEW view;
 
-    view.BufferLocation =
+    view.BufferLocation =  // 頂点バッファのスタート位置
         shogiObj->GetVertAddress();
-    view.SizeInBytes =
-        shogiObj->GetVerticesByteSize();
-    view.StrideInBytes =
+    view.StrideInBytes =   // 頂点1つ分のサイズ
         shogiObj->GetVertexByteSize();
+        view.SizeInBytes = // 頂点全体のサイズ
+        shogiObj->GetVerticesByteSize();
 
     return view;
 }
@@ -627,60 +522,100 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(ShogiObj* shogiObj)
 {
     D3D12_INDEX_BUFFER_VIEW view;
 
-    view.BufferLocation =
+    view.BufferLocation = // インデックスバッファのスタート位置
         shogiObj->GetIdxAddress();
-    view.Format =
+    view.Format =         // フォーマット unsigned short
         DXGI_FORMAT_R16_UINT;
-    view.SizeInBytes =
+    view.SizeInBytes =    // インデックス全体のサイズ
         shogiObj->GetIndicesByteSize();
 
     return view;
 }
 
-//// オブジェクト描画命令セット
-//void DX12::SetCmdDrawObj(ShogiObj* shogiObj)
-//{
-//    // 頂点バッファビューセット
-//    D3D12_VERTEX_BUFFER_VIEW vertBuffViews[] = {GetVertBuffView(shogiObj)};
-//    auto vertBuffViewNum = sizeof(vertBuffViews) / sizeof(D3D12_VERTEX_BUFFER_VIEW);
-//    _cmdList->SetVertBuffViews(vertBuffViewNum, vertBuffViews);
-//
-//    // インデックスバッファセット
-//    _cmdList->SetIdxBuffView(GetIdxBuffView(shogiObj));
-//
-//    // インデックス描画セット
-//    _cmdList->SetDrawWithIdx(shogiObj);
-//}
-
-
-// RTVリソースを画面表示に変更
-void DX12::ChangeBarrierToPresent(BackBuff* backBuff)
-{
-    D3D12_RESOURCE_BARRIER barrier =
-        GetBasiceResourceBarrier();
-
-    barrier.Transition.pResource =
-        backBuff->GetBackBuff();
-    barrier.Transition.StateBefore =
-        D3D12_RESOURCE_STATE_RENDER_TARGET;
-    barrier.Transition.StateAfter  =
-        D3D12_RESOURCE_STATE_PRESENT;
-
-    _cmdList->SetResourceBarrier(barrier);
-}
-
-
-
-
 // コマンド実行
-void DX12::ExeCommand()
+void DX12::ExeCmd()
 {
-    ID3D12CommandList* commandLists[] = {_cmdList->GetCmdList()}; // リストに格納
-    UINT listNum = sizeof(commandLists) / sizeof(ID3D12CommandList); // リスト数取得
-
-    _cmdQueue->GetCmdQueue()->ExecuteCommandLists(listNum, commandLists); // コマンドキュー実行
-
+    _cmdList->Close(); // コマンドクローズ
+    _cmdQueue->ExeCmd(_cmdList.get()); // コマンド実行
+    WaitProcessWithFence(); // フェンスによる同期処理
+    _cmdAllocator->Reset();               // コマンドアロケータリセット
+    _cmdList->Reset(_cmdAllocator.get()); // コマンドリストリセット
 }
+
+
+
+// Direct2D処理実行
+void DX12::ExeD2D()
+{
+    StartD2D(); // Direct2D開始
+    DrawStr(L"歩りゃあ", 0, 0, 720, 720);
+    EndD2D(); // Direct2D終了
+}
+
+// Direct2D開始
+void DX12::StartD2D()
+{
+    auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
+
+    _device11->AcquireWrappedBackBuffer(_wrappedBackBuffers[backBufferIdx].get());
+    _d2dDeviceContext->SetRenderTarget(_d2dRenderTargets[backBufferIdx].get());
+    _d2dDeviceContext->BeginDraw();
+    _d2dDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
+}
+
+// Direct2D終了
+void DX12::EndD2D()
+{
+    auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
+
+    _d2dDeviceContext->EndDraw();
+    _device11->ReleaseWrappedBackBuffer(_wrappedBackBuffers[backBufferIdx].get());
+    _deviceContext->Flash(); // Direct2D描画
+}
+
+//// 文字を出力する
+//void DX12::DrawStr(std::wstring str, D2D1_RECT_F rect)
+//{
+//    _d2dDeviceContext->DrawTextW(
+//        str,
+//        rect,
+//        _dWriteTextFormat->GetDWriteTextFormat(),
+//        _d2dSolidColorBrush->GetD2DSolidColorBrush());
+//}
+// 文字を出力する
+void DX12::DrawStr(
+    std::wstring str,
+    float left,
+    float top,
+    float right,
+    float bottom)
+{
+    D2D1_RECT_F rect = {left, top, right, bottom};
+
+    _d2dDeviceContext->DrawTextW(
+        str,
+        rect,
+        _dWriteTextFormat->GetDWriteTextFormat(),
+        _d2dSolidColorBrush->GetD2DSolidColorBrush());
+}
+
+
+
+
+// レンダーターゲットのフリップ準備
+void DX12::PrepareRenderTargetToFlip()
+{
+    // バックバッファを表示画面に設定
+    auto resourceBarrier = _rb->GetRBToPresent(_backBuffs[_currentBackBuffIdx]->GetBackBuff());
+    _cmdList->SetResourceBarrier(resourceBarrier);
+
+    ExeCmd(); // コマンド実行
+}
+
+
+
+
+
 
 // フェンスによる同期制御
 void DX12::WaitProcessWithFence()
@@ -695,16 +630,6 @@ void DX12::WaitProcessWithFence()
         WaitForSingleObject(event, INFINITE);
         CloseHandle(event);
     }
-}
-
-// コマンドリセット
-void DX12::ResetCommand()
-{
-    ID3D12CommandAllocator* commandAllocator =
-        _cmdAllocator->GetCmdAllocator();
-
-    commandAllocator->Reset();
-    _cmdList->GetCmdList()->Reset(commandAllocator, nullptr);
 }
 
 
@@ -785,7 +710,6 @@ DX12::DX12() {
 
     _dsBuff  = std::make_unique<DSBuff>();
     _dsvHeap = std::make_unique<DSVHeap>();
-    _dsv     = std::make_unique<DSV>();
 
     _fence = std::make_unique<Fence>();
 
@@ -805,7 +729,12 @@ DX12::DX12() {
     _inputLayout   = std::make_unique<InputLayout>();
     _pipeline      = std::make_unique<Pipeline>();
 
+    _pieceTexRTVHeap = std::make_unique<RTVHeap>();
+    _pieceTexSRVHeap = std::make_unique<CSUHeap>();
+
     _board = std::make_unique<Board>();
+
+    _rb = std::make_unique<ResourceBarrier>();
 }
 
 DX12::~DX12(){}

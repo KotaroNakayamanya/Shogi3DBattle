@@ -1,10 +1,10 @@
 #include"ShogiObj.h"
 
- void ShogiObj::SetVertices(std::vector<VertexStruct::Vertex> vertices){_vertices = vertices;}
+ void ShogiObj::SetVertices(std::vector<Vert> vertices){_vertices = vertices;}
  void ShogiObj::SetIndices(std::vector<unsigned short> indices){_indices = indices;}
 
 // 頂点集合ポインタを返す
-std::vector<VertexStruct::Vertex> ShogiObj::GetVertices(){return _vertices;}
+std::vector<ShogiObj::Vert> ShogiObj::GetVertices(){return _vertices;}
 // 頂点１つ分のバイトサイズを返す
 unsigned int ShogiObj::GetVertexByteSize(){return sizeof(_vertices[0]);}
 // 頂点集合全体のバイトサイズを返す
@@ -32,5 +32,10 @@ D3D12_GPU_VIRTUAL_ADDRESS ShogiObj::GetVertAddress(){return _vertAddress;}      
 void ShogiObj::SetIdxAddress (D3D12_GPU_VIRTUAL_ADDRESS address){_idxAddress  = address;} // インデックスアドレスセット
 D3D12_GPU_VIRTUAL_ADDRESS ShogiObj::GetIdxAddress (){return _idxAddress;}                 // インデックスアドレスを返す
 
-ShogiObj::ShogiObj(){}
+ShogiObj::ShogiObj()
+{
+    _vertAddress = 0;
+    _idxAddress  = 0;
+    _id          = PAWN_1;
+}
 ShogiObj::~ShogiObj(){}

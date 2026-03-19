@@ -12,8 +12,12 @@ class RTVHeap
 
 private:
     ComPtr<ID3D12DescriptorHeap> _rtvHeap; // RTVヒープ
+    UINT _rtvOffset; // RTVオフセット数
 
 public:
-    RTVHeap(){}
-    ~RTVHeap(){}
+    // 引数の位置のRTVハンドルを返す
+    D3D12_CPU_DESCRIPTOR_HANDLE GetRTVHandle(UINT i);
+
+    RTVHeap();
+    ~RTVHeap();
 };

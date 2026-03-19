@@ -20,7 +20,6 @@ private:
     ComPtr<ID3D12Resource> _constBuff; // コンスタントバッファ
 
 public:
-    D3D12_GPU_VIRTUAL_ADDRESS GetStartAddress(); // バッファの開始アドレスを返す
     // 変換行列を書き込む
     void WriteToConstBuff(
         Board* board,

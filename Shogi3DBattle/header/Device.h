@@ -12,7 +12,6 @@
 #include"BackBuff.h"
 #include"DSBuff.h"
 #include"DSVHeap.h"
-#include"DSV.h"
 #include"Fence.h"
 #include"VShader.h"
 #include"PShader.h"
@@ -101,10 +100,11 @@ public:
         DeviceContext* deviceContext,
         CmdQueue* cmdQueue);
     HRESULT CreateRTVHeap(RTVHeap* rtvHeap, SwapChain* swapChain); // RTVヒープ作成
-    HRESULT CreateRTV(BackBuff* backBuff, RTVHeap* rtvHeap, SwapChain* swapChain, UINT i); // RTV作成
+    HRESULT CreateBackBuff(BackBuff* backBuff, SwapChain* swapChain, UINT i); // バックバッファ作成
+    void    CreateRTV(BackBuff* backBuff, RTVHeap* rtvHeap, UINT i); // RTV作成
     HRESULT CreateDSBuff(DSBuff* dsBuff, GameWindow* gameWindow); // デプスステンシルバッファ作成
     HRESULT CreateDSVHeap(DSVHeap* dsvHeap); // デプスステンシルヒープ作成
-    void    CreateDSV(DSV* dsv, DSVHeap* dsvHeap, DSBuff* dsBuff); // DSV作成
+    void    CreateDSV(DSVHeap* dsvHeap, DSBuff* dsBuff); // DSV作成
     HRESULT CreateFence(Fence* fence); // フェンス作成
 
     HRESULT CreateVShader(VShader* vShader); // 頂点シェーダー作成
@@ -116,9 +116,9 @@ public:
 
     HRESULT CreateConstBuff(ConstBuff* constBuff, UINT pieceNum); // コンスタントバッファ作成
     HRESULT CreateTexBuff(TexBuff* texBuff); // テクスチャバッファ作成
-    HRESULT CreateRenderTexBuff(RenderTexBuff* renderTexBuff); // レンダーターゲット兼テクスチャバッファ作成
+    HRESULT CreateRenderTexBuff(RenderTexBuff* renderTexBuff, BackBuff* backBuff); // レンダーターゲット兼テクスチャバッファ作成
 
-    HRESULT CreateCSUHeap(CSUHeap* csuHeap); // CSUヒープ作成
+    HRESULT CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum); // CSUヒープ作成
     void    CreateCBV(CSUHeap* csuHeap, ConstBuff* constBuff); // CBV作成
     void    CreateSRV(CSUHeap* csuHeap, TexBuff* texBuff); // SRV作成
 

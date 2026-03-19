@@ -14,7 +14,8 @@ private:
     ComPtr<ID3D12CommandAllocator> _cmdAllocator; // コマンドアロケータ
 
 public:
-    ID3D12CommandAllocator* GetCmdAllocator();       // コマンドアロケータを返す
+    void Reset(); // コマンドリセット
+    ID3D12CommandAllocator* GetCmdAllocator(); // コマンドアロケータを返す
 
     CmdAllocator();
     ~CmdAllocator();

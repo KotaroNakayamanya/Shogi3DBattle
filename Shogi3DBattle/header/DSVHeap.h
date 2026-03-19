@@ -14,6 +14,8 @@ private:
     ComPtr<ID3D12DescriptorHeap> _dsvHeap; // DSVヒープ
 
 public:
-    DSVHeap(){}
-    ~DSVHeap(){}
+    D3D12_CPU_DESCRIPTOR_HANDLE GetDSVHandle(); // DSVハンドルを返す
+
+    DSVHeap();
+    ~DSVHeap();
 };

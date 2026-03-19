@@ -30,7 +30,7 @@
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Device11.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
-    <ClCompile Include="src\DSV.cpp" />
+    <ClCompile Include="src\DSVHeap.cpp" />
     <ClCompile Include="src\DWriteFactory.cpp" />
     <ClCompile Include="src\DX12.cpp" />
     <ClCompile Include="src\DXGIFactory.cpp" />
@@ -54,8 +54,10 @@
     <ClCompile Include="src\Pipeline.cpp" />
     <ClCompile Include="src\ProjMat.cpp" />
     <ClCompile Include="src\PShader.cpp" />
+    <ClCompile Include="src\ResourceBarrier.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\BackBuff.cpp" />
+    <ClCompile Include="src\RTVHeap.cpp" />
     <ClCompile Include="src\ScissorRect.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Tex.cpp" />
@@ -84,7 +86,6 @@
     <ClInclude Include="header\Device11.h" />
     <ClInclude Include="header\DeviceContext.h" />
     <ClInclude Include="header\DSBuff.h" />
-    <ClInclude Include="header\DSV.h" />
     <ClInclude Include="header\DSVHeap.h" />
     <ClInclude Include="header\MoveCamera.h" />
     <ClInclude Include="header\GameWindow.h" />
@@ -113,6 +114,7 @@
     <ClInclude Include="header\Pipeline.h" />
     <ClInclude Include="header\ProjMat.h" />
     <ClInclude Include="header\PShader.h" />
+    <ClInclude Include="header\ResourceBarrier.h" />
     <ClInclude Include="header\RootSignature.h" />
     <ClInclude Include="header\BackBuff.h" />
     <ClInclude Include="header\RTVHeap.h" />
@@ -126,7 +128,7 @@
     <ClInclude Include="header\DWriteTextFormat.h" />
     <ClInclude Include="header\VertBuff.h" />
     <ClInclude Include="header\ShogiObj.h" />
-    <ClInclude Include="header\VertexStruct.h" />
+    <ClInclude Include="header\VertStruct.h" />
     <ClInclude Include="header\ViewMat.h" />
     <ClInclude Include="header\Viewport.h" />
     <ClInclude Include="header\ViewRotation.h" />

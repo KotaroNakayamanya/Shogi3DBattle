@@ -80,9 +80,6 @@ LRESULT CALLBACK WindowProcedure(
     static POINT screenLT;
     static POINT screenRB;
 
-    PAINTSTRUCT ps;
-    HDC hdc;
-
 
 
     switch(msg){
@@ -90,7 +87,7 @@ LRESULT CALLBACK WindowProcedure(
     {
         GameWindow* gameWindow = app.GetGameWindow(); // ゲームウインドウ取得
 
-        RECT windowRect = {0, 0, gameWindow->GetWindowWidth(), gameWindow->GetWindowHeight()};
+        RECT windowRect = {0, 0, static_cast<LONG>(gameWindow->GetWindowWidth()), static_cast<LONG>(gameWindow->GetWindowHeight())};
         AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, false); // クライアント領域調整
 
         UINT windowWidth = windowRect.right - windowRect.left;
@@ -155,8 +152,8 @@ LRESULT CALLBACK WindowProcedure(
 
         if (isCursorInited)
         {
-            int x = LOWORD(lParam);   // カーソル動作後の横位置
-            int y = HIWORD(lParam);   // カーソル動作後の縦位置
+            UINT x = LOWORD(lParam);   // カーソル動作後の横位置
+            UINT y = HIWORD(lParam);   // カーソル動作後の縦位置
 
             inputHandler->MemoryMouseMove(x, y);
 

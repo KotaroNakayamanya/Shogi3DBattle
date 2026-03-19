@@ -77,9 +77,9 @@ void CmdList::SetTopology(D3D_PRIMITIVE_TOPOLOGY topology)
 }
 
 // 頂点バッファビューセット
-void CmdList::SetVertBuffViews(UINT num, D3D12_VERTEX_BUFFER_VIEW* vertBuffViews)
+void CmdList::SetVertBuffView(D3D12_VERTEX_BUFFER_VIEW vertBuffView)
 {
-    _cmdList->IASetVertexBuffers(0, num, vertBuffViews);
+    _cmdList->IASetVertexBuffers(0, 1, &vertBuffView);
 }
 
 // インデックスバッファビューセット
@@ -88,15 +88,22 @@ void CmdList::SetIdxBuffView(D3D12_INDEX_BUFFER_VIEW idxBuffView)
     _cmdList->IASetIndexBuffer(&idxBuffView);
 }
 
-//// インデックス描画セット
-//void CmdList::SetDrawWithIdx(ShogiObj* shogiObj)
-//{
-//    _cmdList->DrawIndexedInstanced(shogiObj->GetIdxNum(), 1, 0, 0, 0);
-//}
 // インデックス描画セット
-void CmdList::SetDrawWithIdx(UINT idxNum, UINT objNum)
+void CmdList::SetDrawWithIdx(ShogiObj* shogiObj)
+{    
+    _cmdList->DrawIndexedInstanced(shogiObj->GetIdxNum(), 1, 0, 0, 0);
+}
+
+// コマンドクローズ
+void CmdList::Close()
 {
-    _cmdList->DrawIndexedInstanced(idxNum, objNum, 0, 0, 0);
+    _cmdList->Close();
+}
+
+// コマンドリセット
+void CmdList::Reset(CmdAllocator* cmdAllocator)
+{
+    _cmdList->Reset(cmdAllocator->GetCmdAllocator(), nullptr);
 }
 
 // コマンドリストを返す
