@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include"GameWindow.h"
-//#include"GameObj.h"
 #include"DX12.h"
 #include"InputHandler.h"
 
@@ -9,9 +8,14 @@
 class Application
 {
 private:
-    std::unique_ptr<GameWindow> _gameWindow; // ゲームウインドウ
-    //std::unique_ptr<GameObj> _gameObj; // ゲームオブジェクト
-    std::unique_ptr<DX12> _dx12; // DirectX
+    std::unique_ptr<GameWindow>            _gameWindow; // ゲームウインドウ
+    std::unique_ptr<Board>                 _board;      // 将棋盤
+    std::vector<std::unique_ptr<Piece>> _pieces;     // 駒
+    std::unique_ptr<DX12>                  _dx12;       // DirectX
+
+    void CreateBoard(ShogiObjId id); // 将棋盤作成
+    void CreatePiece(Piece* piece, ShogiObjId id); // 駒作成
+
     std::unique_ptr<InputHandler> _inputHandler; // インプットハンドラ
 
     Application(); // デフォルトコンストラクタ禁止
@@ -28,7 +32,12 @@ public:
     GameWindow* GetGameWindow(); // ゲームウインドウオブジェクトを返す
     DX12* GetDX12(); // DX12オブジェクトを返す
     HWND GetHWND(); // ウインドウハンドルを返す
+
+    Board* GetBoard(); // 将棋盤を返す
+    std::vector<std::unique_ptr<Piece>>& GetPieces(); // 駒を返す
+
     InputHandler* GetInputHandler(); // インプットハンドラを返す
+
     UINT GetWindowWidth();  // ウインドウ横サイズを返す
     UINT GetWindowHeight(); // ウインドウ縦サイズを返す
     

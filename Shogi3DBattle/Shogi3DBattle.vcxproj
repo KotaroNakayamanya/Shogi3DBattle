@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="header\DefaultHeapProp.cpp" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
@@ -37,6 +38,8 @@
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Device11.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
+    <ClCompile Include="src\DSBuffFactory.cpp" />
+    <ClCompile Include="src\DSResourceDesc.cpp" />
     <ClCompile Include="src\DSVFactory.cpp" />
     <ClCompile Include="src\DSVHeapDesc.cpp" />
     <ClCompile Include="src\DSVOffset.cpp" />
@@ -48,6 +51,7 @@
     <ClCompile Include="src\GameWindow.cpp" />
     <ClCompile Include="src\HeapFactory.cpp" />
     <ClCompile Include="src\IdxBuff.cpp" />
+    <ClCompile Include="src\IdxBuffFactory.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyConf.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -60,6 +64,7 @@
     <ClCompile Include="src\MovingPiece.cpp" />
     <ClCompile Include="src\Pawn.cpp" />
     <ClCompile Include="src\Piece.cpp" />
+    <ClCompile Include="src\PShaderResourceStates.cpp" />
     <ClCompile Include="src\ReadResourceStates.cpp" />
     <ClCompile Include="src\RenderTexBuff.cpp" />
     <ClCompile Include="src\Pipeline.cpp" />
@@ -73,18 +78,24 @@
     <ClCompile Include="src\RTVHeapDesc.cpp" />
     <ClCompile Include="src\RTVOffset.cpp" />
     <ClCompile Include="src\ScissorRect.cpp" />
+    <ClCompile Include="src\ShogiObjFactory.cpp" />
     <ClCompile Include="src\SRVFactory.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Tex.cpp" />
     <ClCompile Include="src\TexBuff.cpp" />
+    <ClCompile Include="src\TexBuffFactory.cpp" />
+    <ClCompile Include="src\TexHeapProp.cpp" />
+    <ClCompile Include="src\TexResourceDesc.cpp" />
     <ClCompile Include="src\UploadHeapProp.cpp" />
     <ClCompile Include="src\VertBuff.cpp" />
     <ClCompile Include="src\ShogiObj.cpp" />
+    <ClCompile Include="src\VertBuffFactory.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
     <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\ViewRotation.cpp" />
     <ClCompile Include="src\VShader.cpp" />
     <ClCompile Include="src\WrappedBackBuff.cpp" />
+    <ClCompile Include="src\DepthWriteResourceStates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
@@ -92,6 +103,9 @@
     <ClInclude Include="header\BuffResourceDesc.h" />
     <ClInclude Include="header\ConstBuffFactory.h" />
     <ClInclude Include="header\Board.h" />
+    <ClInclude Include="header\DefaultHeapProp.h" />
+    <ClInclude Include="header\DSBuffFactory.h" />
+    <ClInclude Include="header\DSResourceDesc.h" />
     <ClInclude Include="header\IBuffFactory.h" />
     <ClInclude Include="header\CBVFactory.h" />
     <ClInclude Include="header\CmdAllocator.h" />
@@ -114,6 +128,7 @@
     <ClInclude Include="header\Device11.h" />
     <ClInclude Include="header\DeviceContext.h" />
     <ClInclude Include="header\HeapFactory.h" />
+    <ClInclude Include="header\IdxBuffFactory.h" />
     <ClInclude Include="header\IHeapProp.h" />
     <ClInclude Include="header\IDescOffset.h" />
     <ClInclude Include="header\IHeapDesc.h" />
@@ -142,6 +157,7 @@
     <ClInclude Include="header\MovingPiece.h" />
     <ClInclude Include="header\Pawn.h" />
     <ClInclude Include="header\Piece.h" />
+    <ClInclude Include="header\PShaderResourceStates.h" />
     <ClInclude Include="header\ReadResourceStates.h" />
     <ClInclude Include="header\RenderTexBuff.h" />
     <ClInclude Include="header\Pipeline.h" />
@@ -157,16 +173,21 @@
     <ClInclude Include="header\RTVHeapFactory.h" />
     <ClInclude Include="header\RTVOffset.h" />
     <ClInclude Include="header\ScissorRect.h" />
+    <ClInclude Include="header\ShogiObjFactory.h" />
     <ClInclude Include="header\ShogiObjIdEnum.h" />
     <ClInclude Include="header\SRVFactory.h" />
     <ClInclude Include="header\SwapChain.h" />
     <ClInclude Include="header\Tex.h" />
     <ClInclude Include="header\TexBuff.h" />
+    <ClInclude Include="header\TexBuffFactory.h" />
+    <ClInclude Include="header\TexHeapProp.h" />
+    <ClInclude Include="header\TexResourceDesc.h" />
     <ClInclude Include="header\TexStruct.h" />
     <ClInclude Include="header\DWriteTextFormat.h" />
     <ClInclude Include="header\UploadHeapProp.h" />
     <ClInclude Include="header\VertBuff.h" />
     <ClInclude Include="header\ShogiObj.h" />
+    <ClInclude Include="header\VertBuffFactory.h" />
     <ClInclude Include="header\View.h" />
     <ClInclude Include="header\IViewFactory.h" />
     <ClInclude Include="header\ViewMat.h" />
@@ -174,6 +195,7 @@
     <ClInclude Include="header\ViewRotation.h" />
     <ClInclude Include="header\VShader.h" />
     <ClInclude Include="header\WrappedBackBuff.h" />
+    <ClInclude Include="header\DepthWriteResourceStates.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\PixelShader.hlsl">

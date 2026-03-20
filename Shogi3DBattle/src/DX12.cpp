@@ -33,16 +33,16 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     if(FAILED(_dxgiFactory->CreateSwapChain(_swapChain.get(), _cmdQueue.get(), gameWindow))) goto failed; // スワップチェーン作成
     if(FAILED(_device->CreateFence(_fence.get()))) goto failed; // フェンス作成
 
-    // 将棋オブジェクト作成
-    CreateBoard(BOARD); // 将棋盤作成
-    for (int i = 0; i < _pieces.size(); i++)
-    {
-        _pieces[i] = std::make_unique<Pawn>();
-        if(i == 0)
-            CreatePiece(_pieces[0].get(), PAWN_1);
-        else
-            CreatePiece(_pieces[i].get(), PAWN_2);
-    }
+    //// 将棋オブジェクト作成
+    //CreateBoard(BOARD); // 将棋盤作成
+    //for (int i = 0; i < _pieces.size(); i++)
+    //{
+    //    _pieces[i] = std::make_unique<Pawn>();
+    //    if(i == 0)
+    //        CreatePiece(_pieces[0].get(), PAWN_1);
+    //    else
+    //        CreatePiece(_pieces[i].get(), PAWN_2);
+    //}
 
     
     if(FAILED(CreateBuff())) goto failed; // バッファ系作成
@@ -211,190 +211,212 @@ HRESULT DX12::CreateDWriteFactory()
 
 
 
-// 将棋盤作成
-void DX12::CreateBoard(ShogiObjId id)
-{
-    _board->SetId(id);
-
-    std::vector<ShogiObj::Vert> vertices;
-
-    vertices =
-    {   // 上面図
-
-        // 前面
-        {{ 0.0f,  0.0f, 0.0f},  {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左下
-        {{50.0f,  0.0f, 0.0f},  {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}, UINT(id)}, // 右下
-        {{ 0.0f, 50.0f, 0.0f},  {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}, UINT(id)}, // 左上
-        {{50.0f, 50.0f, 0.0f},  {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}, UINT(id)}, // 右上
-
-        // 背面
-        {{ 0.0f,  0.0f, 20.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左下
-        {{50.0f,  0.0f, 20.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 右下
-        {{ 0.0f, 50.0f, 20.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左上
-        {{50.0f, 50.0f, 20.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}  // 右上
-    };
-
-    _board->SetVertices(vertices);
-
-
-    std::vector<unsigned short> indices;
-
-    enum BoardVertName // 将棋盤の頂点に名前を付ける
-    {
-        // 前面
-        frontLeftBottom,  // 左下
-        frontRightBottom, // 右下
-        frontLeftTop,     // 左上
-        frontRightTop,    // 右上
-
-        // 背面
-        backLeftBottom,  // 左下
-        backRightBottom, // 右下
-        backLeftTop,     // 左上
-        backRightTop,    // 右上
-    };
-
-    indices =
-    {
-        // 前面
-        frontRightBottom, frontLeftBottom,  frontLeftTop,
-        frontLeftTop,     frontRightTop,    frontRightBottom,     
-        
-        // 上側面
-        frontRightTop, frontLeftTop, backLeftTop, 
-        backLeftTop,   backRightTop, frontRightTop,
-
-        // 右側面
-        frontRightBottom, frontRightTop,   backRightTop,
-        backRightTop,     backRightBottom, frontRightBottom,
-
-        // 下側面
-        frontLeftBottom, frontRightBottom, backRightBottom,
-        backRightBottom, backLeftBottom,   frontLeftBottom,
-
-        // 左側面
-        frontLeftTop, frontLeftBottom, backLeftBottom,
-        backLeftBottom, backLeftTop, frontLeftTop,
-
-        // 背面
-        backRightBottom, backLeftBottom, backLeftTop,
-        backLeftTop,     backRightTop,   backRightBottom
-    };
-    _board->SetIndices(indices);
-}
-
-// 駒作成
-void DX12::CreatePiece(Piece* piece, ShogiObjId id)
-{
-    piece->SetId(id);
-
-    std::vector<ShogiObj::Vert> vertices;
-
-    float bottomWidth  = 0.9f;          // 底面の横の長さ
-    float cornerWidth  = 0.7f;          // 角部分の横の長さ
-    float height       = 0.9f;          // 高さ
-    float cornerHeight = height * 0.7f; // 角部分の高さ（高さを基準に調整）
-    float thickness    = 0.4f;          // 駒の厚み
-
-    vertices = // 頂点集合
-    {   // 上面図と考えて指定
-        // 前面
-        {{-bottomWidth, -height,       -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左下
-        {{ bottomWidth, -height,       -thickness}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}, UINT(id)}, // 右下
-        {{-cornerWidth,  cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}, UINT(id)}, // 左上
-        {{ cornerWidth,  cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}, UINT(id)}, // 右上
-        {{ 0.0f,         height,       -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, UINT(id)}, // 上    
-
-        // 裏面
-        {{-bottomWidth, -height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左下
-        {{ bottomWidth, -height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 右下
-        {{-cornerWidth,  cornerHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左上
-        {{ cornerWidth,  cornerHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 右上
-        {{ 0.0f,         height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 上
-    };
-
-    piece->SetVertices(vertices);
-
-
-    std::vector<unsigned short> indices;
-
-    enum PieceVertName // 駒の頂点に名前を付ける
-    {
-        // 前面
-        frontLeftBottom,  // 左下
-        frontRightBottom, // 右下
-        frontLeftTop,     // 左上
-        frontRightTop,    // 右上
-        frontTop,         // 上
-
-        // 背面
-        backLeftBottom,  // 左下
-        backRightBottom, // 右下
-        backLeftTop,     // 左上
-        backRightTop,    // 右上
-        backTop          // 上
-    };
-
-    indices = // インデックス集合
-    {
-        // 前面
-        frontRightBottom, frontLeftBottom, frontLeftTop,     // 右下　左下　左上
-        frontLeftTop,     frontRightTop,   frontRightBottom, // 左上　右上 右下
-        frontTop,         frontRightTop,   frontLeftTop,     // 右上　左上　上
-
-        // 裏面
-        backLeftBottom,  backRightBottom, backLeftTop, // 左下　右下　左上
-        backRightBottom, backRightTop,    backLeftTop, // 右下　右上　左上
-        backLeftTop,     backRightTop,    backTop,     // 左上　右上　上
-
-        // 側面上左
-        frontTop, frontLeftTop, backLeftTop, // 前面上　前面左上　背面左上
-        backTop,  frontTop,     backLeftTop, // 背面上　前面上　　背面左上
-
-        // 側面上右
-        backTop,  backRightTop, frontRightTop, // 背面上　背面右上　前面右上
-        frontTop, backTop,      frontRightTop, // 前面上　背面上　　前面右上　
-
-
-        // 側面右
-        frontRightBottom, frontRightTop, backRightBottom, // 背面右下　前面右上　背面右下
-        frontRightTop,    backRightTop,  backRightBottom, // 背面右上　背面右上　背面右下
-
-        // 側面左
-        backLeftBottom, backLeftTop,  frontLeftBottom, // 背面左下　背面左上　前面左下
-        backLeftTop,    frontLeftTop, frontLeftBottom, // 背面左上　前面左上　前面左下
-
-        // 底面
-        frontLeftBottom, frontRightBottom, backRightBottom, // 前面左下　前面右下　背面右下
-        frontLeftBottom, backRightBottom, backLeftBottom    // 前面左下　背面右下　背面左下
-    };
-
-    piece->SetIndices(indices);
-}
+//// 将棋盤作成
+//void DX12::CreateBoard(ShogiObjId id)
+//{
+//    _board->SetId(id);
+//
+//    std::vector<ShogiObj::Vert> vertices;
+//
+//    vertices =
+//    {   // 上面図
+//
+//        // 前面
+//        {{ 0.0f,  0.0f, 0.0f},  {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左下
+//        {{50.0f,  0.0f, 0.0f},  {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}, UINT(id)}, // 右下
+//        {{ 0.0f, 50.0f, 0.0f},  {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}, UINT(id)}, // 左上
+//        {{50.0f, 50.0f, 0.0f},  {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}, UINT(id)}, // 右上
+//
+//        // 背面
+//        {{ 0.0f,  0.0f, 20.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左下
+//        {{50.0f,  0.0f, 20.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 右下
+//        {{ 0.0f, 50.0f, 20.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左上
+//        {{50.0f, 50.0f, 20.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}  // 右上
+//    };
+//
+//    _board->SetVertices(vertices);
+//
+//
+//    std::vector<unsigned short> indices;
+//
+//    enum BoardVertName // 将棋盤の頂点に名前を付ける
+//    {
+//        // 前面
+//        frontLeftBottom,  // 左下
+//        frontRightBottom, // 右下
+//        frontLeftTop,     // 左上
+//        frontRightTop,    // 右上
+//
+//        // 背面
+//        backLeftBottom,  // 左下
+//        backRightBottom, // 右下
+//        backLeftTop,     // 左上
+//        backRightTop,    // 右上
+//    };
+//
+//    indices =
+//    {
+//        // 前面
+//        frontRightBottom, frontLeftBottom,  frontLeftTop,
+//        frontLeftTop,     frontRightTop,    frontRightBottom,     
+//        
+//        // 上側面
+//        frontRightTop, frontLeftTop, backLeftTop, 
+//        backLeftTop,   backRightTop, frontRightTop,
+//
+//        // 右側面
+//        frontRightBottom, frontRightTop,   backRightTop,
+//        backRightTop,     backRightBottom, frontRightBottom,
+//
+//        // 下側面
+//        frontLeftBottom, frontRightBottom, backRightBottom,
+//        backRightBottom, backLeftBottom,   frontLeftBottom,
+//
+//        // 左側面
+//        frontLeftTop, frontLeftBottom, backLeftBottom,
+//        backLeftBottom, backLeftTop, frontLeftTop,
+//
+//        // 背面
+//        backRightBottom, backLeftBottom, backLeftTop,
+//        backLeftTop,     backRightTop,   backRightBottom
+//    };
+//    _board->SetIndices(indices);
+//}
+//
+//// 駒作成
+//void DX12::CreatePiece(Piece* piece, ShogiObjId id)
+//{
+//    piece->SetId(id);
+//
+//    std::vector<ShogiObj::Vert> vertices;
+//
+//    float bottomWidth  = 0.9f;          // 底面の横の長さ
+//    float cornerWidth  = 0.7f;          // 角部分の横の長さ
+//    float height       = 0.9f;          // 高さ
+//    float cornerHeight = height * 0.7f; // 角部分の高さ（高さを基準に調整）
+//    float thickness    = 0.4f;          // 駒の厚み
+//
+//    vertices = // 頂点集合
+//    {   // 上面図と考えて指定
+//        // 前面
+//        {{-bottomWidth, -height,       -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左下
+//        {{ bottomWidth, -height,       -thickness}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}, UINT(id)}, // 右下
+//        {{-cornerWidth,  cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}, UINT(id)}, // 左上
+//        {{ cornerWidth,  cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}, UINT(id)}, // 右上
+//        {{ 0.0f,         height,       -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, UINT(id)}, // 上    
+//
+//        // 裏面
+//        {{-bottomWidth, -height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左下
+//        {{ bottomWidth, -height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 右下
+//        {{-cornerWidth,  cornerHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左上
+//        {{ cornerWidth,  cornerHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 右上
+//        {{ 0.0f,         height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 上
+//    };
+//
+//    piece->SetVertices(vertices);
+//
+//
+//    std::vector<unsigned short> indices;
+//
+//    enum PieceVertName // 駒の頂点に名前を付ける
+//    {
+//        // 前面
+//        frontLeftBottom,  // 左下
+//        frontRightBottom, // 右下
+//        frontLeftTop,     // 左上
+//        frontRightTop,    // 右上
+//        frontTop,         // 上
+//
+//        // 背面
+//        backLeftBottom,  // 左下
+//        backRightBottom, // 右下
+//        backLeftTop,     // 左上
+//        backRightTop,    // 右上
+//        backTop          // 上
+//    };
+//
+//    indices = // インデックス集合
+//    {
+//        // 前面
+//        frontRightBottom, frontLeftBottom, frontLeftTop,     // 右下　左下　左上
+//        frontLeftTop,     frontRightTop,   frontRightBottom, // 左上　右上 右下
+//        frontTop,         frontRightTop,   frontLeftTop,     // 右上　左上　上
+//
+//        // 裏面
+//        backLeftBottom,  backRightBottom, backLeftTop, // 左下　右下　左上
+//        backRightBottom, backRightTop,    backLeftTop, // 右下　右上　左上
+//        backLeftTop,     backRightTop,    backTop,     // 左上　右上　上
+//
+//        // 側面上左
+//        frontTop, frontLeftTop, backLeftTop, // 前面上　前面左上　背面左上
+//        backTop,  frontTop,     backLeftTop, // 背面上　前面上　　背面左上
+//
+//        // 側面上右
+//        backTop,  backRightTop, frontRightTop, // 背面上　背面右上　前面右上
+//        frontTop, backTop,      frontRightTop, // 前面上　背面上　　前面右上　
+//
+//
+//        // 側面右
+//        frontRightBottom, frontRightTop, backRightBottom, // 背面右下　前面右上　背面右下
+//        frontRightTop,    backRightTop,  backRightBottom, // 背面右上　背面右上　背面右下
+//
+//        // 側面左
+//        backLeftBottom, backLeftTop,  frontLeftBottom, // 背面左下　背面左上　前面左下
+//        backLeftTop,    frontLeftTop, frontLeftBottom, // 背面左上　前面左上　前面左下
+//
+//        // 底面
+//        frontLeftBottom, frontRightBottom, backRightBottom, // 前面左下　前面右下　背面右下
+//        frontLeftBottom, backRightBottom, backLeftBottom    // 前面左下　背面右下　背面左下
+//    };
+//
+//    piece->SetIndices(indices);
+//}
 
 // バッファ系作成
 HRESULT DX12::CreateBuff()
 {
-     // ゲームウインドウ取得
-    auto gameWindow = Application::GetInstance().GetGameWindow();
+    auto& app = Application::GetInstance();
+    
+    auto  gameWindow = app.GetGameWindow(); // ゲームウインドウ取得
+    auto  board      = app.GetBoard();
+    auto& pieces     = app.GetPieces();
 
     UINT widthSize, heightSize;
 
+    // バックバッファ作成
     _backBuffs.resize(_swapChain->GetBackBuffNum());
     for (UINT i = 0; i < _backBuffs.size(); i++)
     {
         _backBuffs[i] = std::make_unique<Buff>();
-        if (FAILED(_swapChain->CreateBackBuff(_backBuffs[i].get(), i))) goto failed; // バックバッファ作成
+        if (FAILED(_swapChain->CreateBackBuff(_backBuffs[i].get(), i))) goto failed;
     }
-    if (FAILED(_device->CreateDSBuff(_dsBuff.get(), gameWindow))) goto failed; // デプスステンシルバッファ作成
+
+    // デプスステンシルバッファ作成
+    widthSize  = gameWindow->GetWindowWidth();
+    heightSize = gameWindow->GetWindowHeight();
+    if (FAILED(_device->CreateBuff(_dsBuff.get(), widthSize, heightSize, Buff::DEPTH_STENCIL))) goto failed;
+
     // コンスタントバッファ作成
-    widthSize = (sizeof(DirectX::XMMATRIX)*(40+1+1) + 0xff) & ~0xff; // 駒40 将棋盤1 ビュープロジェクション行列1 256アラインメント
+    widthSize  = (sizeof(DirectX::XMMATRIX)*(40+1+1) + 0xff) & ~0xff; // 駒40 将棋盤1 ビュープロジェクション行列1 256アラインメント
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_constBuff.get(), widthSize, heightSize, Buff::CONSTANT))) goto failed;
 
-    if (FAILED(_device->CreateTexBuff(_texBuff.get()))) goto failed; // テクスチャバッファ作成
-    if (FAILED(_device->CreateVertBuff(_vertBuff.get(), _board.get(), _pieces))) goto failed; // 頂点バッファ作成
-    if (FAILED(_device->CreateIdxBuff (_idxBuff.get(),  _board.get(), _pieces))) goto failed; // インデックスバッファ作成
+    // 頂点バッファ作成
+    widthSize = board->GetVerticesByteSize();
+    for(auto& piece : pieces) {widthSize += piece->GetVerticesByteSize(); }
+    heightSize = 1;
+    if (FAILED(_device->CreateBuff(_vertBuff.get(), widthSize, heightSize, Buff::VERTEX))) goto failed;
+
+    // インデックスバッファ作成
+    widthSize = board->GetIndicesByteSize();
+    for(auto& piece : pieces) {widthSize += piece->GetIndicesByteSize(); }
+    heightSize = 1;
+    if (FAILED(_device->CreateBuff(_idxBuff.get(), widthSize, heightSize, Buff::INDEX))) goto failed;
+
+    // テクスチャバッファ作成
+    widthSize  = 256;
+    heightSize = 256;
+    if (FAILED(_device->CreateBuff(_texBuff.get(), widthSize, heightSize, Buff::TEXTURE))) goto failed;
 
     return S_OK;
 
@@ -427,8 +449,12 @@ void DX12::CreateTex()
 // バッファに書き込み
 HRESULT DX12::WriteToBuff()
 {
-    if (FAILED(_vertBuff->WriteToVertBuff(_board.get(), _pieces))) goto failed; // 頂点バッファに書き込み
-    if (FAILED(_idxBuff ->WriteToIdxBuff (_board.get(), _pieces)))  goto failed; // インデックスバッファに書き込み
+    auto& app    = Application::GetInstance();
+    auto  board  = app.GetBoard();
+    auto& pieces = app.GetPieces();
+
+    if (FAILED(_vertBuff->WriteToVertBuff(board, pieces))) goto failed; // 頂点バッファに書き込み
+    if (FAILED(_idxBuff ->WriteToIdxBuff (board, pieces)))  goto failed; // インデックスバッファに書き込み
     _texBuff->WriteToTexBuff(_tex.get()); // テクスチャをバッファに書き込み
 
     return S_OK;
@@ -542,21 +568,25 @@ void DX12::ExeD3D()
 {
     Set3DCmd(); // 3Dコマンドセット
 
+    auto& app    = Application::GetInstance();
+    auto  board  = app.GetBoard();
+    auto& pieces = app.GetPieces();
+
     // 将棋盤描画コマンドセット
-    _cmdList->SetIdxBuffView(GetIdxBuffView(_board.get()));
-    SetDrawObjCmd(_board.get());
+    _cmdList->SetIdxBuffView(GetIdxBuffView(board));
+    SetDrawObjCmd(board);
 
     // 駒描画コマンドセット
-    _cmdList->SetIdxBuffView(GetIdxBuffView(_pieces[0].get()));
+    _cmdList->SetIdxBuffView(GetIdxBuffView(pieces[0].get()));
     for (UINT i = 0; i < 2; i++)
     {
-        SetDrawObjCmd(_pieces[i].get());
+        SetDrawObjCmd(pieces[i].get());
     }
 
     // ワールド行列、ビュープロジェクション行列をコンスタントバッファに書き込み
     _constBuff->WriteToConstBuff(
-        _board.get(),
-        _pieces,
+        board,
+        pieces,
         _viewMat.get(),
         _projMat.get());
 
@@ -754,7 +784,7 @@ void DX12::WaitProcessWithFence()
 
 
 //////
-Piece* DX12::GetPawn(){return _pieces[0].get(); } // 歩を返す}
+//Piece* DX12::GetPawn(){return _pieces[0].get(); } // 歩を返す}
 ViewMat* DX12::GetViewMat(){return _viewMat.get();} // ビュー行列を返す
 //////
 
@@ -823,7 +853,7 @@ DX12::DX12() {
     _pieceTexRTVHeap = std::make_unique<Heap>();
     _pieceTexSRVHeap = std::make_unique<CSUHeap>();
 
-    _board = std::make_unique<Board>();
+    //_board = std::make_unique<Board>();
 
     _rb = std::make_unique<ResourceBarrier>();
 }

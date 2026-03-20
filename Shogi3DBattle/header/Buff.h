@@ -11,7 +11,6 @@ class Buff
 public:
     enum BuffType
     {
-        BACKBUFF, // バックバッファ
         DEPTH_STENCIL, // デプスステンシルバッファ
         VERTEX, // 頂点バッファ
         INDEX,  // インデックスバッファ

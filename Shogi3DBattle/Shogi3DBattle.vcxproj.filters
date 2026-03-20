@@ -214,11 +214,17 @@
     <Filter Include="ソース ファイル\dx12\buff\factory">
       <UniqueIdentifier>{50efd447-8f5e-4158-a620-ffaeed66e307}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\dx12\buff\factory\resource_state">
-      <UniqueIdentifier>{e88a18d9-57bf-4711-8f26-aaab4ef62077}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\DX12\buff\factory\resource_state">
       <UniqueIdentifier>{48aa6ffb-4979-4501-a111-2acca5c5e380}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\buff\factory\resource_states">
+      <UniqueIdentifier>{e88a18d9-57bf-4711-8f26-aaab4ef62077}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\buff\factory\heap_prop">
+      <UniqueIdentifier>{3634e8d6-8e03-4364-8149-ab663ba445fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\buff\factory\resource_desc">
+      <UniqueIdentifier>{ed5ad725-a11a-4346-b047-7a6a4e94ee20}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -411,14 +417,47 @@
     <ClCompile Include="src\ConstBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\UploadHeapProp.cpp">
+    <ClCompile Include="src\IdxBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\BuffResourceDesc.cpp">
+    <ClCompile Include="src\VertBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\ReadResourceStates.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory\resource_states</Filter>
+    </ClCompile>
+    <ClCompile Include="header\DefaultHeapProp.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory\heap_prop</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UploadHeapProp.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory\heap_prop</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BuffResourceDesc.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory\resource_desc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DSResourceDesc.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory\resource_desc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DSBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DepthWriteResourceStates.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory\resource_states</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TexHeapProp.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory\heap_prop</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TexResourceDesc.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory\resource_desc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TexBuffFactory.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PShaderResourceStates.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory\resource_states</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShogiObjFactory.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -682,6 +721,39 @@
     </ClInclude>
     <ClInclude Include="header\ReadResourceStates.h">
       <Filter>ヘッダー ファイル\DX12\buff\factory\resource_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IdxBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\VertBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DefaultHeapProp.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory\heap_prop</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DSResourceDesc.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_desc</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DSBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DepthWriteResourceStates.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\TexHeapProp.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory\heap_prop</Filter>
+    </ClInclude>
+    <ClInclude Include="header\TexResourceDesc.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_desc</Filter>
+    </ClInclude>
+    <ClInclude Include="header\TexBuffFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PShaderResourceStates.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ShogiObjFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

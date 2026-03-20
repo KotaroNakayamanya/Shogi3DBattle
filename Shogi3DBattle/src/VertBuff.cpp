@@ -1,7 +1,7 @@
 #include"VertBuff.h"
 
 // 頂点バッファに書き込み
-HRESULT VertBuff::WriteToVertBuff(Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces)
+HRESULT VertBuff::WriteToVertBuff(Board* board, std::vector<std::unique_ptr<Piece>>& pieces)
 {
     ShogiObj::Vert* vertBuffMap;
 

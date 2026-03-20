@@ -3,7 +3,7 @@
 // •ÏŠ·s—ñ‚ğ‘‚«‚Ş
 void ConstBuff::WriteToConstBuff(
     Board* board,
-    std::array<std::unique_ptr<Piece>, 40>& pieces,
+    std::vector<std::unique_ptr<Piece>>& pieces,
     ViewMat* viewMat,
     ProjMat* projMat)
 {

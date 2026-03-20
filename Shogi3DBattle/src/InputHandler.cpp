@@ -101,9 +101,9 @@ void InputHandler::SetCursorY(int y){_cursorY = y;}
 
 InputHandler::InputHandler()
 {
-    Piece*   piece   = Application::GetInstance().GetDX12()->GetPawn();
+    auto& pieces = Application::GetInstance().GetPieces();
 
-    _sceneState = std::make_unique<MovingPiece>(piece);
+    _sceneState = std::make_unique<MovingPiece>(pieces[0].get());
     _keyConf    = std::make_unique<KeyConf>();
 }
 

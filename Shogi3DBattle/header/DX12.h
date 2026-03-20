@@ -101,20 +101,10 @@ private:
     // テクスチャ
     std::unique_ptr<Tex> _tex;     // テクスチャ
     void CreateTex(); // テクスチャ作成
-
-
-    
-    
-
     
     // カメラ
     std::unique_ptr<ViewMat> _viewMat; // ビュー行列
     std::unique_ptr<ProjMat> _projMat; // プロジェクション行列
-
-    // 将棋オブジェクト
-    std::unique_ptr<Board> _board; // 将棋盤
-    std::array<std::unique_ptr<Piece>, 40> _pieces; // 駒
-
 
     void CreateBoard(ShogiObjId id); // 将棋盤作成
     void CreatePiece(Piece* piece, ShogiObjId id); // 駒作成
@@ -152,11 +142,6 @@ public:
     bool InitDX12(GameWindow* gameWindow); // DirectX12初期作成
     void ExeDX12(); // DirectX12実行処理
 
-    /// <summary>
-    Piece* GetPawn(); // ポーンを返す
-    /// </summary>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
     ViewMat* GetViewMat(); // ビュー行列を返す
 
     void ProcessChangeWindowSize( // ウインドウサイズ変更処理

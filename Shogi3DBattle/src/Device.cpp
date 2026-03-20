@@ -1,5 +1,9 @@
 #include"Device.h"
+#include"DSBuffFactory.h"
 #include"ConstBuffFactory.h"
+#include"VertBuffFactory.h"
+#include"IdxBuffFactory.h"
+#include"TexBuffFactory.h"
 #include"RTVHeapFactory.h"
 #include"DSVHeapFactory.h"
 #include"CSUHeapFactory.h"
@@ -81,43 +85,13 @@ D3D12_COMMAND_QUEUE_DESC Device::GetCmdQueueDesc()
 
 
 
-// DirectX11系作成
-HRESULT Device::CreateD3D11(
-    Device11* device11,
-    DeviceContext* deviceContext,
-    CmdQueue* cmdQueue)
+// フェンス作成
+HRESULT Device::CreateFence(Fence* fence)
 {
-    ComPtr<ID3D11On12Device> device11Com;
-    ComPtr<ID3D11DeviceContext> deviceContextCom;
-
-    UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-#ifdef _DEBUG
-    flags += D3D11_CREATE_DEVICE_DEBUG;
-#endif
-
-    HRESULT result;
-
-    ComPtr<ID3D11Device> device11Origin;
-
-    result =  D3D11On12CreateDevice(
-        _device.Get(),
-        flags,
-        nullptr, // 3D12の機能レベル使用
-        0,       // 機能レベル配列サイズ(nullptrのため0）
-        reinterpret_cast<IUnknown**>(cmdQueue->GetCmdQueuePtr()),
-        1, // キューの個数 1
-        0, // ノードマスク
-        device11Origin.ReleaseAndGetAddressOf(),
-        deviceContextCom.ReleaseAndGetAddressOf(),
-        nullptr); // 機能レベル返却先 nullptr
-    if(FAILED(result)) return result;
-
-    result = device11Origin.As(&device11Com);
-    if(FAILED(result)) return result;
-
-    device11->SetDevice11(device11Com);
-    deviceContext->SetDeviceContext(deviceContextCom);
-    return result;
+    return _device->CreateFence(
+        fence->_fenceVal,
+        D3D12_FENCE_FLAG_NONE,
+        IID_PPV_ARGS(fence->_fence.ReleaseAndGetAddressOf()));
 }
 
 
@@ -128,26 +102,24 @@ HRESULT Device::CreateBuff(Buff* buff, UINT width, UINT height, Buff::BuffType b
 {
     switch (buffType)
     {
-    case Buff::BACKBUFF:
-        break;
-
     case Buff::DEPTH_STENCIL:
+        _buffFactory.reset(new DSBuffFactory());
         break;
-
 
     case Buff::VERTEX:
+        _buffFactory.reset(new VertBuffFactory());
         break;
-
 
     case Buff::INDEX:
+        _buffFactory.reset(new IdxBuffFactory());
         break;
-
 
     case Buff::CONSTANT:
         _buffFactory.reset(new ConstBuffFactory());
          break;
 
     case Buff::TEXTURE:
+        _buffFactory.reset(new TexBuffFactory());
         break;
 
     default:
@@ -156,354 +128,6 @@ HRESULT Device::CreateBuff(Buff* buff, UINT width, UINT height, Buff::BuffType b
 
     _buffFactory->CreateBuff(buff, width, height, _device.Get());
 }
-
-// 頂点バッファ作成
-HRESULT Device::CreateVertBuff(VertBuff* vertBuff, Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces)
-{
-    ComPtr<ID3D12Resource> vertBuffCom;
-
-    UINT totalByteSize = board->GetVerticesByteSize();
-    for (auto& piece : pieces)
-    {
-        totalByteSize += piece->GetVerticesByteSize();
-    }
-
-    D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
-    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
-
-    HRESULT result;
-    result = _device->CreateCommittedResource(
-        &heapProp,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(vertBuffCom.ReleaseAndGetAddressOf()));
-    if(FAILED(result)) return result;
-
-    vertBuff->SetBuff(vertBuffCom);
-    return S_OK;
-}
-
-// インデックスバッファ作成
-HRESULT Device::CreateIdxBuff(IdxBuff* idxBuff, Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces)
-{
-    UINT totalByteSize = board->GetIndicesByteSize();
-    for (auto& piece : pieces)
-    {
-        totalByteSize += piece->GetVerticesByteSize();
-    }
-
-    D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
-    D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
-
-    return _device->CreateCommittedResource(
-        &heapProp,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(idxBuff->_idxBuff.ReleaseAndGetAddressOf()));
-}
-
-
-
-// 頂点ヒーププロパティ
-D3D12_HEAP_PROPERTIES Device::GetVertHeapProp()
-{
-    D3D12_HEAP_PROPERTIES prop = {};
-
-    prop.Type =
-        D3D12_HEAP_TYPE_UPLOAD;
-    prop.CPUPageProperty =
-        D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-    prop.MemoryPoolPreference =
-        D3D12_MEMORY_POOL_UNKNOWN;
-
-    return prop;
-}
-
-// 頂点リソースディスクリプタ
-D3D12_RESOURCE_DESC Device::GetVertResourceDesc(UINT byteSize)
-{
-    D3D12_RESOURCE_DESC desc = {};
-
-    desc.Dimension =
-        D3D12_RESOURCE_DIMENSION_BUFFER;
-    desc.Width =
-        byteSize;
-    desc.Height =
-        1;
-    desc.DepthOrArraySize =
-        1;
-    desc.MipLevels =
-        1;
-    desc.Format =
-        DXGI_FORMAT_UNKNOWN;
-    desc.SampleDesc.Count =
-        1;
-    desc.Flags =
-        D3D12_RESOURCE_FLAG_NONE;
-    desc.Layout =
-        D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-    return desc;
-}
-
-// デプスステンシルバッファ作成
-HRESULT Device::CreateDSBuff(Buff* dsBuff, GameWindow* gameWindow)
-{
-    ComPtr<ID3D12Resource> dsBuffCom;
-
-    D3D12_HEAP_PROPERTIES heapProp =
-        GetDefaultHeapProp();
-    D3D12_RESOURCE_DESC resourceDesc =
-        GetDSResourceDesc(gameWindow->GetWindowWidth(), gameWindow->GetWindowHeight());
-    D3D12_CLEAR_VALUE clearValue =
-        GetClearValue();
-
-    HRESULT result;
-    result = _device->CreateCommittedResource(
-        &heapProp,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        &clearValue,
-        IID_PPV_ARGS(dsBuffCom.ReleaseAndGetAddressOf()));
-
-    dsBuff->SetBuff(dsBuffCom);
-    return S_OK;
-}
-
-// デフォルトヒーププロパティ
-D3D12_HEAP_PROPERTIES Device::GetDefaultHeapProp()
-{
-    D3D12_HEAP_PROPERTIES prop = {};
-
-    prop.Type =
-        D3D12_HEAP_TYPE_DEFAULT;
-    prop.CPUPageProperty =
-        D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-    prop.MemoryPoolPreference =
-        D3D12_MEMORY_POOL_UNKNOWN;
-
-    return prop;
-}
-
-// デプスステンシルリソースディスクリプタ
-D3D12_RESOURCE_DESC Device::GetDSResourceDesc(
-    UINT windowWidth, UINT windowHeight)
-{
-    D3D12_RESOURCE_DESC desc = {};
-
-    desc.Dimension =
-        D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    desc.Width =
-        windowWidth;
-    desc.Height =
-        windowHeight;
-    desc.DepthOrArraySize =
-        1;
-    desc.Format = // 深度値書き込み用
-        DXGI_FORMAT_D32_FLOAT;
-    desc.Layout =
-        D3D12_TEXTURE_LAYOUT_UNKNOWN;
-    desc.Flags = // デプスステンシルとして使用
-        D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-    desc.SampleDesc =
-        GetSampleDesc();
-
-    return desc;
-}
-
-// クリアバリュー
-D3D12_CLEAR_VALUE Device::GetClearValue()
-{
-    D3D12_CLEAR_VALUE clearValue = {};
-
-    clearValue.DepthStencil.Depth = // 深さの初期値を最大値に
-        1.0f;
-    clearValue.Format = // float値
-        DXGI_FORMAT_D32_FLOAT;
-
-    return clearValue;
-}
-
-// テクスチャバッファオブジェクト作成
-HRESULT Device::CreateTexBuff(TexBuff* texBuff)
-{
-    ComPtr<ID3D12Resource> texBuffCom;
-
-    D3D12_HEAP_PROPERTIES heapProp = GetTexHeapProp();
-    D3D12_RESOURCE_DESC resourceDesc = GetTexResourceDesc();
-
-    HRESULT result;
-    result = _device->CreateCommittedResource(
-        &heapProp,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
-        nullptr,
-        IID_PPV_ARGS(texBuffCom.ReleaseAndGetAddressOf()));
-    if(FAILED(result)) return result;
-
-    texBuff->SetBuff(texBuffCom);
-    return S_OK;
-}
-
-// テクスチャヒーププロパティ
-D3D12_HEAP_PROPERTIES Device::GetTexHeapProp()
-{
-    D3D12_HEAP_PROPERTIES prop = {};
-
-    prop.Type =
-        D3D12_HEAP_TYPE_CUSTOM;
-    prop.CPUPageProperty =
-        D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-    prop.MemoryPoolPreference = // 転送L0
-        D3D12_MEMORY_POOL_L0;
-    prop.CreationNodeMask =
-        0;
-    prop.VisibleNodeMask =
-        0;
-
-    return prop;
-}
-
-// テクスチャリソースディスクリプタ
-D3D12_RESOURCE_DESC Device::GetTexResourceDesc()
-{
-    D3D12_RESOURCE_DESC desc = {};
-
-    desc.Dimension =
-        D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    desc.Height =
-        256;
-    desc.Width =
-        256;
-    desc.DepthOrArraySize =
-        1;
-    desc.MipLevels =
-        1;
-    desc.Format =
-        DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.Layout =
-        D3D12_TEXTURE_LAYOUT_UNKNOWN;
-    desc.Flags =
-        D3D12_RESOURCE_FLAG_NONE;
-    desc.SampleDesc =
-        GetSampleDesc();
-
-    return desc;
-}
-
-// サンプリングディスクリプタ
-DXGI_SAMPLE_DESC Device::GetSampleDesc()
-{
-    DXGI_SAMPLE_DESC desc = {};
-
-    desc.Count = 1; // サンプリング数
-    desc.Quality = 0; // クオリティ（0は最低）
-
-    return desc;
-}
-
-// コンスタントバッファ作成
-HRESULT Device::CreateConstBuff(ConstBuff* constBuff, UINT pieceNum)
-{
-    ComPtr<ID3D12Resource> constBuffCom;
-
-    D3D12_HEAP_PROPERTIES heapProp =
-        GetConstHeapProp();
-    D3D12_RESOURCE_DESC resourceDesc =
-        GetConstResourceDesc(pieceNum);
-
-    HRESULT result;
-    result = _device->CreateCommittedResource(
-        &heapProp,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(constBuffCom.ReleaseAndGetAddressOf()));
-
-    constBuff->SetBuff(constBuffCom);
-    return S_OK;
-}
-
-// コンスタントバッファヒーププロパティ
-D3D12_HEAP_PROPERTIES Device::GetConstHeapProp()
-{
-    D3D12_HEAP_PROPERTIES prop = {};
-
-    prop.Type =
-        D3D12_HEAP_TYPE_UPLOAD;
-    prop.CPUPageProperty =
-        D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-    prop.MemoryPoolPreference =
-        D3D12_MEMORY_POOL_UNKNOWN;
-
-    return prop;
-}
-
-// コンスタントバッファリソースディスクリプタ
-D3D12_RESOURCE_DESC Device::GetConstResourceDesc(UINT pieceNum)
-{
-    D3D12_RESOURCE_DESC desc = {};
-
-    UINT matByteSize = sizeof(DirectX::XMMATRIX);
-    UINT matNum = pieceNum + 2; // 駒の数(pieceNum)+将棋盤(1)+ビュープロジェ行列(1)
-    UINT byteSize = matByteSize * matNum;
-
-    desc.Dimension =
-        D3D12_RESOURCE_DIMENSION_BUFFER;
-    desc.Height =
-        1;
-    desc.Width = // 必要バイト数以上で、256の倍数となる数をバイト数とする
-        (byteSize + 0xff) & ~0xff;
-    desc.DepthOrArraySize =
-        1;
-    desc.MipLevels =
-        1;
-    desc.Format =
-        DXGI_FORMAT_UNKNOWN;
-    desc.SampleDesc.Count =
-        1;
-    desc.Flags =
-        D3D12_RESOURCE_FLAG_NONE;
-    desc.Layout =
-        D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-    return desc;
-}
-
-//// レンダーターゲット兼テクスチャバッファ作成
-//HRESULT Device::CreateRenderTexBuff(RenderTexBuff* renderTexBuff, Buff* backBuff)
-//{
-//    D3D12_HEAP_PROPERTIES heapProp = GetDefaultHeapProp();
-//    D3D12_RESOURCE_DESC resourceDesc = backBuff->GetBuff()->GetDesc();
-//
-//    D3D12_CLEAR_VALUE clearValue = {};
-//
-//    clearValue.Color[0] = 1.0f;
-//    clearValue.Color[1] = 1.0f;
-//    clearValue.Color[2] = 1.0f;
-//    clearValue.Color[3] = 1.0f;
-//    clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-//
-//    return _device->CreateCommittedResource(
-//        &heapProp,
-//        D3D12_HEAP_FLAG_NONE,
-//        &resourceDesc,
-//        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
-//        &clearValue,
-//        IID_PPV_ARGS(renderTexBuff->_renderTexBuff.ReleaseAndGetAddressOf()));
-//
-//    return S_OK;
-//}
-
-
-
 
 // ヒープ作成
 HRESULT Device::CreateHeap(Heap* heap, UINT descNum, Heap::HeapType heapType)
@@ -539,9 +163,6 @@ HRESULT Device::CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT u
 
     return CreateHeap(csuHeap, cbvNum + srvNum + uavNum, heapType);
 }
-
-
-
 
 // ビュー作成
 void Device::CreateView(Heap* heap, UINT i, Buff* buff, View::ViewType viewType)
@@ -600,18 +221,6 @@ void Device::CreateCSUView(CSUHeap* csuHeap, UINT i, Buff* buff, View::ViewType 
 
 
 
-// フェンス作成
-HRESULT Device::CreateFence(Fence* fence)
-{
-    return _device->CreateFence(
-        fence->_fenceVal,
-        D3D12_FENCE_FLAG_NONE,
-        IID_PPV_ARGS(fence->_fence.ReleaseAndGetAddressOf()));
-}
-
-
-
-
 // 頂点シェーダバイナリ作成
 HRESULT Device::CreateVShader(VShader* vShader)
 {
@@ -645,30 +254,6 @@ HRESULT Device::CreatePShader(PShader* pShader)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ルートシグネチャ作成
 HRESULT Device::CreateRootSignature(RootSignature* rootSignature)
 {
@@ -695,7 +280,8 @@ Microsoft::WRL::ComPtr<ID3DBlob> Device::GetRootSignatureBlob()
         rootSignatureBlob.ReleaseAndGetAddressOf(),
         nullptr);
 
-    DeleteRootSignatureDescMemory(&rootSignatureDesc); // ディスクリプタで使用されたメモリ開放
+    // ディスクリプタで使用されたメモリ開放
+    DeleteRootSignatureDescMemory(&rootSignatureDesc);
 
     return rootSignatureBlob;
 }
@@ -947,8 +533,8 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC Device::GetPipelineStateDesc(
         1;
     desc.RTVFormats[0] =
         DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.SampleDesc =
-        GetSampleDesc();
+    desc.SampleDesc.Count = 1;
+
     desc.DepthStencilState =
         GetDepthStencilDesc();
     desc.DSVFormat = // 32ビットfloat値を深度値に使用
@@ -1064,11 +650,50 @@ D3D12_DEPTH_STENCIL_DESC Device::GetDepthStencilDesc()
 
 
 
+// Direct3D11系作成
+HRESULT Device::CreateD3D11(
+    Device11* device11,
+    DeviceContext* deviceContext,
+    CmdQueue* cmdQueue)
+{
+    ComPtr<ID3D11On12Device> device11Com;
+    ComPtr<ID3D11DeviceContext> deviceContextCom;
+
+    UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#ifdef _DEBUG
+    flags += D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+    HRESULT result;
+
+    ComPtr<ID3D11Device> device11Origin;
+
+    result =  D3D11On12CreateDevice(
+        _device.Get(),
+        flags,
+        nullptr, // 3D12の機能レベル使用
+        0,       // 機能レベル配列サイズ(nullptrのため0）
+        reinterpret_cast<IUnknown**>(cmdQueue->GetCmdQueuePtr()),
+        1, // キューの個数 1
+        0, // ノードマスク
+        device11Origin.ReleaseAndGetAddressOf(),
+        deviceContextCom.ReleaseAndGetAddressOf(),
+        nullptr); // 機能レベル返却先 nullptr
+    if(FAILED(result)) return result;
+
+    result = device11Origin.As(&device11Com);
+    if(FAILED(result)) return result;
+
+    device11->SetDevice11(device11Com);
+    deviceContext->SetDeviceContext(deviceContextCom);
+    return result;
+}
+
+
+
+
 // Direct3Dデバイスセット
 void Device::SetDevice(ComPtr<ID3D12Device> device){_device = device;}
-// Direct3Dデバイスを返す
-ID3D12Device* Device::GetDevice(){return _device.Get();}
 
 Device::Device(){}
-
 Device::~Device(){}
