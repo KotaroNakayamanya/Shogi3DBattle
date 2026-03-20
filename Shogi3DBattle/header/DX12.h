@@ -42,10 +42,10 @@ private:
     std::unique_ptr<CmdList> _cmdList; // コマンドリスト
     std::unique_ptr<CmdQueue> _cmdQueue; // コマンドリスト
     std::unique_ptr<SwapChain> _swapChain; // スワップチェーン
-    std::unique_ptr<RTVHeap> _rtvHeap; // RTVヒープ
-    std::vector<std::unique_ptr<BackBuff>> _backBuffs; // バックバッファ
-    std::unique_ptr<DSBuff> _dsBuff; // デプスステンシルバッファ
-    std::unique_ptr<DSVHeap> _dsvHeap; // デプスステンシルヒープ
+    std::unique_ptr<Heap> _rtvHeap; // RTVヒープ
+    std::vector<std::unique_ptr<Buff>> _backBuffs; // バックバッファ
+    std::unique_ptr<Buff> _dsBuff; // デプスステンシルバッファ
+    std::unique_ptr<Heap> _dsvHeap; // デプスステンシルヒープ
     std::unique_ptr<Fence> _fence; // フェンス
 
     std::unique_ptr<Viewport> _viewport; // ビューポート
@@ -67,7 +67,7 @@ private:
     std::unique_ptr<Tex>       _tex;     // テクスチャ
 
     std::vector<std::unique_ptr<RenderTexBuff>> _pieceTexBuffs; // 駒テクスチャバッファ
-    std::unique_ptr<RTVHeap> _pieceTexRTVHeap; // 駒テクスチャRTVヒープ
+    std::unique_ptr<Heap> _pieceTexRTVHeap; // 駒テクスチャRTVヒープ
     std::unique_ptr<CSUHeap> _pieceTexSRVHeap; // 駒テクスチャRTVヒープ
 
     std::unique_ptr<CSUHeap>   _csuHeap; // CSUヒープ

@@ -42,15 +42,17 @@ bool DX12::InitDX12(GameWindow* gameWindow)
 
     // レンダーターゲット系作成
     if (FAILED(_dxgiFactory->CreateSwapChain(_swapChain.get(), _cmdQueue.get(), gameWindow))) goto failed; // スワップチェーン作成
-    //if (FAILED(_device->CreateRTVHeap(_rtvHeap.get(), _swapChain.get()))) goto failed; // RTVヒープ作成
-    if (FAILED(_device->CreateRTVHeap(_rtvHeap.get(), _swapChain->GetBackBuffNum()))) goto failed; // RTVヒープ作成
     UINT backBuffNum; // レンダーターゲット数
     backBuffNum = _swapChain->GetBackBuffNum();
     _backBuffs.resize(backBuffNum);
     for (UINT i = 0; i < backBuffNum; i++)
     {
-        _backBuffs[i] = std::make_unique<BackBuff>();
-        if (FAILED(_device->CreateBackBuff(_backBuffs[i].get(), _swapChain.get(), i))) goto failed; // バックバッファ作成
+        _backBuffs[i] = std::make_unique<Buff>();
+        if (FAILED(_swapChain->CreateBackBuff(_backBuffs[i].get(), i))) goto failed; // バックバッファ作成
+    }
+    if (FAILED(_device->CreateHeap(_rtvHeap.get(), _swapChain->GetBackBuffNum(), Heap::RTV))) goto failed; // RTVヒープ作成
+    for (UINT i = 0; i < backBuffNum; i++)
+    {
         _device->CreateRTV(_backBuffs[i].get(), _rtvHeap.get(), i); // RTV作成
     }
 
@@ -76,8 +78,9 @@ bool DX12::InitDX12(GameWindow* gameWindow)
 
     // デプスステンシル系作成
     if (FAILED(_device->CreateDSBuff(_dsBuff.get(), gameWindow))) goto failed; // デプスステンシルバッファ作成
-    if (FAILED(_device->CreateDSVHeap(_dsvHeap.get()))) goto failed; // DSVヒープ作成
-    _device->CreateDSV(_dsvHeap.get(), _dsBuff.get()); // DSV作成
+    if (FAILED(_device->CreateHeap(_dsvHeap.get(), 1, Heap::DSV))) goto failed; // DSVヒープ作成
+    //if (FAILED(_device->CreateDSVHeap(_dsvHeap.get()))) goto failed; // DSVヒープ作成
+    _device->CreateDSV(_dsvHeap.get(), _dsBuff.get(), 0); // DSV作成
 
 
     // フェンス作成
@@ -142,14 +145,14 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     
 
 
-    // CBV, SRV作成
+    // CBV, SRV作成, UAV作成
     UINT cbvNum, srvNum, uavNum;
     cbvNum = 1;
     srvNum = 1;
     uavNum = 0;
-    if (FAILED(_device->CreateCSUHeap(_csuHeap.get(), cbvNum, srvNum, uavNum))) goto failed; // CSUヒープオブジェクト作成
-    _device->CreateCBV(_csuHeap.get(), _constBuff.get()); // CBV作成
-    _device->CreateSRV(_csuHeap.get(), _texBuff.get());   // SRV作成
+    if (FAILED(_device->CreateHeap(_csuHeap.get(), cbvNum, srvNum, uavNum, Heap::CSU))) goto failed; // CSUヒープオブジェクト作成
+    _device->CreateCBV(_csuHeap.get(), _constBuff.get(), 0); // CBV作成
+    _device->CreateSRV(_csuHeap.get(), _texBuff.get(), 0);   // SRV作成
 
     // 駒テクスチャ作成
     UINT shogiTexNum;
@@ -424,12 +427,12 @@ void DX12::InitRenderTarget()
     _currentBackBuffIdx = _swapChain->GetCurrentBackBufferIdx();
 
     // バックバッファリソースをレンダーターゲットに変更
-    auto resourceBarrier = _rb->GetRBToRenderTarget(_backBuffs[_currentBackBuffIdx]->GetBackBuff());
+    auto resourceBarrier = _rb->GetRBToRenderTarget(_backBuffs[_currentBackBuffIdx]->GetBuff());
     _cmdList->SetResourceBarrier(resourceBarrier);
 
     // バックバッファをレンダーターゲットに設定
-    auto rtvHandle = _rtvHeap->GetRTVHandle(_currentBackBuffIdx);
-    auto dsvHandle = _dsvHeap->GetDSVHandle();
+    auto rtvHandle = _rtvHeap->GetDescHandle(_currentBackBuffIdx);
+    auto dsvHandle = _dsvHeap->GetDescHandle(0);
     _cmdList->SetRenderTarget(rtvHandle, dsvHandle);
 
     // クリア処理
@@ -476,15 +479,15 @@ void DX12::Set3DCmd()
     _cmdList->SetRootSignature(_rootSignature->GetRootSignature());
 
     // CBV,SRVヒープセット
-    ID3D12DescriptorHeap* csuHeaps[] = {_csuHeap->GetCSUHeap()};
+    ID3D12DescriptorHeap* csuHeaps[] = {_csuHeap->GetHeap()};
     auto csuHeapNum = sizeof(csuHeaps) / sizeof(ID3D12DescriptorHeap*);
     _cmdList->SetCSUHeaps(csuHeapNum, csuHeaps); 
 
     // ルートパラメータとディスクリプタ関連付け
-    auto handle = _csuHeap->GetCSUHeap()->GetGPUDescriptorHandleForHeapStart();
-    _cmdList->SetDescriptorTable(0, handle); // CBV
-    handle.ptr += _device->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-    _cmdList->SetDescriptorTable(1, handle); // SRV
+    //auto csuHandle = _csuHeap->GetCSUHeap()->GetGPUDescriptorHandleForHeapStart();
+    _cmdList->SetDescriptorTable(0, _csuHeap->GetGPUCBVHandle(0)); // CBV
+    //csuHandle.ptr += _device->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    _cmdList->SetDescriptorTable(1, _csuHeap->GetGPUSRVHandle(0)); // SRV
 
     // トポロジーセット
     _cmdList->SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -604,7 +607,7 @@ void DX12::DrawStr(
 void DX12::PrepareRenderTargetToFlip()
 {
     // バックバッファを表示画面に設定
-    auto resourceBarrier = _rb->GetRBToPresent(_backBuffs[_currentBackBuffIdx]->GetBackBuff());
+    auto resourceBarrier = _rb->GetRBToPresent(_backBuffs[_currentBackBuffIdx]->GetBuff());
     _cmdList->SetResourceBarrier(resourceBarrier);
 
     ExeCmd(); // コマンド実行
@@ -704,10 +707,10 @@ DX12::DX12() {
 
     _swapChain = std::make_unique<SwapChain>();
 
-    _rtvHeap      = std::make_unique<RTVHeap>();
+    _rtvHeap      = std::make_unique<Heap>();
 
-    _dsBuff  = std::make_unique<DSBuff>();
-    _dsvHeap = std::make_unique<DSVHeap>();
+    _dsBuff  = std::make_unique<Buff>();
+    _dsvHeap = std::make_unique<Heap>();
 
     _fence = std::make_unique<Fence>();
 
@@ -727,7 +730,7 @@ DX12::DX12() {
     _inputLayout   = std::make_unique<InputLayout>();
     _pipeline      = std::make_unique<Pipeline>();
 
-    _pieceTexRTVHeap = std::make_unique<RTVHeap>();
+    _pieceTexRTVHeap = std::make_unique<Heap>();
     _pieceTexSRVHeap = std::make_unique<CSUHeap>();
 
     _board = std::make_unique<Board>();

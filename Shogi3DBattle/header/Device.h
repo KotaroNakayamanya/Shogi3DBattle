@@ -1,5 +1,10 @@
 #pragma once
 
+//#include"IHeapConf.h"
+
+#include"IHeapDesc.h"
+#include"IDescOffset.h"
+
 #include"RenderTexBuff.h"
 #include"Device11.h"
 #include"DeviceContext.h"
@@ -7,11 +12,9 @@
 #include"CmdList.h"
 #include"CmdQueue.h"
 #include"SwapChain.h"
-#include"RTVHeap.h"
+#include"Heap.h"
 #include"GameWindow.h"
-#include"BackBuff.h"
-#include"DSBuff.h"
-#include"DSVHeap.h"
+#include"Buff.h"
 #include"Fence.h"
 #include"VShader.h"
 #include"PShader.h"
@@ -35,8 +38,12 @@ class Device
 private:
     ComPtr<ID3D12Device> _device; // Direct3Dデバイス
 
+    //std::vector<std::unique_ptr<IHeapConf>> _heapConfs;
+
+    std::vector<std::unique_ptr<IHeapDesc>>   _heapDescs;   // ヒープディスクリプタ返却用
+    std::vector<std::unique_ptr<IDescOffset>> _descOffsets; // ディスクリプタオフセット返却用
+
     D3D12_COMMAND_QUEUE_DESC GetCmdQueueDesc(); // コマンドキューディスクリプタ
-    D3D12_DESCRIPTOR_HEAP_DESC GetRTVHeapDesc(UINT rtvNum); // RTVヒープディスクリプタ
 
     D3D12_HEAP_PROPERTIES GetVertHeapProp(); // 頂点ヒーププロパティ
     D3D12_RESOURCE_DESC GetVertResourceDesc(UINT byteSize);  // 頂点リソースディスクリプタ
@@ -53,7 +60,7 @@ private:
         UINT windowWidth, UINT windowHeight);   
     D3D12_CLEAR_VALUE GetClearValue(); // クリアバリュー
 
-    D3D12_DESCRIPTOR_HEAP_DESC GetDSVHeapDesc(); // DSVヒープディスクリプタ
+    //D3D12_DESCRIPTOR_HEAP_DESC GetDSVHeapDesc(); // DSVヒープディスクリプタ
     D3D12_DEPTH_STENCIL_VIEW_DESC GetDSVDesc(); // DSVディスクリプタ
 
     D3D12_DESCRIPTOR_HEAP_DESC GetCSUHeapDesc(UINT descNum); // CSUヒープディスクリプタ
@@ -97,13 +104,13 @@ public:
         Device11* device11,
         DeviceContext* deviceContext,
         CmdQueue* cmdQueue);
-    //HRESULT CreateRTVHeap(RTVHeap* rtvHeap, SwapChain* swapChain); // RTVヒープ作成
-    HRESULT CreateRTVHeap(RTVHeap* rtvHeap, UINT rtvNum); // RTVヒープ作成
-    HRESULT CreateBackBuff(BackBuff* backBuff, SwapChain* swapChain, UINT i); // バックバッファ作成
-    void    CreateRTV(BackBuff* backBuff, RTVHeap* rtvHeap, UINT i); // RTV作成
-    HRESULT CreateDSBuff(DSBuff* dsBuff, GameWindow* gameWindow); // デプスステンシルバッファ作成
-    HRESULT CreateDSVHeap(DSVHeap* dsvHeap); // デプスステンシルヒープ作成
-    void    CreateDSV(DSVHeap* dsvHeap, DSBuff* dsBuff); // DSV作成
+
+    HRESULT CreateHeap(Heap* heap, UINT descNum, Heap::HeapType heapType); // ヒープ作成
+    HRESULT CreateHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum, Heap::HeapType heapType); // ヒープ作成（CSU）
+
+    void    CreateRTV(Buff* backBuff, Heap* rtvHeap, UINT i); // RTV作成
+    HRESULT CreateDSBuff(Buff* dsBuff, GameWindow* gameWindow); // デプスステンシルバッファ作成
+    void    CreateDSV(Heap* dsvHeap, Buff* dsBuff, UINT i); // DSV作成
     HRESULT CreateFence(Fence* fence); // フェンス作成
 
     HRESULT CreateVShader(VShader* vShader); // 頂点シェーダー作成
@@ -115,11 +122,11 @@ public:
 
     HRESULT CreateConstBuff(ConstBuff* constBuff, UINT pieceNum); // コンスタントバッファ作成
     HRESULT CreateTexBuff(TexBuff* texBuff); // テクスチャバッファ作成
-    HRESULT CreateRenderTexBuff(RenderTexBuff* renderTexBuff, BackBuff* backBuff); // レンダーターゲット兼テクスチャバッファ作成
+    HRESULT CreateRenderTexBuff(RenderTexBuff* renderTexBuff, Buff* backBuff); // レンダーターゲット兼テクスチャバッファ作成
 
-    HRESULT CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum); // CSUヒープ作成
-    void    CreateCBV(CSUHeap* csuHeap, ConstBuff* constBuff); // CBV作成
-    void    CreateSRV(CSUHeap* csuHeap, TexBuff* texBuff); // SRV作成
+    
+    void    CreateCBV(CSUHeap* csuHeap, ConstBuff* constBuff, UINT i); // CBV作成
+    void    CreateSRV(CSUHeap* csuHeap, TexBuff* texBuff, UINT i); // SRV作成
 
     HRESULT CreateRootSignature(RootSignature* rootSignature); // ルートシグネチャ作成
     void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成

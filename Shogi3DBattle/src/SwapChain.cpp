@@ -1,5 +1,20 @@
 #include"SwapChain.h"
 
+// バックバッファ作成
+HRESULT SwapChain::CreateBackBuff(Buff* backBuff, UINT i)
+{
+    ComPtr<ID3D12Resource> backBuffCom;
+
+    HRESULT result;
+    result = _swapChain->GetBuffer(
+        i,
+        IID_PPV_ARGS(backBuffCom.ReleaseAndGetAddressOf()));
+    if(FAILED(result)) return result;
+
+    backBuff->SetBuff(backBuffCom);
+    return S_OK;
+}
+
 // 現在のバックバッファインデックスを返す
 UINT SwapChain::GetCurrentBackBufferIdx()
 {

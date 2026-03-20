@@ -166,6 +166,24 @@
     <Filter Include="ソース ファイル\command\move_view">
       <UniqueIdentifier>{904fbbc2-070d-4eae-9852-fba68df2b7ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\dx12\heap">
+      <UniqueIdentifier>{3f63c6a1-4007-4c14-8813-569405da6e0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\heap\desc_offset">
+      <UniqueIdentifier>{f3e3d483-3a8f-4aef-af0c-f55ff304f6b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\heap\heap_desc">
+      <UniqueIdentifier>{7bae8294-3fc9-431f-9d5f-7461388be4a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\heap">
+      <UniqueIdentifier>{42cd72b0-58d5-411c-a27f-e5c26df9a1e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\heap\heap_desc">
+      <UniqueIdentifier>{0d1d2c56-c6d3-4b2a-ac1e-4d9ef8815537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\heap\desc_offset">
+      <UniqueIdentifier>{78fdbd35-dcee-4f92-a38b-ffb53c614d31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -176,9 +194,6 @@
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CSUHeap.cpp">
-      <Filter>ソース ファイル\dx12\csu</Filter>
     </ClCompile>
     <ClCompile Include="src\GameWindow.cpp">
       <Filter>ソース ファイル\game_window</Filter>
@@ -246,7 +261,7 @@
     <ClCompile Include="src\VShader.cpp">
       <Filter>ソース ファイル\dx12\shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\BackBuff.cpp">
+    <ClCompile Include="src\Buff.cpp">
       <Filter>ソース ファイル\dx12\render</Filter>
     </ClCompile>
     <ClCompile Include="src\Device.cpp">
@@ -273,9 +288,6 @@
     <ClCompile Include="src\Device11.cpp">
       <Filter>ソース ファイル\dx12\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\DSVHeap.cpp">
-      <Filter>ソース ファイル\dx12\depth_stencil</Filter>
-    </ClCompile>
     <ClCompile Include="src\D2DDeviceContext.cpp">
       <Filter>ソース ファイル\dx12</Filter>
     </ClCompile>
@@ -289,9 +301,6 @@
       <Filter>ソース ファイル\dx12</Filter>
     </ClCompile>
     <ClCompile Include="src\ResourceBarrier.cpp">
-      <Filter>ソース ファイル\dx12</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RTVHeap.cpp">
       <Filter>ソース ファイル\dx12</Filter>
     </ClCompile>
     <ClCompile Include="src\MoveBack.cpp">
@@ -324,6 +333,30 @@
     <ClCompile Include="src\D2DRenderTarget.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\CSUHeap.cpp">
+      <Filter>ソース ファイル\dx12\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Heap.cpp">
+      <Filter>ソース ファイル\dx12\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSUOffset.cpp">
+      <Filter>ソース ファイル\dx12\heap\desc_offset</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DSVOffset.cpp">
+      <Filter>ソース ファイル\dx12\heap\desc_offset</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RTVOffset.cpp">
+      <Filter>ソース ファイル\dx12\heap\desc_offset</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CSUHeapDesc.cpp">
+      <Filter>ソース ファイル\dx12\heap\heap_desc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DSVHeapDesc.cpp">
+      <Filter>ソース ファイル\dx12\heap\heap_desc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RTVHeapDesc.cpp">
+      <Filter>ソース ファイル\dx12\heap\heap_desc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -340,9 +373,6 @@
     </ClInclude>
     <ClInclude Include="header\Adapter.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\CSUHeap.h">
-      <Filter>ヘッダー ファイル\DX12\csu</Filter>
     </ClInclude>
     <ClInclude Include="header\DXGIFactory.h">
       <Filter>ヘッダー ファイル\DX12\factory\dxgi</Filter>
@@ -380,12 +410,6 @@
     <ClInclude Include="header\TexBuff.h">
       <Filter>ヘッダー ファイル\DX12\csu\texture</Filter>
     </ClInclude>
-    <ClInclude Include="header\DSBuff.h">
-      <Filter>ヘッダー ファイル\DX12\Draw\depth_stencil</Filter>
-    </ClInclude>
-    <ClInclude Include="header\DSVHeap.h">
-      <Filter>ヘッダー ファイル\DX12\Draw\depth_stencil</Filter>
-    </ClInclude>
     <ClInclude Include="header\MoveBack.h">
       <Filter>ヘッダー ファイル\command</Filter>
     </ClInclude>
@@ -397,9 +421,6 @@
     </ClInclude>
     <ClInclude Include="header\Move.h">
       <Filter>ヘッダー ファイル\command</Filter>
-    </ClInclude>
-    <ClInclude Include="header\RTVHeap.h">
-      <Filter>ヘッダー ファイル\DX12\Draw\render_target</Filter>
     </ClInclude>
     <ClInclude Include="header\SwapChain.h">
       <Filter>ヘッダー ファイル\DX12\Draw\render_target</Filter>
@@ -455,7 +476,7 @@
     <ClInclude Include="header\Device.h">
       <Filter>ヘッダー ファイル\DX12\factory\device</Filter>
     </ClInclude>
-    <ClInclude Include="header\BackBuff.h">
+    <ClInclude Include="header\Buff.h">
       <Filter>ヘッダー ファイル\DX12\Draw\render_target</Filter>
     </ClInclude>
     <ClInclude Include="header\Viewport.h">
@@ -517,6 +538,36 @@
     </ClInclude>
     <ClInclude Include="header\D2DSolicColorBrush.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IHeapDesc.h">
+      <Filter>ヘッダー ファイル\DX12\heap\heap_desc</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DSVHeapDesc.h">
+      <Filter>ヘッダー ファイル\DX12\heap\heap_desc</Filter>
+    </ClInclude>
+    <ClInclude Include="header\RTVHeapDesc.h">
+      <Filter>ヘッダー ファイル\DX12\heap\heap_desc</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CSUHeapDesc.h">
+      <Filter>ヘッダー ファイル\DX12\heap\heap_desc</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CSUOffset.h">
+      <Filter>ヘッダー ファイル\DX12\heap\desc_offset</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DSVOffset.h">
+      <Filter>ヘッダー ファイル\DX12\heap\desc_offset</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IDescOffset.h">
+      <Filter>ヘッダー ファイル\DX12\heap\desc_offset</Filter>
+    </ClInclude>
+    <ClInclude Include="header\RTVOffset.h">
+      <Filter>ヘッダー ファイル\DX12\heap\desc_offset</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Heap.h">
+      <Filter>ヘッダー ファイル\DX12\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CSUHeap.h">
+      <Filter>ヘッダー ファイル\DX12\heap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

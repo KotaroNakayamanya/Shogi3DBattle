@@ -44,7 +44,7 @@ HRESULT Device11::CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext)
 // ラップされたバックバッファ作成
 HRESULT Device11::CreateWrappedBackBuff(
     WrappedBackBuff* wrappedBackBuff,
-    BackBuff* backBuff)
+    Buff* backBuff)
 {
     ComPtr<ID3D11Resource> wrappedBackBuffCom;
 
@@ -52,7 +52,7 @@ HRESULT Device11::CreateWrappedBackBuff(
 
     HRESULT result;
     result = _device11->CreateWrappedResource(
-        backBuff->GetBackBuff(),
+        backBuff->GetBuff(),
         &flags,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
