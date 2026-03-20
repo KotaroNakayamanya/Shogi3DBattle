@@ -18,6 +18,13 @@ D3D12_GPU_DESCRIPTOR_HANDLE Heap::GetGPUDescHandle(UINT i)
     return gpuDescHandle;
 }
 
+// ディスクリプタの数を返す
+UINT Heap::GetDescNum()
+{
+    auto heapDesc = _heap->GetDesc();
+    return heapDesc.NumDescriptors;
+}
+
 // ヒープセット
 void Heap::SetHeap(ComPtr<ID3D12DescriptorHeap> heap){_heap = heap;}
 // ヒープを返す

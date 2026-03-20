@@ -1,22 +1,21 @@
 #pragma once
 
-#include<d3d12.h>
-#include<wrl.h>
+#include"Buff.h"
 #include"Tex.h"
 
-class TexBuff
+class TexBuff : public Buff
 {
-    friend class Device; // Direct3Dデバイスから参照可能
+    //friend class Device; // Direct3Dデバイスから参照可能
 
-    template<typename T>
-    using ComPtr = Microsoft::WRL::ComPtr<T>;
+    //template<typename T>
+    //using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    ComPtr<ID3D12Resource> _texBuff; // テクスチャバッファ
+    //ComPtr<ID3D12Resource> _texBuff; // テクスチャバッファ
 
 public:
     void WriteToTexBuff(Tex* tex); // テクスチャをバッファに書き込み
-    ID3D12Resource* GetTexBuff(); // テクスチャバッファを返す
+    //ID3D12Resource* GetTexBuff(); // テクスチャバッファを返す
 
     TexBuff();
     ~TexBuff();

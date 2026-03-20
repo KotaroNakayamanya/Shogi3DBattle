@@ -1,5 +1,6 @@
 ﻿#include"DX12.h"
 
+#include"Application.h"
 #include<algorithm>
 #include<cassert>
 #include<Pawn.h>
@@ -27,75 +28,10 @@ namespace {
 // DirectX12初期処理
 bool DX12::InitDX12(GameWindow* gameWindow)
 {
-    // ファクトリー系作成
-    if (FAILED(CreateDXGIFactory())) goto failed; // DXGIファクトリー作成
-    if (FAILED(_dxgiFactory->CreateAdapter(_adapter.get()))) goto failed; // アダプター作成
-    if (FAILED(_dxgiFactory->CreateDevice(_device.get(), _adapter.get()))) goto failed; // デバイス作成
-    _adapter.reset(); // アダプター破棄
-
-
-    // コマンド作成
-    if (FAILED(_device->CreateCmdAllocator(_cmdAllocator.get()))) goto failed; // コマンドアロケータ作成
-    if (FAILED(_device->CreateCmdList(_cmdList.get(), _cmdAllocator.get()))) goto failed; // コマンドリスト作成
-    if (FAILED(_device->CreateCmdQueue(_cmdQueue.get()))) goto failed; // コマンドキュー作成
-
-
-    // レンダーターゲット系作成
-    if (FAILED(_dxgiFactory->CreateSwapChain(_swapChain.get(), _cmdQueue.get(), gameWindow))) goto failed; // スワップチェーン作成
-    UINT backBuffNum; // レンダーターゲット数
-    backBuffNum = _swapChain->GetBackBuffNum();
-    _backBuffs.resize(backBuffNum);
-    for (UINT i = 0; i < backBuffNum; i++)
-    {
-        _backBuffs[i] = std::make_unique<Buff>();
-        if (FAILED(_swapChain->CreateBackBuff(_backBuffs[i].get(), i))) goto failed; // バックバッファ作成
-    }
-    if (FAILED(_device->CreateHeap(_rtvHeap.get(), _swapChain->GetBackBuffNum(), Heap::RTV))) goto failed; // RTVヒープ作成
-    for (UINT i = 0; i < backBuffNum; i++)
-    {
-        _device->CreateRTV(_backBuffs[i].get(), _rtvHeap.get(), i); // RTV作成
-    }
-
-
-    // DirectX11系作成（文字描画に使用）
-    if (FAILED(CreateDWriteFactory())) goto failed; // DirectWriteファクトリー作成
-    if (FAILED(_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.get()))) goto failed; // Direct3D11系作成
-    if (FAILED(_device11->CreateD2DDeviceContext(_d2dDeviceContext.get()))) goto failed; // Direct2Dデバイスコンテキスト作成
-    _wrappedBackBuffs.resize(backBuffNum);
-    _d2dRenderTargets.resize(backBuffNum);
-    for (UINT i = 0; i < backBuffNum; i++)
-    {
-        _wrappedBackBuffs[i] = std::make_unique<WrappedBackBuff>();
-        _d2dRenderTargets[i]   = std::make_unique<D2DRenderTarget>();
-
-        if (FAILED(_device11->CreateWrappedBackBuff(_wrappedBackBuffs[i].get(), _backBuffs[i].get()))) goto failed; // ラップされたバックバッファ作成
-        if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dRenderTargets[i].get(), _wrappedBackBuffs[i].get()))) goto failed; // Direct2Dレンダーターゲット作成
-    }
-    if(FAILED(_d2dDeviceContext->CreateD2DSolidColorBrush(_d2dSolidColorBrush.get()))) goto failed; // ソリッドカラーブラッシュ作成
-    if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_dWriteTextFormat.get(), L"メイリオ"))) goto failed; // テキストフォーマット作成
-    if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed; // 駒のテキストフォーマット作成
-
-
-    // デプスステンシル系作成
-    if (FAILED(_device->CreateDSBuff(_dsBuff.get(), gameWindow))) goto failed; // デプスステンシルバッファ作成
-    if (FAILED(_device->CreateHeap(_dsvHeap.get(), 1, Heap::DSV))) goto failed; // DSVヒープ作成
-    //if (FAILED(_device->CreateDSVHeap(_dsvHeap.get()))) goto failed; // DSVヒープ作成
-    _device->CreateDSV(_dsvHeap.get(), _dsBuff.get(), 0); // DSV作成
-
-
-    // フェンス作成
-    if (FAILED(_device->CreateFence(_fence.get()))) goto failed;
-
-
-    // 描画領域系作成
-    _viewport->SetViewport(gameWindow); // ビューポート作成
-    _scissorRect->SetScissorRect(gameWindow); // シザー矩形作成
-
-
-    // シェーダー作成
-    if (FAILED(_device->CreateVShader(_vShader.get()))) goto failed; // 頂点シェーダー作成
-    if (FAILED(_device->CreatePShader(_pShader.get()))) goto failed; // ピクセルシェーダー作成
-
+    if(FAILED(CreateFactory())) goto failed; // ファクトリー系作成
+    if(FAILED(CreateCommand())) goto failed; // コマンド系作成
+    if(FAILED(_dxgiFactory->CreateSwapChain(_swapChain.get(), _cmdQueue.get(), gameWindow))) goto failed; // スワップチェーン作成
+    if(FAILED(_device->CreateFence(_fence.get()))) goto failed; // フェンス作成
 
     // 将棋オブジェクト作成
     CreateBoard(BOARD); // 将棋盤作成
@@ -108,68 +44,33 @@ bool DX12::InitDX12(GameWindow* gameWindow)
             CreatePiece(_pieces[i].get(), PAWN_2);
     }
 
+    
+    if(FAILED(CreateBuff())) goto failed; // バッファ系作成
+    if(FAILED(CreateHeap())) goto failed; // ヒープ作成
+    CreateView(); // ビュー作成
 
-    // 頂点・インデックスバッファ作成
-    if (FAILED(_device->CreateVertBuff(_vertBuff.get(), _board.get(), _pieces))) goto failed; // 頂点バッファ作成
-    if (FAILED(_device->CreateIdxBuff (_idxBuff.get(),  _board.get(), _pieces))) goto failed; // インデックスバッファ作成
-    if (FAILED(_vertBuff->WriteToVertBuff(_board.get(), _pieces))) goto failed; // 頂点バッファに書き込み
-    if (FAILED(_idxBuff ->WriteToIdxBuff (_board.get(), _pieces)))  goto failed; // インデックスバッファに書き込み
-    _device->CreateInputLayout(_inputLayout.get()); // 入力レイアウト（頂点バッファの中身の内訳）作成
-
-
-    // 将棋オブジェクトに頂点バッファアドレスを付与
-    D3D12_GPU_VIRTUAL_ADDRESS vertBuffAddress, idxBuffAddress;
-
-    vertBuffAddress  = _vertBuff->GetAddress();
-    idxBuffAddress   = _idxBuff ->GetAddress();
-    _board->SetVertAddress(vertBuffAddress);
-    _board->SetIdxAddress (idxBuffAddress);
-
-    vertBuffAddress += _board->GetVerticesByteSize(); // 将棋盤のバイトサイズを足してずらす
-    idxBuffAddress  += _board->GetIndicesByteSize();  
-    _pieces[0]->SetVertAddress(vertBuffAddress);
-    _pieces[0]->SetIdxAddress(idxBuffAddress);
-
-    vertBuffAddress += _pieces[0]->GetVerticesByteSize(); // 将棋盤のバイトサイズを足してずらす
-    idxBuffAddress  += _pieces[0]->GetIndicesByteSize();
-    _pieces[1]->SetVertAddress(vertBuffAddress);
-    _pieces[1]->SetIdxAddress(idxBuffAddress);
-
-
-    // コンスタントバッファ、テクスチャバッファ作成
-    if (FAILED(_device->CreateConstBuff(_constBuff.get(), 40))) goto failed; // コンスタントバッファ作成
-    if (FAILED(_device->CreateTexBuff(_texBuff.get()))) goto failed; // テクスチャバッファ作成
-
+    
     CreateTex(); // テクスチャ作成
-    _texBuff->WriteToTexBuff(_tex.get()); // テクスチャをバッファに書き込み
+    if(FAILED(WriteToBuff())) goto failed; // バッファに書き込み
+
+    //// 駒テクスチャ作成
+    //UINT shogiTexNum;
+    //shogiTexNum = 8 + 6 + 1; // 駒表8種 駒裏6種 将棋盤1
+    //_pieceTexBuffs.resize(shogiTexNum);
+    //for (UINT i = 0; i < shogiTexNum; i++)
+    //{
+    //    _pieceTexBuffs[i] = std::make_unique<RenderTexBuff>();
+    //    if (FAILED(_device->CreateRenderTexBuff(_pieceTexBuffs[i].get(), _backBuffs[0].get()))) goto failed; // レンダーターゲットテクスチャ作成
+    //}
+    //// if (FAILED(_device->CreateRTVHeap(_rtvHeap.get(), _swapChain.get()))) goto failed; // 駒テクスチャRTVヒープ作成
     
-
-
-    // CBV, SRV作成, UAV作成
-    UINT cbvNum, srvNum, uavNum;
-    cbvNum = 1;
-    srvNum = 1;
-    uavNum = 0;
-    if (FAILED(_device->CreateHeap(_csuHeap.get(), cbvNum, srvNum, uavNum, Heap::CSU))) goto failed; // CSUヒープオブジェクト作成
-    _device->CreateCBV(_csuHeap.get(), _constBuff.get(), 0); // CBV作成
-    _device->CreateSRV(_csuHeap.get(), _texBuff.get(), 0);   // SRV作成
-
-    // 駒テクスチャ作成
-    UINT shogiTexNum;
-    shogiTexNum = 8 + 6 + 1; // 駒表8種 駒裏6種 将棋盤1
-    _pieceTexBuffs.resize(shogiTexNum);
-    for (UINT i = 0; i < shogiTexNum; i++)
-    {
-        _pieceTexBuffs[i] = std::make_unique<RenderTexBuff>();
-        if (FAILED(_device->CreateRenderTexBuff(_pieceTexBuffs[i].get(), _backBuffs[0].get()))) goto failed; // レンダーターゲットテクスチャ作成
-    }
-    // if (FAILED(_device->CreateRTVHeap(_rtvHeap.get(), _swapChain.get()))) goto failed; // 駒テクスチャRTVヒープ作成
-    
-    
-
     // ルートシグネチャオブジェクト作成
     if (FAILED(_device->CreateRootSignature(_rootSignature.get()))) goto failed;
 
+    // 頂点バッファ入力レイアウト作成
+    _device->CreateInputLayout(_inputLayout.get());
+    // シェーダー系作成
+    if(FAILED(CreateShader())) goto failed;
 
     // パイプラインオブジェクト作成
     if (FAILED(_device->CreatePipeline(
@@ -180,12 +81,37 @@ bool DX12::InitDX12(GameWindow* gameWindow)
         _pShader.get())))     // ピクセルシェーダ
         goto failed;
 
+    
+    CreateDrawArea(); // 描画領域系作成
+    
+    if(FAILED(CreateD2D())) goto failed; // DirectX11系作成
 
     return true;
 
 failed:
     assert(false);
     return false;
+}
+
+
+
+
+// ファクトリー系作成
+HRESULT DX12::CreateFactory()
+{
+    // DXGIファクトリー作成
+    if(FAILED(CreateDXGIFactory())) goto failed;
+    // アダプター作成
+    if (FAILED(_dxgiFactory->CreateAdapter(_adapter.get()))) goto failed;
+    // デバイス作成
+    if (FAILED(_dxgiFactory->CreateDevice(_device.get(), _adapter.get()))) goto failed;
+    
+    _adapter.reset(); // アダプター破棄
+    
+    return S_OK;
+
+failed:
+    return E_FAIL;
 }
 
 // DXGIファクトリー作成
@@ -212,6 +138,67 @@ HRESULT DX12::CreateDXGIFactory()
     return S_OK;
 }
 
+
+
+
+// コマンド系作成
+HRESULT DX12::CreateCommand()
+{
+    // コマンドアロケータ作成
+    if (FAILED(_device->CreateCmdAllocator(_cmdAllocator.get()))) goto failed;
+    // コマンドリスト作成
+    if (FAILED(_device->CreateCmdList(_cmdList.get(), _cmdAllocator.get()))) goto failed;
+    // コマンドキュー作成
+    if (FAILED(_device->CreateCmdQueue(_cmdQueue.get()))) goto failed;
+
+    return S_OK;
+
+failed:
+    return E_FAIL;
+}
+
+
+
+
+// Direct2D系作成
+HRESULT DX12::CreateD2D()
+{   
+    // Direct3D11系作成
+    if (FAILED(_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.get()))) goto failed;
+    // Direct2Dデバイスコンテキスト作成
+    if (FAILED(_device11->CreateD2DDeviceContext(_d2dDeviceContext.get()))) goto failed;
+    
+    UINT backBuffNum; // バックバッファの数
+    backBuffNum = _swapChain->GetBackBuffNum();
+    _wrappedBackBuffs.resize(backBuffNum);
+    _d2dRenderTargets.resize(backBuffNum);
+    for (UINT i = 0; i < backBuffNum; i++)
+    {
+        // ラップされたバックバッファ作成
+        _wrappedBackBuffs[i] = std::make_unique<WrappedBackBuff>();
+        if (FAILED(_device11->CreateWrappedBackBuff(_wrappedBackBuffs[i].get(), _backBuffs[i].get()))) goto failed;
+    }
+    for (UINT i = 0; i < backBuffNum; i++)
+    {
+        // Direct2Dレンダーターゲット作成
+        _d2dRenderTargets[i] = std::make_unique<D2DRenderTarget>();
+        if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dRenderTargets[i].get(), _wrappedBackBuffs[i].get()))) goto failed;
+    }
+
+    // DirectWriteファクトリー作成
+    if (FAILED(CreateDWriteFactory())) goto failed;
+    // ソリッドカラーブラッシュ作成
+    if(FAILED(_d2dDeviceContext->CreateD2DSolidColorBrush(_d2dSolidColorBrush.get()))) goto failed;
+    // テキストフォーマット作成
+    if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_dWriteTextFormat.get(), L"メイリオ"))) goto failed;
+    // if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed; // 駒のテキストフォーマット作成
+
+    return S_OK;
+
+failed:
+    return E_FAIL;
+}
+
 // DirectWriteファクトリー作成
 HRESULT DX12::CreateDWriteFactory()
 {
@@ -220,6 +207,9 @@ HRESULT DX12::CreateDWriteFactory()
         __uuidof(IDWriteFactory),
         reinterpret_cast<IUnknown**>(_dWriteFactory->_dWriteFactory.ReleaseAndGetAddressOf()));
 }
+
+
+
 
 // 将棋盤作成
 void DX12::CreateBoard(ShogiObjId id)
@@ -294,7 +284,7 @@ void DX12::CreateBoard(ShogiObjId id)
 }
 
 // 駒作成
- void DX12::CreatePiece(Piece* piece, ShogiObjId id)
+void DX12::CreatePiece(Piece* piece, ShogiObjId id)
 {
     piece->SetId(id);
 
@@ -380,9 +370,39 @@ void DX12::CreateBoard(ShogiObjId id)
     };
 
     piece->SetIndices(indices);
- }
+}
 
- // テクスチャ作成
+// バッファ系作成
+HRESULT DX12::CreateBuff()
+{
+     // ゲームウインドウ取得
+    auto gameWindow = Application::GetInstance().GetGameWindow();
+
+    UINT widthSize, heightSize;
+
+    _backBuffs.resize(_swapChain->GetBackBuffNum());
+    for (UINT i = 0; i < _backBuffs.size(); i++)
+    {
+        _backBuffs[i] = std::make_unique<Buff>();
+        if (FAILED(_swapChain->CreateBackBuff(_backBuffs[i].get(), i))) goto failed; // バックバッファ作成
+    }
+    if (FAILED(_device->CreateDSBuff(_dsBuff.get(), gameWindow))) goto failed; // デプスステンシルバッファ作成
+    // コンスタントバッファ作成
+    widthSize = (sizeof(DirectX::XMMATRIX)*(40+1+1) + 0xff) & ~0xff; // 駒40 将棋盤1 ビュープロジェクション行列1 256アラインメント
+    heightSize = 1;
+    if (FAILED(_device->CreateBuff(_constBuff.get(), widthSize, heightSize, Buff::CONSTANT))) goto failed;
+
+    if (FAILED(_device->CreateTexBuff(_texBuff.get()))) goto failed; // テクスチャバッファ作成
+    if (FAILED(_device->CreateVertBuff(_vertBuff.get(), _board.get(), _pieces))) goto failed; // 頂点バッファ作成
+    if (FAILED(_device->CreateIdxBuff (_idxBuff.get(),  _board.get(), _pieces))) goto failed; // インデックスバッファ作成
+
+    return S_OK;
+
+failed:
+    return E_FAIL;
+}
+
+// テクスチャ作成
 void DX12::CreateTex()
 {
     std::array<TexStruct::TexRGBA, 256*256> tex;
@@ -403,6 +423,80 @@ void DX12::CreateTex()
 
     _tex->SetTex(tex);
  }
+
+// バッファに書き込み
+HRESULT DX12::WriteToBuff()
+{
+    if (FAILED(_vertBuff->WriteToVertBuff(_board.get(), _pieces))) goto failed; // 頂点バッファに書き込み
+    if (FAILED(_idxBuff ->WriteToIdxBuff (_board.get(), _pieces)))  goto failed; // インデックスバッファに書き込み
+    _texBuff->WriteToTexBuff(_tex.get()); // テクスチャをバッファに書き込み
+
+    return S_OK;
+
+failed:
+    return E_FAIL;
+}
+
+// ヒープ作成
+HRESULT DX12::CreateHeap()
+{
+    if (FAILED(_device->CreateHeap(_rtvHeap.get(), _swapChain->GetBackBuffNum(), Heap::RTV))) goto failed; // RTVヒープ作成
+    if (FAILED(_device->CreateHeap(_dsvHeap.get(), 1, Heap::DSV))) goto failed; // DSVヒープ作成
+
+    UINT cbvNum, srvNum, uavNum;
+    cbvNum = 1;
+    srvNum = 1;
+    uavNum = 0;
+    if (FAILED(_device->CreateCSUHeap(_csuHeap.get(), cbvNum, srvNum, uavNum, Heap::CSU))) goto failed; // CSUヒープオブジェクト作成
+
+    return S_OK;
+
+failed:
+    return E_FAIL;
+}
+
+// ビュー作成
+void DX12::CreateView()
+{
+    for (UINT i = 0; i < _rtvHeap->GetDescNum(); i++)
+    {
+        _device->CreateView(_rtvHeap.get(), i, _backBuffs[i].get(), View::RTV); // RTV作成
+    }
+    for (UINT i = 0; i < _dsvHeap->GetDescNum(); i++)
+    {
+        _device->CreateView(_dsvHeap.get(), i, _dsBuff.get(), View::DSV); // DSV作成
+    }
+    for (UINT i = 0; i < _csuHeap->GetCBVNum(); i++)
+    {
+        _device->CreateCSUView(_csuHeap.get(), i, _constBuff.get(), View::CBV); // CBV作成
+    }
+    for (UINT i = 0; i < _csuHeap->GetSRVNum(); i++)
+    {
+        _device->CreateCSUView(_csuHeap.get(), 0, _texBuff.get(), View::SRV);   // SRV作成
+    }
+}
+
+// シェーダー系作成
+HRESULT DX12::CreateShader()
+{
+    if (FAILED(_device->CreateVShader(_vShader.get()))) goto failed; // 頂点シェーダー作成
+    if (FAILED(_device->CreatePShader(_pShader.get()))) goto failed; // ピクセルシェーダー作成
+
+    return S_OK;
+
+failed:
+    return E_FAIL;
+}
+
+// 描画領域系作成
+void DX12::CreateDrawArea()
+{
+    // ゲームウインドウ取得
+    auto gameWindow = Application::GetInstance().GetGameWindow();
+
+    _viewport->SetViewport(gameWindow); // ビューポート作成
+    _scissorRect->SetScissorRect(gameWindow); // シザー矩形作成
+}
 
 
 
@@ -481,12 +575,10 @@ void DX12::Set3DCmd()
     // CBV,SRVヒープセット
     ID3D12DescriptorHeap* csuHeaps[] = {_csuHeap->GetHeap()};
     auto csuHeapNum = sizeof(csuHeaps) / sizeof(ID3D12DescriptorHeap*);
-    _cmdList->SetCSUHeaps(csuHeapNum, csuHeaps); 
+    _cmdList->SetCSUHeaps(1, csuHeaps); 
 
     // ルートパラメータとディスクリプタ関連付け
-    //auto csuHandle = _csuHeap->GetCSUHeap()->GetGPUDescriptorHandleForHeapStart();
     _cmdList->SetDescriptorTable(0, _csuHeap->GetGPUCBVHandle(0)); // CBV
-    //csuHandle.ptr += _device->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     _cmdList->SetDescriptorTable(1, _csuHeap->GetGPUSRVHandle(0)); // SRV
 
     // トポロジーセット
@@ -494,13 +586,11 @@ void DX12::Set3DCmd()
 
     // ビューポートセット
     D3D12_VIEWPORT viewports[] = {_viewport->GetViewport()};
-    auto viewportNum = sizeof(viewports) / sizeof(D3D12_VIEWPORT);
-    _cmdList->SetViewports(viewportNum, viewports);
+    _cmdList->SetViewports(1, viewports);
 
     // シザー矩形セット
     D3D12_RECT scissorRects[] = {_scissorRect->GetScissorRect()};
-    auto scissorRectNum = sizeof(scissorRects) / sizeof(D3D12_RECT);
-    _cmdList->SetScissorRects(scissorRectNum, scissorRects);
+    _cmdList->SetScissorRects(1, scissorRects);
 }
 
 // オブジェクト描画コマンドセット

@@ -1,14 +1,12 @@
 #include"Device.h"
+#include"ConstBuffFactory.h"
 #include"RTVHeapFactory.h"
 #include"DSVHeapFactory.h"
 #include"CSUHeapFactory.h"
-
-#include"RTVHeapDesc.h"
-#include"DSVHeapDesc.h"
-#include"CSUHeapDesc.h"
-#include"RTVOffset.h"
-#include"DSVOffset.h"
-#include"CSUOffset.h"
+#include"RTVFactory.h"
+#include"DSVFactory.h"
+#include"CBVFactory.h"
+#include"SRVFactory.h"
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
@@ -125,9 +123,45 @@ HRESULT Device::CreateD3D11(
 
 
 
+// バッファ作成
+HRESULT Device::CreateBuff(Buff* buff, UINT width, UINT height, Buff::BuffType buffType)
+{
+    switch (buffType)
+    {
+    case Buff::BACKBUFF:
+        break;
+
+    case Buff::DEPTH_STENCIL:
+        break;
+
+
+    case Buff::VERTEX:
+        break;
+
+
+    case Buff::INDEX:
+        break;
+
+
+    case Buff::CONSTANT:
+        _buffFactory.reset(new ConstBuffFactory());
+         break;
+
+    case Buff::TEXTURE:
+        break;
+
+    default:
+        return E_FAIL;
+    }
+
+    _buffFactory->CreateBuff(buff, width, height, _device.Get());
+}
+
 // 頂点バッファ作成
 HRESULT Device::CreateVertBuff(VertBuff* vertBuff, Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces)
 {
+    ComPtr<ID3D12Resource> vertBuffCom;
+
     UINT totalByteSize = board->GetVerticesByteSize();
     for (auto& piece : pieces)
     {
@@ -137,13 +171,18 @@ HRESULT Device::CreateVertBuff(VertBuff* vertBuff, Board* board, std::array<std:
     D3D12_HEAP_PROPERTIES heapProp = GetVertHeapProp();
     D3D12_RESOURCE_DESC resourceDesc = GetVertResourceDesc(totalByteSize);
 
-    return _device->CreateCommittedResource(
+    HRESULT result;
+    result = _device->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
-        IID_PPV_ARGS(vertBuff->_vertBuff.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(vertBuffCom.ReleaseAndGetAddressOf()));
+    if(FAILED(result)) return result;
+
+    vertBuff->SetBuff(vertBuffCom);
+    return S_OK;
 }
 
 // インデックスバッファ作成
@@ -293,16 +332,23 @@ D3D12_CLEAR_VALUE Device::GetClearValue()
 // テクスチャバッファオブジェクト作成
 HRESULT Device::CreateTexBuff(TexBuff* texBuff)
 {
+    ComPtr<ID3D12Resource> texBuffCom;
+
     D3D12_HEAP_PROPERTIES heapProp = GetTexHeapProp();
     D3D12_RESOURCE_DESC resourceDesc = GetTexResourceDesc();
 
-    return _device->CreateCommittedResource(
+    HRESULT result;
+    result = _device->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
         nullptr,
-        IID_PPV_ARGS(texBuff->_texBuff.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(texBuffCom.ReleaseAndGetAddressOf()));
+    if(FAILED(result)) return result;
+
+    texBuff->SetBuff(texBuffCom);
+    return S_OK;
 }
 
 // テクスチャヒーププロパティ
@@ -362,30 +408,99 @@ DXGI_SAMPLE_DESC Device::GetSampleDesc()
     return desc;
 }
 
-// レンダーターゲット兼テクスチャバッファ作成
-HRESULT Device::CreateRenderTexBuff(RenderTexBuff* renderTexBuff, Buff* backBuff)
+// コンスタントバッファ作成
+HRESULT Device::CreateConstBuff(ConstBuff* constBuff, UINT pieceNum)
 {
-    D3D12_HEAP_PROPERTIES heapProp = GetDefaultHeapProp();
-    D3D12_RESOURCE_DESC resourceDesc = backBuff->GetBuff()->GetDesc();
+    ComPtr<ID3D12Resource> constBuffCom;
 
-    D3D12_CLEAR_VALUE clearValue = {};
+    D3D12_HEAP_PROPERTIES heapProp =
+        GetConstHeapProp();
+    D3D12_RESOURCE_DESC resourceDesc =
+        GetConstResourceDesc(pieceNum);
 
-    clearValue.Color[0] = 1.0f;
-    clearValue.Color[1] = 1.0f;
-    clearValue.Color[2] = 1.0f;
-    clearValue.Color[3] = 1.0f;
-    clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-
-    return _device->CreateCommittedResource(
+    HRESULT result;
+    result = _device->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
-        &clearValue,
-        IID_PPV_ARGS(renderTexBuff->_renderTexBuff.ReleaseAndGetAddressOf()));
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(constBuffCom.ReleaseAndGetAddressOf()));
 
+    constBuff->SetBuff(constBuffCom);
     return S_OK;
 }
+
+// コンスタントバッファヒーププロパティ
+D3D12_HEAP_PROPERTIES Device::GetConstHeapProp()
+{
+    D3D12_HEAP_PROPERTIES prop = {};
+
+    prop.Type =
+        D3D12_HEAP_TYPE_UPLOAD;
+    prop.CPUPageProperty =
+        D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    prop.MemoryPoolPreference =
+        D3D12_MEMORY_POOL_UNKNOWN;
+
+    return prop;
+}
+
+// コンスタントバッファリソースディスクリプタ
+D3D12_RESOURCE_DESC Device::GetConstResourceDesc(UINT pieceNum)
+{
+    D3D12_RESOURCE_DESC desc = {};
+
+    UINT matByteSize = sizeof(DirectX::XMMATRIX);
+    UINT matNum = pieceNum + 2; // 駒の数(pieceNum)+将棋盤(1)+ビュープロジェ行列(1)
+    UINT byteSize = matByteSize * matNum;
+
+    desc.Dimension =
+        D3D12_RESOURCE_DIMENSION_BUFFER;
+    desc.Height =
+        1;
+    desc.Width = // 必要バイト数以上で、256の倍数となる数をバイト数とする
+        (byteSize + 0xff) & ~0xff;
+    desc.DepthOrArraySize =
+        1;
+    desc.MipLevels =
+        1;
+    desc.Format =
+        DXGI_FORMAT_UNKNOWN;
+    desc.SampleDesc.Count =
+        1;
+    desc.Flags =
+        D3D12_RESOURCE_FLAG_NONE;
+    desc.Layout =
+        D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+    return desc;
+}
+
+//// レンダーターゲット兼テクスチャバッファ作成
+//HRESULT Device::CreateRenderTexBuff(RenderTexBuff* renderTexBuff, Buff* backBuff)
+//{
+//    D3D12_HEAP_PROPERTIES heapProp = GetDefaultHeapProp();
+//    D3D12_RESOURCE_DESC resourceDesc = backBuff->GetBuff()->GetDesc();
+//
+//    D3D12_CLEAR_VALUE clearValue = {};
+//
+//    clearValue.Color[0] = 1.0f;
+//    clearValue.Color[1] = 1.0f;
+//    clearValue.Color[2] = 1.0f;
+//    clearValue.Color[3] = 1.0f;
+//    clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+//
+//    return _device->CreateCommittedResource(
+//        &heapProp,
+//        D3D12_HEAP_FLAG_NONE,
+//        &resourceDesc,
+//        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, // テクスチャ
+//        &clearValue,
+//        IID_PPV_ARGS(renderTexBuff->_renderTexBuff.ReleaseAndGetAddressOf()));
+//
+//    return S_OK;
+//}
 
 
 
@@ -393,7 +508,6 @@ HRESULT Device::CreateRenderTexBuff(RenderTexBuff* renderTexBuff, Buff* backBuff
 // ヒープ作成
 HRESULT Device::CreateHeap(Heap* heap, UINT descNum, Heap::HeapType heapType)
 {
-
     switch (heapType)
     {
     case Heap::RTV:
@@ -413,31 +527,10 @@ HRESULT Device::CreateHeap(Heap* heap, UINT descNum, Heap::HeapType heapType)
     }
 
     return _heapFactory->CreateHeap(heap, descNum, _device.Get());
-    
-    
-    //ComPtr<ID3D12DescriptorHeap> heapCom;
-
-    //auto& heapDesc = _heapDescs[heapType]; // 使用するヒープタイプのヒープディスクリプタを取得
-    //D3D12_DESCRIPTOR_HEAP_DESC desc = heapDesc->GetHeapDesc(descNum);
-
-    //HRESULT result;
-    //result = _device->CreateDescriptorHeap(
-    //    &desc,
-    //    IID_PPV_ARGS(heapCom.ReleaseAndGetAddressOf()));
-    //if(FAILED(result)) return result;
-
-    //heap->SetHeap(heapCom);
-
-    //// ディスクリプタオフセット取得
-    //auto& descOffset = _descOffsets[heapType]; // 使用するヒープタイプのディスクリプタオフセットを取得
-    //auto offset = descOffset->GetDescOffset(_device.Get());
-    //heap->SetDescOffset(offset);
-
-    //return S_OK;
 }
 
 // ヒープ作成（CSU）
-HRESULT Device::CreateHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum, Heap::HeapType heapType)
+HRESULT Device::CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum, Heap::HeapType heapType)
 {
     // CSUヒープ内訳取得
     csuHeap->SetCBVNum(cbvNum);
@@ -450,104 +543,59 @@ HRESULT Device::CreateHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavN
 
 
 
-
-
-// RTV作成
-void Device::CreateRTV(Buff* backBuff, Heap* rtvHeap, UINT i)
+// ビュー作成
+void Device::CreateView(Heap* heap, UINT i, Buff* buff, View::ViewType viewType)
 {
-    auto rtvHandle = rtvHeap->GetDescHandle(i);
+    switch (viewType)
+    {
+    case View::RTV:
+        _viewFactory.reset(new RTVFactory());
+        break;
 
-    _device->CreateRenderTargetView(
-        backBuff->GetBuff(),
-        nullptr,
-        rtvHandle);
+    case View::DSV:
+        _viewFactory.reset(new DSVFactory());
+        break;
+
+    case View::CBV:
+        _viewFactory.reset(new CBVFactory());
+        break;
+
+    case View::SRV:
+        _viewFactory.reset(new SRVFactory());
+        break;
+
+    default:
+        return;
+    }
+
+    _viewFactory->CreateView(heap, i, buff, _device.Get());
 }
 
-// DSV作成
-void Device::CreateDSV(Heap* dsvHeap, Buff* dsBuff, UINT i)
+// ビュー作成（CSU系）
+void Device::CreateCSUView(CSUHeap* csuHeap, UINT i, Buff* buff, View::ViewType viewType)
 {
-    D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = GetDSVDesc();
+    UINT offset = 0;
 
-    _device->CreateDepthStencilView(
-        dsBuff->GetBuff(),
-        &dsvDesc,
-        dsvHeap->GetDescHandle(i));
+    switch (viewType)
+    {
+    case View::CBV:
+        offset = csuHeap->GetCBVStartIdx();
+        break;
+
+    case View::SRV:
+        offset = csuHeap->GetSRVStartIdx();
+        break;
+
+    case View::UAV:
+        offset = csuHeap->GetUAVStartIdx();
+        break;
+
+    default:
+        return;
+    }
+
+    CreateView(csuHeap, offset + i, buff, viewType);
 }
-
-// DSVディスクリプタ
-D3D12_DEPTH_STENCIL_VIEW_DESC Device::GetDSVDesc()
-{
-    D3D12_DEPTH_STENCIL_VIEW_DESC desc = {};
-
-    desc.Format = // float値
-        DXGI_FORMAT_D32_FLOAT;
-    desc.ViewDimension = // 2Dテクスチャ
-        D3D12_DSV_DIMENSION_TEXTURE2D;
-    desc.Flags =
-        D3D12_DSV_FLAG_NONE;
-
-    return desc;
-}
-
-// CBV作成
-void Device::CreateCBV(CSUHeap* csuHeap, ConstBuff* constBuff, UINT i)
-{
-    D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = GetCBVDesc(constBuff->GetBuff());
-
-    auto cbvHandle = csuHeap->GetCBVHandle(i);
-
-    _device->CreateConstantBufferView(
-        &cbvDesc,
-        cbvHandle);
-}
-
-// CBVディスクリプタ
-D3D12_CONSTANT_BUFFER_VIEW_DESC Device::GetCBVDesc(ID3D12Resource* constBuff)
-{
-    D3D12_CONSTANT_BUFFER_VIEW_DESC desc = {};
-
-    desc.BufferLocation = constBuff->GetGPUVirtualAddress();
-    desc.SizeInBytes = static_cast<UINT>(constBuff->GetDesc().Width * constBuff->GetDesc().Height);
-
-    return desc;
-}
-
-// SRV作成
-void Device::CreateSRV(CSUHeap* csuHeap, TexBuff* texBuff, UINT i)
-{
-    auto srvHandle = csuHeap->GetSRVHandle(i);
-
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = GetSRVDesc();
-
-    _device->CreateShaderResourceView(
-        texBuff->_texBuff.Get(),
-        &srvDesc,
-        srvHandle);
-}
-
-// SRVディスクリプタ
-D3D12_SHADER_RESOURCE_VIEW_DESC Device::GetSRVDesc()
-{
-    D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-    desc.Format =
-        DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.Shader4ComponentMapping =
-        D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    desc.ViewDimension =
-        D3D12_SRV_DIMENSION_TEXTURE2D;
-    desc.Texture2D.MipLevels =
-        1;
-
-    return desc;
-}
-
-
-
-
-
-
-
-
 
 
 
@@ -607,69 +655,7 @@ HRESULT Device::CreatePShader(PShader* pShader)
 
 
 
-// コンスタントバッファ作成
-HRESULT Device::CreateConstBuff(ConstBuff* constBuff, UINT pieceNum)
-{
-    D3D12_HEAP_PROPERTIES heapProp =
-        GetConstHeapProp();
-    D3D12_RESOURCE_DESC resourceDesc =
-        GetConstResourceDesc(pieceNum);
-    //GetConstResourceDesc(shogiObj->GetVerticesByteSize());
 
-    return _device->CreateCommittedResource(
-        &heapProp,
-        D3D12_HEAP_FLAG_NONE,
-        &resourceDesc,
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        nullptr,
-        IID_PPV_ARGS(constBuff->_constBuff.ReleaseAndGetAddressOf()));
-}
-
-// コンスタントバッファヒーププロパティ
-D3D12_HEAP_PROPERTIES Device::GetConstHeapProp()
-{
-    D3D12_HEAP_PROPERTIES prop = {};
-
-    prop.Type =
-        D3D12_HEAP_TYPE_UPLOAD;
-    prop.CPUPageProperty =
-        D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-    prop.MemoryPoolPreference =
-        D3D12_MEMORY_POOL_UNKNOWN;
-
-    return prop;
-}
-
-// コンスタントバッファリソースディスクリプタ
-D3D12_RESOURCE_DESC Device::GetConstResourceDesc(UINT pieceNum)
-{
-    D3D12_RESOURCE_DESC desc = {};
-
-    UINT matByteSize = sizeof(DirectX::XMMATRIX);
-    UINT matNum = pieceNum + 2; // 駒の数(pieceNum)+将棋盤(1)+ビュープロジェ行列(1)
-    UINT byteSize = matByteSize * matNum;
-
-    desc.Dimension =
-        D3D12_RESOURCE_DIMENSION_BUFFER;
-    desc.Height =
-        1;
-    desc.Width = // 必要バイト数以上で、256の倍数となる数をバイト数とする
-        (byteSize + 0xff) & ~0xff;
-    desc.DepthOrArraySize =
-        1;
-    desc.MipLevels =
-        1;
-    desc.Format =
-        DXGI_FORMAT_UNKNOWN;
-    desc.SampleDesc.Count =
-        1;
-    desc.Flags =
-        D3D12_RESOURCE_FLAG_NONE;
-    desc.Layout =
-        D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-    return desc;
-}
 
 
 
@@ -1083,19 +1069,6 @@ void Device::SetDevice(ComPtr<ID3D12Device> device){_device = device;}
 // Direct3Dデバイスを返す
 ID3D12Device* Device::GetDevice(){return _device.Get();}
 
-Device::Device()
-{
-    // ヒープディスクリプタ返却用オブジェクト
-    _heapDescs.resize(Heap::NUM);
-    _heapDescs[Heap::RTV] = std::make_unique<RTVHeapDesc>();
-    _heapDescs[Heap::DSV] = std::make_unique<DSVHeapDesc>();
-    _heapDescs[Heap::CSU] = std::make_unique<CSUHeapDesc>();
-
-    // ディスクリプタオフセット返却用オブジェクト
-    _descOffsets.resize(Heap::NUM);
-    _descOffsets[Heap::RTV] = std::make_unique<RTVOffset>();
-    _descOffsets[Heap::DSV] = std::make_unique<DSVOffset>();
-    _descOffsets[Heap::CSU] = std::make_unique<CSUOffset>();
-}
+Device::Device(){}
 
 Device::~Device(){}

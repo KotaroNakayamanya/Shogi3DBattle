@@ -13,12 +13,25 @@ D3D12_CPU_DESCRIPTOR_HANDLE CSUHeap::GetUAVHandle(UINT i){return GetDescHandle(_
 // 指定された位置のGPUUAVハンドルを返す
 D3D12_GPU_DESCRIPTOR_HANDLE CSUHeap::GetGPUUAVHandle(UINT i){return GetGPUDescHandle(_cbvNum + _srvNum + i);}
 
+// CBVのスタート位置のインデックスを返す
+UINT CSUHeap::GetCBVStartIdx(){return 0;}
+// SRVのスタート位置のインデックスを返す
+UINT CSUHeap::GetSRVStartIdx(){return _cbvNum;}
+// UAVのスタート位置のインデックスを返す
+UINT CSUHeap::GetUAVStartIdx(){return _cbvNum + _srvNum;}
+
 // CBV数セット
 void CSUHeap::SetCBVNum(UINT cbvNum){_cbvNum = cbvNum;}
+// CBV数を返す
+UINT CSUHeap::GetCBVNum()           {return _cbvNum;}
 // SRV数セット
 void CSUHeap::SetSRVNum(UINT srvNum){_srvNum = srvNum;}
+// SRV数を返す
+UINT CSUHeap::GetSRVNum()           {return _srvNum;}
 // UAV数セット
 void CSUHeap::SetUAVNum(UINT uavNum){_uavNum = uavNum;}
+// UAV数を返す
+UINT CSUHeap::GetUAVNum()           {return _uavNum;}
 
 CSUHeap::CSUHeap(){}
 CSUHeap::~CSUHeap(){}

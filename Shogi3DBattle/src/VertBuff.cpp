@@ -1,41 +1,39 @@
 #include"VertBuff.h"
-#include<cassert>
 
 // 頂点バッファに書き込み
 HRESULT VertBuff::WriteToVertBuff(Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces)
 {
     ShogiObj::Vert* vertBuffMap;
 
-    HRESULT result = _vertBuff->Map(0, nullptr, (void**)&vertBuffMap);
-    if (FAILED(result))
-    {
-        assert(false); return E_FAIL;
-    }
+    HRESULT result = _buff->Map(0, nullptr, (void**)&vertBuffMap);
+    if (FAILED(result)) return result;
 
-    auto boardVertices = board->GetVertices();
-
-    auto joinedVertices = boardVertices;
+    // 頂点を全て繋げた配列を作成
+    auto joinedVertices = board->GetVertices();
     for (auto& piece : pieces)
     {
         auto pieceVertices = piece->GetVertices();
         joinedVertices.insert(joinedVertices.end(), pieceVertices.begin(), pieceVertices.end());
     }
-    
+
     std::copy(joinedVertices.begin(), joinedVertices.end(), vertBuffMap);
 
-    _vertBuff->Unmap(0, nullptr);
+    _buff->Unmap(0, nullptr);
+
+
+    // バッファアドレスをそれぞれのオブジェクトに紐づける
+    auto vertAddress = _buff->GetGPUVirtualAddress();
+
+    board->SetVertAddress(vertAddress);
+    vertAddress += board->GetVerticesByteSize();
+    for (auto& piece : pieces)
+    {
+        piece->SetVertAddress(vertAddress);
+        vertAddress += piece->GetVerticesByteSize();
+    }
 
     return S_OK;
 }
-
-// 頂点バッファアドレスを返す
-D3D12_GPU_VIRTUAL_ADDRESS VertBuff::GetAddress()
-{
-    return _vertBuff->GetGPUVirtualAddress();
-}
-
-// 頂点バッファを返す
-ID3D12Resource* VertBuff::GetVertBuff() { return _vertBuff.Get(); }
 
 VertBuff::VertBuff() {}
 VertBuff::~VertBuff() {}

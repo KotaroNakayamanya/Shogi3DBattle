@@ -5,7 +5,7 @@ void TexBuff::WriteToTexBuff(Tex* tex)
 {
     const auto& texture = tex->GetTex();
 
-    _texBuff->WriteToSubresource(
+    _buff->WriteToSubresource(
         0,
         nullptr,
         texture.data(),
@@ -13,7 +13,7 @@ void TexBuff::WriteToTexBuff(Tex* tex)
         sizeof(TexStruct::TexRGBA) * texture.size());
 }
 
-ID3D12Resource* TexBuff::GetTexBuff(){return _texBuff.Get();} // バッファを渡す
+//ID3D12Resource* TexBuff::GetTexBuff(){return _texBuff.Get();} // バッファを渡す
 
 TexBuff::TexBuff(){}
 TexBuff::~TexBuff(){}

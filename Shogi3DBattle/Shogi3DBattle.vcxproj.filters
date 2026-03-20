@@ -196,6 +196,30 @@
     <Filter Include="ソース ファイル\dx12\heap\factory">
       <UniqueIdentifier>{8ac4bd23-3876-4b0e-8e1d-a276dcbabd94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\view">
+      <UniqueIdentifier>{e35dc506-08e6-4a20-8ec6-860b261cf51b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\view\factory">
+      <UniqueIdentifier>{918caae6-4a55-418d-862b-5b920331f49c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\factory">
+      <UniqueIdentifier>{bf31cb85-51ea-4d3f-8dd9-8e1a1c6b1ea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\factory\resource_desc">
+      <UniqueIdentifier>{fa569c7a-9aeb-4eb6-9224-780c05ea1ea0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\factory\heap_prop">
+      <UniqueIdentifier>{646c20fd-2ea2-4354-a49f-99efedff7216}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\buff\factory">
+      <UniqueIdentifier>{50efd447-8f5e-4158-a620-ffaeed66e307}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\buff\factory\resource_state">
+      <UniqueIdentifier>{e88a18d9-57bf-4711-8f26-aaab4ef62077}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\factory\resource_state">
+      <UniqueIdentifier>{48aa6ffb-4979-4501-a111-2acca5c5e380}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -271,9 +295,6 @@
       <Filter>ソース ファイル\dx12\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\ScissorRect.cpp">
-      <Filter>ソース ファイル\dx12\view</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Viewport.cpp">
       <Filter>ソース ファイル\dx12\view</Filter>
     </ClCompile>
     <ClCompile Include="src\ShogiObj.cpp">
@@ -372,15 +393,39 @@
     <ClCompile Include="src\HeapFactory.cpp">
       <Filter>ソース ファイル\dx12\heap\factory</Filter>
     </ClCompile>
+    <ClCompile Include="src\Viewport.cpp">
+      <Filter>ソース ファイル\dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CBVFactory.cpp">
+      <Filter>ソース ファイル\dx12\view</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SRVFactory.cpp">
+      <Filter>ソース ファイル\dx12\view</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RTVFactory.cpp">
+      <Filter>ソース ファイル\dx12\view</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DSVFactory.cpp">
+      <Filter>ソース ファイル\dx12\view</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConstBuffFactory.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UploadHeapProp.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BuffResourceDesc.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ReadResourceStates.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\TexStruct.h">
-      <Filter>ヘッダー ファイル\struct</Filter>
-    </ClInclude>
-    <ClInclude Include="header\VertStruct.h">
       <Filter>ヘッダー ファイル\struct</Filter>
     </ClInclude>
     <ClInclude Include="header\DX12.h">
@@ -595,6 +640,48 @@
     </ClInclude>
     <ClInclude Include="header\CSUHeapFactory.h">
       <Filter>ヘッダー ファイル\DX12\heap\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\View.h">
+      <Filter>ヘッダー ファイル\DX12\view</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IViewFactory.h">
+      <Filter>ヘッダー ファイル\DX12\view\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\RTVFactory.h">
+      <Filter>ヘッダー ファイル\DX12\view\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DSVFactory.h">
+      <Filter>ヘッダー ファイル\DX12\view\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CBVFactory.h">
+      <Filter>ヘッダー ファイル\DX12\view\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\SRVFactory.h">
+      <Filter>ヘッダー ファイル\DX12\view\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IHeapProp.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory\heap_prop</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IResourceDesc.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_desc</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IResourceStates.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ConstBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\UploadHeapProp.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory\heap_prop</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BuffResourceDesc.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_desc</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ReadResourceStates.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_state</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

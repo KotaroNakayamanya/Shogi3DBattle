@@ -1,29 +1,18 @@
 #pragma once
 
-#include<d3d12.h>
-#include<wrl.h>
+#include"Buff.h"
 #include<array>
 #include<memory>
 #include"Board.h"
 #include"Piece.h"
 
-class VertBuff
+class VertBuff : public Buff
 {
-    friend class Device; // デバイスから参照可能
-
-    template<typename T>
-    using ComPtr = Microsoft::WRL::ComPtr<T>;
-
-private:
-    ComPtr<ID3D12Resource> _vertBuff; // 頂点バッファ
-
 public:
     // 頂点バッファに書き込み
     HRESULT WriteToVertBuff(Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces);
     // 頂点バッファアドレスを返す
     D3D12_GPU_VIRTUAL_ADDRESS GetAddress();
-    // 頂点バッファを返す
-    ID3D12Resource* GetVertBuff();
 
     VertBuff();
     ~VertBuff();

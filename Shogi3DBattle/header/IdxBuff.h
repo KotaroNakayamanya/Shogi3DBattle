@@ -19,8 +19,6 @@ private:
 
 public:
     HRESULT WriteToIdxBuff(Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces);  // インデックスに書き込み
-    //HRESULT WriteToIdxBuff(Board* board, Piece* piece);  // インデックスに書き込み
-    //HRESULT WriteToIdxBuff(ShogiObj* shogiObj);  // インデックスに書き込み
     D3D12_GPU_VIRTUAL_ADDRESS GetAddress(); // 頂点バッファアドレスを返す
 
     IdxBuff();

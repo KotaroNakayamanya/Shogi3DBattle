@@ -21,7 +21,10 @@
   <ItemGroup>
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\BuffResourceDesc.cpp" />
+    <ClCompile Include="src\ConstBuffFactory.cpp" />
     <ClCompile Include="src\Board.cpp" />
+    <ClCompile Include="src\CBVFactory.cpp" />
     <ClCompile Include="src\CmdAllocator.cpp" />
     <ClCompile Include="src\CmdList.cpp" />
     <ClCompile Include="src\CmdQueue.cpp" />
@@ -34,6 +37,7 @@
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Device11.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
+    <ClCompile Include="src\DSVFactory.cpp" />
     <ClCompile Include="src\DSVHeapDesc.cpp" />
     <ClCompile Include="src\DSVOffset.cpp" />
     <ClCompile Include="src\DWriteFactory.cpp" />
@@ -56,6 +60,7 @@
     <ClCompile Include="src\MovingPiece.cpp" />
     <ClCompile Include="src\Pawn.cpp" />
     <ClCompile Include="src\Piece.cpp" />
+    <ClCompile Include="src\ReadResourceStates.cpp" />
     <ClCompile Include="src\RenderTexBuff.cpp" />
     <ClCompile Include="src\Pipeline.cpp" />
     <ClCompile Include="src\ProjMat.cpp" />
@@ -64,12 +69,15 @@
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Buff.cpp" />
     <ClCompile Include="src\Heap.cpp" />
+    <ClCompile Include="src\RTVFactory.cpp" />
     <ClCompile Include="src\RTVHeapDesc.cpp" />
     <ClCompile Include="src\RTVOffset.cpp" />
     <ClCompile Include="src\ScissorRect.cpp" />
+    <ClCompile Include="src\SRVFactory.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Tex.cpp" />
     <ClCompile Include="src\TexBuff.cpp" />
+    <ClCompile Include="src\UploadHeapProp.cpp" />
     <ClCompile Include="src\VertBuff.cpp" />
     <ClCompile Include="src\ShogiObj.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
@@ -81,7 +89,11 @@
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
     <ClInclude Include="header\Application.h" />
+    <ClInclude Include="header\BuffResourceDesc.h" />
+    <ClInclude Include="header\ConstBuffFactory.h" />
     <ClInclude Include="header\Board.h" />
+    <ClInclude Include="header\IBuffFactory.h" />
+    <ClInclude Include="header\CBVFactory.h" />
     <ClInclude Include="header\CmdAllocator.h" />
     <ClInclude Include="header\CmdList.h" />
     <ClInclude Include="header\CmdQueue.h" />
@@ -93,6 +105,7 @@
     <ClInclude Include="header\D2DDeviceContext.h" />
     <ClInclude Include="header\D2DRenderTarget.h" />
     <ClInclude Include="header\D2DSolicColorBrush.h" />
+    <ClInclude Include="header\DSVFactory.h" />
     <ClInclude Include="header\DSVHeapDesc.h" />
     <ClInclude Include="header\DSVHeapFactory.h" />
     <ClInclude Include="header\DSVOffset.h" />
@@ -101,8 +114,11 @@
     <ClInclude Include="header\Device11.h" />
     <ClInclude Include="header\DeviceContext.h" />
     <ClInclude Include="header\HeapFactory.h" />
+    <ClInclude Include="header\IHeapProp.h" />
     <ClInclude Include="header\IDescOffset.h" />
     <ClInclude Include="header\IHeapDesc.h" />
+    <ClInclude Include="header\IResourceDesc.h" />
+    <ClInclude Include="header\IResourceStates.h" />
     <ClInclude Include="header\MoveCamera.h" />
     <ClInclude Include="header\GameWindow.h" />
     <ClInclude Include="header\ControllerButton.h" />
@@ -126,6 +142,7 @@
     <ClInclude Include="header\MovingPiece.h" />
     <ClInclude Include="header\Pawn.h" />
     <ClInclude Include="header\Piece.h" />
+    <ClInclude Include="header\ReadResourceStates.h" />
     <ClInclude Include="header\RenderTexBuff.h" />
     <ClInclude Include="header\Pipeline.h" />
     <ClInclude Include="header\ProjMat.h" />
@@ -135,19 +152,23 @@
     <ClInclude Include="header\Buff.h" />
     <ClInclude Include="header\Heap.h" />
     <ClInclude Include="header\ISceneState.h" />
+    <ClInclude Include="header\RTVFactory.h" />
     <ClInclude Include="header\RTVHeapDesc.h" />
     <ClInclude Include="header\RTVHeapFactory.h" />
     <ClInclude Include="header\RTVOffset.h" />
     <ClInclude Include="header\ScissorRect.h" />
     <ClInclude Include="header\ShogiObjIdEnum.h" />
+    <ClInclude Include="header\SRVFactory.h" />
     <ClInclude Include="header\SwapChain.h" />
     <ClInclude Include="header\Tex.h" />
     <ClInclude Include="header\TexBuff.h" />
     <ClInclude Include="header\TexStruct.h" />
     <ClInclude Include="header\DWriteTextFormat.h" />
+    <ClInclude Include="header\UploadHeapProp.h" />
     <ClInclude Include="header\VertBuff.h" />
     <ClInclude Include="header\ShogiObj.h" />
-    <ClInclude Include="header\VertStruct.h" />
+    <ClInclude Include="header\View.h" />
+    <ClInclude Include="header\IViewFactory.h" />
     <ClInclude Include="header\ViewMat.h" />
     <ClInclude Include="header\Viewport.h" />
     <ClInclude Include="header\ViewRotation.h" />

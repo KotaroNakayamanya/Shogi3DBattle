@@ -23,9 +23,16 @@ public:
     // 指定された位置のGPUUAVハンドルを返す
     D3D12_GPU_DESCRIPTOR_HANDLE GetGPUUAVHandle(UINT i);
 
+    UINT GetCBVStartIdx(); // CBVのスタート位置のインデックスを返す
+    UINT GetSRVStartIdx(); // SRVのスタート位置のインデックスを返す
+    UINT GetUAVStartIdx(); // UAVのスタート位置のインデックスを返す
+
     void SetCBVNum(UINT cbvNum); // CBV数セット
+    UINT GetCBVNum();            // CBV数を返す
     void SetSRVNum(UINT srvNum); // SRV数セット
+    UINT GetSRVNum();            // SRV数を返す
     void SetUAVNum(UINT uavNum); // UAV数セット
+    UINT GetUAVNum();            // UAV数を返す
 
     CSUHeap();
     ~CSUHeap();

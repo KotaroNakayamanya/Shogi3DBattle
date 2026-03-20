@@ -1,9 +1,8 @@
 #pragma once
 
 #include"HeapFactory.h"
-
-#include"IHeapDesc.h"
-#include"IDescOffset.h"
+#include"IViewFactory.h"
+#include"IBuffFactory.h"
 
 #include"RenderTexBuff.h"
 #include"Device11.h"
@@ -13,6 +12,7 @@
 #include"CmdQueue.h"
 #include"SwapChain.h"
 #include"Heap.h"
+#include"View.h"
 #include"GameWindow.h"
 #include"Buff.h"
 #include"Fence.h"
@@ -38,10 +38,9 @@ class Device
 private:
     ComPtr<ID3D12Device> _device; // Direct3Dデバイス
 
-    std::unique_ptr<HeapFactory> _heapFactory;
-
-    std::vector<std::unique_ptr<IHeapDesc>>   _heapDescs;   // ヒープディスクリプタ返却用
-    std::vector<std::unique_ptr<IDescOffset>> _descOffsets; // ディスクリプタオフセット返却用
+    std::unique_ptr<IBuffFactory> _buffFactory; // バッファファクトリー 
+    std::unique_ptr<HeapFactory>  _heapFactory; // ヒープファクトリー
+    std::unique_ptr<IViewFactory> _viewFactory; // ビューファクトリー
 
     D3D12_COMMAND_QUEUE_DESC GetCmdQueueDesc(); // コマンドキューディスクリプタ
 
@@ -59,11 +58,6 @@ private:
     D3D12_RESOURCE_DESC GetDSResourceDesc( // デプスステンシルリソースディスクリプタ
         UINT windowWidth, UINT windowHeight);   
     D3D12_CLEAR_VALUE GetClearValue(); // クリアバリュー
-
-    D3D12_DEPTH_STENCIL_VIEW_DESC GetDSVDesc(); // DSVディスクリプタ
-
-    D3D12_CONSTANT_BUFFER_VIEW_DESC GetCBVDesc(ID3D12Resource* constBuff); // CBVディスクリプタ
-    D3D12_SHADER_RESOURCE_VIEW_DESC GetSRVDesc(); // SRVディスクリプタ
 
     ComPtr<ID3DBlob> GetRootSignatureBlob(); // ルートシグネチャBlob取得
     D3D12_ROOT_SIGNATURE_DESC GetRootSignatureDesc(); // ルートシグネチャディスクリプタ
@@ -103,28 +97,28 @@ public:
         DeviceContext* deviceContext,
         CmdQueue* cmdQueue);
 
-    HRESULT CreateHeap(Heap* heap, UINT descNum, Heap::HeapType heapType); // ヒープ作成
-    HRESULT CreateHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum, Heap::HeapType heapType); // ヒープ作成（CSU）
 
-    void    CreateRTV(Buff* backBuff, Heap* rtvHeap, UINT i); // RTV作成
+    HRESULT CreateBuff(Buff* buff, UINT width, UINT height, Buff::BuffType buffType); // バッファ作成
+
     HRESULT CreateDSBuff(Buff* dsBuff, GameWindow* gameWindow); // デプスステンシルバッファ作成
-    void    CreateDSV(Heap* dsvHeap, Buff* dsBuff, UINT i); // DSV作成
+    HRESULT CreateVertBuff(VertBuff* vertBuff, Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces); // 頂点バッファ作成
+    HRESULT CreateIdxBuff (IdxBuff* idxBuff,   Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces); // インデックスバッファ作成
+    HRESULT CreateConstBuff(ConstBuff* constBuff, UINT pieceNum); // コンスタントバッファ作成
+    HRESULT CreateTexBuff(TexBuff* texBuff); // テクスチャバッファ作成
+    //HRESULT CreateRenderTexBuff(RenderTexBuff* renderTexBuff, Buff* backBuff); // レンダーターゲット兼テクスチャバッファ作成
+
+    HRESULT CreateHeap   (Heap* heap, UINT descNum, Heap::HeapType heapType); // ヒープ作成
+    HRESULT CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum, Heap::HeapType heapType); // ヒープ作成（CSU）
+
+    void CreateView   (Heap* heap,       UINT i, Buff* buff, View::ViewType viewType); // ビュー作成
+    void CreateCSUView(CSUHeap* csuHeap, UINT i, Buff* buff, View::ViewType viewType); // ビュー作成（CSU系）
+
+    
+    
     HRESULT CreateFence(Fence* fence); // フェンス作成
 
     HRESULT CreateVShader(VShader* vShader); // 頂点シェーダー作成
     HRESULT CreatePShader(PShader* pShader); // ピクセルシェーダー作成
-
-    HRESULT CreateVertBuff(VertBuff* vertBuff, Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces); // 頂点バッファ作成
-    HRESULT CreateIdxBuff (IdxBuff* idxBuff,   Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces); // インデックスバッファ作成
-
-
-    HRESULT CreateConstBuff(ConstBuff* constBuff, UINT pieceNum); // コンスタントバッファ作成
-    HRESULT CreateTexBuff(TexBuff* texBuff); // テクスチャバッファ作成
-    HRESULT CreateRenderTexBuff(RenderTexBuff* renderTexBuff, Buff* backBuff); // レンダーターゲット兼テクスチャバッファ作成
-
-    
-    void    CreateCBV(CSUHeap* csuHeap, ConstBuff* constBuff, UINT i); // CBV作成
-    void    CreateSRV(CSUHeap* csuHeap, TexBuff* texBuff, UINT i); // SRV作成
 
     HRESULT CreateRootSignature(RootSignature* rootSignature); // ルートシグネチャ作成
     void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成
