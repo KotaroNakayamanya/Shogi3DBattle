@@ -5,17 +5,16 @@
 
 class D2DSolidColorBrush
 {
-    friend class D2DDeviceContext;
-
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    ComPtr<ID2D1SolidColorBrush> _d2dSolidColorBrush;
+    ComPtr<ID2D1SolidColorBrush> _d2dSolidColorBrush; // Direct2Dソリッドカラーブラッシュ
     
 public:
-    ID2D1SolidColorBrush* GetD2DSolidColorBrush(){return _d2dSolidColorBrush.Get();}
+    void SetGetD2DSolidColorBrush(ComPtr<ID2D1SolidColorBrush> d2dSolidColorBrush); // Direct2Dソリッドカラーブラッシュセット
+    ID2D1SolidColorBrush* GetD2DSolidColorBrush(); // Direct2Dソリッドカラーブラッシュを返す
 
-    D2DSolidColorBrush(){}
-    ~D2DSolidColorBrush(){}
+    D2DSolidColorBrush();
+    ~D2DSolidColorBrush();
 };

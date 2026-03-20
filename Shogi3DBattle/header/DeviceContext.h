@@ -6,8 +6,6 @@
 class DeviceContext
 {
 private:
-    friend class Device;
-
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -16,6 +14,8 @@ private:
 
 public:
     void Flash();
+
+    void SetDeviceContext(ComPtr<ID3D11DeviceContext> deviceContext); // デバイスコンテキストセット
 
     DeviceContext();
     ~DeviceContext();

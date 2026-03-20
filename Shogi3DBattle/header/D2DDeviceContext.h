@@ -1,14 +1,12 @@
 #pragma once
 
 #include"D2DRenderTarget.h"
-#include"WrappedBackBuffer.h"
+#include"WrappedBackBuff.h"
 #include"D2DSolicColorBrush.h"
 #include<string>
 
 class D2DDeviceContext
 {
-    friend class Device11;
-
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -19,7 +17,7 @@ public:
     // Direct2Dレンダーターゲット作成
     HRESULT CreateD2DRenderTarget(
         D2DRenderTarget* d2dRenderTarget,
-        WrappedBackBuffer* wrappedBackBuffer);
+        WrappedBackBuff* wrappedBackBuff);
 
     // ソリッドカラーブラッシュ作成
     HRESULT CreateD2DSolidColorBrush(
@@ -35,6 +33,8 @@ public:
         D2D1_RECT_F rect,
         IDWriteTextFormat* textFormat,
         ID2D1Brush* brush);
+
+    void SetD2DDeviceContext(ComPtr<ID2D1DeviceContext> d2dDeviceContext); // Direct2Dデバイスコンテキストセット
 
     D2DDeviceContext();
     ~D2DDeviceContext();

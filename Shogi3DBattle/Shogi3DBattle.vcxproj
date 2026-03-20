@@ -27,6 +27,8 @@
     <ClCompile Include="src\CmdQueue.cpp" />
     <ClCompile Include="src\ConstBuff.cpp" />
     <ClCompile Include="src\D2DDeviceContext.cpp" />
+    <ClCompile Include="src\D2DRenderTarget.cpp" />
+    <ClCompile Include="src\D2DSolidColorBrush.cpp" />
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Device11.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
@@ -68,6 +70,7 @@
     <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\ViewRotation.cpp" />
     <ClCompile Include="src\VShader.cpp" />
+    <ClCompile Include="src\WrappedBackBuff.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
@@ -133,7 +136,7 @@
     <ClInclude Include="header\Viewport.h" />
     <ClInclude Include="header\ViewRotation.h" />
     <ClInclude Include="header\VShader.h" />
-    <ClInclude Include="header\WrappedBackBuffer.h" />
+    <ClInclude Include="header\WrappedBackBuff.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\PixelShader.hlsl">

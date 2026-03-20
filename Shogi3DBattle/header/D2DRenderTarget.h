@@ -5,15 +5,16 @@
 
 class D2DRenderTarget
 {
-    friend class D2DDeviceContext;
-
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    ComPtr<ID2D1Bitmap1> _d2dRenderTarget;
+    ComPtr<ID2D1Bitmap1> _d2dRenderTarget; // Direct2Dレンダーターゲット
 
 public:
-    D2DRenderTarget(){}
-    ~D2DRenderTarget(){}
+    void SetD2DRenderTarget(ComPtr<ID2D1Bitmap1> d2dRenderTarget); // Direct2Dレンダーターゲットセット
+    ID2D1Bitmap1* GetD2DRenderTarget(); // Direct2Dレンダーターゲットを返す
+
+    D2DRenderTarget();
+    ~D2DRenderTarget();
 };

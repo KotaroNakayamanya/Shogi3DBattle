@@ -82,6 +82,9 @@ HRESULT Device::CreateD3D11(
     DeviceContext* deviceContext,
     CmdQueue* cmdQueue)
 {
+    ComPtr<ID3D11On12Device> device11Com;
+    ComPtr<ID3D11DeviceContext> deviceContextCom;
+
     UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #ifdef _DEBUG
     flags += D3D11_CREATE_DEVICE_DEBUG;
@@ -89,7 +92,7 @@ HRESULT Device::CreateD3D11(
 
     HRESULT result;
 
-    ComPtr<ID3D11Device> dev11;
+    ComPtr<ID3D11Device> device11Origin;
 
     result =  D3D11On12CreateDevice(
         _device.Get(),
@@ -99,14 +102,16 @@ HRESULT Device::CreateD3D11(
         reinterpret_cast<IUnknown**>(cmdQueue->GetCmdQueuePtr()),
         1, // キューの個数 1
         0, // ノードマスク
-        dev11.ReleaseAndGetAddressOf(),
-        deviceContext->_deviceContext.ReleaseAndGetAddressOf(),
+        device11Origin.ReleaseAndGetAddressOf(),
+        deviceContextCom.ReleaseAndGetAddressOf(),
         nullptr); // 機能レベル返却先 nullptr
     if(FAILED(result)) return result;
 
+    result = device11Origin.As(&device11Com);
+    if(FAILED(result)) return result;
 
-    result = dev11.As(&device11->_device11);
-
+    device11->SetDevice11(device11Com);
+    deviceContext->SetDeviceContext(deviceContextCom);
     return result;
 }
 

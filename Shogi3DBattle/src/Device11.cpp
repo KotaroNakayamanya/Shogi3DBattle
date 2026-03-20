@@ -6,6 +6,8 @@
 // Direct2Dデバイスコンテキスト作成
 HRESULT Device11::CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext)
 {
+    ComPtr<ID2D1DeviceContext> d2dDeviceContextCom;
+
     HRESULT result;
     
     // Direct2Dファクトリー作成
@@ -30,47 +32,61 @@ HRESULT Device11::CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext)
         d2dDevice.ReleaseAndGetAddressOf());
     if(FAILED(result)) return result;
 
-    return d2dDevice->CreateDeviceContext(
+    result = d2dDevice->CreateDeviceContext(
         D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
-        d2dDeviceContext->_d2dDeviceContext.ReleaseAndGetAddressOf());
+        d2dDeviceContextCom.ReleaseAndGetAddressOf());
+    if(FAILED(result)) return result;
+
+    d2dDeviceContext->SetD2DDeviceContext(d2dDeviceContextCom);
+    return S_OK;
 }
 
 // ラップされたバックバッファ作成
-HRESULT Device11::CreateWrappedBackBuffer(
-    WrappedBackBuffer* wrappedBackBuffer,
+HRESULT Device11::CreateWrappedBackBuff(
+    WrappedBackBuff* wrappedBackBuff,
     BackBuff* backBuff)
 {
+    ComPtr<ID3D11Resource> wrappedBackBuffCom;
+
     D3D11_RESOURCE_FLAGS flags = {D3D11_BIND_RENDER_TARGET};
 
-    return _device11->CreateWrappedResource(
+    HRESULT result;
+    result = _device11->CreateWrappedResource(
         backBuff->GetBackBuff(),
         &flags,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
-        IID_PPV_ARGS(wrappedBackBuffer->_wrappedBackBuffer.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(wrappedBackBuffCom.ReleaseAndGetAddressOf()));
+    if(FAILED(result)) return result;
+
+    wrappedBackBuff->SetWrappedBackBuff(wrappedBackBuffCom);
+    return S_OK;
 }
 
 
 
 
 // ラップされたバックバッファへのレンダリングを許可
-void Device11::AcquireWrappedBackBuffer(WrappedBackBuffer* wrappedBackBuffer)
+void Device11::AcquireWrappedBackBuff(WrappedBackBuff* wrappedBackBuff)
 {
     _device11->AcquireWrappedResources(
-        wrappedBackBuffer->_wrappedBackBuffer.GetAddressOf(),
+        wrappedBackBuff->GetWrappedBackBuffPtr(),
         1); // バックバッファ数 1
 }
 
 // ラップされたバックバッファへのレンダリングをリリース
-void Device11::ReleaseWrappedBackBuffer(WrappedBackBuffer* wrappedBackBuffer)
+void Device11::ReleaseWrappedBackBuff(WrappedBackBuff* wrappedBackBuffer)
 {
     _device11->ReleaseWrappedResources(
-        wrappedBackBuffer->_wrappedBackBuffer.GetAddressOf(),
+        wrappedBackBuffer->GetWrappedBackBuffPtr(),
         1); // バックバッファ数 1
 }
 
 
 
+
+// Direct3D11デバイスセット
+void Device11::SetDevice11(ComPtr<ID3D11On12Device> device11){_device11 = device11;}
 
 Device11::Device11(){}
 Device11::~Device11(){}

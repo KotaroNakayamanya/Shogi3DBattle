@@ -35,7 +35,7 @@ private:
 
     std::unique_ptr<DWriteTextFormat> _pieceTextFormat; // 駒のテキストフォーマット
 
-    std::vector<std::unique_ptr<WrappedBackBuffer>> _wrappedBackBuffers; // ラップされたバックバッファ
+    std::vector<std::unique_ptr<WrappedBackBuff>> _wrappedBackBuffs; // ラップされたバックバッファ
     std::vector<std::unique_ptr<D2DRenderTarget>> _d2dRenderTargets; // Direct2Dレンダーターゲット
 
     std::unique_ptr<CmdAllocator> _cmdAllocator; // コマンドアロケータ

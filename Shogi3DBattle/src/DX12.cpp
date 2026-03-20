@@ -59,15 +59,15 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     if (FAILED(CreateDWriteFactory())) goto failed; // DirectWriteファクトリー作成
     if (FAILED(_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.get()))) goto failed; // Direct3D11系作成
     if (FAILED(_device11->CreateD2DDeviceContext(_d2dDeviceContext.get()))) goto failed; // Direct2Dデバイスコンテキスト作成
-    _wrappedBackBuffers.resize(backBuffNum);
+    _wrappedBackBuffs.resize(backBuffNum);
     _d2dRenderTargets.resize(backBuffNum);
     for (UINT i = 0; i < backBuffNum; i++)
     {
-        _wrappedBackBuffers[i] = std::make_unique<WrappedBackBuffer>();
+        _wrappedBackBuffs[i] = std::make_unique<WrappedBackBuff>();
         _d2dRenderTargets[i]   = std::make_unique<D2DRenderTarget>();
 
-        if (FAILED(_device11->CreateWrappedBackBuffer(_wrappedBackBuffers[i].get(), _backBuffs[i].get()))) goto failed; // ラップされたバックバッファ作成
-        if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dRenderTargets[i].get(), _wrappedBackBuffers[i].get()))) goto failed; // Direct2Dレンダーターゲット作成
+        if (FAILED(_device11->CreateWrappedBackBuff(_wrappedBackBuffs[i].get(), _backBuffs[i].get()))) goto failed; // ラップされたバックバッファ作成
+        if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dRenderTargets[i].get(), _wrappedBackBuffs[i].get()))) goto failed; // Direct2Dレンダーターゲット作成
     }
     if(FAILED(_d2dDeviceContext->CreateD2DSolidColorBrush(_d2dSolidColorBrush.get()))) goto failed; // ソリッドカラーブラッシュ作成
     if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_dWriteTextFormat.get(), L"メイリオ"))) goto failed; // テキストフォーマット作成
@@ -564,7 +564,7 @@ void DX12::StartD2D()
 {
     auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
 
-    _device11->AcquireWrappedBackBuffer(_wrappedBackBuffers[backBufferIdx].get());
+    _device11->AcquireWrappedBackBuff(_wrappedBackBuffs[backBufferIdx].get());
     _d2dDeviceContext->SetRenderTarget(_d2dRenderTargets[backBufferIdx].get());
     _d2dDeviceContext->BeginDraw();
     _d2dDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
@@ -576,19 +576,10 @@ void DX12::EndD2D()
     auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
 
     _d2dDeviceContext->EndDraw();
-    _device11->ReleaseWrappedBackBuffer(_wrappedBackBuffers[backBufferIdx].get());
+    _device11->ReleaseWrappedBackBuff(_wrappedBackBuffs[backBufferIdx].get());
     _deviceContext->Flash(); // Direct2D描画
 }
 
-//// 文字を出力する
-//void DX12::DrawStr(std::wstring str, D2D1_RECT_F rect)
-//{
-//    _d2dDeviceContext->DrawTextW(
-//        str,
-//        rect,
-//        _dWriteTextFormat->GetDWriteTextFormat(),
-//        _d2dSolidColorBrush->GetD2DSolidColorBrush());
-//}
 // 文字を出力する
 void DX12::DrawStr(
     std::wstring str,

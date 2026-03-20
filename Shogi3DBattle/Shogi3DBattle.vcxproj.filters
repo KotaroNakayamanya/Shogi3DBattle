@@ -315,6 +315,15 @@
     <ClCompile Include="src\MoveEyeForward.cpp">
       <Filter>ソース ファイル\command\move_view</Filter>
     </ClCompile>
+    <ClCompile Include="src\WrappedBackBuff.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D2DSolidColorBrush.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D2DRenderTarget.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -491,7 +500,7 @@
     <ClInclude Include="header\D2DDeviceContext.h">
       <Filter>ヘッダー ファイル\DX12\D2D</Filter>
     </ClInclude>
-    <ClInclude Include="header\WrappedBackBuffer.h">
+    <ClInclude Include="header\WrappedBackBuff.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
     <ClInclude Include="header\D2DRenderTarget.h">

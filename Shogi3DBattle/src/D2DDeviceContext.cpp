@@ -4,8 +4,9 @@
 // Direct2Dレンダーターゲット作成
 HRESULT D2DDeviceContext::CreateD2DRenderTarget(
     D2DRenderTarget* d2dRenderTarget,
-    WrappedBackBuffer* wrappedBackBuffer)
+    WrappedBackBuff* wrappedBackBuff)
 {
+    ComPtr<ID2D1Bitmap1> d2dRenderTargetCom;
     
     HWND hwnd = Application::GetInstance().GetHWND();
     const UINT dpi = GetDpiForWindow(hwnd);
@@ -23,22 +24,33 @@ HRESULT D2DDeviceContext::CreateD2DRenderTarget(
 
     // DXGIサーフェイス作成
     ComPtr<IDXGISurface> dxgiSurface;
-    result = wrappedBackBuffer->_wrappedBackBuffer.As(&dxgiSurface);
+    result = wrappedBackBuff->SetAsDXGISurfaceCom(&dxgiSurface);
     if(FAILED(result)) return result;
 
-    return _d2dDeviceContext->CreateBitmapFromDxgiSurface(
+    result = _d2dDeviceContext->CreateBitmapFromDxgiSurface(
         dxgiSurface.Get(),
         &bitmapProps,
-        d2dRenderTarget->_d2dRenderTarget.ReleaseAndGetAddressOf());
+        d2dRenderTargetCom.ReleaseAndGetAddressOf());
+    if(FAILED(result)) return result;
+
+    d2dRenderTarget->SetD2DRenderTarget(d2dRenderTargetCom);
+    return S_OK;
 }
 
 // ソリッドカラーブラッシュ作成
 HRESULT D2DDeviceContext::CreateD2DSolidColorBrush(
     D2DSolidColorBrush* d2dSolidColorBrush)
 {
-    return _d2dDeviceContext->CreateSolidColorBrush(
+    ComPtr<ID2D1SolidColorBrush> d2dSolidColorBrushCom;
+
+    HRESULT result;
+    result = _d2dDeviceContext->CreateSolidColorBrush(
         D2D1::ColorF(D2D1::ColorF::Black, 1.0f),
-        d2dSolidColorBrush->_d2dSolidColorBrush.ReleaseAndGetAddressOf());
+        d2dSolidColorBrushCom.ReleaseAndGetAddressOf());
+    if(FAILED(result)) return result;
+
+    d2dSolidColorBrush->SetGetD2DSolidColorBrush(d2dSolidColorBrushCom);
+    return S_OK;
 }
 
 
@@ -46,7 +58,7 @@ HRESULT D2DDeviceContext::CreateD2DSolidColorBrush(
 
 void D2DDeviceContext::SetRenderTarget(D2DRenderTarget* d2dRenderTarget)
 {
-    _d2dDeviceContext->SetTarget(d2dRenderTarget->_d2dRenderTarget.Get());
+    _d2dDeviceContext->SetTarget(d2dRenderTarget->GetD2DRenderTarget());
 }
 
 void D2DDeviceContext::BeginDraw()
@@ -80,6 +92,9 @@ void D2DDeviceContext::DrawTextW(
 
 
 
+
+// Direct2Dデバイスコンテキストセット
+void D2DDeviceContext::SetD2DDeviceContext(ComPtr<ID2D1DeviceContext> d2dDeviceContext){_d2dDeviceContext = d2dDeviceContext;}
 
 D2DDeviceContext::D2DDeviceContext(){}
 D2DDeviceContext::~D2DDeviceContext(){}
