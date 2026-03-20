@@ -1,10 +1,8 @@
 #include"Device.h"
-#include<d3dcompiler.h>
-#include<cassert>
-#include<memory>
-//#include<RTVHeapConf.h>
-//#include<DSVHeapConf.h>
-//#include<CSUHeapConf.h>
+#include"RTVHeapFactory.h"
+#include"DSVHeapFactory.h"
+#include"CSUHeapFactory.h"
+
 #include"RTVHeapDesc.h"
 #include"DSVHeapDesc.h"
 #include"CSUHeapDesc.h"
@@ -130,7 +128,6 @@ HRESULT Device::CreateD3D11(
 // 頂点バッファ作成
 HRESULT Device::CreateVertBuff(VertBuff* vertBuff, Board* board, std::array<std::unique_ptr<Piece>, 40>& pieces)
 {
-    //UINT totalByteSize = board->GetVerticesByteSize() + piece->GetVerticesByteSize();
     UINT totalByteSize = board->GetVerticesByteSize();
     for (auto& piece : pieces)
     {
@@ -396,25 +393,47 @@ HRESULT Device::CreateRenderTexBuff(RenderTexBuff* renderTexBuff, Buff* backBuff
 // ヒープ作成
 HRESULT Device::CreateHeap(Heap* heap, UINT descNum, Heap::HeapType heapType)
 {
-    ComPtr<ID3D12DescriptorHeap> heapCom;
 
-    auto& heapDesc = _heapDescs[heapType]; // 使用するヒープタイプのヒープディスクリプタを取得
-    D3D12_DESCRIPTOR_HEAP_DESC desc = heapDesc->GetHeapDesc(descNum);
+    switch (heapType)
+    {
+    case Heap::RTV:
+        _heapFactory.reset(new RTVHeapFactory());
+        break;
 
-    HRESULT result;
-    result = _device->CreateDescriptorHeap(
-        &desc,
-        IID_PPV_ARGS(heapCom.ReleaseAndGetAddressOf()));
-    if(FAILED(result)) return result;
+    case Heap::DSV:
+        _heapFactory.reset(new DSVHeapFactory());
+        break;
 
-    heap->SetHeap(heapCom);
+    case Heap::CSU:
+        _heapFactory.reset(new CSUHeapFactory());
+        break;
 
-    // ディスクリプタオフセット取得
-    auto& descOffset = _descOffsets[heapType]; // 使用するヒープタイプのディスクリプタオフセットを取得
-    auto offset = descOffset->GetDescOffset(_device.Get());
-    heap->SetDescOffset(offset);
+    default:
+        return E_FAIL;
+    }
 
-    return S_OK;
+    return _heapFactory->CreateHeap(heap, descNum, _device.Get());
+    
+    
+    //ComPtr<ID3D12DescriptorHeap> heapCom;
+
+    //auto& heapDesc = _heapDescs[heapType]; // 使用するヒープタイプのヒープディスクリプタを取得
+    //D3D12_DESCRIPTOR_HEAP_DESC desc = heapDesc->GetHeapDesc(descNum);
+
+    //HRESULT result;
+    //result = _device->CreateDescriptorHeap(
+    //    &desc,
+    //    IID_PPV_ARGS(heapCom.ReleaseAndGetAddressOf()));
+    //if(FAILED(result)) return result;
+
+    //heap->SetHeap(heapCom);
+
+    //// ディスクリプタオフセット取得
+    //auto& descOffset = _descOffsets[heapType]; // 使用するヒープタイプのディスクリプタオフセットを取得
+    //auto offset = descOffset->GetDescOffset(_device.Get());
+    //heap->SetDescOffset(offset);
+
+    //return S_OK;
 }
 
 // ヒープ作成（CSU）

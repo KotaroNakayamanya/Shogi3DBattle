@@ -42,6 +42,7 @@
     <ClCompile Include="src\CSUHeap.cpp" />
     <ClCompile Include="src\Fence.cpp" />
     <ClCompile Include="src\GameWindow.cpp" />
+    <ClCompile Include="src\HeapFactory.cpp" />
     <ClCompile Include="src\IdxBuff.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyConf.cpp" />
@@ -86,17 +87,20 @@
     <ClInclude Include="header\CmdQueue.h" />
     <ClInclude Include="header\ConstBuff.h" />
     <ClInclude Include="header\CSUHeapDesc.h" />
+    <ClInclude Include="header\CSUHeapFactory.h" />
     <ClInclude Include="header\CSUOffset.h" />
     <ClInclude Include="header\CursorMove.h" />
     <ClInclude Include="header\D2DDeviceContext.h" />
     <ClInclude Include="header\D2DRenderTarget.h" />
     <ClInclude Include="header\D2DSolicColorBrush.h" />
     <ClInclude Include="header\DSVHeapDesc.h" />
+    <ClInclude Include="header\DSVHeapFactory.h" />
     <ClInclude Include="header\DSVOffset.h" />
     <ClInclude Include="header\DWriteFactory.h" />
     <ClInclude Include="header\Device.h" />
     <ClInclude Include="header\Device11.h" />
     <ClInclude Include="header\DeviceContext.h" />
+    <ClInclude Include="header\HeapFactory.h" />
     <ClInclude Include="header\IDescOffset.h" />
     <ClInclude Include="header\IHeapDesc.h" />
     <ClInclude Include="header\MoveCamera.h" />
@@ -132,6 +136,7 @@
     <ClInclude Include="header\Heap.h" />
     <ClInclude Include="header\ISceneState.h" />
     <ClInclude Include="header\RTVHeapDesc.h" />
+    <ClInclude Include="header\RTVHeapFactory.h" />
     <ClInclude Include="header\RTVOffset.h" />
     <ClInclude Include="header\ScissorRect.h" />
     <ClInclude Include="header\ShogiObjIdEnum.h" />

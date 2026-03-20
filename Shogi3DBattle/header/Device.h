@@ -1,6 +1,6 @@
 #pragma once
 
-//#include"IHeapConf.h"
+#include"HeapFactory.h"
 
 #include"IHeapDesc.h"
 #include"IDescOffset.h"
@@ -38,7 +38,7 @@ class Device
 private:
     ComPtr<ID3D12Device> _device; // Direct3Dデバイス
 
-    //std::vector<std::unique_ptr<IHeapConf>> _heapConfs;
+    std::unique_ptr<HeapFactory> _heapFactory;
 
     std::vector<std::unique_ptr<IHeapDesc>>   _heapDescs;   // ヒープディスクリプタ返却用
     std::vector<std::unique_ptr<IDescOffset>> _descOffsets; // ディスクリプタオフセット返却用
@@ -60,10 +60,8 @@ private:
         UINT windowWidth, UINT windowHeight);   
     D3D12_CLEAR_VALUE GetClearValue(); // クリアバリュー
 
-    //D3D12_DESCRIPTOR_HEAP_DESC GetDSVHeapDesc(); // DSVヒープディスクリプタ
     D3D12_DEPTH_STENCIL_VIEW_DESC GetDSVDesc(); // DSVディスクリプタ
 
-    D3D12_DESCRIPTOR_HEAP_DESC GetCSUHeapDesc(UINT descNum); // CSUヒープディスクリプタ
     D3D12_CONSTANT_BUFFER_VIEW_DESC GetCBVDesc(ID3D12Resource* constBuff); // CBVディスクリプタ
     D3D12_SHADER_RESOURCE_VIEW_DESC GetSRVDesc(); // SRVディスクリプタ
 

@@ -184,6 +184,18 @@
     <Filter Include="ヘッダー ファイル\DX12\heap\desc_offset">
       <UniqueIdentifier>{78fdbd35-dcee-4f92-a38b-ffb53c614d31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\dx12\buff">
+      <UniqueIdentifier>{12c79aa5-4374-4fb4-afc0-d7480c48df7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff">
+      <UniqueIdentifier>{7b03786c-e539-4465-b118-092231c641d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\heap\factory">
+      <UniqueIdentifier>{6cff4950-f359-4604-a900-f6deb15893f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\heap\factory">
+      <UniqueIdentifier>{8ac4bd23-3876-4b0e-8e1d-a276dcbabd94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -213,9 +225,6 @@
     <ClCompile Include="src\Pawn.cpp">
       <Filter>ソース ファイル\shogi_obj\piece</Filter>
     </ClCompile>
-    <ClCompile Include="src\TexBuff.cpp">
-      <Filter>ソース ファイル\dx12\csu\texture</Filter>
-    </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>ソース ファイル\dx12\render</Filter>
     </ClCompile>
@@ -237,12 +246,6 @@
     <ClCompile Include="src\Pipeline.cpp">
       <Filter>ソース ファイル\dx12\pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="src\VertBuff.cpp">
-      <Filter>ソース ファイル\dx12\vertex</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IdxBuff.cpp">
-      <Filter>ソース ファイル\dx12\vertex</Filter>
-    </ClCompile>
     <ClCompile Include="src\Board.cpp">
       <Filter>ソース ファイル\shogi_obj\board</Filter>
     </ClCompile>
@@ -252,17 +255,11 @@
     <ClCompile Include="src\ProjMat.cpp">
       <Filter>ソース ファイル\dx12\csu\const</Filter>
     </ClCompile>
-    <ClCompile Include="src\ConstBuff.cpp">
-      <Filter>ソース ファイル\dx12\csu\const</Filter>
-    </ClCompile>
     <ClCompile Include="src\PShader.cpp">
       <Filter>ソース ファイル\dx12\shader</Filter>
     </ClCompile>
     <ClCompile Include="src\VShader.cpp">
       <Filter>ソース ファイル\dx12\shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Buff.cpp">
-      <Filter>ソース ファイル\dx12\render</Filter>
     </ClCompile>
     <ClCompile Include="src\Device.cpp">
       <Filter>ソース ファイル\dx12\factory</Filter>
@@ -297,9 +294,6 @@
     <ClCompile Include="src\DWriteFactory.cpp">
       <Filter>ソース ファイル\dx12</Filter>
     </ClCompile>
-    <ClCompile Include="src\RenderTexBuff.cpp">
-      <Filter>ソース ファイル\dx12</Filter>
-    </ClCompile>
     <ClCompile Include="src\ResourceBarrier.cpp">
       <Filter>ソース ファイル\dx12</Filter>
     </ClCompile>
@@ -323,9 +317,6 @@
     </ClCompile>
     <ClCompile Include="src\MoveEyeForward.cpp">
       <Filter>ソース ファイル\command\move_view</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WrappedBackBuff.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\D2DSolidColorBrush.cpp">
       <Filter>ソース ファイル</Filter>
@@ -356,6 +347,30 @@
     </ClCompile>
     <ClCompile Include="src\RTVHeapDesc.cpp">
       <Filter>ソース ファイル\dx12\heap\heap_desc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buff.cpp">
+      <Filter>ソース ファイル\dx12\buff</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IdxBuff.cpp">
+      <Filter>ソース ファイル\dx12\buff</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertBuff.cpp">
+      <Filter>ソース ファイル\dx12\buff</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTexBuff.cpp">
+      <Filter>ソース ファイル\dx12\buff</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WrappedBackBuff.cpp">
+      <Filter>ソース ファイル\dx12\buff</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConstBuff.cpp">
+      <Filter>ソース ファイル\dx12\buff</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TexBuff.cpp">
+      <Filter>ソース ファイル\dx12\buff</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HeapFactory.cpp">
+      <Filter>ソース ファイル\dx12\heap\factory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -407,9 +422,6 @@
     <ClInclude Include="header\Pawn.h">
       <Filter>ヘッダー ファイル\shogi_obj\piece</Filter>
     </ClInclude>
-    <ClInclude Include="header\TexBuff.h">
-      <Filter>ヘッダー ファイル\DX12\csu\texture</Filter>
-    </ClInclude>
     <ClInclude Include="header\MoveBack.h">
       <Filter>ヘッダー ファイル\command</Filter>
     </ClInclude>
@@ -443,12 +455,6 @@
     <ClInclude Include="header\RootSignature.h">
       <Filter>ヘッダー ファイル\DX12\root_signature</Filter>
     </ClInclude>
-    <ClInclude Include="header\VertBuff.h">
-      <Filter>ヘッダー ファイル\DX12\vertex</Filter>
-    </ClInclude>
-    <ClInclude Include="header\IdxBuff.h">
-      <Filter>ヘッダー ファイル\DX12\vertex</Filter>
-    </ClInclude>
     <ClInclude Include="header\Board.h">
       <Filter>ヘッダー ファイル\shogi_obj\board</Filter>
     </ClInclude>
@@ -476,17 +482,11 @@
     <ClInclude Include="header\Device.h">
       <Filter>ヘッダー ファイル\DX12\factory\device</Filter>
     </ClInclude>
-    <ClInclude Include="header\Buff.h">
-      <Filter>ヘッダー ファイル\DX12\Draw\render_target</Filter>
-    </ClInclude>
     <ClInclude Include="header\Viewport.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
     <ClInclude Include="header\ScissorRect.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ConstBuff.h">
-      <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
     </ClInclude>
     <ClInclude Include="header\MoveCamera.h">
       <Filter>ヘッダー ファイル\command</Filter>
@@ -521,16 +521,10 @@
     <ClInclude Include="header\D2DDeviceContext.h">
       <Filter>ヘッダー ファイル\DX12\D2D</Filter>
     </ClInclude>
-    <ClInclude Include="header\WrappedBackBuff.h">
-      <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="header\D2DRenderTarget.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
     <ClInclude Include="header\ResourceBarrier.h">
-      <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\RenderTexBuff.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
     <ClInclude Include="header\DWriteTextFormat.h">
@@ -568,6 +562,39 @@
     </ClInclude>
     <ClInclude Include="header\CSUHeap.h">
       <Filter>ヘッダー ファイル\DX12\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="header\RenderTexBuff.h">
+      <Filter>ヘッダー ファイル\DX12\buff</Filter>
+    </ClInclude>
+    <ClInclude Include="header\WrappedBackBuff.h">
+      <Filter>ヘッダー ファイル\DX12\buff</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IdxBuff.h">
+      <Filter>ヘッダー ファイル\DX12\buff</Filter>
+    </ClInclude>
+    <ClInclude Include="header\VertBuff.h">
+      <Filter>ヘッダー ファイル\DX12\buff</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Buff.h">
+      <Filter>ヘッダー ファイル\DX12\buff</Filter>
+    </ClInclude>
+    <ClInclude Include="header\TexBuff.h">
+      <Filter>ヘッダー ファイル\DX12\buff</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ConstBuff.h">
+      <Filter>ヘッダー ファイル\DX12\buff</Filter>
+    </ClInclude>
+    <ClInclude Include="header\RTVHeapFactory.h">
+      <Filter>ヘッダー ファイル\DX12\heap\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\HeapFactory.h">
+      <Filter>ヘッダー ファイル\DX12\heap\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DSVHeapFactory.h">
+      <Filter>ヘッダー ファイル\DX12\heap\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CSUHeapFactory.h">
+      <Filter>ヘッダー ファイル\DX12\heap\factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
