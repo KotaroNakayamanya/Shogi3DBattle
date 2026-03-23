@@ -19,9 +19,10 @@ public:
         D2DRenderTarget* d2dRenderTarget,
         WrappedBuff* wrappedBuff);
 
-    // ソリッドカラーブラッシュ作成
-    HRESULT CreateD2DSolidColorBrush(
-        D2DSolidColorBrush* d2dSolidColorBrush);
+    // 黒色ブラシ作成
+    HRESULT CreateBlackBrush(D2DSolidColorBrush* colorBrush);
+    // 赤色ブラシ作成
+    HRESULT CreateRedBrush(D2DSolidColorBrush* colorBrush);
 
     void SetRenderTarget(D2DRenderTarget* d2dRenderTarget);
     void BeginDraw();

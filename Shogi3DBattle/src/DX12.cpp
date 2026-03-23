@@ -327,8 +327,10 @@ HRESULT DX12::CreateD2D()
 
     // DirectWriteファクトリー作成
     if (FAILED(CreateDWriteFactory())) goto failed;
-    // ソリッドカラーブラッシュ作成
-    if(FAILED(_d2dDeviceContext->CreateD2DSolidColorBrush(_d2dSolidColorBrush.get()))) goto failed;
+    // 黒色ブラシ作成
+    if(FAILED(_d2dDeviceContext->CreateBlackBrush(_blackBrush.get()))) goto failed;
+    // 赤色ブラシ作成
+    if(FAILED(_d2dDeviceContext->CreateRedBrush(_redBrush.get()))) goto failed;
     // テキストフォーマット作成
     if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_dWriteTextFormat.get(), L"メイリオ"))) goto failed;
     // if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed; // 駒のテキストフォーマット作成
@@ -355,8 +357,8 @@ void DX12::CreateRenderTex()
     _d2dDeviceContext->BeginDraw();
     _d2dDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
 
-    DrawStr(L"歩", 0, 30, 256/2-1, 256/2-1);
-    DrawStr(L"と", 256/2, 30, 256, 256/2-1);
+    DrawStr(L"歩", 0, 30, 256/2-1, 256/2-1, _blackBrush->GetD2DSolidColorBrush());
+    DrawStr(L"と", 256/2, 30, 256, 256/2-1, _redBrush->GetD2DSolidColorBrush());
 
     _d2dDeviceContext->EndDraw();
     _device11->ReleaseWrappedBuff(_wrappedPawnTexBuff.get());
@@ -562,7 +564,7 @@ void DX12::ExeCmd()
 void DX12::ExeD2D()
 {
     StartD2D(); // Direct2D開始
-    DrawStr(L"歩りゃあ", 0, 0, 720, 720);
+    //DrawStr(L"歩りゃあ", 0, 0, 720, 720);
     EndD2D(); // Direct2D終了
 }
 
@@ -593,7 +595,8 @@ void DX12::DrawStr(
     float left,
     float top,
     float right,
-    float bottom)
+    float bottom,
+    ID2D1SolidColorBrush* brush)
 {
     D2D1_RECT_F rect = {left, top, right, bottom};
 
@@ -601,7 +604,7 @@ void DX12::DrawStr(
         str,
         rect,
         _dWriteTextFormat->GetDWriteTextFormat(),
-        _d2dSolidColorBrush->GetD2DSolidColorBrush());
+        brush);
 }
 
 
@@ -705,7 +708,8 @@ DX12::DX12() {
     _device11      = std::make_unique<Device11>();
     _deviceContext = std::make_unique<DeviceContext>();
     _d2dDeviceContext = std::make_unique<D2DDeviceContext>();
-    _d2dSolidColorBrush = std::make_unique<D2DSolidColorBrush>();
+    _blackBrush = std::make_unique<D2DSolidColorBrush>();
+    _redBrush = std::make_unique<D2DSolidColorBrush>();
     _dWriteTextFormat = std::make_unique<DWriteTextFormat>();
     _pieceTextFormat = std::make_unique<DWriteTextFormat>();
 

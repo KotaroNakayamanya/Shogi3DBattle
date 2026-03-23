@@ -37,19 +37,35 @@ HRESULT D2DDeviceContext::CreateD2DRenderTarget(
     return S_OK;
 }
 
-// ソリッドカラーブラッシュ作成
-HRESULT D2DDeviceContext::CreateD2DSolidColorBrush(
-    D2DSolidColorBrush* d2dSolidColorBrush)
+// 黒色ブラシ作成
+HRESULT D2DDeviceContext::CreateBlackBrush(
+    D2DSolidColorBrush* colorBrush)
 {
-    ComPtr<ID2D1SolidColorBrush> d2dSolidColorBrushCom;
+    ComPtr<ID2D1SolidColorBrush> colorBrushCom;
 
     HRESULT result;
     result = _d2dDeviceContext->CreateSolidColorBrush(
         D2D1::ColorF(D2D1::ColorF::Black, 1.0f),
-        d2dSolidColorBrushCom.ReleaseAndGetAddressOf());
+        colorBrushCom.ReleaseAndGetAddressOf());
     if(FAILED(result)) return result;
 
-    d2dSolidColorBrush->SetGetD2DSolidColorBrush(d2dSolidColorBrushCom);
+    colorBrush->SetGetD2DSolidColorBrush(colorBrushCom);
+    return S_OK;
+}
+
+// 赤色ブラシ作成
+HRESULT D2DDeviceContext::CreateRedBrush(
+    D2DSolidColorBrush* colorBrush)
+{
+    ComPtr<ID2D1SolidColorBrush> colorBrushCom;
+
+    HRESULT result;
+    result = _d2dDeviceContext->CreateSolidColorBrush(
+        D2D1::ColorF(D2D1::ColorF::Red, 1.0f),
+        colorBrushCom.ReleaseAndGetAddressOf());
+    if(FAILED(result)) return result;
+
+    colorBrush->SetGetD2DSolidColorBrush(colorBrushCom);
     return S_OK;
 }
 

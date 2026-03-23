@@ -81,8 +81,18 @@ private:
     std::unique_ptr<DWriteTextFormat>   _dWriteTextFormat;   // ディレクトライトテキストフォーマット
     std::unique_ptr<DWriteTextFormat> _pieceTextFormat; // 駒のテキストフォーマット
 
-    // Direct2Dソリッドカラーブッシュ
-    std::unique_ptr<D2DSolidColorBrush> _d2dSolidColorBrush; // Direct2Dソリッドカラーブラッシュ
+    // ブラシ
+    std::unique_ptr<D2DSolidColorBrush> _blackBrush; // 黒色ブラシ
+    std::unique_ptr<D2DSolidColorBrush> _redBrush;   // 赤色ブラシ
+    void DrawStr(    // 文字を出力する
+        std::wstring str,
+        float left,
+        float top,
+        float right,
+        float bottom,
+        ID2D1SolidColorBrush* brush);
+
+        
 
     // Direct2Dラップバッファ
     std::vector<std::unique_ptr<WrappedBuff>> _wrappedBackBuffs; // ラップされたバックバッファ
@@ -122,12 +132,7 @@ private:
 
     void StartD2D(); // Direct2D開始
     void EndD2D();   // Direct2D終了
-    void DrawStr(    // 文字を出力する
-        std::wstring str,
-        float left,
-        float top,
-        float right,
-        float bottom);
+    
 
 
     void Set3DCmd(); // 3Dコマンドセット
