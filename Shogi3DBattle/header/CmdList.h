@@ -19,6 +19,8 @@ public:
     void SetRenderTarget( // レンダーターゲットセット
         D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle,
         D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle);
+    void SetRenderTarget( // レンダーターゲットセット
+        D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle);
     void ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle); // レンダーターゲットクリア
     void ClearDepthStencil(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle); // デプスステンシルクリア
 

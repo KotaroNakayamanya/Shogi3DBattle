@@ -8,6 +8,13 @@ void CmdList::SetRenderTarget(
     _cmdList->OMSetRenderTargets(1, &rtvHandle, true, &dsvHandle);
 }
 
+// レンダーターゲットセット
+void CmdList::SetRenderTarget(
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle)
+{
+    _cmdList->OMSetRenderTargets(1, &rtvHandle, true, nullptr);
+}
+
 // デプスステンシルクリア
 void CmdList::ClearDepthStencil(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
 {

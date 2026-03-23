@@ -44,6 +44,13 @@ private:
 
     std::unique_ptr<TexBuff>   _woodTexBuff; // 木材テクスチャバッファ
     std::unique_ptr<TexBuff>   _boardLineTexBuff; // 将棋盤黒線テクスチャバッファ
+    std::unique_ptr<TexBuff>   _pawnTexBuff; // 歩テクスチャバッファ
+    std::unique_ptr<WrappedBuff> _wrappedPawnTexBuff; // ラップされた歩テクスチャバッファ
+    std::unique_ptr<D2DRenderTarget> _d2dRenderTargetPawnTex;
+
+    void CreateRenderTex(); // レンダーテクスチャ作成
+    void InitRenderTex(); // レンダーテクスチャ初期処理
+    void ExeRenderToTex(); // テクスチャへレンダリング実行
 
     //std::vector<std::unique_ptr<RenderTexBuff>> _pieceTexBuffs; // 駒テクスチャバッファ
     HRESULT CreateBuff(); // バッファ系作成
@@ -51,6 +58,7 @@ private:
 
     // ヒープ
     std::unique_ptr<Heap>    _rtvHeap; // RTVヒープ
+    std::unique_ptr<Heap>    _texRTVHeap; // テクスチャRTVヒープ
     std::unique_ptr<Heap>    _dsvHeap; // DSVヒープ
     std::unique_ptr<CSUHeap> _csuHeap; // CSUヒープ
     std::unique_ptr<Heap>    _pieceTexRTVHeap; // 駒テクスチャRTVヒープ
@@ -100,17 +108,10 @@ private:
     std::unique_ptr<InputLayout> _inputLayout; // 入力レイアウト
     std::unique_ptr<RootSignature> _rootSignature; // ルートシグネチャ
     std::unique_ptr<Pipeline> _pipeline; // パイプライン
-
-    //// テクスチャ
-    //std::unique_ptr<Tex> _tex;     // テクスチャ
-    //void CreateTex(); // テクスチャ作成
     
     // カメラ
     std::unique_ptr<ViewMat> _viewMat; // ビュー行列
     std::unique_ptr<ProjMat> _projMat; // プロジェクション行列
-
-    //void CreateBoard(ShogiObjId id); // 将棋盤作成
-    //void CreatePiece(Piece* piece, ShogiObjId id); // 駒作成
 
     void InitRenderTarget(); // レンダーターゲット初期処理
 

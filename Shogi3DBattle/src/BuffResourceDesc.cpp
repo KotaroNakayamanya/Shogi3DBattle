@@ -10,9 +10,7 @@ D3D12_RESOURCE_DESC BuffResourceDesc::GetResourceDesc(UINT width, UINT height)
     buffResourceDesc.Height           = height;
     buffResourceDesc.DepthOrArraySize = 1;
     buffResourceDesc.MipLevels        = 1;
-    buffResourceDesc.Format           = DXGI_FORMAT_UNKNOWN;
     buffResourceDesc.SampleDesc.Count = 1;
-    buffResourceDesc.Flags            = D3D12_RESOURCE_FLAG_NONE;
     buffResourceDesc.Layout           = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
     return buffResourceDesc;

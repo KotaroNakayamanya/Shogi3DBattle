@@ -1,16 +1,25 @@
-#include"TexBuffFactory.h"
+#include"RenderTexBuffFactory.h"
 #include"TexHeapProp.h"
 #include"TexResourceDesc.h"
 #include"PShaderResourceStates.h"
 
-// テクスチャバッファ作成
-HRESULT TexBuffFactory::CreateBuff(Buff* texBuff, UINT width, UINT height, ID3D12Device* device)
+// レンダーテクスチャバッファ作成
+HRESULT RenderTexBuffFactory::CreateBuff(Buff* constBuff, UINT width, UINT height, ID3D12Device* device)
 {
     Microsoft::WRL::ComPtr<ID3D12Resource> constBuffCom;
 
     D3D12_HEAP_PROPERTIES heapProp       = _heapProp->GetHeapProp();
     D3D12_RESOURCE_DESC   resourceDesc   = _resourceDesc->GetResourceDesc(width, height);
     D3D12_RESOURCE_STATES resourceStates = _resourceStates->GetResourceStates();
+    D3D12_CLEAR_VALUE     clearValue     = {};
+
+    clearValue.Color[0] = 1.0f;
+    clearValue.Color[1] = 1.0f;
+    clearValue.Color[2] = 1.0f;
+    clearValue.Color[3] = 1.0f;
+    clearValue.Format             = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+    resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
     HRESULT result;
     result = device->CreateCommittedResource(
@@ -18,19 +27,19 @@ HRESULT TexBuffFactory::CreateBuff(Buff* texBuff, UINT width, UINT height, ID3D1
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
         resourceStates,
-        nullptr,
+        &clearValue,
         IID_PPV_ARGS(constBuffCom.ReleaseAndGetAddressOf()));
     if(FAILED(result)) return result;
 
-    texBuff->SetBuff(constBuffCom);
+    constBuff->SetBuff(constBuffCom);
     return S_OK;
 }
 
-TexBuffFactory::TexBuffFactory()
+RenderTexBuffFactory::RenderTexBuffFactory()
 {
     _heapProp       = std::make_unique<TexHeapProp>();           // テクスチャヒーププロパティ
     _resourceDesc   = std::make_unique<TexResourceDesc>();       // テクスチャリソースディスクリプタ
     _resourceStates = std::make_unique<PShaderResourceStates>(); // ピクセルシェーダーリソースステート
 }
 
-TexBuffFactory::~TexBuffFactory(){}
+RenderTexBuffFactory::~RenderTexBuffFactory(){}

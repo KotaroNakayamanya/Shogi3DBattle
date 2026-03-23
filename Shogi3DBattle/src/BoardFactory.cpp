@@ -4,6 +4,9 @@
 void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UINT id)
 {
     shogiObj->SetId(id);
+
+    UINT texId = static_cast<UINT>(shogiObjType);
+    shogiObj->SetTexId(texId);
     
     float size = 60.0f;
 

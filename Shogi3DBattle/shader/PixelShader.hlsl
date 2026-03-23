@@ -7,10 +7,11 @@ float4 PShader(Output input) : SV_Target
     //float4 aaa = 
     
     float4 wood      = tex.Sample(samp, input.uv);
-    float4 boardLine = boardLineTex[0].Sample(samp, input.uv);
+    float4 draw = drawTex[input.texId].Sample(samp, input.uv);
+    //float4 boardLine = drawTex[1].Sample(samp, input.uv);
     
     
-    return wood * boardLine;
+    return wood * draw;
     
     //float2 aaa = { 0.5f, 0.0f };
     //float4 color = float4(tex.Sample(samp, aaa));

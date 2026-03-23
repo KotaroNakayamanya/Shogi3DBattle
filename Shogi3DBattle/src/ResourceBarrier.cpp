@@ -6,12 +6,9 @@ D3D12_RESOURCE_BARRIER ResourceBarrier::GetRBToRenderTarget(ID3D12Resource* reso
     D3D12_RESOURCE_BARRIER rb = 
         GetBasiceResourceBarrier();
 
-    rb.Transition.pResource =
-        resource;
-    rb.Transition.StateBefore =
-        D3D12_RESOURCE_STATE_PRESENT;
-    rb.Transition.StateAfter  =
-        D3D12_RESOURCE_STATE_RENDER_TARGET;
+    rb.Transition.pResource   = resource;
+    rb.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+    rb.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
 
     return rb;
 }
@@ -22,12 +19,35 @@ D3D12_RESOURCE_BARRIER ResourceBarrier::GetRBToPresent(ID3D12Resource* resource)
     D3D12_RESOURCE_BARRIER rb =
         GetBasiceResourceBarrier();
 
-    rb.Transition.pResource =
-        resource;
-    rb.Transition.StateBefore =
-        D3D12_RESOURCE_STATE_RENDER_TARGET;
-    rb.Transition.StateAfter  =
-        D3D12_RESOURCE_STATE_PRESENT;
+    rb.Transition.pResource   = resource;
+    rb.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    rb.Transition.StateAfter  = D3D12_RESOURCE_STATE_PRESENT;
+
+    return rb;
+}
+
+// テクスチャ→レンダーターゲット変更用リソースバリアを返す
+D3D12_RESOURCE_BARRIER ResourceBarrier::GetRBTexToRenderTarget(ID3D12Resource* resource)
+{
+    D3D12_RESOURCE_BARRIER rb =
+        GetBasiceResourceBarrier();
+
+    rb.Transition.pResource   = resource;
+    rb.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+    rb.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
+
+    return rb;
+}
+
+// レンダーターゲット→テクスチャ変更用リソースバリアを返す
+D3D12_RESOURCE_BARRIER ResourceBarrier::GetRBRenderTargetToTex(ID3D12Resource* resource)
+{
+    D3D12_RESOURCE_BARRIER rb =
+        GetBasiceResourceBarrier();
+
+    rb.Transition.pResource   = resource;
+    rb.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    rb.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 
     return rb;
 }
@@ -37,12 +57,9 @@ D3D12_RESOURCE_BARRIER ResourceBarrier::GetBasiceResourceBarrier()
 {
     D3D12_RESOURCE_BARRIER rb = {};
 
-    rb.Type =
-        D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    rb.Flags =
-        D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    rb.Transition.Subresource =
-        D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    rb.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    rb.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    rb.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
     return rb;
 }

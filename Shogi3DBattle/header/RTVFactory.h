@@ -6,7 +6,7 @@ class RTVFactory : public IViewFactory
 {
 public:
     // RTVçÏê¨
-    void CreateView(Heap* rtvHeap, UINT i, Buff* backBuff, ID3D12Device* device) override;
+    void CreateView(Heap* rtvHeap, UINT i, Buff* rtBuff, ID3D12Device* device) override;
 
     RTVFactory();
     ~RTVFactory();

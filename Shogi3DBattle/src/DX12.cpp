@@ -37,10 +37,6 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     if(FAILED(CreateHeap())) goto failed; // ヒープ作成
     CreateView(); // ビュー作成
 
-    
-    //CreateTex(); // テクスチャ作成
-    if(FAILED(WriteToBuff())) goto failed; // バッファに書き込み
-
     //// 駒テクスチャ作成
     //UINT shogiTexNum;
     //shogiTexNum = 8 + 6 + 1; // 駒表8種 駒裏6種 将棋盤1
@@ -72,8 +68,13 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     
     CreateDrawArea(); // 描画領域系作成
     
-    if(FAILED(CreateD2D())) goto failed; // DirectX11系作成
+    if(FAILED(CreateD2D())) goto failed; // DirectX11系作成 
 
+    if(FAILED(WriteToBuff())) goto failed; // バッファに書き込み
+
+    CreateRenderTex(); // レンダーテクスチャ作成
+
+    
     return true;
 
 failed:
@@ -145,48 +146,6 @@ failed:
     return E_FAIL;
 }
 
-
-
-
-// Direct2D系作成
-HRESULT DX12::CreateD2D()
-{   
-    // Direct3D11系作成
-    if (FAILED(_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.get()))) goto failed;
-    // Direct2Dデバイスコンテキスト作成
-    if (FAILED(_device11->CreateD2DDeviceContext(_d2dDeviceContext.get()))) goto failed;
-    
-    UINT backBuffNum; // バックバッファの数
-    backBuffNum = _swapChain->GetBackBuffNum();
-    _wrappedBackBuffs.resize(backBuffNum);
-    _d2dRenderTargets.resize(backBuffNum);
-    for (UINT i = 0; i < backBuffNum; i++)
-    {
-        // ラップされたバックバッファ作成
-        _wrappedBackBuffs[i] = std::make_unique<WrappedBuff>();
-        if (FAILED(_device11->CreateWrappedBuff(_wrappedBackBuffs[i].get(), _backBuffs[i].get()))) goto failed;
-    }
-    for (UINT i = 0; i < backBuffNum; i++)
-    {
-        // Direct2Dレンダーターゲット作成
-        _d2dRenderTargets[i] = std::make_unique<D2DRenderTarget>();
-        if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dRenderTargets[i].get(), _wrappedBackBuffs[i].get()))) goto failed;
-    }
-
-    // DirectWriteファクトリー作成
-    if (FAILED(CreateDWriteFactory())) goto failed;
-    // ソリッドカラーブラッシュ作成
-    if(FAILED(_d2dDeviceContext->CreateD2DSolidColorBrush(_d2dSolidColorBrush.get()))) goto failed;
-    // テキストフォーマット作成
-    if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_dWriteTextFormat.get(), L"メイリオ"))) goto failed;
-    // if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed; // 駒のテキストフォーマット作成
-
-    return S_OK;
-
-failed:
-    return E_FAIL;
-}
-
 // DirectWriteファクトリー作成
 HRESULT DX12::CreateDWriteFactory()
 {
@@ -248,30 +207,15 @@ HRESULT DX12::CreateBuff()
     heightSize = woodTex->GetHeight();
     if (FAILED(_device->CreateBuff(_woodTexBuff.get(), widthSize, heightSize, Buff::TEXTURE))) goto failed;
 
-    // テクスチャバッファ作成
+    // 将棋盤黒線テクスチャバッファ作成
     widthSize  = boardLineTex->GetWidth();
     heightSize = boardLineTex->GetHeight();
     if (FAILED(_device->CreateBuff(_boardLineTexBuff.get(), widthSize, heightSize, Buff::TEXTURE))) goto failed;
 
-    return S_OK;
-
-failed:
-    return E_FAIL;
-}
-
-// バッファに書き込み
-HRESULT DX12::WriteToBuff()
-{
-    auto& app    = Application::GetInstance();
-    auto  board  = app.GetBoard();
-    auto& pieces = app.GetPieces();
-    auto  woodTex = app.GetWoodTex();
-    auto  boardLineTex = app.GetBoardLineTex();
-
-    if (FAILED(_vertBuff->WriteToVertBuff(board, pieces))) goto failed; // 頂点バッファに書き込み
-    if (FAILED(_idxBuff ->WriteToIdxBuff (board, pieces)))  goto failed; // インデックスバッファに書き込み
-    _woodTexBuff->WriteToTexBuff(woodTex); // 木材テクスチャをバッファに書き込み
-    _boardLineTexBuff->WriteToTexBuff(boardLineTex); // 将棋盤黒線テクスチャをバッファに書き込み
+    // 歩テクスチャバッファ作成
+    widthSize  = boardLineTex->GetWidth();
+    heightSize = boardLineTex->GetHeight();
+    if (FAILED(_device->CreateBuff(_pawnTexBuff.get(), widthSize, heightSize, Buff::RENDER_TEX))) goto failed;
 
     return S_OK;
 
@@ -283,11 +227,12 @@ failed:
 HRESULT DX12::CreateHeap()
 {
     if (FAILED(_device->CreateHeap(_rtvHeap.get(), _swapChain->GetBackBuffNum(), Heap::RTV))) goto failed; // RTVヒープ作成
+    if (FAILED(_device->CreateHeap(_texRTVHeap.get(), 1, Heap::RTV))) goto failed; // テクスチャRTVヒープ作成
     if (FAILED(_device->CreateHeap(_dsvHeap.get(), 1, Heap::DSV))) goto failed; // DSVヒープ作成
 
     UINT cbvNum, srvNum, uavNum;
     cbvNum = 1;
-    srvNum = 2;
+    srvNum = 3;
     uavNum = 0;
     if (FAILED(_device->CreateCSUHeap(_csuHeap.get(), cbvNum, srvNum, uavNum, Heap::CSU))) goto failed; // CSUヒープオブジェクト作成
 
@@ -304,6 +249,10 @@ void DX12::CreateView()
     {
         _device->CreateView(_rtvHeap.get(), i, _backBuffs[i].get(), View::RTV); // RTV作成
     }
+    for (UINT i = 0; i < _texRTVHeap->GetDescNum(); i++)
+    {
+        _device->CreateView(_texRTVHeap.get(), i, _pawnTexBuff.get(), View::RTV); // テクスチャRTV作成
+    }
     for (UINT i = 0; i < _dsvHeap->GetDescNum(); i++)
     {
         _device->CreateView(_dsvHeap.get(), i, _dsBuff.get(), View::DSV); // DSV作成
@@ -319,6 +268,7 @@ void DX12::CreateView()
 
     _device->CreateCSUView(_csuHeap.get(), 0, _woodTexBuff.get(), View::SRV);   // SRV作成
     _device->CreateCSUView(_csuHeap.get(), 1, _boardLineTexBuff.get(), View::SRV);   // SRV作成
+    _device->CreateCSUView(_csuHeap.get(), 2, _pawnTexBuff.get(), View::SRV);   // SRV作成
 
 }
 
@@ -345,6 +295,122 @@ void DX12::CreateDrawArea()
 }
 
 
+// Direct2D系作成
+HRESULT DX12::CreateD2D()
+{   
+    // Direct3D11系作成
+    if (FAILED(_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.get()))) goto failed;
+    // Direct2Dデバイスコンテキスト作成
+    if (FAILED(_device11->CreateD2DDeviceContext(_d2dDeviceContext.get()))) goto failed;
+    
+    UINT backBuffNum; // バックバッファの数
+    backBuffNum = _swapChain->GetBackBuffNum();
+    _wrappedBackBuffs.resize(backBuffNum);
+    _d2dRenderTargets.resize(backBuffNum);
+    for (UINT i = 0; i < backBuffNum; i++)
+    {
+        // ラップされたバックバッファ作成
+        _wrappedBackBuffs[i] = std::make_unique<WrappedBuff>();
+        if (FAILED(_device11->CreateWrappedBuff(_wrappedBackBuffs[i].get(), _backBuffs[i].get()))) goto failed;
+    }
+    for (UINT i = 0; i < backBuffNum; i++)
+    {
+        // Direct2Dレンダーターゲット作成
+        _d2dRenderTargets[i] = std::make_unique<D2DRenderTarget>();
+        if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dRenderTargets[i].get(), _wrappedBackBuffs[i].get()))) goto failed;
+    }
+
+    // ラップされたテクスチャバッファ作成
+    if (FAILED(_device11->CreateWrappedBuff(_wrappedPawnTexBuff.get(), _pawnTexBuff.get()))) goto failed;
+    // Direct2Dレンダーターゲット作成
+    if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dRenderTargetPawnTex.get(), _wrappedPawnTexBuff.get()))) goto failed;
+
+    // DirectWriteファクトリー作成
+    if (FAILED(CreateDWriteFactory())) goto failed;
+    // ソリッドカラーブラッシュ作成
+    if(FAILED(_d2dDeviceContext->CreateD2DSolidColorBrush(_d2dSolidColorBrush.get()))) goto failed;
+    // テキストフォーマット作成
+    if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_dWriteTextFormat.get(), L"メイリオ"))) goto failed;
+    // if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed; // 駒のテキストフォーマット作成
+
+    return S_OK;
+
+failed:
+    return E_FAIL;
+}
+
+// レンダーテクスチャ作成
+void DX12::CreateRenderTex()
+{
+    InitRenderTex(); // レンダーテクスチャ初期処理
+    ExeD3D(); // Direct3D処理実行
+    ExeD2D(); // Direct2D処理実行
+    PrepareRenderTargetToFlip(); // 画面フリップ準備処理
+    _swapChain->Flip(); // 画面フリップ
+
+    ExeCmd(); // コマンド実行してリソースをレンダーターゲットにする
+
+    _device11->AcquireWrappedBuff(_wrappedPawnTexBuff.get());
+    _d2dDeviceContext->SetRenderTarget(_d2dRenderTargetPawnTex.get());
+    _d2dDeviceContext->BeginDraw();
+    _d2dDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
+
+    DrawStr(L"歩", 0, 30, 256/2-1, 256/2-1);
+    DrawStr(L"と", 256/2, 30, 256, 256/2-1);
+
+    _d2dDeviceContext->EndDraw();
+    _device11->ReleaseWrappedBuff(_wrappedPawnTexBuff.get());
+    _deviceContext->Flash(); // Direct2D描画
+
+    ExeRenderToTex(); // テクスチャへレンダリング実行
+}
+
+// レンダーテクスチャ初期処理
+void DX12::InitRenderTex()
+{
+    // テクスチャのリソースバリアをレンダーターゲットに変更
+    auto resourceBarrier = _rb->GetRBTexToRenderTarget(_pawnTexBuff->GetBuff());
+    _cmdList->SetResourceBarrier(resourceBarrier);
+
+    // レンダーターゲットに設定
+    auto rtvHandle = _texRTVHeap->GetDescHandle(0);
+    _cmdList->SetRenderTarget(rtvHandle);
+
+    _cmdList->ClearRenderTarget(rtvHandle); // レンダーターゲットクリア
+}
+
+// テクスチャへレンダリング実行
+void DX12::ExeRenderToTex()
+{
+    // テクスチャのリソースバリアをテクスチャに戻す
+    auto resourceBarrier = _rb->GetRBRenderTargetToTex(_pawnTexBuff->GetBuff());
+     _cmdList->SetResourceBarrier(resourceBarrier);
+    // コマンド実行
+    ExeCmd();
+}
+
+// バッファに書き込み
+HRESULT DX12::WriteToBuff()
+{
+    auto& app    = Application::GetInstance();
+    auto  board  = app.GetBoard();
+    auto& pieces = app.GetPieces();
+    auto  woodTex = app.GetWoodTex();
+    auto  boardLineTex = app.GetBoardLineTex();
+
+    if (FAILED(_vertBuff->WriteToVertBuff(board, pieces))) goto failed; // 頂点バッファに書き込み
+    if (FAILED(_idxBuff ->WriteToIdxBuff (board, pieces)))  goto failed; // インデックスバッファに書き込み
+    _woodTexBuff->WriteToTexBuff(woodTex); // 木材テクスチャをバッファに書き込み
+    _boardLineTexBuff->WriteToTexBuff(boardLineTex); // 将棋盤黒線テクスチャをバッファに書き込み
+
+    return S_OK;
+
+failed:
+    return E_FAIL;
+}
+
+
+///////////////////////////////////////////////////////////////////////
 
 
 // コマンド実行
@@ -352,13 +418,10 @@ void DX12::ExeDX12()
 {
     InitRenderTarget(); // レンダーターゲット初期処理
     ExeD3D(); // Direct3D処理実行
-    ExeD2D(); // Direct2D処理実行
+    //ExeD2D(); // Direct2D処理実行
     PrepareRenderTargetToFlip(); // 画面フリップ準備処理
     _swapChain->Flip(); // 画面フリップ
 }
-
-
-
 
 // レンダーターゲット初期処理
 void DX12::InitRenderTarget()
@@ -481,6 +544,7 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(ShogiObj* shogiObj)
 
     return view;
 }
+
 
 // コマンド実行
 void DX12::ExeCmd()
@@ -633,6 +697,10 @@ DX12::DX12() {
     _adapter     = std::make_unique<Adapter>();
     _device      = std::make_unique<Device>();
 
+    _rtvHeap      = std::make_unique<Heap>();
+    _texRTVHeap   = std::make_unique<Heap>();
+    _csuHeap       = std::make_unique<CSUHeap>();
+
     _dWriteFactory = std::make_unique<DWriteFactory>();
     _device11      = std::make_unique<Device11>();
     _deviceContext = std::make_unique<DeviceContext>();
@@ -647,7 +715,7 @@ DX12::DX12() {
 
     _swapChain = std::make_unique<SwapChain>();
 
-    _rtvHeap      = std::make_unique<Heap>();
+    
 
     _dsBuff  = std::make_unique<Buff>();
     _dsvHeap = std::make_unique<Heap>();
@@ -664,8 +732,9 @@ DX12::DX12() {
     _constBuff     = std::make_unique<ConstBuff>();
     _woodTexBuff       = std::make_unique<TexBuff>();
     _boardLineTexBuff       = std::make_unique<TexBuff>();
+    _pawnTexBuff       = std::make_unique<TexBuff>();
 
-    _csuHeap       = std::make_unique<CSUHeap>();
+    
     _rootSignature = std::make_unique<RootSignature>();
     _inputLayout   = std::make_unique<InputLayout>();
     _pipeline      = std::make_unique<Pipeline>();
@@ -674,6 +743,9 @@ DX12::DX12() {
     _pieceTexSRVHeap = std::make_unique<CSUHeap>();
 
     _rb = std::make_unique<ResourceBarrier>();
+
+    _wrappedPawnTexBuff = std::make_unique<WrappedBuff>();
+    _d2dRenderTargetPawnTex = std::make_unique<D2DRenderTarget>();
 }
 
 DX12::~DX12(){}

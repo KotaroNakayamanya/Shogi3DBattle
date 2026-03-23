@@ -3,6 +3,7 @@ struct Output
     float4 svpos  : SV_POSITION;
     float4 normal : NORMAL;
     float2 uv     : TEXCOORD;
+    uint   texId  : TEXTURE_INDEX;
 };
 
 
@@ -13,7 +14,7 @@ struct Output
 
 
 Texture2D<float4> tex : register(t0);
-Texture2D<float4> boardLineTex[1] : register(t1);
+Texture2D<float4> drawTex[2] : register(t1);
 
 SamplerState samp : register(s0); // 0番　サンプラー
 

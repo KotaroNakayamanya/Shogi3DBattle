@@ -4,6 +4,7 @@
 #include"VertBuffFactory.h"
 #include"IdxBuffFactory.h"
 #include"TexBuffFactory.h"
+#include"RenderTexBuffFactory.h"
 #include"RTVHeapFactory.h"
 #include"DSVHeapFactory.h"
 #include"CSUHeapFactory.h"
@@ -120,6 +121,10 @@ HRESULT Device::CreateBuff(Buff* buff, UINT width, UINT height, Buff::BuffType b
 
     case Buff::TEXTURE:
         _buffFactory.reset(new TexBuffFactory());
+        break;
+
+    case Buff::RENDER_TEX:
+        _buffFactory.reset(new RenderTexBuffFactory());
         break;
 
     default:
@@ -434,7 +439,7 @@ void Device::CreateInputLayout(InputLayout* inputLayout)
 {
     auto& layout = inputLayout->_inputLayout;
 
-    layout.resize(4);
+    layout.resize(5);
 
     layout[0] =
     { // 頂点
@@ -467,8 +472,18 @@ void Device::CreateInputLayout(InputLayout* inputLayout)
         0
     };
     layout[3] =
-    { // インデックス
-        "INDEX",
+    { // オブジェクトインデックス
+        "OBJECT_INDEX",
+        0,
+        DXGI_FORMAT_R32_UINT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+    layout[4] =
+    { // テクスチャインデックス
+        "TEXTURE_INDEX",
         0,
         DXGI_FORMAT_R32_UINT,
         0,

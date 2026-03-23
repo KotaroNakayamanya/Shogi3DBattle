@@ -13,12 +13,16 @@ public:
         DirectX::XMFLOAT3 pos;
         DirectX::XMFLOAT3 normal;
         DirectX::XMFLOAT2 uv;
-        UINT idx;
+        UINT objId;
+        UINT texId;
     }Vert;
 
     // 将棋オブジェクトタイプ
     enum ShogiObjType
-    {
+    {   
+        BOARD,
+        PAWN,
+        
         KING,
         ROOK,
         BISHOP,
@@ -26,56 +30,12 @@ public:
         SILVER,
         KNIGHT,
         LANCE,
-        PAWN,
-        BOARD
+        
     };
-    /*enum ShogiObjType
-    {
-        KING_1,
-        KING_2,
-        ROOK_1,
-        ROOK_2,
-        BISHOP_1,
-        BISHOP_2,
-        GOLD_1,
-        GOLD_2,
-        GOLD_3,
-        GOLD_4,
-        SILVER_1,
-        SILVER_2,
-        SILVER_3,
-        SILVER_4,
-        KNIGHT_1,
-        KNIGHT_2,
-        KNIGHT_3,
-        KNIGHT_4,
-        LANCE_1,
-        LANCE_2,
-        LANCE_3,
-        LANCE_4,
-        PAWN_1,
-        PAWN_2,
-        PAWN_3,
-        PAWN_4,
-        PAWN_5,
-        PAWN_6,
-        PAWN_7,
-        PAWN_8,
-        PAWN_9,
-        PAWN_10,
-        PAWN_11,
-        PAWN_12,
-        PAWN_13,
-        PAWN_14,
-        PAWN_15,
-        PAWN_16,
-        PAWN_17,
-        PAWN_18,
-        BOARD
-    };*/
 
 protected:
     UINT _id; // 将棋オブジェクトID
+    UINT _texId; // 使用するテクスチャID
     std::vector<Vert> _vertices; // 頂点集合
     std::vector<unsigned short>   _indices;  // 頂点インデックス
     DirectX::XMMATRIX             _worldMat = DirectX::XMMatrixIdentity(); // ワールド行列
@@ -102,6 +62,8 @@ public:
     D3D12_GPU_VIRTUAL_ADDRESS GetIdxAddress();              // インデックスアドレスを返す
     void SetId(UINT id); // 将棋オブジェクトIDセット
     UINT GetId();        // 将棋オブジェクトIDを返す
+    void SetTexId(UINT texId); // テクスチャIDセット
+    UINT GetTexId();           // テクスチャIDを返す
 
     DirectX::XMMATRIX GetWorldMat(); // ワールド行列を返す
 

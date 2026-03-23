@@ -15,7 +15,8 @@ public:
         VERTEX, // 頂点バッファ
         INDEX,  // インデックスバッファ
         CONSTANT, // コンスタントバッファ
-        TEXTURE // テクスチャバッファ
+        TEXTURE, // テクスチャバッファ
+        RENDER_TEX // レンダーテクスチャバッファ
     };
 
 protected:

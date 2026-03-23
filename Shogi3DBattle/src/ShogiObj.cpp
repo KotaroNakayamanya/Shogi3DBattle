@@ -22,6 +22,10 @@ UINT ShogiObj::GetIndicesByteSize(){return GetIndexByteSize() * static_cast<UINT
 void ShogiObj::SetId(UINT id){_id = id;}
 // 将棋オブジェクトIDを返す
 UINT ShogiObj::GetId(){return _id;}
+// テクスチャIDセット
+void ShogiObj::SetTexId(UINT texId){_texId = texId;}
+// テクスチャIDを返す
+UINT ShogiObj::GetTexId(){return _texId;}
 
 
 DirectX::XMMATRIX ShogiObj::GetWorldMat(){return _worldMat;} // ワールド行列を返す

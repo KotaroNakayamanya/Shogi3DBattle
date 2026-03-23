@@ -7,46 +7,42 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
 {
     shogiObj->SetId(id);
 
-    
+    UINT texId = static_cast<UINT>(shogiObjType);
+    shogiObj->SetTexId(texId);   
 
-    
-    //float height = (320.0f / 350.0f) * 10.0f;
-
-   
-
-    float mmWidth;
+    float mmBottomWidth;
     float mmHeight;
     switch (shogiObjType)
     {
     case ShogiObj::KING:
-        mmWidth  = 285.0f;
+        mmBottomWidth  = 285.0f;
         mmHeight = 320.0f;
         break;
     
     case ShogiObj::ROOK:
     case ShogiObj::BISHOP:
-        mmWidth  = 260.0f;
+        mmBottomWidth  = 260.0f;
         mmHeight = 300.0f;
         break;
 
     case ShogiObj::GOLD:
     case ShogiObj::SILVER:
-        mmWidth  = 250.0f;
+        mmBottomWidth  = 250.0f;
         mmHeight = 285.0f;
         break;
     
     case ShogiObj::KNIGHT:
-        mmWidth  = 235.0f;
+        mmBottomWidth  = 235.0f;
         mmHeight = 275.0f;
         break;
 
     case ShogiObj::LANCE:
-        mmWidth  = 225.0f;
+        mmBottomWidth  = 225.0f;
         mmHeight = 275.0f;
         break;
 
     case ShogiObj::PAWN:
-        mmWidth  = 225.0f;
+        mmBottomWidth  = 225.0f;
         mmHeight = 260.0f;
         break;
 
@@ -57,36 +53,72 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     // 10.0fで約400mm
     float mmPerFloat = 400.0f / 10.0f;
 
-    // floatの半径の長さに直す
-    float width  = mmWidth  / mmPerFloat; // 底面横の長さ
+    // マスの1辺を1.0fとして、駒をfloatの長さに直す
+    float bottomWidth  = mmBottomWidth  / mmPerFloat; // 底面横の長さ
     float height = mmHeight / mmPerFloat; // 縦の長さ
-    float cornerWidth  = width  * 0.7;    // 角部分の横の長さ
-    float cornerHeight = height * 0.85;   // 角部分縦の底面からの高さ
+
+    float cornerWidthRate  = 0.7;  // 底面横に対する角横長さの比率
+    float cornerHeightRate = 0.85; // 駒の高さに対する角縦長さの比率
+
+    float cornerWidth  = bottomWidth  * cornerWidthRate;    // 角部分の横の長さ
+    float cornerHeight = height * cornerHeightRate;   // 角部分縦の底面からの高さ
     float thickness    = height / 8.0f;  // 駒の厚み
 
+    // UV座標使用のため、駒の高さを1.0fとした時のそれぞれの頂点のUV座標を計算する
+    float quarterCornerWidth = (cornerWidth / height) / 2 / 2;
+    float quarterBottomWidth = (bottomWidth / height) / 2 / 2;
+
+    float frontCenterU = 0.25f;
+
+    // 表面
+    float frontTopU = frontCenterU;
+    float topV = 0.0f;
+
+   
+    float frontLeftCornerU  = frontCenterU - quarterCornerWidth;
+    float frontRightCornerU = frontCenterU + quarterCornerWidth;
+    float cornerV = (1.0f - cornerHeightRate) / 2;
+
+    
+    float frontLeftBottomU  = frontCenterU - quarterBottomWidth;
+    float frontRightBottomU = frontCenterU + quarterBottomWidth;
+    float bottomV = 0.5f;
+
+    // 裏面
+    float backTopU = frontTopU + 0.5f;
+    float backLeftCornerU  = frontLeftCornerU + 0.5f;
+    float backRightCornerU = frontRightCornerU + 0.5f;
+    float backLeftBottomU  = frontLeftBottomU + 0.5f;
+    float backRightBottomU = frontRightBottomU + 0.5f;
+    
+
     // (0,0)を基準とした頂点座標にするため、縦横をずらす
-    width        /= 2;
+    bottomWidth  /= 2;
     height       /= 2;
     cornerWidth  /= 2;
     cornerHeight -= height;
+
+    
+
+    
 
     std::vector<ShogiObj::Vert> vertices;
 
     vertices = // 頂点集合
     {   // 上面図と考えて指定
         // 前面
-        {{     -width,     -height, -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, id}, // 左下
-        {{      width,     -height, -thickness}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}, id}, // 右下
-        {{-cornerWidth, cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}, id}, // 左上
-        {{ cornerWidth, cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}, id}, // 右上
-        {{        0.0f,      height, -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, id}, // 上    
+        {{-bottomWidth,     -height, -thickness}, {0.0f, 0.0f, -1.0f}, {frontLeftBottomU, bottomV}, id, texId}, // 左下
+        {{ bottomWidth,     -height, -thickness}, {0.0f, 0.0f, -1.0f}, {frontRightBottomU, bottomV}, id, texId}, // 右下
+        {{-cornerWidth, cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {frontLeftCornerU, cornerV}, id, texId}, // 左上
+        {{ cornerWidth, cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {frontRightCornerU, cornerV}, id, texId}, // 右上
+        {{        0.0f,      height, -thickness}, {0.0f, 0.0f, -1.0f}, {frontTopU, topV}, id, texId}, // 上    
 
         // 裏面
-        {{      -width,     -height,      0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, id}, // 左下
-        {{       width,     -height,      0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, id}, // 右下
-        {{-cornerWidth,  cornerHeight,      0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, id}, // 左上
-        {{ cornerWidth,  cornerHeight,      0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, id}, // 右上
-        {{        0.0f,       height,      0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, id}, // 上
+        {{-bottomWidth,     -height,      0.0f}, {0.0f, 0.0f, 1.0f}, {backRightBottomU, bottomV}, id, texId}, // 左下
+        {{ bottomWidth,     -height,      0.0f}, {0.0f, 0.0f, 1.0f}, {backLeftBottomU, bottomV}, id, texId}, // 右下
+        {{-cornerWidth,  cornerHeight,      0.0f}, {0.0f, 0.0f, 1.0f}, {backRightCornerU, cornerV}, id, texId}, // 左上
+        {{ cornerWidth,  cornerHeight,      0.0f}, {0.0f, 0.0f, 1.0f}, {backLeftCornerU, cornerV}, id, texId}, // 右上
+        {{        0.0f,       height,      0.0f}, {0.0f, 0.0f, 1.0f}, {backTopU, topV}, id}, // 上
     };
 
     shogiObj->SetVertices(vertices);

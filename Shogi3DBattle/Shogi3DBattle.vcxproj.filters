@@ -495,6 +495,9 @@
     <ClCompile Include="src\PieceFactory.cpp">
       <Filter>ソース ファイル\shogi_obj\factory</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderTexBuffFactory.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -793,6 +796,9 @@
     </ClInclude>
     <ClInclude Include="header\PieceFactory.h">
       <Filter>ヘッダー ファイル\shogi_obj\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\RenderTexBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
