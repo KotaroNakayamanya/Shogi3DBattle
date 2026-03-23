@@ -3,6 +3,7 @@
 #include"GameWindow.h"
 #include"DX12.h"
 #include"InputHandler.h"
+#include"IShogiObjFactory.h"
 
 
 class Application
@@ -10,11 +11,23 @@ class Application
 private:
     std::unique_ptr<GameWindow>            _gameWindow; // ゲームウインドウ
     std::unique_ptr<Board>                 _board;      // 将棋盤
-    std::vector<std::unique_ptr<Piece>> _pieces;     // 駒
+    std::vector<std::unique_ptr<Piece>>    _pieces;     // 駒
     std::unique_ptr<DX12>                  _dx12;       // DirectX
 
-    void CreateBoard(ShogiObjId id); // 将棋盤作成
-    void CreatePiece(Piece* piece, ShogiObjId id); // 駒作成
+    std::unique_ptr<IShogiObjFactory> _shogiObjFactory; // 将棋オブジェクトファクトリー
+
+    void CreateShogiObj(); // 将棋オブジェクト作成
+
+    // テクスチャ
+    std::unique_ptr<Tex> _woodTex; // 木材テクスチャ
+    std::unique_ptr<Tex> _boardLineTex; // 将棋盤黒線テクスチャ
+    
+
+    void CreateTex(); // テクスチャ作成
+
+    //void CreateBoard(ShogiObj::ShogiObjType id); // 将棋盤作成
+
+    //void CreatePiece(Piece* piece, ShogiObj::ShogiObjType id); // 駒作成
 
     std::unique_ptr<InputHandler> _inputHandler; // インプットハンドラ
 
@@ -35,6 +48,8 @@ public:
 
     Board* GetBoard(); // 将棋盤を返す
     std::vector<std::unique_ptr<Piece>>& GetPieces(); // 駒を返す
+    Tex* GetWoodTex(); // 木材テクスチャを返す
+    Tex* GetBoardLineTex(); // 将棋盤黒線テクスチャを返す
 
     InputHandler* GetInputHandler(); // インプットハンドラを返す
 

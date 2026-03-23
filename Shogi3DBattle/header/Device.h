@@ -44,9 +44,9 @@ private:
 
     D3D12_COMMAND_QUEUE_DESC GetCmdQueueDesc(); // コマンドキューディスクリプタ
 
-    ComPtr<ID3DBlob> GetRootSignatureBlob(); // ルートシグネチャBlob取得
-    D3D12_ROOT_SIGNATURE_DESC GetRootSignatureDesc(); // ルートシグネチャディスクリプタ
-    std::vector<D3D12_ROOT_PARAMETER> GetRootParams(UINT paramNum); // ルートパラメータ
+    ComPtr<ID3DBlob> GetRootSignatureBlob(CSUHeap* csuHeap); // ルートシグネチャBlob取得
+    D3D12_ROOT_SIGNATURE_DESC GetRootSignatureDesc(CSUHeap* csuHeap); // ルートシグネチャディスクリプタ
+    std::vector<D3D12_ROOT_PARAMETER> GetRootParams(UINT paramNum, CSUHeap* csuHeap); // ルートパラメータ
     D3D12_ROOT_DESCRIPTOR_TABLE GetDescTable( // ディスクリプタテーブル
         D3D12_DESCRIPTOR_RANGE_TYPE rangeType,
         UINT rangeNum);
@@ -87,7 +87,7 @@ public:
     void CreateView   (Heap* heap,       UINT i, Buff* buff, View::ViewType viewType);                       // ビュー作成
     void CreateCSUView(CSUHeap* csuHeap, UINT i, Buff* buff, View::ViewType viewType);                       // ビュー作成（CSU系）
 
-    HRESULT CreateRootSignature(RootSignature* rootSignature); // ルートシグネチャ作成
+    HRESULT CreateRootSignature(RootSignature* rootSignature, CSUHeap* csuHeap); // ルートシグネチャ作成
     void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成
     HRESULT CreateVShader(VShader* vShader); // 頂点シェーダー作成
     HRESULT CreatePShader(PShader* pShader); // ピクセルシェーダー作成

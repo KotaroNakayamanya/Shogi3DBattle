@@ -41,45 +41,45 @@ HRESULT Device11::CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext)
     return S_OK;
 }
 
-// ラップされたバックバッファ作成
-HRESULT Device11::CreateWrappedBackBuff(
-    WrappedBackBuff* wrappedBackBuff,
-    Buff* backBuff)
+// ラップされたバッファ作成
+HRESULT Device11::CreateWrappedBuff(
+    WrappedBuff* wrappedBuff,
+    Buff* buff)
 {
-    ComPtr<ID3D11Resource> wrappedBackBuffCom;
+    ComPtr<ID3D11Resource> wrappedBuffCom;
 
     D3D11_RESOURCE_FLAGS flags = {D3D11_BIND_RENDER_TARGET};
 
     HRESULT result;
     result = _device11->CreateWrappedResource(
-        backBuff->GetBuff(),
+        buff->GetBuff(),
         &flags,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
-        IID_PPV_ARGS(wrappedBackBuffCom.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(wrappedBuffCom.ReleaseAndGetAddressOf()));
     if(FAILED(result)) return result;
 
-    wrappedBackBuff->SetWrappedBackBuff(wrappedBackBuffCom);
+    wrappedBuff->SetWrappedBuff(wrappedBuffCom);
     return S_OK;
 }
 
 
 
 
-// ラップされたバックバッファへのレンダリングを許可
-void Device11::AcquireWrappedBackBuff(WrappedBackBuff* wrappedBackBuff)
+// ラップされたバッファへのレンダリングを許可
+void Device11::AcquireWrappedBuff(WrappedBuff* wrappedBackBuff)
 {
     _device11->AcquireWrappedResources(
-        wrappedBackBuff->GetWrappedBackBuffPtr(),
+        wrappedBackBuff->GetWrappedBuffPtr(),
         1); // バックバッファ数 1
 }
 
-// ラップされたバックバッファへのレンダリングをリリース
-void Device11::ReleaseWrappedBackBuff(WrappedBackBuff* wrappedBackBuffer)
+// ラップされたバッファへのレンダリングをリリース
+void Device11::ReleaseWrappedBuff(WrappedBuff* wrappedBackBuffer)
 {
     _device11->ReleaseWrappedResources(
-        wrappedBackBuffer->GetWrappedBackBuffPtr(),
-        1); // バックバッファ数 1
+        wrappedBackBuffer->GetWrappedBuffPtr(),
+        1); // バッファ数 1
 }
 
 

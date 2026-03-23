@@ -1,7 +1,7 @@
 #pragma once
 
 #include"D2DRenderTarget.h"
-#include"WrappedBackBuff.h"
+#include"WrappedBuff.h"
 #include"D2DSolicColorBrush.h"
 #include<string>
 
@@ -17,7 +17,7 @@ public:
     // Direct2Dレンダーターゲット作成
     HRESULT CreateD2DRenderTarget(
         D2DRenderTarget* d2dRenderTarget,
-        WrappedBackBuff* wrappedBackBuff);
+        WrappedBuff* wrappedBuff);
 
     // ソリッドカラーブラッシュ作成
     HRESULT CreateD2DSolidColorBrush(

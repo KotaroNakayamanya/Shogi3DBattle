@@ -1,28 +1,18 @@
 ﻿#include"Application.h"
-#include"cassert"
 
-
-
+#include"BoardFactory.h"
 #include"Pawn.h"
-
-
-
+#include<array>
+#include"BoardFactory.h"
+#include"PieceFactory.h"
 
 // 初期処理
 bool Application::Init()
 {
     if(_gameWindow->InitGameWindow() == false) goto failed;    // ゲームウインドウ初期処理
-    // 将棋オブジェクト作成
-    CreateBoard(BOARD); // 将棋盤作成
-    _pieces.resize(40);
-    for (int i = 0; i < _pieces.size(); i++)
-    {
-        _pieces[i] = std::make_unique<Pawn>();
-        if(i == 0)
-            CreatePiece(_pieces[0].get(), PAWN_1);
-        else
-            CreatePiece(_pieces[i].get(), PAWN_2);
-    }
+    CreateShogiObj(); // 将棋オブジェクト作成
+
+    CreateTex();
 
     if(_dx12->InitDX12(_gameWindow.get()) == false) goto failed; // DirectX12初期処理
     _inputHandler = std::make_unique<InputHandler>(); // インプットハンドラ作成(初期は動ける状態）
@@ -34,166 +24,232 @@ failed:
     return false;
 }
 
-// 将棋盤作成
-void Application::CreateBoard(ShogiObjId id)
+// 将棋オブジェクト作成
+void Application::CreateShogiObj()
 {
-    _board->SetId(id);
+    UINT id = 0;
 
-    std::vector<ShogiObj::Vert> vertices;
+    // 将棋盤作成
+    _shogiObjFactory.reset(new BoardFactory());
+    _shogiObjFactory->CreateShogiObj(_board.get(), ShogiObj::BOARD, id++);
 
-    vertices =
-    {   // 上面図
+    // 駒作成
+    _shogiObjFactory.reset(new PieceFactory());
 
-        // 前面
-        {{ 0.0f,  0.0f, 0.0f},  {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左下
-        {{50.0f,  0.0f, 0.0f},  {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}, UINT(id)}, // 右下
-        {{ 0.0f, 50.0f, 0.0f},  {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}, UINT(id)}, // 左上
-        {{50.0f, 50.0f, 0.0f},  {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}, UINT(id)}, // 右上
+    UINT kingNum =  2;
+    UINT rookNum =  2;
+    UINT bishopNum = 2;
+    UINT goldNum = 4;
+    UINT silverNum = 4;
+    UINT knightNum = 4;
+    UINT lanceNum = 4;
+    UINT pawnNum = 18;
 
-        // 背面
-        {{ 0.0f,  0.0f, 20.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左下
-        {{50.0f,  0.0f, 20.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 右下
-        {{ 0.0f, 50.0f, 20.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左上
-        {{50.0f, 50.0f, 20.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}  // 右上
-    };
+    UINT pieceNum = kingNum
+                  + rookNum
+                  + bishopNum
+                  + goldNum
+                  + silverNum
+                  + knightNum
+                  + lanceNum
+                  + pawnNum;
 
-    _board->SetVertices(vertices);
+    _pieces.resize(pawnNum);
 
-
-    std::vector<unsigned short> indices;
-
-    enum BoardVertName // 将棋盤の頂点に名前を付ける
+    // 歩　作成
+    for (UINT i = 0; i < pawnNum; i++)
     {
-        // 前面
-        frontLeftBottom,  // 左下
-        frontRightBottom, // 右下
-        frontLeftTop,     // 左上
-        frontRightTop,    // 右上
+        _pieces[i] = std::make_unique<Pawn>();
+        _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, id++);
+    }
 
-        // 背面
-        backLeftBottom,  // 左下
-        backRightBottom, // 右下
-        backLeftTop,     // 左上
-        backRightTop,    // 右上
-    };
+    _pieces[1]->MoveX(10.0f);
+    _pieces[1]->MoveY(10.0f);
+    _pieces[2]->MoveX(20.0f);
+    _pieces[2]->MoveY(10.0f);
+    _pieces[3]->MoveX(30.0f);
+    _pieces[3]->MoveY(10.0f);
+    _pieces[4]->MoveX(40.0f);
+    _pieces[4]->MoveY(10.0f);
+    _pieces[5]->MoveX(50.0f);
+    _pieces[5]->MoveY(10.0f);
 
-    indices =
-    {
-        // 前面
-        frontRightBottom, frontLeftBottom,  frontLeftTop,
-        frontLeftTop,     frontRightTop,    frontRightBottom,     
         
-        // 上側面
-        frontRightTop, frontLeftTop, backLeftTop, 
-        backLeftTop,   backRightTop, frontRightTop,
-
-        // 右側面
-        frontRightBottom, frontRightTop,   backRightTop,
-        backRightTop,     backRightBottom, frontRightBottom,
-
-        // 下側面
-        frontLeftBottom, frontRightBottom, backRightBottom,
-        backRightBottom, backLeftBottom,   frontLeftBottom,
-
-        // 左側面
-        frontLeftTop, frontLeftBottom, backLeftBottom,
-        backLeftBottom, backLeftTop, frontLeftTop,
-
-        // 背面
-        backRightBottom, backLeftBottom, backLeftTop,
-        backLeftTop,     backRightTop,   backRightBottom
-    };
-    _board->SetIndices(indices);
 }
 
-// 駒作成
-void Application::CreatePiece(Piece* piece, ShogiObjId id)
+// テクスチャ作成
+void Application::CreateTex()
 {
-    piece->SetId(id);
+    //_texs[0] = std::make_unique<Tex>();
 
-    std::vector<ShogiObj::Vert> vertices;
+    //std::vector<TexStruct::TexRGBA> tex;
 
-    float bottomWidth  = 0.9f;          // 底面の横の長さ
-    float cornerWidth  = 0.7f;          // 角部分の横の長さ
-    float height       = 0.9f;          // 高さ
-    float cornerHeight = height * 0.7f; // 角部分の高さ（高さを基準に調整）
-    float thickness    = 0.4f;          // 駒の厚み
+    //UINT rowSize = 512;
 
-    vertices = // 頂点集合
-    {   // 上面図と考えて指定
-        // 前面
-        {{-bottomWidth, -height,       -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左下
-        {{ bottomWidth, -height,       -thickness}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}, UINT(id)}, // 右下
-        {{-cornerWidth,  cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}, UINT(id)}, // 左上
-        {{ cornerWidth,  cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}, UINT(id)}, // 右上
-        {{ 0.0f,         height,       -thickness}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}, UINT(id)}, // 上    
+    //tex.resize(rowSize*rowSize);
 
-        // 裏面
-        {{-bottomWidth, -height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左下
-        {{ bottomWidth, -height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 右下
-        {{-cornerWidth,  cornerHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 左上
-        {{ cornerWidth,  cornerHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 右上
-        {{ 0.0f,         height,       0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, UINT(id)}, // 上
-    };
+    //UINT x = 0;
+    //UINT y = 0;
 
-    piece->SetVertices(vertices);
+    //float halfSquareFloatSize = rowSize / 60.0f * 5.0f;
+
+    //
+
+    //
+
+    //for (auto& rgba : tex)
+    //{
+    //    rgba.r = 226;
+    //    rgba.g = 232;
+    //    rgba.b =  75;
+    //    rgba.a = 255;
+    //}
 
 
-    std::vector<unsigned short> indices;
 
-    enum PieceVertName // 駒の頂点に名前を付ける
+    //for (auto& rgba : tex)
+    //{
+    //    for (UINT i = 0; i < 6; i++)
+    //    {
+    //        
+    //        UINT BlackLinePos = (1 + i * 2) * halfSquareFloatSize;
+
+    //        // 縦方向の黒線を入れる
+    //        // Xが黒線の直線上の値であるかチェック
+    //        bool isXOnBlackLine = x == BlackLinePos;
+    //        // Yが線を入れたい範囲にあるかチェック
+    //        bool isYDrawRange = drawLowerLimit <= y && y <= drawUpperLimit;
+    //        if (isXOnBlackLine && isYDrawRange)
+    //        {
+    //            rgba.r = 0;
+    //            rgba.g = 0;
+    //            rgba.b = 0;
+    //        }
+
+    //        // 横方向の黒線を入れる
+    //        // Yが黒線の直線上の値であるかチェック
+    //        bool isYOnBlackLine = y == BlackLinePos;
+    //        // Yが線を入れたい範囲にあるかチェック
+    //        bool isXDrawRange = drawLowerLimit <= x && x <= drawUpperLimit;
+    //        if (isYOnBlackLine && isXDrawRange)
+    //        {
+    //            rgba.r = 0;
+    //            rgba.g = 0;
+    //            rgba.b = 0;
+    //        }
+    //    }
+
+    //    x++;
+    //    if(x / rowSize > 0) y++;
+    //    x %= rowSize;
+    //}
+
+    //_texs[0]->SetTex(tex);
+
+    // 将棋盤黒線テクスチャ作成
+    _boardLineTex = std::make_unique<Tex>();
+
+    std::vector<TexStruct::TexRGBA> boardLineTex;
+
+    auto lineSize = 256;
+    UINT width  = lineSize;
+    UINT height = lineSize;
+
+    boardLineTex.resize(width * height);
+
+    // 白色でクリア
+    for (auto& rgba : boardLineTex)
     {
-        // 前面
-        frontLeftBottom,  // 左下
-        frontRightBottom, // 右下
-        frontLeftTop,     // 左上
-        frontRightTop,    // 右上
-        frontTop,         // 上
+        rgba.r = 255;
+        rgba.g = 255;
+        rgba.b = 255;
+        rgba.a = 255;
+    }
 
-        // 背面
-        backLeftBottom,  // 左下
-        backRightBottom, // 右下
-        backLeftTop,     // 左上
-        backRightTop,    // 右上
-        backTop          // 上
-    };
+    UINT squareNum = 5; // マス数
+    UINT halfSquareLength = lineSize / (squareNum + 1) / 2; // マスの半分のサイズ
 
-    indices = // インデックス集合
+    UINT drawLowerLimit  = halfSquareLength *  1;
+    UINT drawUpperLimit  = halfSquareLength * (1 + squareNum * 2);
+
+    
+    // 黒線を描画する対象座標(x, y)に黒色を格納する
+    UINT x = 0;
+    UINT y = 0;
+    UINT lineNum = squareNum + 1; // 横縦それぞれの線の本数
+    for (auto& rgba : boardLineTex)
     {
-        // 前面
-        frontRightBottom, frontLeftBottom, frontLeftTop,     // 右下　左下　左上
-        frontLeftTop,     frontRightTop,   frontRightBottom, // 左上　右上 右下
-        frontTop,         frontRightTop,   frontLeftTop,     // 右上　左上　上
+        // xy座標が横縦それぞれの線の上にあれば黒色を格納
+        for (UINT i = 0; i < lineNum; i++)
+        {
+            // 黒線対象の座標を取得(xとyのどちらにも使える)
+            UINT BlackLinePos = halfSquareLength * (1 + i * 2);
 
-        // 裏面
-        backLeftBottom,  backRightBottom, backLeftTop, // 左下　右下　左上
-        backRightBottom, backRightTop,    backLeftTop, // 右下　右上　左上
-        backLeftTop,     backRightTop,    backTop,     // 左上　右上　上
+            // x座標が黒線の直線上の値であるかチェック
+            bool isXOnBlackLine = x == BlackLinePos;
+            // y座標が線を描画する範囲にあるかチェック
+            bool isYDrawRange = drawLowerLimit <= y && y <= drawUpperLimit;
+            // 縦方向の線分上にあれば黒色
+            if (isXOnBlackLine && isYDrawRange)
+            {
+                rgba.r = 0;
+                rgba.g = 0;
+                rgba.b = 0;
+            }
 
-        // 側面上左
-        frontTop, frontLeftTop, backLeftTop, // 前面上　前面左上　背面左上
-        backTop,  frontTop,     backLeftTop, // 背面上　前面上　　背面左上
+            
+            // y座標が黒線の直線上の値であるかチェック
+            bool isYOnBlackLine = y == BlackLinePos;
+            // x座標が線を描画する範囲にあるかチェック
+            bool isXDrawRange = drawLowerLimit <= x && x <= drawUpperLimit;
+            // 横方向の線分上にあれば黒色
+            if (isYOnBlackLine && isXDrawRange)
+            {
+                rgba.r = 0;
+                rgba.g = 0;
+                rgba.b = 0;
+            }
+        }
 
-        // 側面上右
-        backTop,  backRightTop, frontRightTop, // 背面上　背面右上　前面右上
-        frontTop, backTop,      frontRightTop, // 前面上　背面上　　前面右上　
+        // xとyの次の座標を取得
+        x++;            // xを足す
+        if (x >= width) // xが端を超えたらyを足してxを0に戻す
+        {
+            y++;
+            x = 0;
+        }
+    }
+
+    _boardLineTex->SetWidth (width);
+    _boardLineTex->SetHeight(height);
+    _boardLineTex->SetTex(boardLineTex);
 
 
-        // 側面右
-        frontRightBottom, frontRightTop, backRightBottom, // 背面右下　前面右上　背面右下
-        frontRightTop,    backRightTop,  backRightBottom, // 背面右上　背面右上　背面右下
 
-        // 側面左
-        backLeftBottom, backLeftTop,  frontLeftBottom, // 背面左下　背面左上　前面左下
-        backLeftTop,    frontLeftTop, frontLeftBottom, // 背面左上　前面左上　前面左下
 
-        // 底面
-        frontLeftBottom, frontRightBottom, backRightBottom, // 前面左下　前面右下　背面右下
-        frontLeftBottom, backRightBottom, backLeftBottom    // 前面左下　背面右下　背面左下
-    };
+    // 木材テクスチャ作成
+    _woodTex = std::make_unique<Tex>();
 
-    piece->SetIndices(indices);
-}
+    std::vector<TexStruct::TexRGBA> woodTex;
+
+    lineSize = 256;
+    width  = lineSize;
+    height = lineSize;
+
+    woodTex.resize(width * height);
+
+    for (auto& rgba : woodTex)
+    {
+        rgba.r = 226;
+        rgba.g = 232;
+        rgba.b =  75;
+        rgba.a = 255;
+    }
+
+    _woodTex->SetWidth (width);
+    _woodTex->SetHeight(height);
+    _woodTex->SetTex(woodTex);
+ }
 
 Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す
 std::vector<std::unique_ptr<Piece>>& Application::GetPieces(){return _pieces;} // 駒を返す
@@ -403,6 +459,8 @@ HWND Application::GetHWND(){return _gameWindow->GetHWND();} // ウインドウ�
 UINT Application::GetWindowWidth(){return _gameWindow->GetWindowWidth();}   // ウインドウ横サイズを返す
 UINT Application::GetWindowHeight(){return _gameWindow->GetWindowHeight();} // ウインドウ縦サイズを返す
 ViewMat* Application::GetViewMat(){return _dx12->GetViewMat();} // ビュー行列を返す
+Tex* Application::GetWoodTex(){return _woodTex.get();} // テクスチャを返す
+Tex* Application::GetBoardLineTex(){return _boardLineTex.get();} // テクスチャを返す
 
 // シングルトンインスタンスを返す
 Application& Application::GetInstance()

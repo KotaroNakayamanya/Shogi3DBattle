@@ -6,22 +6,22 @@
 // 頂点集合ポインタを返す
 std::vector<ShogiObj::Vert> ShogiObj::GetVertices(){return _vertices;}
 // 頂点１つ分のバイトサイズを返す
-unsigned int ShogiObj::GetVertexByteSize(){return sizeof(_vertices[0]);}
+UINT ShogiObj::GetVertexByteSize(){return sizeof(_vertices[0]);}
 // 頂点集合全体のバイトサイズを返す
-unsigned int ShogiObj::GetVerticesByteSize(){return GetVertexByteSize() * _vertices.size();}
+UINT ShogiObj::GetVerticesByteSize(){return GetVertexByteSize() * static_cast<UINT>(_vertices.size());}
 
 // 頂点インデックスポインタを返す
 std::vector<unsigned short> ShogiObj::GetIndices(){return _indices;}
 // 頂点インデックスの個数を返す
-unsigned int ShogiObj::GetIdxNum(){return _indices.size();}
+UINT ShogiObj::GetIdxNum(){return static_cast<UINT>(_indices.size());}
 // 頂点インデックス１つ分のバイトサイズを返す
-unsigned int ShogiObj::GetIndexByteSize(){return sizeof(_indices[0]);}
+UINT ShogiObj::GetIndexByteSize(){return sizeof(_indices[0]);}
 // 頂点インデックス全体のバイトサイズを返す
-unsigned int ShogiObj::GetIndicesByteSize(){return GetIndexByteSize() * _indices.size();}
+UINT ShogiObj::GetIndicesByteSize(){return GetIndexByteSize() * static_cast<UINT>(_indices.size());}
 // 将棋オブジェクトIDセット
-void ShogiObj::SetId(ShogiObjId id){_id = id;}
-// 将棋オブジェクトを返す
-ShogiObjId ShogiObj::GetId(){return _id;}
+void ShogiObj::SetId(UINT id){_id = id;}
+// 将棋オブジェクトIDを返す
+UINT ShogiObj::GetId(){return _id;}
 
 
 DirectX::XMMATRIX ShogiObj::GetWorldMat(){return _worldMat;} // ワールド行列を返す
@@ -32,10 +32,5 @@ D3D12_GPU_VIRTUAL_ADDRESS ShogiObj::GetVertAddress(){return _vertAddress;}      
 void ShogiObj::SetIdxAddress (D3D12_GPU_VIRTUAL_ADDRESS address){_idxAddress  = address;} // インデックスアドレスセット
 D3D12_GPU_VIRTUAL_ADDRESS ShogiObj::GetIdxAddress (){return _idxAddress;}                 // インデックスアドレスを返す
 
-ShogiObj::ShogiObj()
-{
-    _vertAddress = 0;
-    _idxAddress  = 0;
-    _id          = PAWN_1;
-}
+ShogiObj::ShogiObj(){}
 ShogiObj::~ShogiObj(){}

@@ -9,11 +9,9 @@ void TexBuff::WriteToTexBuff(Tex* tex)
         0,
         nullptr,
         texture.data(),
-        sizeof(TexStruct::TexRGBA) * 256,
-        sizeof(TexStruct::TexRGBA) * texture.size());
+        sizeof(TexStruct::TexRGBA) * tex->GetWidth(),
+        0);
 }
-
-//ID3D12Resource* TexBuff::GetTexBuff(){return _texBuff.Get();} // バッファを渡す
 
 TexBuff::TexBuff(){}
 TexBuff::~TexBuff(){}

@@ -255,9 +255,9 @@ HRESULT Device::CreatePShader(PShader* pShader)
 
 
 // ルートシグネチャ作成
-HRESULT Device::CreateRootSignature(RootSignature* rootSignature)
+HRESULT Device::CreateRootSignature(RootSignature* rootSignature, CSUHeap* csuHeap)
 {
-    ComPtr<ID3DBlob> _rootSignatureBlob = GetRootSignatureBlob(); // ルートシグネチャバイナリ作成
+    ComPtr<ID3DBlob> _rootSignatureBlob = GetRootSignatureBlob(csuHeap); // ルートシグネチャバイナリ作成
 
     return _device->CreateRootSignature(
         0,
@@ -267,12 +267,12 @@ HRESULT Device::CreateRootSignature(RootSignature* rootSignature)
 }
 
 // ルートシグネチャBlob取得
-Microsoft::WRL::ComPtr<ID3DBlob> Device::GetRootSignatureBlob()
+Microsoft::WRL::ComPtr<ID3DBlob> Device::GetRootSignatureBlob(CSUHeap* csuHeap)
 {
     ComPtr<ID3DBlob> rootSignatureBlob;
 
     D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc =
-        GetRootSignatureDesc();
+        GetRootSignatureDesc(csuHeap);
 
     D3D12SerializeRootSignature(
         &rootSignatureDesc,
@@ -287,7 +287,7 @@ Microsoft::WRL::ComPtr<ID3DBlob> Device::GetRootSignatureBlob()
 }
 
 // ルートシグネチャディスクリプタ
-D3D12_ROOT_SIGNATURE_DESC Device::GetRootSignatureDesc()
+D3D12_ROOT_SIGNATURE_DESC Device::GetRootSignatureDesc(CSUHeap* csuHeap)
 {
     D3D12_ROOT_SIGNATURE_DESC desc = {};
 
@@ -296,7 +296,7 @@ D3D12_ROOT_SIGNATURE_DESC Device::GetRootSignatureDesc()
 
     std::vector<D3D12_ROOT_PARAMETER>* rootParameterPtr =
         new std::vector<D3D12_ROOT_PARAMETER>;
-    *rootParameterPtr = GetRootParams(paramNum);
+    *rootParameterPtr = GetRootParams(paramNum, csuHeap);
 
     std::vector<D3D12_STATIC_SAMPLER_DESC>* samplerDescPtr =
         new std::vector<D3D12_STATIC_SAMPLER_DESC>;
@@ -317,7 +317,7 @@ D3D12_ROOT_SIGNATURE_DESC Device::GetRootSignatureDesc()
 }
 
 // ルートパラメータ
-std::vector<D3D12_ROOT_PARAMETER> Device::GetRootParams(UINT paramNum)
+std::vector<D3D12_ROOT_PARAMETER> Device::GetRootParams(UINT paramNum, CSUHeap* csuHeap)
 {
     std::vector<D3D12_ROOT_PARAMETER> descs = {};
     descs.resize(paramNum);
@@ -328,7 +328,7 @@ std::vector<D3D12_ROOT_PARAMETER> Device::GetRootParams(UINT paramNum)
     descs[0].ShaderVisibility = // 頂点シェーダで利用可能
         D3D12_SHADER_VISIBILITY_VERTEX;
     descs[0].DescriptorTable =
-        GetDescTable(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1);
+        GetDescTable(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, csuHeap->GetCBVNum());
 
     // SRV
     descs[1].ParameterType = // ディスクリプタテーブル
@@ -336,7 +336,7 @@ std::vector<D3D12_ROOT_PARAMETER> Device::GetRootParams(UINT paramNum)
     descs[1].ShaderVisibility = // ピクセルシェーダで利用可能
         D3D12_SHADER_VISIBILITY_PIXEL;
     descs[1].DescriptorTable =
-        GetDescTable(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1);
+        GetDescTable(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, csuHeap->GetSRVNum());
 
     return descs;
 }
@@ -344,14 +344,14 @@ std::vector<D3D12_ROOT_PARAMETER> Device::GetRootParams(UINT paramNum)
 // ディスクリプタテーブル
 D3D12_ROOT_DESCRIPTOR_TABLE Device::GetDescTable(
     D3D12_DESCRIPTOR_RANGE_TYPE rangeType,
-    UINT rangeNum)
+    UINT descNum)
 {
     D3D12_ROOT_DESCRIPTOR_TABLE desc = {};
 
     std::vector<D3D12_DESCRIPTOR_RANGE>* descRangePtr =
         new std::vector<D3D12_DESCRIPTOR_RANGE>;
 
-    *descRangePtr = GetDescRanges(rangeType, rangeNum);
+    *descRangePtr = GetDescRanges(rangeType, descNum);
 
     desc.pDescriptorRanges =
         descRangePtr->data();
@@ -369,12 +369,11 @@ std::vector<D3D12_DESCRIPTOR_RANGE> Device::GetDescRanges(
     std::vector<D3D12_DESCRIPTOR_RANGE> descs = {};
     descs.resize(1);
 
-    descs[0].NumDescriptors = // ディスクリプタ数
-        //1;
-        descNum;
     descs[0].RangeType = // タイプ
         rangeType;
-    descs[0].BaseShaderRegister = // スロット0から
+    descs[0].NumDescriptors = // ディスクリプタ数
+        descNum;
+    descs[0].BaseShaderRegister = // スロット0
         0;
     descs[0].OffsetInDescriptorsFromTableStart =
         D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;

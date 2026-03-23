@@ -4,7 +4,13 @@ float4 PShader(Output input) : SV_Target
 {
     //return float4(input.uv, 1, 1);
     //return float4(1, 1, 1, 1);
-    return float4(tex.Sample(samp, input.uv));
+    //float4 aaa = 
+    
+    float4 wood      = tex.Sample(samp, input.uv);
+    float4 boardLine = boardLineTex[0].Sample(samp, input.uv);
+    
+    
+    return wood * boardLine;
     
     //float2 aaa = { 0.5f, 0.0f };
     //float4 color = float4(tex.Sample(samp, aaa));

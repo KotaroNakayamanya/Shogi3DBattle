@@ -41,8 +41,11 @@ private:
     std::unique_ptr<VertBuff> _vertBuff; // 頂点バッファ
     std::unique_ptr<IdxBuff>  _idxBuff;  // インデックスバッファ
     std::unique_ptr<ConstBuff> _constBuff; // コンスタントバッファ
-    std::unique_ptr<TexBuff>   _texBuff; // テクスチャバッファ
-    std::vector<std::unique_ptr<RenderTexBuff>> _pieceTexBuffs; // 駒テクスチャバッファ
+
+    std::unique_ptr<TexBuff>   _woodTexBuff; // 木材テクスチャバッファ
+    std::unique_ptr<TexBuff>   _boardLineTexBuff; // 将棋盤黒線テクスチャバッファ
+
+    //std::vector<std::unique_ptr<RenderTexBuff>> _pieceTexBuffs; // 駒テクスチャバッファ
     HRESULT CreateBuff(); // バッファ系作成
     HRESULT WriteToBuff(); // バッファに書き込み  
 
@@ -73,8 +76,8 @@ private:
     // Direct2Dソリッドカラーブッシュ
     std::unique_ptr<D2DSolidColorBrush> _d2dSolidColorBrush; // Direct2Dソリッドカラーブラッシュ
 
-    // Direct2Dバックバッファ
-    std::vector<std::unique_ptr<WrappedBackBuff>> _wrappedBackBuffs; // ラップされたバックバッファ
+    // Direct2Dラップバッファ
+    std::vector<std::unique_ptr<WrappedBuff>> _wrappedBackBuffs; // ラップされたバックバッファ
 
     // Direct2Dレンダーターゲット
     std::vector<std::unique_ptr<D2DRenderTarget>> _d2dRenderTargets; // Direct2Dレンダーターゲット
@@ -98,16 +101,16 @@ private:
     std::unique_ptr<RootSignature> _rootSignature; // ルートシグネチャ
     std::unique_ptr<Pipeline> _pipeline; // パイプライン
 
-    // テクスチャ
-    std::unique_ptr<Tex> _tex;     // テクスチャ
-    void CreateTex(); // テクスチャ作成
+    //// テクスチャ
+    //std::unique_ptr<Tex> _tex;     // テクスチャ
+    //void CreateTex(); // テクスチャ作成
     
     // カメラ
     std::unique_ptr<ViewMat> _viewMat; // ビュー行列
     std::unique_ptr<ProjMat> _projMat; // プロジェクション行列
 
-    void CreateBoard(ShogiObjId id); // 将棋盤作成
-    void CreatePiece(Piece* piece, ShogiObjId id); // 駒作成
+    //void CreateBoard(ShogiObjId id); // 将棋盤作成
+    //void CreatePiece(Piece* piece, ShogiObjId id); // 駒作成
 
     void InitRenderTarget(); // レンダーターゲット初期処理
 

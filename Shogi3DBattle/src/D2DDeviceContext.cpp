@@ -4,7 +4,7 @@
 // Direct2Dレンダーターゲット作成
 HRESULT D2DDeviceContext::CreateD2DRenderTarget(
     D2DRenderTarget* d2dRenderTarget,
-    WrappedBackBuff* wrappedBackBuff)
+    WrappedBuff* wrappedBuff)
 {
     ComPtr<ID2D1Bitmap1> d2dRenderTargetCom;
     
@@ -24,7 +24,7 @@ HRESULT D2DDeviceContext::CreateD2DRenderTarget(
 
     // DXGIサーフェイス作成
     ComPtr<IDXGISurface> dxgiSurface;
-    result = wrappedBackBuff->SetAsDXGISurfaceCom(&dxgiSurface);
+    result = wrappedBuff->SetAsDXGISurfaceCom(&dxgiSurface);
     if(FAILED(result)) return result;
 
     result = _d2dDeviceContext->CreateBitmapFromDxgiSurface(

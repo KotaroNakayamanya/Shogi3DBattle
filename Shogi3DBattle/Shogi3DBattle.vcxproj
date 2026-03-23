@@ -22,6 +22,7 @@
     <ClCompile Include="header\DefaultHeapProp.cpp" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\BoardFactory.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
     <ClCompile Include="src\ConstBuffFactory.cpp" />
     <ClCompile Include="src\Board.cpp" />
@@ -64,6 +65,7 @@
     <ClCompile Include="src\MovingPiece.cpp" />
     <ClCompile Include="src\Pawn.cpp" />
     <ClCompile Include="src\Piece.cpp" />
+    <ClCompile Include="src\PieceFactory.cpp" />
     <ClCompile Include="src\PShaderResourceStates.cpp" />
     <ClCompile Include="src\ReadResourceStates.cpp" />
     <ClCompile Include="src\RenderTexBuff.cpp" />
@@ -78,7 +80,6 @@
     <ClCompile Include="src\RTVHeapDesc.cpp" />
     <ClCompile Include="src\RTVOffset.cpp" />
     <ClCompile Include="src\ScissorRect.cpp" />
-    <ClCompile Include="src\ShogiObjFactory.cpp" />
     <ClCompile Include="src\SRVFactory.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Tex.cpp" />
@@ -94,12 +95,13 @@
     <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\ViewRotation.cpp" />
     <ClCompile Include="src\VShader.cpp" />
-    <ClCompile Include="src\WrappedBackBuff.cpp" />
+    <ClCompile Include="src\WrappedBuff.cpp" />
     <ClCompile Include="src\DepthWriteResourceStates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
     <ClInclude Include="header\Application.h" />
+    <ClInclude Include="header\BoardFactory.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
     <ClInclude Include="header\ConstBuffFactory.h" />
     <ClInclude Include="header\Board.h" />
@@ -157,6 +159,7 @@
     <ClInclude Include="header\MovingPiece.h" />
     <ClInclude Include="header\Pawn.h" />
     <ClInclude Include="header\Piece.h" />
+    <ClInclude Include="header\PieceFactory.h" />
     <ClInclude Include="header\PShaderResourceStates.h" />
     <ClInclude Include="header\ReadResourceStates.h" />
     <ClInclude Include="header\RenderTexBuff.h" />
@@ -173,8 +176,7 @@
     <ClInclude Include="header\RTVHeapFactory.h" />
     <ClInclude Include="header\RTVOffset.h" />
     <ClInclude Include="header\ScissorRect.h" />
-    <ClInclude Include="header\ShogiObjFactory.h" />
-    <ClInclude Include="header\ShogiObjIdEnum.h" />
+    <ClInclude Include="header\IShogiObjFactory.h" />
     <ClInclude Include="header\SRVFactory.h" />
     <ClInclude Include="header\SwapChain.h" />
     <ClInclude Include="header\Tex.h" />
@@ -194,7 +196,7 @@
     <ClInclude Include="header\Viewport.h" />
     <ClInclude Include="header\ViewRotation.h" />
     <ClInclude Include="header\VShader.h" />
-    <ClInclude Include="header\WrappedBackBuff.h" />
+    <ClInclude Include="header\WrappedBuff.h" />
     <ClInclude Include="header\DepthWriteResourceStates.h" />
   </ItemGroup>
   <ItemGroup>

@@ -19,9 +19,6 @@
     <Filter Include="ヘッダー ファイル\DX12">
       <UniqueIdentifier>{0e035323-ee1f-4428-9320-4d22a40c736c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\Draw">
-      <UniqueIdentifier>{a1d326ce-5bcb-4661-9b4b-7ab29a5b5c58}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\DX12\csu">
       <UniqueIdentifier>{8e35ec3d-b74e-4de4-8151-9baa1815ee54}</UniqueIdentifier>
     </Filter>
@@ -37,20 +34,11 @@
     <Filter Include="ソース ファイル\game_window">
       <UniqueIdentifier>{32ab675c-7748-4ec7-b4ff-8d5a0f2e212b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\key_map">
-      <UniqueIdentifier>{54f4de9d-ec76-4f59-834a-1e00085e3871}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\scene_state">
       <UniqueIdentifier>{78332d16-03d8-4c5d-ba6e-85e4652863a7}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\scene_state">
       <UniqueIdentifier>{147c356d-309b-43f8-ae42-31545dbfb11d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\command">
-      <UniqueIdentifier>{8c4ce1f3-9c02-4eca-b771-14d02dd016a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\command">
-      <UniqueIdentifier>{e29343ca-5ba6-4323-a4a5-e280dd4badbe}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\input_handler">
       <UniqueIdentifier>{848ceee7-25ae-4f3f-b2ec-f6112d60fe86}</UniqueIdentifier>
@@ -70,18 +58,6 @@
     <Filter Include="ソース ファイル\dx12\csu\texture">
       <UniqueIdentifier>{b1b639c0-1558-47a8-a1db-05be639f2be1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\Draw\depth_stencil">
-      <UniqueIdentifier>{2e353524-191a-4d14-bc30-08c011e067ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\Draw\render_target">
-      <UniqueIdentifier>{ead463a6-b449-49cb-bf0b-9ea61658180d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\Draw\command">
-      <UniqueIdentifier>{b401d5ab-f915-4127-898e-9dd429f5bd44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\Draw\fence">
-      <UniqueIdentifier>{77fa9810-5fd8-447b-9873-a18249dc3692}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\dx12\shader">
       <UniqueIdentifier>{b6044eb4-9f10-4e02-bdb3-192f1a5e23b9}</UniqueIdentifier>
     </Filter>
@@ -99,12 +75,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\DX12\shader">
       <UniqueIdentifier>{b44911ac-f69a-40cd-b8e6-c76fe61b7248}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\dx12\vertex">
-      <UniqueIdentifier>{b4edcd5c-4373-4c94-8877-edb67f499e76}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\vertex">
-      <UniqueIdentifier>{c0680ff0-3293-4293-86a1-750dfae9104f}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\mouse">
       <UniqueIdentifier>{4432fb4b-b6dc-4503-bd59-b99cd6648243}</UniqueIdentifier>
@@ -133,38 +103,14 @@
     <Filter Include="ヘッダー ファイル\DX12\factory">
       <UniqueIdentifier>{6d263b71-0dea-41db-9e59-bcba584d3926}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\factory\device">
-      <UniqueIdentifier>{2225f7d2-b39f-4ece-835a-b78441c39569}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\factory\dxgi">
-      <UniqueIdentifier>{ab7f19d6-8f72-4310-ba78-c38a4ef41ff9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\dx12\command">
       <UniqueIdentifier>{745cfd2c-bfd5-47d2-a84e-c0bc4d683999}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\dx12\depth_stencil">
-      <UniqueIdentifier>{4ba02cb8-278d-41ac-a182-a72b668695eb}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\dx12\fence">
       <UniqueIdentifier>{24bfe637-8583-4328-a723-d913514023df}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\dx12\view">
       <UniqueIdentifier>{52b7f94d-9eab-4046-a556-632984c76bfd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\dx12\render">
-      <UniqueIdentifier>{e8a8cd52-ee38-46ad-a4b3-049929804045}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\D2D">
-      <UniqueIdentifier>{2090c6dc-f043-427a-8f9a-553a1063381d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\input_handler\map">
-      <UniqueIdentifier>{31fe555d-f8f5-4f7d-bd70-caa2e40237e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\command\move_piece">
-      <UniqueIdentifier>{3c9fa434-5203-4001-a971-49777abcede5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\command\move_view">
-      <UniqueIdentifier>{904fbbc2-070d-4eae-9852-fba68df2b7ed}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\dx12\heap">
       <UniqueIdentifier>{3f63c6a1-4007-4c14-8813-569405da6e0d}</UniqueIdentifier>
@@ -177,12 +123,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\DX12\heap">
       <UniqueIdentifier>{42cd72b0-58d5-411c-a27f-e5c26df9a1e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\heap\heap_desc">
-      <UniqueIdentifier>{0d1d2c56-c6d3-4b2a-ac1e-4d9ef8815537}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\heap\desc_offset">
-      <UniqueIdentifier>{78fdbd35-dcee-4f92-a38b-ffb53c614d31}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\dx12\buff">
       <UniqueIdentifier>{12c79aa5-4374-4fb4-afc0-d7480c48df7e}</UniqueIdentifier>
@@ -226,6 +166,99 @@
     <Filter Include="ソース ファイル\dx12\buff\factory\resource_desc">
       <UniqueIdentifier>{ed5ad725-a11a-4346-b047-7a6a4e94ee20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\shogi_obj\factory">
+      <UniqueIdentifier>{65995f4d-91d0-4aad-aaf3-2260432487e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\swap_chain">
+      <UniqueIdentifier>{e8a8cd52-ee38-46ad-a4b3-049929804045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\d3d11">
+      <UniqueIdentifier>{721d2103-bea6-4ca3-a72a-015d15e01575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\resource_barrier">
+      <UniqueIdentifier>{dfcae937-daa7-4782-9e5a-a4b4966ef6ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\d3d11\d2d">
+      <UniqueIdentifier>{fef2eff7-a21b-4429-8a73-872629473ebe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\d3d11\wrapped_buff">
+      <UniqueIdentifier>{45c8e7f4-ff05-44ce-bea4-32c48e1da24f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\d3d11\factory">
+      <UniqueIdentifier>{709a9bf8-c9b0-4675-952a-1017ed069b32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\d3d11\context">
+      <UniqueIdentifier>{88cb8675-fd2f-445a-b2e1-67939eb7790d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\shader\hlsl">
+      <UniqueIdentifier>{162b5be9-6f57-4d9c-b2f7-57a516f119d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\dx12\draw_area">
+      <UniqueIdentifier>{596b4283-5026-43f2-9ce0-0afdcd43baaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\input_handler\key_map">
+      <UniqueIdentifier>{31fe555d-f8f5-4f7d-bd70-caa2e40237e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\obj_command">
+      <UniqueIdentifier>{8c4ce1f3-9c02-4eca-b771-14d02dd016a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\obj_command">
+      <UniqueIdentifier>{e29343ca-5ba6-4323-a4a5-e280dd4badbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\obj_command\piece">
+      <UniqueIdentifier>{574efc24-c1cf-4a2f-9b15-cdb916740aff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\obj_command\piece">
+      <UniqueIdentifier>{3c9fa434-5203-4001-a971-49777abcede5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\obj_command\camera">
+      <UniqueIdentifier>{0da8114b-10ad-4354-8178-f30438c1af34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\obj_command\camera">
+      <UniqueIdentifier>{904fbbc2-070d-4eae-9852-fba68df2b7ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\command">
+      <UniqueIdentifier>{b401d5ab-f915-4127-898e-9dd429f5bd44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\fence">
+      <UniqueIdentifier>{77fa9810-5fd8-447b-9873-a18249dc3692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\swap_chain">
+      <UniqueIdentifier>{ead463a6-b449-49cb-bf0b-9ea61658180d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\d3d11">
+      <UniqueIdentifier>{2090c6dc-f043-427a-8f9a-553a1063381d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\heap\factory\desc_offset">
+      <UniqueIdentifier>{78fdbd35-dcee-4f92-a38b-ffb53c614d31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\heap\factory\heap_desc">
+      <UniqueIdentifier>{0d1d2c56-c6d3-4b2a-ac1e-4d9ef8815537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\d3d11\d2d">
+      <UniqueIdentifier>{11da42aa-d1ed-4c47-9e20-05b419e20293}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\d3d11\wrappe_buff">
+      <UniqueIdentifier>{cc004109-94c3-4b11-8c75-19c744102379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\d3d11\factory">
+      <UniqueIdentifier>{1384760b-baea-4aa1-9975-d6dddd2ff29d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\draw_area">
+      <UniqueIdentifier>{103bdd01-c7e2-4471-8ebf-5c7f7e05dceb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\input_layout">
+      <UniqueIdentifier>{bb23dc31-f1cb-42e6-a856-bc39bea3a353}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\resource_barrier">
+      <UniqueIdentifier>{0f28c504-cd5d-4094-beca-d606b5a4d613}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\shogi_obj\factory">
+      <UniqueIdentifier>{471b672a-ce78-45e0-914a-746235cc279d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\input_handler\key_map">
+      <UniqueIdentifier>{54f4de9d-ec76-4f59-834a-1e00085e3871}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -241,7 +274,7 @@
       <Filter>ソース ファイル\game_window</Filter>
     </ClCompile>
     <ClCompile Include="src\KeyConf.cpp">
-      <Filter>ソース ファイル\input_handler\map</Filter>
+      <Filter>ソース ファイル\input_handler\key_map</Filter>
     </ClCompile>
     <ClCompile Include="src\MovingPiece.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
@@ -256,7 +289,7 @@
       <Filter>ソース ファイル\shogi_obj\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
-      <Filter>ソース ファイル\dx12\render</Filter>
+      <Filter>ソース ファイル\dx12\swap_chain</Filter>
     </ClCompile>
     <ClCompile Include="src\CmdAllocator.cpp">
       <Filter>ソース ファイル\dx12\command</Filter>
@@ -300,56 +333,32 @@
     <ClCompile Include="src\Adapter.cpp">
       <Filter>ソース ファイル\dx12\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\ScissorRect.cpp">
-      <Filter>ソース ファイル\dx12\view</Filter>
-    </ClCompile>
     <ClCompile Include="src\ShogiObj.cpp">
       <Filter>ソース ファイル\shogi_obj</Filter>
     </ClCompile>
     <ClCompile Include="src\Tex.cpp">
       <Filter>ソース ファイル\dx12\csu\texture</Filter>
     </ClCompile>
-    <ClCompile Include="src\Device11.cpp">
-      <Filter>ソース ファイル\dx12\factory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D2DDeviceContext.cpp">
-      <Filter>ソース ファイル\dx12</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DeviceContext.cpp">
-      <Filter>ソース ファイル\dx12</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DWriteFactory.cpp">
-      <Filter>ソース ファイル\dx12</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ResourceBarrier.cpp">
-      <Filter>ソース ファイル\dx12</Filter>
-    </ClCompile>
     <ClCompile Include="src\MoveBack.cpp">
-      <Filter>ソース ファイル\command\move_piece</Filter>
+      <Filter>ソース ファイル\obj_command\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\MoveLeft.cpp">
-      <Filter>ソース ファイル\command\move_piece</Filter>
+      <Filter>ソース ファイル\obj_command\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\MoveRight.cpp">
-      <Filter>ソース ファイル\command\move_piece</Filter>
+      <Filter>ソース ファイル\obj_command\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\MoveForward.cpp">
-      <Filter>ソース ファイル\command\move_piece</Filter>
+      <Filter>ソース ファイル\obj_command\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\ViewRotation.cpp">
-      <Filter>ソース ファイル\command\move_view</Filter>
+      <Filter>ソース ファイル\obj_command\camera</Filter>
     </ClCompile>
     <ClCompile Include="src\MoveTargetForward.cpp">
-      <Filter>ソース ファイル\command\move_view</Filter>
+      <Filter>ソース ファイル\obj_command\camera</Filter>
     </ClCompile>
     <ClCompile Include="src\MoveEyeForward.cpp">
-      <Filter>ソース ファイル\command\move_view</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D2DSolidColorBrush.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D2DRenderTarget.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\obj_command\camera</Filter>
     </ClCompile>
     <ClCompile Include="src\CSUHeap.cpp">
       <Filter>ソース ファイル\dx12\heap</Filter>
@@ -387,9 +396,6 @@
     <ClCompile Include="src\RenderTexBuff.cpp">
       <Filter>ソース ファイル\dx12\buff</Filter>
     </ClCompile>
-    <ClCompile Include="src\WrappedBackBuff.cpp">
-      <Filter>ソース ファイル\dx12\buff</Filter>
-    </ClCompile>
     <ClCompile Include="src\ConstBuff.cpp">
       <Filter>ソース ファイル\dx12\buff</Filter>
     </ClCompile>
@@ -398,9 +404,6 @@
     </ClCompile>
     <ClCompile Include="src\HeapFactory.cpp">
       <Filter>ソース ファイル\dx12\heap\factory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Viewport.cpp">
-      <Filter>ソース ファイル\dx12</Filter>
     </ClCompile>
     <ClCompile Include="src\CBVFactory.cpp">
       <Filter>ソース ファイル\dx12\view</Filter>
@@ -450,14 +453,47 @@
     <ClCompile Include="src\TexResourceDesc.cpp">
       <Filter>ソース ファイル\dx12\buff\factory\resource_desc</Filter>
     </ClCompile>
-    <ClCompile Include="src\TexBuffFactory.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\PShaderResourceStates.cpp">
       <Filter>ソース ファイル\dx12\buff\factory\resource_states</Filter>
     </ClCompile>
-    <ClCompile Include="src\ShogiObjFactory.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="src\TexBuffFactory.cpp">
+      <Filter>ソース ファイル\dx12\buff\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ResourceBarrier.cpp">
+      <Filter>ソース ファイル\dx12\resource_barrier</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D2DDeviceContext.cpp">
+      <Filter>ソース ファイル\dx12\d3d11\d2d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D2DRenderTarget.cpp">
+      <Filter>ソース ファイル\dx12\d3d11\d2d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D2DSolidColorBrush.cpp">
+      <Filter>ソース ファイル\dx12\d3d11\d2d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WrappedBuff.cpp">
+      <Filter>ソース ファイル\dx12\d3d11\wrapped_buff</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Device11.cpp">
+      <Filter>ソース ファイル\dx12\d3d11\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DWriteFactory.cpp">
+      <Filter>ソース ファイル\dx12\d3d11\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DeviceContext.cpp">
+      <Filter>ソース ファイル\dx12\d3d11\context</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScissorRect.cpp">
+      <Filter>ソース ファイル\dx12\draw_area</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Viewport.cpp">
+      <Filter>ソース ファイル\dx12\draw_area</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoardFactory.cpp">
+      <Filter>ソース ファイル\shogi_obj\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PieceFactory.cpp">
+      <Filter>ソース ファイル\shogi_obj\factory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -470,20 +506,14 @@
     <ClInclude Include="header\DX12.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="header\Adapter.h">
-      <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\DXGIFactory.h">
-      <Filter>ヘッダー ファイル\DX12\factory\dxgi</Filter>
-    </ClInclude>
     <ClInclude Include="header\GameWindow.h">
       <Filter>ヘッダー ファイル\game_window</Filter>
     </ClInclude>
     <ClInclude Include="header\KeyConf.h">
-      <Filter>ヘッダー ファイル\key_map</Filter>
+      <Filter>ヘッダー ファイル\input_handler\key_map</Filter>
     </ClInclude>
     <ClInclude Include="header\ControllerButton.h">
-      <Filter>ヘッダー ファイル\key_map</Filter>
+      <Filter>ヘッダー ファイル\input_handler\key_map</Filter>
     </ClInclude>
     <ClInclude Include="header\ISceneState.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
@@ -497,41 +527,23 @@
     <ClInclude Include="header\Piece.h">
       <Filter>ヘッダー ファイル\shogi_obj\piece</Filter>
     </ClInclude>
-    <ClInclude Include="header\ICommand.h">
-      <Filter>ヘッダー ファイル\command</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveForward.h">
-      <Filter>ヘッダー ファイル\command</Filter>
-    </ClInclude>
     <ClInclude Include="header\Pawn.h">
       <Filter>ヘッダー ファイル\shogi_obj\piece</Filter>
     </ClInclude>
-    <ClInclude Include="header\MoveBack.h">
-      <Filter>ヘッダー ファイル\command</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveLeft.h">
-      <Filter>ヘッダー ファイル\command</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveRight.h">
-      <Filter>ヘッダー ファイル\command</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Move.h">
-      <Filter>ヘッダー ファイル\command</Filter>
-    </ClInclude>
     <ClInclude Include="header\SwapChain.h">
-      <Filter>ヘッダー ファイル\DX12\Draw\render_target</Filter>
+      <Filter>ヘッダー ファイル\DX12\swap_chain</Filter>
     </ClInclude>
     <ClInclude Include="header\CmdAllocator.h">
-      <Filter>ヘッダー ファイル\DX12\Draw\command</Filter>
+      <Filter>ヘッダー ファイル\DX12\command</Filter>
     </ClInclude>
     <ClInclude Include="header\CmdList.h">
-      <Filter>ヘッダー ファイル\DX12\Draw\command</Filter>
+      <Filter>ヘッダー ファイル\DX12\command</Filter>
     </ClInclude>
     <ClInclude Include="header\CmdQueue.h">
-      <Filter>ヘッダー ファイル\DX12\Draw\command</Filter>
+      <Filter>ヘッダー ファイル\DX12\command</Filter>
     </ClInclude>
     <ClInclude Include="header\Fence.h">
-      <Filter>ヘッダー ファイル\DX12\Draw\fence</Filter>
+      <Filter>ヘッダー ファイル\DX12\fence</Filter>
     </ClInclude>
     <ClInclude Include="header\Pipeline.h">
       <Filter>ヘッダー ファイル\DX12\pipeline</Filter>
@@ -563,83 +575,32 @@
     <ClInclude Include="header\VShader.h">
       <Filter>ヘッダー ファイル\DX12\shader</Filter>
     </ClInclude>
-    <ClInclude Include="header\Device.h">
-      <Filter>ヘッダー ファイル\DX12\factory\device</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Viewport.h">
-      <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ScissorRect.h">
-      <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveCamera.h">
-      <Filter>ヘッダー ファイル\command</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveEyeForward.h">
-      <Filter>ヘッダー ファイル\command</Filter>
-    </ClInclude>
     <ClInclude Include="header\Tex.h">
       <Filter>ヘッダー ファイル\DX12\csu\texture</Filter>
     </ClInclude>
-    <ClInclude Include="header\InputLayout.h">
-      <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveTargetForward.h">
-      <Filter>ヘッダー ファイル\command</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ViewRotation.h">
-      <Filter>ヘッダー ファイル\command</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ShogiObjIdEnum.h">
-      <Filter>ヘッダー ファイル\shogi_obj\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Device11.h">
-      <Filter>ヘッダー ファイル\DX12\factory\device</Filter>
-    </ClInclude>
-    <ClInclude Include="header\DeviceContext.h">
-      <Filter>ヘッダー ファイル\DX12\factory\device</Filter>
-    </ClInclude>
-    <ClInclude Include="header\DWriteFactory.h">
-      <Filter>ヘッダー ファイル\DX12\factory</Filter>
-    </ClInclude>
-    <ClInclude Include="header\D2DDeviceContext.h">
-      <Filter>ヘッダー ファイル\DX12\D2D</Filter>
-    </ClInclude>
-    <ClInclude Include="header\D2DRenderTarget.h">
-      <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ResourceBarrier.h">
-      <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\DWriteTextFormat.h">
-      <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\D2DSolicColorBrush.h">
-      <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
     <ClInclude Include="header\IHeapDesc.h">
-      <Filter>ヘッダー ファイル\DX12\heap\heap_desc</Filter>
+      <Filter>ヘッダー ファイル\DX12\heap\factory\heap_desc</Filter>
     </ClInclude>
     <ClInclude Include="header\DSVHeapDesc.h">
-      <Filter>ヘッダー ファイル\DX12\heap\heap_desc</Filter>
+      <Filter>ヘッダー ファイル\DX12\heap\factory\heap_desc</Filter>
     </ClInclude>
     <ClInclude Include="header\RTVHeapDesc.h">
-      <Filter>ヘッダー ファイル\DX12\heap\heap_desc</Filter>
+      <Filter>ヘッダー ファイル\DX12\heap\factory\heap_desc</Filter>
     </ClInclude>
     <ClInclude Include="header\CSUHeapDesc.h">
-      <Filter>ヘッダー ファイル\DX12\heap\heap_desc</Filter>
+      <Filter>ヘッダー ファイル\DX12\heap\factory\heap_desc</Filter>
     </ClInclude>
     <ClInclude Include="header\CSUOffset.h">
-      <Filter>ヘッダー ファイル\DX12\heap\desc_offset</Filter>
+      <Filter>ヘッダー ファイル\DX12\heap\factory\desc_offset</Filter>
     </ClInclude>
     <ClInclude Include="header\DSVOffset.h">
-      <Filter>ヘッダー ファイル\DX12\heap\desc_offset</Filter>
+      <Filter>ヘッダー ファイル\DX12\heap\factory\desc_offset</Filter>
     </ClInclude>
     <ClInclude Include="header\IDescOffset.h">
-      <Filter>ヘッダー ファイル\DX12\heap\desc_offset</Filter>
+      <Filter>ヘッダー ファイル\DX12\heap\factory\desc_offset</Filter>
     </ClInclude>
     <ClInclude Include="header\RTVOffset.h">
-      <Filter>ヘッダー ファイル\DX12\heap\desc_offset</Filter>
+      <Filter>ヘッダー ファイル\DX12\heap\factory\desc_offset</Filter>
     </ClInclude>
     <ClInclude Include="header\Heap.h">
       <Filter>ヘッダー ファイル\DX12\heap</Filter>
@@ -648,9 +609,6 @@
       <Filter>ヘッダー ファイル\DX12\heap</Filter>
     </ClInclude>
     <ClInclude Include="header\RenderTexBuff.h">
-      <Filter>ヘッダー ファイル\DX12\buff</Filter>
-    </ClInclude>
-    <ClInclude Include="header\WrappedBackBuff.h">
       <Filter>ヘッダー ファイル\DX12\buff</Filter>
     </ClInclude>
     <ClInclude Include="header\IdxBuff.h">
@@ -746,27 +704,108 @@
     <ClInclude Include="header\TexResourceDesc.h">
       <Filter>ヘッダー ファイル\DX12\buff\factory\resource_desc</Filter>
     </ClInclude>
-    <ClInclude Include="header\TexBuffFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="header\PShaderResourceStates.h">
       <Filter>ヘッダー ファイル\DX12\buff\factory\resource_state</Filter>
     </ClInclude>
-    <ClInclude Include="header\ShogiObjFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="header\Move.h">
+      <Filter>ヘッダー ファイル\obj_command\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\MoveBack.h">
+      <Filter>ヘッダー ファイル\obj_command\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\MoveForward.h">
+      <Filter>ヘッダー ファイル\obj_command\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\MoveLeft.h">
+      <Filter>ヘッダー ファイル\obj_command\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\MoveRight.h">
+      <Filter>ヘッダー ファイル\obj_command\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ViewRotation.h">
+      <Filter>ヘッダー ファイル\obj_command\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="header\MoveCamera.h">
+      <Filter>ヘッダー ファイル\obj_command\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="header\MoveEyeForward.h">
+      <Filter>ヘッダー ファイル\obj_command\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="header\MoveTargetForward.h">
+      <Filter>ヘッダー ファイル\obj_command\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ICommand.h">
+      <Filter>ヘッダー ファイル\obj_command\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DeviceContext.h">
+      <Filter>ヘッダー ファイル\DX12\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Device.h">
+      <Filter>ヘッダー ファイル\DX12\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DXGIFactory.h">
+      <Filter>ヘッダー ファイル\DX12\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Adapter.h">
+      <Filter>ヘッダー ファイル\DX12\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DWriteTextFormat.h">
+      <Filter>ヘッダー ファイル\DX12\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="header\D2DDeviceContext.h">
+      <Filter>ヘッダー ファイル\DX12\d3d11\d2d</Filter>
+    </ClInclude>
+    <ClInclude Include="header\D2DRenderTarget.h">
+      <Filter>ヘッダー ファイル\DX12\d3d11\d2d</Filter>
+    </ClInclude>
+    <ClInclude Include="header\D2DSolicColorBrush.h">
+      <Filter>ヘッダー ファイル\DX12\d3d11\d2d</Filter>
+    </ClInclude>
+    <ClInclude Include="header\WrappedBuff.h">
+      <Filter>ヘッダー ファイル\DX12\d3d11\wrappe_buff</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Device11.h">
+      <Filter>ヘッダー ファイル\DX12\d3d11\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DWriteFactory.h">
+      <Filter>ヘッダー ファイル\DX12\d3d11\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ScissorRect.h">
+      <Filter>ヘッダー ファイル\DX12\draw_area</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Viewport.h">
+      <Filter>ヘッダー ファイル\DX12\draw_area</Filter>
+    </ClInclude>
+    <ClInclude Include="header\InputLayout.h">
+      <Filter>ヘッダー ファイル\DX12\input_layout</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ResourceBarrier.h">
+      <Filter>ヘッダー ファイル\DX12\resource_barrier</Filter>
+    </ClInclude>
+    <ClInclude Include="header\TexBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IShogiObjFactory.h">
+      <Filter>ヘッダー ファイル\shogi_obj\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BoardFactory.h">
+      <Filter>ヘッダー ファイル\shogi_obj\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PieceFactory.h">
+      <Filter>ヘッダー ファイル\shogi_obj\factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shader\VertexShader.hlsl">
-      <Filter>ソース ファイル\dx12\shader</Filter>
-    </FxCompile>
     <FxCompile Include="shader\PixelShader.hlsl">
-      <Filter>ソース ファイル\dx12\shader</Filter>
+      <Filter>ソース ファイル\dx12\shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\VertexShader.hlsl">
+      <Filter>ソース ファイル\dx12\shader\hlsl</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\Shader.hlsli">
-      <Filter>ソース ファイル\dx12\shader</Filter>
+      <Filter>ソース ファイル\dx12\shader\hlsl</Filter>
     </None>
   </ItemGroup>
 </Project>

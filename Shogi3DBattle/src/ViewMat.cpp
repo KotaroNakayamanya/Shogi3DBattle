@@ -165,8 +165,8 @@ DirectX::XMFLOAT3* ViewMat::GetTargetPtr(){return _eye.get();}
 
 ViewMat::ViewMat()
 {
-    _eye    = std::make_unique<DirectX::XMFLOAT3>(0.0f, -3.0f, -4.0f);
-    _target = std::make_unique<DirectX::XMFLOAT3>(0.0f,  0.0f, -2.0f);
+    _eye    = std::make_unique<DirectX::XMFLOAT3>(0.0f,  -8.0f, 0.0f);
+    _target = std::make_unique<DirectX::XMFLOAT3>(0.0f,  0.0f, -5.0f);
     _up     = std::make_unique<DirectX::XMFLOAT3>(0.0f,  0.0f, -1.0f);
 }
 
