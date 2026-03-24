@@ -36,17 +36,6 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     if(FAILED(CreateBuff())) goto failed; // バッファ系作成
     if(FAILED(CreateHeap())) goto failed; // ヒープ作成
     CreateView(); // ビュー作成
-
-    //// 駒テクスチャ作成
-    //UINT shogiTexNum;
-    //shogiTexNum = 8 + 6 + 1; // 駒表8種 駒裏6種 将棋盤1
-    //_pieceTexBuffs.resize(shogiTexNum);
-    //for (UINT i = 0; i < shogiTexNum; i++)
-    //{
-    //    _pieceTexBuffs[i] = std::make_unique<RenderTexBuff>();
-    //    if (FAILED(_device->CreateRenderTexBuff(_pieceTexBuffs[i].get(), _backBuffs[0].get()))) goto failed; // レンダーターゲットテクスチャ作成
-    //}
-    //// if (FAILED(_device->CreateRTVHeap(_rtvHeap.get(), _swapChain.get()))) goto failed; // 駒テクスチャRTVヒープ作成
     
     // ルートシグネチャオブジェクト作成
     if (FAILED(_device->CreateRootSignature(_rootSignature.get(), _csuHeap.get()))) goto failed;
@@ -207,15 +196,28 @@ HRESULT DX12::CreateBuff()
     heightSize = woodTex->GetHeight();
     if (FAILED(_device->CreateBuff(_woodTexBuff.get(), widthSize, heightSize, Buff::TEXTURE))) goto failed;
 
-    // 将棋盤黒線テクスチャバッファ作成
-    widthSize  = boardLineTex->GetWidth();
-    heightSize = boardLineTex->GetHeight();
-    if (FAILED(_device->CreateBuff(_boardLineTexBuff.get(), widthSize, heightSize, Buff::TEXTURE))) goto failed;
+    //// 将棋盤黒線テクスチャバッファ作成
+    //widthSize  = boardLineTex->GetWidth();
+    //heightSize = boardLineTex->GetHeight();
+    //if (FAILED(_device->CreateBuff(_boardLineTexBuff.get(), widthSize, heightSize, Buff::TEXTURE))) goto failed;
 
-    // 歩テクスチャバッファ作成
-    widthSize  = boardLineTex->GetWidth();
-    heightSize = boardLineTex->GetHeight();
-    if (FAILED(_device->CreateBuff(_pawnTexBuff.get(), widthSize, heightSize, Buff::RENDER_TEX))) goto failed;
+    //// 歩テクスチャバッファ作成
+    //widthSize  = boardLineTex->GetWidth();
+    //heightSize = boardLineTex->GetHeight();
+    //if (FAILED(_device->CreateBuff(_pawnTexBuff.get(), widthSize, heightSize, Buff::RENDER_TEX))) goto failed;
+
+    // 将棋オブジェクト種類ごとのテクスチャバッファ作成
+    UINT buffNum, boardNum;
+    boardNum = 1;
+    buffNum = 8 + boardNum;
+    _shogiObjTexBuffs.resize(9); // 将棋盤1 +駒種類8
+    for(auto& shogiObjTexBuff : _shogiObjTexBuffs) shogiObjTexBuff = std::make_unique<TexBuff>();
+    widthSize = 256;
+    widthSize = 256;
+    if (FAILED(_device->CreateBuff(_shogiObjTexBuffs[0].get(), widthSize, heightSize, Buff::TEXTURE))) goto failed;
+    for(UINT i = boardNum; i < buffNum; i++)
+    //for (auto& piece : pieces)
+        if (FAILED(_device->CreateBuff(_shogiObjTexBuffs[i].get(), widthSize, heightSize, Buff::RENDER_TEX))) goto failed;
 
     return S_OK;
 
@@ -226,15 +228,24 @@ failed:
 // ヒープ作成
 HRESULT DX12::CreateHeap()
 {
-    if (FAILED(_device->CreateHeap(_rtvHeap.get(), _swapChain->GetBackBuffNum(), Heap::RTV))) goto failed; // RTVヒープ作成
-    if (FAILED(_device->CreateHeap(_texRTVHeap.get(), 1, Heap::RTV))) goto failed; // テクスチャRTVヒープ作成
-    if (FAILED(_device->CreateHeap(_dsvHeap.get(), 1, Heap::DSV))) goto failed; // DSVヒープ作成
+    // バックバッファRTVヒープ作成
+    if (FAILED(_device->CreateHeap(_rtvHeap.get(), _swapChain->GetBackBuffNum(), Heap::RTV))) goto failed;
 
+    // DSVヒープ作成
+    if (FAILED(_device->CreateHeap(_dsvHeap.get(), 1, Heap::DSV))) goto failed;
+
+    // CSUヒープ作成
+    UINT pieceTexNum, boardTexNum;
+    boardTexNum = 1;
+    pieceTexNum = 8;
     UINT cbvNum, srvNum, uavNum;
     cbvNum = 1;
-    srvNum = 3;
+    srvNum = 1 + boardTexNum + pieceTexNum; // 木材テクスチャ1 将棋盤テクスチャ1　駒テクスチャ8
     uavNum = 0;
-    if (FAILED(_device->CreateCSUHeap(_csuHeap.get(), cbvNum, srvNum, uavNum, Heap::CSU))) goto failed; // CSUヒープオブジェクト作成
+    if (FAILED(_device->CreateCSUHeap(_csuHeap.get(), cbvNum, srvNum, uavNum, Heap::CSU))) goto failed;
+
+    // 駒ごとの文字テクスチャ作成用RTVヒープ
+    if (FAILED(_device->CreateHeap(_texRTVHeap.get(), pieceTexNum, Heap::RTV))) goto failed;
 
     return S_OK;
 
@@ -245,30 +256,55 @@ failed:
 // ビュー作成
 void DX12::CreateView()
 {
+    auto& app = Application::GetInstance();
+    auto board = app.GetBoard();
+    auto& pieces = app.GetPieces();
+
+    // バックバッファ用RTV作成
     for (UINT i = 0; i < _rtvHeap->GetDescNum(); i++)
     {
-        _device->CreateView(_rtvHeap.get(), i, _backBuffs[i].get(), View::RTV); // RTV作成
+        _device->CreateView(_rtvHeap.get(), i, _backBuffs[i].get(), View::RTV);
     }
-    for (UINT i = 0; i < _texRTVHeap->GetDescNum(); i++)
-    {
-        _device->CreateView(_texRTVHeap.get(), i, _pawnTexBuff.get(), View::RTV); // テクスチャRTV作成
-    }
+
+    // DSV作成
     for (UINT i = 0; i < _dsvHeap->GetDescNum(); i++)
     {
-        _device->CreateView(_dsvHeap.get(), i, _dsBuff.get(), View::DSV); // DSV作成
+        _device->CreateView(_dsvHeap.get(), i, _dsBuff.get(), View::DSV);
     }
+
+    // CBV作成
     for (UINT i = 0; i < _csuHeap->GetCBVNum(); i++)
     {
-        _device->CreateCSUView(_csuHeap.get(), i, _constBuff.get(), View::CBV); // CBV作成
+        _device->CreateCSUView(_csuHeap.get(), i, _constBuff.get(), View::CBV);
     }
-    //for (UINT i = 0; i < _csuHeap->GetSRVNum(); i++)
-    //{
-    //    _device->CreateCSUView(_csuHeap.get(), 0, _texBuff.get(), View::SRV);   // SRV作成
-    //}
 
-    _device->CreateCSUView(_csuHeap.get(), 0, _woodTexBuff.get(), View::SRV);   // SRV作成
-    _device->CreateCSUView(_csuHeap.get(), 1, _boardLineTexBuff.get(), View::SRV);   // SRV作成
-    _device->CreateCSUView(_csuHeap.get(), 2, _pawnTexBuff.get(), View::SRV);   // SRV作成
+    // 木材テクスチャ用SRV作成
+    _device->CreateCSUView(_csuHeap.get(), 0, _woodTexBuff.get(), View::SRV);
+
+    // 将棋盤テクスチャ用SRV作成
+    UINT otherTexNum;
+    otherTexNum = 1;
+    _device->CreateCSUView(_csuHeap.get(), 1, _shogiObjTexBuffs[0].get(), View::SRV);
+    // 駒テクスチャ用SRV作成
+    UINT shogiObjTexNum, boardTexNum, pieceTexNum;
+    
+    boardTexNum = 1;
+    pieceTexNum = 8;
+    shogiObjTexNum = otherTexNum + boardTexNum + pieceTexNum;
+
+    for(UINT i = otherTexNum + boardTexNum; i < shogiObjTexNum; i++)
+        _device->CreateCSUView(_csuHeap.get(), i, _shogiObjTexBuffs[i - otherTexNum].get(), View::SRV);
+
+    //for(auto& piece : pieces)
+    //    _device->CreateCSUView(_csuHeap.get(), piece->GetTexId() + 1, _shogiObjTexBuffs[piece->GetTexId()].get(), View::SRV);
+
+    // 駒の種類ごとのテクスチャ作成用RTV作成
+    for(UINT i = 0; i < pieceTexNum; i++)
+        _device->CreateView(_texRTVHeap.get(), i, _shogiObjTexBuffs[i + boardTexNum].get(), View::RTV);
+
+    
+    //_device->CreateCSUView(_csuHeap.get(), 1, _boardLineTexBuff.get(), View::SRV);   // SRV作成
+    //_device->CreateCSUView(_csuHeap.get(), 2, _pawnTexBuff.get(), View::SRV);   // SRV作成
 
 }
 
@@ -320,10 +356,23 @@ HRESULT DX12::CreateD2D()
         if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dRenderTargets[i].get(), _wrappedBackBuffs[i].get()))) goto failed;
     }
 
-    // ラップされたテクスチャバッファ作成
-    if (FAILED(_device11->CreateWrappedBuff(_wrappedPawnTexBuff.get(), _pawnTexBuff.get()))) goto failed;
+    // ラップされた駒テクスチャバッファ作成
+    //if (FAILED(_device11->CreateWrappedBuff(_wrappedPawnTexBuff.get(), _shogiObjTexBuffs[1].get()))) goto failed;
+    UINT boardBuffNum, pieceBuffNum;
+    boardBuffNum = 1;
+    pieceBuffNum = _shogiObjTexBuffs.size() - boardBuffNum;
+    _wrappedPieceTexBuffs.resize(pieceBuffNum);
+    for(auto& wrappedPieceTexBuff : _wrappedPieceTexBuffs) wrappedPieceTexBuff = std::make_unique<WrappedBuff>();
+    //if (FAILED(_device11->CreateWrappedBuff(_wrappedPawnTexBuff.get(), _shogiObjTexBuffs[1].get()))) goto failed;
+    for (UINT i = 0; i < pieceBuffNum; i++)
+        if (FAILED(_device11->CreateWrappedBuff(_wrappedPieceTexBuffs[i].get(), _shogiObjTexBuffs[i + boardBuffNum].get()))) goto failed;
+
     // Direct2Dレンダーターゲット作成
-    if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dRenderTargetPawnTex.get(), _wrappedPawnTexBuff.get()))) goto failed;
+    _d2dPieceTexRenderTargets.resize(pieceBuffNum);
+    for(auto& d2dPieceTexRenderTarget : _d2dPieceTexRenderTargets) d2dPieceTexRenderTarget = std::make_unique<D2DRenderTarget>();
+    for (UINT i = 0; i < pieceBuffNum; i++)
+        if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dPieceTexRenderTargets[i].get(), _wrappedPieceTexBuffs[i].get()))) goto failed;
+    //if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dRenderTargetPawnTex.get(), _wrappedPawnTexBuff.get()))) goto failed;
 
     // DirectWriteファクトリー作成
     if (FAILED(CreateDWriteFactory())) goto failed;
@@ -333,7 +382,6 @@ HRESULT DX12::CreateD2D()
     if(FAILED(_d2dDeviceContext->CreateRedBrush(_redBrush.get()))) goto failed;
     // テキストフォーマット作成
     if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_dWriteTextFormat.get(), L"メイリオ"))) goto failed;
-    // if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed; // 駒のテキストフォーマット作成
 
     return S_OK;
 
@@ -344,51 +392,68 @@ failed:
 // レンダーテクスチャ作成
 void DX12::CreateRenderTex()
 {
-    InitRenderTex(); // レンダーテクスチャ初期処理
-    ExeD3D(); // Direct3D処理実行
-    ExeD2D(); // Direct2D処理実行
-    PrepareRenderTargetToFlip(); // 画面フリップ準備処理
-    _swapChain->Flip(); // 画面フリップ
-
+    
+    ShogiObj::ShogiObjType shogiObjType = ShogiObj::PAWN;
+    InitRenderTex(shogiObjType); // レンダーテクスチャ初期処理
     ExeCmd(); // コマンド実行してリソースをレンダーターゲットにする
-
-    _device11->AcquireWrappedBuff(_wrappedPawnTexBuff.get());
-    _d2dDeviceContext->SetRenderTarget(_d2dRenderTargetPawnTex.get());
-    _d2dDeviceContext->BeginDraw();
-    _d2dDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
-
-    DrawStr(L"歩", 0, 30, 256/2-1, 256/2-1, _blackBrush->GetD2DSolidColorBrush());
-    DrawStr(L"と", 256/2, 30, 256, 256/2-1, _redBrush->GetD2DSolidColorBrush());
-
-    _d2dDeviceContext->EndDraw();
-    _device11->ReleaseWrappedBuff(_wrappedPawnTexBuff.get());
+    auto wrappedBuff = _wrappedPieceTexBuffs[shogiObjType - 1].get();
+    auto d2dRenderTarget = _d2dPieceTexRenderTargets[shogiObjType - 1].get();
+    StartD2D(wrappedBuff, d2dRenderTarget);
+    DrawStr(L"歩", 0, 0, 256/2-1, 256/2-1, _blackBrush->GetD2DSolidColorBrush());
+    DrawStr(L"と", 256/2, 0, 256, 256/2-1, _redBrush->GetD2DSolidColorBrush());
+    EndD2D(wrappedBuff);
     _deviceContext->Flash(); // Direct2D描画
+    ExitRenderTex(shogiObjType); // レンダリング終了処理
+    ExeCmd(); // コマンド実行
 
-    ExeRenderToTex(); // テクスチャへレンダリング実行
+    shogiObjType = ShogiObj::KING;
+    InitRenderTex(shogiObjType); // レンダーテクスチャ初期処理
+    ExeCmd(); // コマンド実行してリソースをレンダーターゲットにする
+    wrappedBuff = _wrappedPieceTexBuffs[shogiObjType - 1].get();
+    d2dRenderTarget = _d2dPieceTexRenderTargets[shogiObjType - 1].get();
+    StartD2D(wrappedBuff, d2dRenderTarget);
+    DrawStr(L"王", 0, 10, 256/2-1, 256/2-1, _blackBrush->GetD2DSolidColorBrush());
+    DrawStr(L"", 256/2, 10, 256, 256/2-1, _redBrush->GetD2DSolidColorBrush());
+    EndD2D(wrappedBuff);
+    _deviceContext->Flash(); // Direct2D描画
+    ExitRenderTex(shogiObjType); // レンダリング終了処理
+    ExeCmd(); // コマンド実行
+
+    shogiObjType = ShogiObj::ROOK;
+    InitRenderTex(shogiObjType); // レンダーテクスチャ初期処理
+    ExeCmd(); // コマンド実行してリソースをレンダーターゲットにする
+    wrappedBuff = _wrappedPieceTexBuffs[shogiObjType - 1].get();
+    d2dRenderTarget = _d2dPieceTexRenderTargets[shogiObjType - 1].get();
+    StartD2D(wrappedBuff, d2dRenderTarget);
+    DrawStr(L"飛車", 0, 5, 256/2-1, 256/2-1, _blackBrush->GetD2DSolidColorBrush());
+    DrawStr(L"龍王", 256/2, 5, 256, 256/2-1, _redBrush->GetD2DSolidColorBrush());
+    EndD2D(wrappedBuff);
+    _deviceContext->Flash(); // Direct2D描画
+    ExitRenderTex(shogiObjType); // レンダリング終了処理
+    ExeCmd(); // コマンド実行
 }
 
 // レンダーテクスチャ初期処理
-void DX12::InitRenderTex()
+void DX12::InitRenderTex(ShogiObj::ShogiObjType shogiObjType)
 {
     // テクスチャのリソースバリアをレンダーターゲットに変更
-    auto resourceBarrier = _rb->GetRBTexToRenderTarget(_pawnTexBuff->GetBuff());
+    //auto resourceBarrier = _rb->GetRBTexToRenderTarget(_shogiObjTexBuffs[1]->GetBuff());
+    auto resourceBarrier = _rb->GetRBTexToRenderTarget(_shogiObjTexBuffs[shogiObjType]->GetBuff());
     _cmdList->SetResourceBarrier(resourceBarrier);
 
     // レンダーターゲットに設定
-    auto rtvHandle = _texRTVHeap->GetDescHandle(0);
+    auto rtvHandle = _texRTVHeap->GetDescHandle(shogiObjType - 1);
     _cmdList->SetRenderTarget(rtvHandle);
 
     _cmdList->ClearRenderTarget(rtvHandle); // レンダーターゲットクリア
 }
 
-// テクスチャへレンダリング実行
-void DX12::ExeRenderToTex()
+// レンダリング終了処理
+void DX12::ExitRenderTex(ShogiObj::ShogiObjType shogiObjType)
 {
     // テクスチャのリソースバリアをテクスチャに戻す
-    auto resourceBarrier = _rb->GetRBRenderTargetToTex(_pawnTexBuff->GetBuff());
+    auto resourceBarrier = _rb->GetRBRenderTargetToTex(_shogiObjTexBuffs[shogiObjType]->GetBuff());
      _cmdList->SetResourceBarrier(resourceBarrier);
-    // コマンド実行
-    ExeCmd();
 }
 
 // バッファに書き込み
@@ -403,7 +468,7 @@ HRESULT DX12::WriteToBuff()
     if (FAILED(_vertBuff->WriteToVertBuff(board, pieces))) goto failed; // 頂点バッファに書き込み
     if (FAILED(_idxBuff ->WriteToIdxBuff (board, pieces)))  goto failed; // インデックスバッファに書き込み
     _woodTexBuff->WriteToTexBuff(woodTex); // 木材テクスチャをバッファに書き込み
-    _boardLineTexBuff->WriteToTexBuff(boardLineTex); // 将棋盤黒線テクスチャをバッファに書き込み
+    _shogiObjTexBuffs[board->GetTexId()]->WriteToTexBuff(boardLineTex); // 将棋盤黒線テクスチャをバッファに書き込み
 
     return S_OK;
 
@@ -563,30 +628,37 @@ void DX12::ExeCmd()
 // Direct2D処理実行
 void DX12::ExeD2D()
 {
-    StartD2D(); // Direct2D開始
+    auto wrappedBackBuff = _wrappedBackBuffs[_currentBackBuffIdx].get();
+    auto d2dRenderTarget = _d2dRenderTargets[_currentBackBuffIdx].get();
+
+    StartD2D(wrappedBackBuff, d2dRenderTarget); // Direct2D開始
     //DrawStr(L"歩りゃあ", 0, 0, 720, 720);
-    EndD2D(); // Direct2D終了
+    EndD2D(wrappedBackBuff); // Direct2D終了
+    _deviceContext->Flash(); // Direct2D描画
 }
 
 // Direct2D開始
-void DX12::StartD2D()
+void DX12::StartD2D(WrappedBuff* wrappedBuff, D2DRenderTarget* d2dRenderTarget)
 {
-    auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
+    //auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
 
-    _device11->AcquireWrappedBuff(_wrappedBackBuffs[backBufferIdx].get());
-    _d2dDeviceContext->SetRenderTarget(_d2dRenderTargets[backBufferIdx].get());
+    //_device11->AcquireWrappedBuff(_wrappedBackBuffs[backBufferIdx].get());
+    _device11->AcquireWrappedBuff(wrappedBuff);
+    //_d2dDeviceContext->SetRenderTarget(_d2dRenderTargets[backBufferIdx].get());
+    _d2dDeviceContext->SetRenderTarget(d2dRenderTarget);
     _d2dDeviceContext->BeginDraw();
     _d2dDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
 }
 
 // Direct2D終了
-void DX12::EndD2D()
+void DX12::EndD2D(WrappedBuff* wrappedBuff)
 {
-    auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
+    //auto backBufferIdx = _swapChain->GetCurrentBackBufferIdx();
 
     _d2dDeviceContext->EndDraw();
-    _device11->ReleaseWrappedBuff(_wrappedBackBuffs[backBufferIdx].get());
-    _deviceContext->Flash(); // Direct2D描画
+    _device11->ReleaseWrappedBuff(wrappedBuff);
+    //_device11->ReleaseWrappedBuff(_wrappedBackBuffs[backBufferIdx].get());
+    //_deviceContext->Flash(); // Direct2D描画
 }
 
 // 文字を出力する
@@ -670,10 +742,9 @@ void DX12::WaitProcessWithFence()
 
 
 
-//////
-//Piece* DX12::GetPawn(){return _pieces[0].get(); } // 歩を返す}
+
 ViewMat* DX12::GetViewMat(){return _viewMat.get();} // ビュー行列を返す
-//////
+
 
 
 
@@ -735,8 +806,8 @@ DX12::DX12() {
     _idxBuff       = std::make_unique<IdxBuff>();
     _constBuff     = std::make_unique<ConstBuff>();
     _woodTexBuff       = std::make_unique<TexBuff>();
-    _boardLineTexBuff       = std::make_unique<TexBuff>();
-    _pawnTexBuff       = std::make_unique<TexBuff>();
+    //_boardLineTexBuff       = std::make_unique<TexBuff>();
+    //_pawnTexBuff       = std::make_unique<TexBuff>();
 
     
     _rootSignature = std::make_unique<RootSignature>();
@@ -748,8 +819,8 @@ DX12::DX12() {
 
     _rb = std::make_unique<ResourceBarrier>();
 
-    _wrappedPawnTexBuff = std::make_unique<WrappedBuff>();
-    _d2dRenderTargetPawnTex = std::make_unique<D2DRenderTarget>();
+    //_wrappedPawnTexBuff = std::make_unique<WrappedBuff>();
+    //_d2dRenderTargetPawnTex = std::make_unique<D2DRenderTarget>();
 }
 
 DX12::~DX12(){}

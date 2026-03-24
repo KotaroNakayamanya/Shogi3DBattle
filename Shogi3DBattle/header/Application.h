@@ -20,14 +20,13 @@ private:
 
     // テクスチャ
     std::unique_ptr<Tex> _woodTex; // 木材テクスチャ
+
+    //std::vector<std::unique_ptr<Tex>> _shogiObjTex; // 将棋オブジェクトごとのテクスチャ
     std::unique_ptr<Tex> _boardLineTex; // 将棋盤黒線テクスチャ
     
 
     void CreateTex(); // テクスチャ作成
 
-    //void CreateBoard(ShogiObj::ShogiObjType id); // 将棋盤作成
-
-    //void CreatePiece(Piece* piece, ShogiObj::ShogiObjType id); // 駒作成
 
     std::unique_ptr<InputHandler> _inputHandler; // インプットハンドラ
 

@@ -27,19 +27,33 @@ HRESULT DWriteFactory::CreateDWriteTextFormat(
         nullptr,
         DWRITE_FONT_WEIGHT_NORMAL,
         DWRITE_FONT_STYLE_NORMAL,
-        DWRITE_FONT_STRETCH_NORMAL,
-        80.0f,
+        DWRITE_FONT_STRETCH_ULTRA_CONDENSED,
+        60.0f,
         L"ja-jp",
         dWriteTextFormat->_dWriteTextFormat.ReleaseAndGetAddressOf());
     if(FAILED(result)) return result;
 
+    // ‰¡ˆÊ’u‚ð’†‰›‚É
     result = dWriteTextFormat->_dWriteTextFormat->SetTextAlignment(
         DWRITE_TEXT_ALIGNMENT_CENTER);
     if(FAILED(result)) return result;
 
+    // cˆÊ’u‚ð’†‰›‚É
     result = dWriteTextFormat->_dWriteTextFormat->SetParagraphAlignment(
         DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
     if(FAILED(result)) return result;
+
+    // c‘‚«‚É‚·‚é
+    result = dWriteTextFormat->_dWriteTextFormat->SetReadingDirection(
+        DWRITE_READING_DIRECTION_TOP_TO_BOTTOM);
+    if(FAILED(result)) return result;
+
+    // ‰E‚©‚ç¶‚Ö
+    result = dWriteTextFormat->_dWriteTextFormat->SetFlowDirection(
+        DWRITE_FLOW_DIRECTION_RIGHT_TO_LEFT);
+    if(FAILED(result)) return result;
+
+    result = S_OK;
 }
 
 

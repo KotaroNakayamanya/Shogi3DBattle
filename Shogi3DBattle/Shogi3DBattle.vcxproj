@@ -89,6 +89,7 @@
     <ClCompile Include="src\TexHeapProp.cpp" />
     <ClCompile Include="src\TexResourceDesc.cpp" />
     <ClCompile Include="src\UploadHeapProp.cpp" />
+    <ClCompile Include="src\VecCalc.cpp" />
     <ClCompile Include="src\VertBuff.cpp" />
     <ClCompile Include="src\ShogiObj.cpp" />
     <ClCompile Include="src\VertBuffFactory.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="header\TexStruct.h" />
     <ClInclude Include="header\DWriteTextFormat.h" />
     <ClInclude Include="header\UploadHeapProp.h" />
+    <ClInclude Include="header\VecCalc.h" />
     <ClInclude Include="header\VertBuff.h" />
     <ClInclude Include="header\ShogiObj.h" />
     <ClInclude Include="header\VertBuffFactory.h" />

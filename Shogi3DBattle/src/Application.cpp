@@ -5,6 +5,7 @@
 #include<array>
 #include"BoardFactory.h"
 #include"PieceFactory.h"
+#include<functional>
 
 // 初期処理
 bool Application::Init()
@@ -27,14 +28,43 @@ failed:
 // 将棋オブジェクト作成
 void Application::CreateShogiObj()
 {
-    UINT id = 0;
+    // 将棋オブジェクト作成用関数
+    std::function<void(ShogiObj*, ShogiObj::ShogiObjType, UINT)> createShogiObjFunction =
+        [this](ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UINT objId)
+        {
+            switch (shogiObjType)
+            {
+            case ShogiObj::BOARD:
+                _shogiObjFactory.reset(new BoardFactory());
+                break;
+            
+            case ShogiObj::KING:
+            case ShogiObj::ROOK:
+            case ShogiObj::BISHOP:
+            case ShogiObj::GOLD:
+            case ShogiObj::SILVER:
+            case ShogiObj::KNIGHT:
+            case ShogiObj::LANCE:
+            case ShogiObj::PAWN:
+                _shogiObjFactory.reset(new PieceFactory());
+                break;
+
+            default:
+                return;
+            }
+
+            _shogiObjFactory->CreateShogiObj(shogiObj, shogiObjType, objId);
+        };
+
+    UINT objId = 0;
 
     // 将棋盤作成
-    _shogiObjFactory.reset(new BoardFactory());
-    _shogiObjFactory->CreateShogiObj(_board.get(), ShogiObj::BOARD, id++);
+    //_shogiObjFactory.reset(new BoardFactory());
+    //_shogiObjFactory->CreateShogiObj(_board.get(), ShogiObj::BOARD, objId++);
+    createShogiObjFunction(_board.get(), ShogiObj::BOARD, objId++);
 
     // 駒作成
-    _shogiObjFactory.reset(new PieceFactory());
+    //_shogiObjFactory.reset(new PieceFactory());
 
     UINT kingNum =  2;
     UINT rookNum =  2;
@@ -54,14 +84,63 @@ void Application::CreateShogiObj()
                   + lanceNum
                   + pawnNum;
 
-    _pieces.resize(pawnNum);
+    _pieces.resize(pieceNum);
+    for(auto& piece : _pieces) piece = std::make_unique<Piece>();
 
-    // 歩　作成
-    for (UINT i = 0; i < pawnNum; i++)
-    {
-        _pieces[i] = std::make_unique<Pawn>();
-        _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, id++);
-    }
+    
+    //// 王　作成
+    //UINT offset = 0;
+    //for (UINT i = 0; i < kingNum; i++)
+    //{
+    //    _pieces[i] = std::make_unique<Piece>();
+    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
+    //}
+    //// 飛車　作成
+    //for (UINT i = 0; i < rookNum; i++)
+    //{
+    //    _pieces[i] = std::make_unique<Piece>();
+    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
+    //}
+    //// 角　作成
+    //for (UINT i = 0; i < bishopNum; i++)
+    //{
+    //    _pieces[i] = std::make_unique<Piece>();
+    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
+    //}
+    //// 金　作成
+    //for (UINT i = 0; i < pawnNum; i++)
+    //{
+    //    _pieces[i] = std::make_unique<Piece>();
+    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
+    //}
+    //// 銀　作成
+    //for (UINT i = 0; i < pawnNum; i++)
+    //{
+    //    _pieces[i] = std::make_unique<Piece>();
+    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
+    //}
+    //// 圭　作成
+    //for (UINT i = 0; i < pawnNum; i++)
+    //{
+    //    _pieces[i] = std::make_unique<Piece>();
+    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
+    //}
+    //// 香　作成
+    //for (UINT i = 0; i < pawnNum; i++)
+    //{
+    //    _pieces[i] = std::make_unique<Piece>();
+    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
+    //}
+
+    for (UINT i = 0; i < kingNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::KING, objId);
+    for (UINT i = 0; i < rookNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::ROOK, objId);
+    for (UINT i = 0; i < bishopNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::BISHOP, objId);
+    for (UINT i = 0; i < goldNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::GOLD, objId);
+    for (UINT i = 0; i < silverNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::SILVER, objId);
+    for (UINT i = 0; i < knightNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::KNIGHT, objId);
+    for (UINT i = 0; i < lanceNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::LANCE, objId);
+    for (UINT i = 0; i < pawnNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::PAWN, objId);
+
 
     _pieces[1]->MoveX(10.0f);
     _pieces[1]->MoveY(10.0f);

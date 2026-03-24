@@ -2,23 +2,19 @@
 
 float4 PShader(Output input) : SV_Target
 {
+    //return float4(input.normal);
+    
     //return float4(input.uv, 1, 1);
-    //return float4(1, 1, 1, 1);
-    //float4 aaa = 
     
-    float4 wood      = tex.Sample(samp, input.uv);
-    float4 draw = drawTex[input.texId].Sample(samp, input.uv);
-    //float4 boardLine = drawTex[1].Sample(samp, input.uv);
+    float4 wood      = woodTex.Sample(samp, input.uv);
     
+    float4 light = normalize(float4(0, 0.5, 1, 0));
+    float1 lightEffect = -dot(light, input.normal);
     
-    return wood * draw;
+    float1 finalLight = max(lightEffect, 0.6f);
     
-    //float2 aaa = { 0.5f, 0.0f };
-    //float4 color = float4(tex.Sample(samp, aaa));
-    //float light = 0.9f;
-    //float4 finalColor = color * light;
+    float4 shogiObjTex = drawTex[input.texId].Sample(samp, input.uv);
+    //float4 shogiObjTex = drawTex[8].Sample(samp, input.uv);
     
-    //return finalColor;
-    
-    //return float4(input.normal.xyz, 1);
+    return wood * shogiObjTex * finalLight;
 }

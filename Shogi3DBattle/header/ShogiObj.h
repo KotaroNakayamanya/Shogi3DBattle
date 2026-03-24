@@ -21,8 +21,6 @@ public:
     enum ShogiObjType
     {   
         BOARD,
-        PAWN,
-        
         KING,
         ROOK,
         BISHOP,
@@ -30,7 +28,7 @@ public:
         SILVER,
         KNIGHT,
         LANCE,
-        
+        PAWN  
     };
 
 protected:

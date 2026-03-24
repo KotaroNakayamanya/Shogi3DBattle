@@ -1,15 +1,18 @@
 #include"PieceFactory.h"
 #include<array>
 #include<algorithm>
+#include"VecCalc.h"
 
 // 駒作成
-void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UINT id)
+void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UINT objId)
 {
-    shogiObj->SetId(id);
+    shogiObj->SetId(objId);
 
+    // 使用する文字テクスチャのIDをセット
     UINT texId = static_cast<UINT>(shogiObjType);
     shogiObj->SetTexId(texId);   
 
+    // 駒の種類ごとの大きさをミリメートルで格納
     float mmBottomWidth;
     float mmHeight;
     switch (shogiObjType)
@@ -51,7 +54,7 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     }
 
     // 10.0fで約400mm
-    float mmPerFloat = 400.0f / 10.0f;
+    float mmPerFloat = 600.0f / 10.0f;
 
     // マスの1辺を1.0fとして、駒をfloatの長さに直す
     float bottomWidth  = mmBottomWidth  / mmPerFloat; // 底面横の長さ
@@ -64,7 +67,7 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     float cornerHeight = height * cornerHeightRate;   // 角部分縦の底面からの高さ
     float thickness    = height / 8.0f;  // 駒の厚み
 
-    // UV座標使用のため、駒の高さを1.0fとした時のそれぞれの頂点のUV座標を計算する
+    // UV座標使用のため、駒の高さを1.0fとした時のそれぞれの頂点のUV座標を取得する
     float quarterCornerWidth = (cornerWidth / height) / 2 / 2;
     float quarterBottomWidth = (bottomWidth / height) / 2 / 2;
 
@@ -92,11 +95,36 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     float backRightBottomU = frontRightBottomU + 0.5f;
     
 
-    // (0,0)を基準とした頂点座標にするため、縦横をずらす
+    // (0,0)を基準とした頂点座標にするため,それぞれの位置をずらす
     bottomWidth  /= 2;
     height       /= 2;
     cornerWidth  /= 2;
     cornerHeight -= height;
+
+
+    // 側面の法線（右と上を正）を
+    DirectX::XMFLOAT2 normalizedVec;
+
+    // 頂点上　→　頂点角右のベクトルを正規化する
+    DirectX::XMFLOAT2 topToRightCornerVec;
+    topToRightCornerVec.x = cornerWidth;
+    topToRightCornerVec.y = cornerHeight - height;
+    normalizedVec = VecCalc::GetNormFloat(topToRightCornerVec);
+
+    // 正規化したベクトルのxyを反対に格納し、どちらかの符号を逆にしたものは法線
+    float cornerNormalX = -normalizedVec.y;
+    float cornerNormalY =  normalizedVec.x;
+
+
+    // 頂点角右　→　頂点底面右のベクトルを正規化する
+    DirectX::XMFLOAT2 rightCornerToRightBottomVec;
+    rightCornerToRightBottomVec.x =  bottomWidth - cornerWidth;
+    rightCornerToRightBottomVec.y = -height      - cornerHeight;
+    normalizedVec = VecCalc::GetNormFloat(rightCornerToRightBottomVec);
+
+    // 正規化したベクトルのxyを反対に格納し、どちらかの符号を逆にしたものは法線
+    float normalX = -normalizedVec.y;
+    float normalY =  normalizedVec.x;
 
     
 
@@ -105,20 +133,50 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     std::vector<ShogiObj::Vert> vertices;
 
     vertices = // 頂点集合
-    {   // 上面図と考えて指定
+    {
         // 前面
-        {{-bottomWidth,     -height, -thickness}, {0.0f, 0.0f, -1.0f}, {frontLeftBottomU, bottomV}, id, texId}, // 左下
-        {{ bottomWidth,     -height, -thickness}, {0.0f, 0.0f, -1.0f}, {frontRightBottomU, bottomV}, id, texId}, // 右下
-        {{-cornerWidth, cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {frontLeftCornerU, cornerV}, id, texId}, // 左上
-        {{ cornerWidth, cornerHeight, -thickness}, {0.0f, 0.0f, -1.0f}, {frontRightCornerU, cornerV}, id, texId}, // 右上
-        {{        0.0f,      height, -thickness}, {0.0f, 0.0f, -1.0f}, {frontTopU, topV}, id, texId}, // 上    
+        {{ cornerWidth, cornerHeight, -thickness}, {0.0f,  0.0f, -1.0f}, {frontRightCornerU, cornerV}, objId, texId}, // 右上
+        {{ bottomWidth,      -height, -thickness}, {0.0f,  0.0f, -1.0f}, {frontRightBottomU, bottomV}, objId, texId}, // 右下
+        {{-bottomWidth,      -height, -thickness}, {0.0f,  0.0f, -1.0f}, {frontLeftBottomU,  bottomV}, objId, texId}, // 左下 
+        {{-cornerWidth, cornerHeight, -thickness}, {0.0f,  0.0f, -1.0f}, {frontLeftCornerU,  cornerV}, objId, texId}, // 左上
+        {{        0.0f,       height, -thickness}, {0.0f,  0.0f, -1.0f}, {frontTopU,         topV   }, objId, texId}, // 上    
 
         // 裏面
-        {{-bottomWidth,     -height,      0.0f}, {0.0f, 0.0f, 1.0f}, {backRightBottomU, bottomV}, id, texId}, // 左下
-        {{ bottomWidth,     -height,      0.0f}, {0.0f, 0.0f, 1.0f}, {backLeftBottomU, bottomV}, id, texId}, // 右下
-        {{-cornerWidth,  cornerHeight,      0.0f}, {0.0f, 0.0f, 1.0f}, {backRightCornerU, cornerV}, id, texId}, // 左上
-        {{ cornerWidth,  cornerHeight,      0.0f}, {0.0f, 0.0f, 1.0f}, {backLeftCornerU, cornerV}, id, texId}, // 右上
-        {{        0.0f,       height,      0.0f}, {0.0f, 0.0f, 1.0f}, {backTopU, topV}, id}, // 上
+        {{-cornerWidth, cornerHeight,       0.0f}, {0.0f,  0.0f,  1.0f}, {backRightCornerU,  cornerV}, objId, texId}, // 右上
+        {{-bottomWidth,      -height,       0.0f}, {0.0f,  0.0f,  1.0f}, {backRightBottomU,  bottomV}, objId, texId}, // 右下
+        {{ bottomWidth,      -height,       0.0f}, {0.0f,  0.0f,  1.0f}, {backLeftBottomU,   bottomV}, objId, texId}, // 左下
+        {{ cornerWidth, cornerHeight,       0.0f}, {0.0f,  0.0f,  1.0f}, {backLeftCornerU,   cornerV}, objId, texId}, // 左上
+        {{        0.0f,       height,       0.0f}, {0.0f,  0.0f,  1.0f}, {backTopU,          topV   }, objId, texId}, // 上
+
+        // 底面
+        {{ bottomWidth,      -height, -thickness}, {0.0f, -1.0f,  0.0f}, {0, 0}, objId, texId}, // 右上
+        {{ bottomWidth,      -height,       0.0f}, {0.0f, -1.0f,  0.0f}, {0, 0}, objId, texId}, // 右下
+        {{-bottomWidth,      -height,       0.0f}, {0.0f, -1.0f,  0.0f}, {0, 0}, objId, texId}, // 左下
+        {{-bottomWidth,      -height, -thickness}, {0.0f, -1.0f,  0.0f}, {0, 0}, objId, texId}, // 左上
+
+        // 側面右
+        {{ cornerWidth, cornerHeight, -thickness}, { normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 右上
+        {{ cornerWidth, cornerHeight,       0.0f}, { normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 右下
+        {{ bottomWidth,      -height,       0.0f}, { normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 左下
+        {{ bottomWidth,      -height, -thickness}, { normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 左上
+
+        // 側面左
+        {{-bottomWidth,      -height, -thickness}, {-normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 右上
+        {{-bottomWidth,      -height,       0.0f}, {-normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 右下
+        {{-cornerWidth, cornerHeight,       0.0f}, {-normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 左下
+        {{-cornerWidth, cornerHeight, -thickness}, {-normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 左上
+
+        // 側面右上
+        {{           0,       height, -thickness}, { cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 右上
+        {{           0,       height,       0.0f}, { cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 右下
+        {{ cornerWidth, cornerHeight,       0.0f}, { cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 左下
+        {{ cornerWidth, cornerHeight, -thickness}, { cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 左上
+
+        // 側面左上
+        {{-cornerWidth, cornerHeight, -thickness}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 右上
+        {{-cornerWidth, cornerHeight,       0.0f}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 右下
+        {{           0,       height,       0.0f}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 左下
+        {{           0,       height, -thickness}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 左上  
     };
 
     shogiObj->SetVertices(vertices);
@@ -126,56 +184,34 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
 
     std::vector<unsigned short> indices;
 
-    enum PieceVertName // 駒の頂点に名前を付ける
+    // 表面と裏面は(0 1 2), (2 3 0), (3 4 0)で作れる
+    for (int i = 0; i < 2; i++)
     {
-        // 前面
-        frontLeftBottom,  // 左下
-        frontRightBottom, // 右下
-        frontLeftTop,     // 左上
-        frontRightTop,    // 右上
-        frontTop,         // 上
+        indices.push_back(0 + 5*i);
+        indices.push_back(1 + 5*i);
+        indices.push_back(2 + 5*i);
 
-        // 背面
-        backLeftBottom,  // 左下
-        backRightBottom, // 右下
-        backLeftTop,     // 左上
-        backRightTop,    // 右上
-        backTop          // 上
-    };
+        indices.push_back(2 + 5*i);
+        indices.push_back(3 + 5*i);
+        indices.push_back(0 + 5*i);
 
-    indices = // インデックス集合
+        indices.push_back(3 + 5*i);
+        indices.push_back(4 + 5*i);
+        indices.push_back(0 + 5*i);
+    }
+
+    // 側面は(0 1 2), (2 3 0)で作れる
+    for (int i = 0; i < 5; i++)
     {
-        // 前面
-        frontRightBottom, frontLeftBottom, frontLeftTop,     // 右下　左下　左上
-        frontLeftTop,     frontRightTop,   frontRightBottom, // 左上　右上 右下
-        frontTop,         frontRightTop,   frontLeftTop,     // 右上　左上　上
+        int offset = 10;
+        indices.push_back(0 + offset + 4*i);
+        indices.push_back(1 + offset + 4*i);
+        indices.push_back(2 + offset + 4*i);
 
-        // 裏面
-        backLeftBottom,  backRightBottom, backLeftTop, // 左下　右下　左上
-        backRightBottom, backRightTop,    backLeftTop, // 右下　右上　左上
-        backLeftTop,     backRightTop,    backTop,     // 左上　右上　上
-
-        // 側面上左
-        frontTop, frontLeftTop, backLeftTop, // 前面上　前面左上　背面左上
-        backTop,  frontTop,     backLeftTop, // 背面上　前面上　　背面左上
-
-        // 側面上右
-        backTop,  backRightTop, frontRightTop, // 背面上　背面右上　前面右上
-        frontTop, backTop,      frontRightTop, // 前面上　背面上　　前面右上　
-
-
-        // 側面右
-        frontRightBottom, frontRightTop, backRightBottom, // 背面右下　前面右上　背面右下
-        frontRightTop,    backRightTop,  backRightBottom, // 背面右上　背面右上　背面右下
-
-        // 側面左
-        backLeftBottom, backLeftTop,  frontLeftBottom, // 背面左下　背面左上　前面左下
-        backLeftTop,    frontLeftTop, frontLeftBottom, // 背面左上　前面左上　前面左下
-
-        // 底面
-        frontLeftBottom, frontRightBottom, backRightBottom, // 前面左下　前面右下　背面右下
-        frontLeftBottom, backRightBottom, backLeftBottom    // 前面左下　背面右下　背面左下
-    };
+        indices.push_back(2 + offset + 4*i);
+        indices.push_back(3 + offset + 4*i);
+        indices.push_back(0 + offset + 4*i);
+    }
 
     shogiObj->SetIndices(indices);
 }

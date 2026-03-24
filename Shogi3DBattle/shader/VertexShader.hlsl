@@ -9,8 +9,14 @@ Output VShader(
 {
     Output output;
     
+    // 座標変換後の座標
     output.svpos  = mul(viewProjMat, mul(worldMat[objId], pos));
-    output.normal = mul(worldMat[objId], normal);
+    
+    // 法線 平行移動成分は0にする
+    float4 normal_w0 = normal;
+    normal_w0.w = 0;
+    output.normal = mul(worldMat[objId], normal_w0);
+    
     output.uv     = uv;
     output.texId  = texId;
     

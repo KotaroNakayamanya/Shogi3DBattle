@@ -43,16 +43,18 @@ private:
     std::unique_ptr<ConstBuff> _constBuff; // コンスタントバッファ
 
     std::unique_ptr<TexBuff>   _woodTexBuff; // 木材テクスチャバッファ
-    std::unique_ptr<TexBuff>   _boardLineTexBuff; // 将棋盤黒線テクスチャバッファ
-    std::unique_ptr<TexBuff>   _pawnTexBuff; // 歩テクスチャバッファ
-    std::unique_ptr<WrappedBuff> _wrappedPawnTexBuff; // ラップされた歩テクスチャバッファ
-    std::unique_ptr<D2DRenderTarget> _d2dRenderTargetPawnTex;
+    std::vector<std::unique_ptr<TexBuff>> _shogiObjTexBuffs; // 将棋オブジェクト種類ごとのテクスチャバッファ
+    //std::unique_ptr<TexBuff>   _boardLineTexBuff; // 将棋盤黒線テクスチャバッファ
+    //std::unique_ptr<TexBuff>   _pawnTexBuff; // 歩テクスチャバッファ
+    //std::unique_ptr<WrappedBuff> _wrappedPawnTexBuff; // ラップされた歩テクスチャバッファ
+    std::vector<std::unique_ptr<WrappedBuff>> _wrappedPieceTexBuffs; // ラップされた駒テクスチャバッファ
+    //std::unique_ptr<D2DRenderTarget> _d2dRenderTargetPawnTex;
+    std::vector<std::unique_ptr<D2DRenderTarget>> _d2dPieceTexRenderTargets; // 駒テクスチャ作成用レンダーターゲット
 
     void CreateRenderTex(); // レンダーテクスチャ作成
-    void InitRenderTex(); // レンダーテクスチャ初期処理
-    void ExeRenderToTex(); // テクスチャへレンダリング実行
+    void InitRenderTex(ShogiObj::ShogiObjType shogiObjType); // レンダーテクスチャ初期処理
+    void ExitRenderTex(ShogiObj::ShogiObjType shogiObjType); // レンダリング終了処理
 
-    //std::vector<std::unique_ptr<RenderTexBuff>> _pieceTexBuffs; // 駒テクスチャバッファ
     HRESULT CreateBuff(); // バッファ系作成
     HRESULT WriteToBuff(); // バッファに書き込み  
 
@@ -130,8 +132,8 @@ private:
 
     void PrepareRenderTargetToFlip(); // レンダーターゲットのフリップ準備
 
-    void StartD2D(); // Direct2D開始
-    void EndD2D();   // Direct2D終了
+    void StartD2D(WrappedBuff* wrappedBuff, D2DRenderTarget* d2dRenderTarget); // Direct2D開始
+    void EndD2D(WrappedBuff* wrappedBuff);   // Direct2D終了
     
 
 
