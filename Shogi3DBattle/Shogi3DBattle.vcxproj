@@ -73,7 +73,6 @@
     <ClCompile Include="src\PieceFactory.cpp" />
     <ClCompile Include="src\PShaderResourceStates.cpp" />
     <ClCompile Include="src\ReadResourceStates.cpp" />
-    <ClCompile Include="src\RenderTexBuff.cpp" />
     <ClCompile Include="src\Pipeline.cpp" />
     <ClCompile Include="src\ProjMat.cpp" />
     <ClCompile Include="src\PShader.cpp" />
@@ -176,7 +175,6 @@
     <ClInclude Include="header\PieceFactory.h" />
     <ClInclude Include="header\PShaderResourceStates.h" />
     <ClInclude Include="header\ReadResourceStates.h" />
-    <ClInclude Include="header\RenderTexBuff.h" />
     <ClInclude Include="header\Pipeline.h" />
     <ClInclude Include="header\ProjMat.h" />
     <ClInclude Include="header\PShader.h" />

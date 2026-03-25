@@ -4,7 +4,7 @@
 
 class WorldMat : public IMat
 {
-private:
+protected:
     DirectX::XMMATRIX _worldMat;
     
 public:

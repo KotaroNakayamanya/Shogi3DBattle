@@ -13,9 +13,7 @@ bool Application::Init()
 {
     if(_gameWindow->InitGameWindow() == false) goto failed;    // ゲームウインドウ初期処理
     CreateShogiObj(); // 将棋オブジェクト作成
-
-    CreateTex();
-
+    CreateTex(); // テクスチャ作成
     if(_dx12->InitDX12(_gameWindow.get()) == false) goto failed; // DirectX12初期処理
     _inputHandler = std::make_unique<InputHandler>(); // インプットハンドラ作成(初期は動ける状態）
 
@@ -25,6 +23,9 @@ failed:
     assert(false);
     return false;
 }
+
+
+
 
 // 将棋オブジェクト作成
 void Application::CreateShogiObj()
@@ -110,6 +111,9 @@ void Application::CreateShogiObj()
         _pieces[i]->MoveY(10.0f);
     }
 }
+
+
+
 
 // テクスチャ作成
 void Application::CreateTex()
@@ -243,8 +247,7 @@ void Application::CreateTex()
     _boardLineTex->SetTex(boardLineTex);
  }
 
-Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す
-std::vector<std::unique_ptr<Piece>>& Application::GetPieces(){return _pieces;} // 駒を返す
+
 
 
 
@@ -372,18 +375,11 @@ LRESULT CALLBACK WindowProcedure(
 
     case WM_MOUSEMOVE: // マウス移動
     {
-        //RECT clientRect;
-        //GetClientRect(hwnd, &clientRect);
-
-
-        //int clientCenterXPos = (clientRect.right  - clientRect.left) / 2;
-        //int clientCenterYPos = (clientRect.bottom - clientRect.top)  / 2;
+        UINT x = LOWORD(lParam);   // カーソル動作後の横位置
+        UINT y = HIWORD(lParam);   // カーソル動作後の縦位置
 
         if (isCursorInited)
         {
-            UINT x = LOWORD(lParam);   // カーソル動作後の横位置
-            UINT y = HIWORD(lParam);   // カーソル動作後の縦位置
-
             inputHandler->MemoryMouseMove(x, y);
 
             bool isXNearEdge = x < 50 || x > (app.GetWindowWidth()  - 50);
@@ -427,7 +423,10 @@ LRESULT CALLBACK WindowProcedure(
             SetRect(&rc, screenLT.x, screenLT.y, screenRB.x, screenRB.y);
             ClipCursor(&rc);
 
-            isCursorInited = true; // カーソル中央をtrue
+            inputHandler->SetCursorX(x);
+            inputHandler->SetCursorY(y);
+
+            isCursorInited = true; // カーソル初期済みをtrue
         }
         
         return 0;
@@ -455,6 +454,37 @@ Tex* Application::GetWoodTex(){return _woodTex.get();} // テクスチャを返�
 Tex* Application::GetBoardLineTex(){return _boardLineTex.get();} // テクスチャを返す
 VertIndices* Application::GetBoardVertIndices(){return _boardIndices.get();} // 将棋盤頂点インデックスを返す
 VertIndices* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
+Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す
+std::vector<std::unique_ptr<Piece>>& Application::GetPieces(){return _pieces;} // 駒を返す
+
+// すべての将棋オブジェクトを返す
+std::vector<ShogiObj*> Application::GetShogiObjects()
+{
+    std::vector<ShogiObj*> shogiObjects;
+
+    // 将棋盤を格納
+    shogiObjects.push_back(_board.get());
+    // 駒を格納
+    for(auto& piece : _pieces) shogiObjects.push_back(piece.get());
+
+    return shogiObjects;
+}
+
+// すべての頂点インデックスを返す
+std::vector<VertIndices*> Application::GetAllVertIndices()
+{
+    std::vector<VertIndices*> allVertIndices;
+
+    // 将棋盤を格納
+    allVertIndices.push_back(_boardIndices.get());
+    // 駒を格納
+    allVertIndices.push_back(_pieceIndices.get());
+
+    return allVertIndices;
+}
+
+
+
 
 // シングルトンインスタンスを返す
 Application& Application::GetInstance()

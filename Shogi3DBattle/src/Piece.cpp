@@ -5,18 +5,18 @@ void Piece::MoveX(float x)
 {
     //_worldMat *= DirectX::XMMatrixTranslation(x, 0, 0);
     auto moveXMat = DirectX::XMMatrixTranslation(x, 0, 0);
-    auto newMat = _worldMat->GetMat() * moveXMat;
+    auto newMat = _worldMat * moveXMat;
 
-    _worldMat->SetWorldMat(newMat);
+    _worldMat = newMat;
 }
 
 // yŽ²•ûŒü‚É“®‚­‚æ‚¤‚Éƒ[ƒ‹ƒhs—ñ‚ð•ÏŠ·‚·‚é
 void Piece::MoveY(float y)
 {
     auto moveYMat = DirectX::XMMatrixTranslation(0, y, 0);
-    auto newMat = _worldMat->GetMat() * moveYMat;
+    auto newMat = _worldMat * moveYMat;
 
-    _worldMat->SetWorldMat(newMat);
+    _worldMat = newMat;
 }
 
 Piece::Piece(){}

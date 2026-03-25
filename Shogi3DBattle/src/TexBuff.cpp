@@ -1,11 +1,11 @@
 #include"TexBuff.h"
 
 // テクスチャをバッファに書き込み
-void TexBuff::WriteToTexBuff(Tex* tex)
+HRESULT TexBuff::WriteToTexBuff(Tex* tex)
 {
     const auto& texture = tex->GetTex();
 
-    _buff->WriteToSubresource(
+    return _buff->WriteToSubresource(
         0,
         nullptr,
         texture.data(),

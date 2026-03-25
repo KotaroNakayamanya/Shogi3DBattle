@@ -6,7 +6,7 @@
 class TexBuff : public Buff
 {
 public:
-    void WriteToTexBuff(Tex* tex); // テクスチャをバッファに書き込み
+    HRESULT WriteToTexBuff(Tex* tex); // テクスチャをバッファに書き込み
 
     TexBuff();
     ~TexBuff();

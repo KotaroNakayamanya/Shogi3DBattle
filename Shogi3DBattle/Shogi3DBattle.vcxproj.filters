@@ -393,9 +393,6 @@
     <ClCompile Include="src\VertBuff.cpp">
       <Filter>ソース ファイル\dx12\buff</Filter>
     </ClCompile>
-    <ClCompile Include="src\RenderTexBuff.cpp">
-      <Filter>ソース ファイル\dx12\buff</Filter>
-    </ClCompile>
     <ClCompile Include="src\ConstBuff.cpp">
       <Filter>ソース ファイル\dx12\buff</Filter>
     </ClCompile>
@@ -631,9 +628,6 @@
     </ClInclude>
     <ClInclude Include="header\CSUHeap.h">
       <Filter>ヘッダー ファイル\DX12\heap</Filter>
-    </ClInclude>
-    <ClInclude Include="header\RenderTexBuff.h">
-      <Filter>ヘッダー ファイル\DX12\buff</Filter>
     </ClInclude>
     <ClInclude Include="header\IdxBuff.h">
       <Filter>ヘッダー ファイル\DX12\buff</Filter>

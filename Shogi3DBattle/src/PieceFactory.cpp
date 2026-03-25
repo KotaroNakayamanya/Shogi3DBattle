@@ -6,6 +6,7 @@
 // 駒作成
 void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UCHAR objId)
 {
+    // 将棋オブジェクトIDセット
     shogiObj->SetObjId(objId);
 
     // 使用する文字テクスチャのIDをセット
@@ -135,49 +136,55 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     vertices = // 頂点集合
     {
         // 前面
-        {{ cornerWidth, cornerHeight, -thickness}, {0.0f,  0.0f, -1.0f}, {frontRightCornerU, cornerV}, objId, texId}, // 右上
-        {{ bottomWidth,      -height, -thickness}, {0.0f,  0.0f, -1.0f}, {frontRightBottomU, bottomV}, objId, texId}, // 右下
-        {{-bottomWidth,      -height, -thickness}, {0.0f,  0.0f, -1.0f}, {frontLeftBottomU,  bottomV}, objId, texId}, // 左下 
-        {{-cornerWidth, cornerHeight, -thickness}, {0.0f,  0.0f, -1.0f}, {frontLeftCornerU,  cornerV}, objId, texId}, // 左上
-        {{        0.0f,       height, -thickness}, {0.0f,  0.0f, -1.0f}, {frontTopU,         topV   }, objId, texId}, // 上    
+        {{ cornerWidth, cornerHeight, -thickness}, {0.0f,  0.0f, -1.0f}, {frontRightCornerU, cornerV}}, // 右上
+        {{ bottomWidth,      -height, -thickness}, {0.0f,  0.0f, -1.0f}, {frontRightBottomU, bottomV}}, // 右下
+        {{-bottomWidth,      -height, -thickness}, {0.0f,  0.0f, -1.0f}, {frontLeftBottomU,  bottomV}}, // 左下 
+        {{-cornerWidth, cornerHeight, -thickness}, {0.0f,  0.0f, -1.0f}, {frontLeftCornerU,  cornerV}}, // 左上
+        {{        0.0f,       height, -thickness}, {0.0f,  0.0f, -1.0f}, {frontTopU,         topV   }}, // 上    
 
         // 裏面
-        {{-cornerWidth, cornerHeight,       0.0f}, {0.0f,  0.0f,  1.0f}, {backRightCornerU,  cornerV}, objId, texId}, // 右上
-        {{-bottomWidth,      -height,       0.0f}, {0.0f,  0.0f,  1.0f}, {backRightBottomU,  bottomV}, objId, texId}, // 右下
-        {{ bottomWidth,      -height,       0.0f}, {0.0f,  0.0f,  1.0f}, {backLeftBottomU,   bottomV}, objId, texId}, // 左下
-        {{ cornerWidth, cornerHeight,       0.0f}, {0.0f,  0.0f,  1.0f}, {backLeftCornerU,   cornerV}, objId, texId}, // 左上
-        {{        0.0f,       height,       0.0f}, {0.0f,  0.0f,  1.0f}, {backTopU,          topV   }, objId, texId}, // 上
+        {{-cornerWidth, cornerHeight,       0.0f}, {0.0f,  0.0f,  1.0f}, {backRightCornerU,  cornerV}}, // 右上
+        {{-bottomWidth,      -height,       0.0f}, {0.0f,  0.0f,  1.0f}, {backRightBottomU,  bottomV}}, // 右下
+        {{ bottomWidth,      -height,       0.0f}, {0.0f,  0.0f,  1.0f}, {backLeftBottomU,   bottomV}}, // 左下
+        {{ cornerWidth, cornerHeight,       0.0f}, {0.0f,  0.0f,  1.0f}, {backLeftCornerU,   cornerV}}, // 左上
+        {{        0.0f,       height,       0.0f}, {0.0f,  0.0f,  1.0f}, {backTopU,          topV   }}, // 上
 
         // 底面
-        {{ bottomWidth,      -height, -thickness}, {0.0f, -1.0f,  0.0f}, {0, 0}, objId, texId}, // 右上
-        {{ bottomWidth,      -height,       0.0f}, {0.0f, -1.0f,  0.0f}, {0, 0}, objId, texId}, // 右下
-        {{-bottomWidth,      -height,       0.0f}, {0.0f, -1.0f,  0.0f}, {0, 0}, objId, texId}, // 左下
-        {{-bottomWidth,      -height, -thickness}, {0.0f, -1.0f,  0.0f}, {0, 0}, objId, texId}, // 左上
+        {{ bottomWidth,      -height, -thickness}, {0.0f, -1.0f,  0.0f}, {0, 0}}, // 右上
+        {{ bottomWidth,      -height,       0.0f}, {0.0f, -1.0f,  0.0f}, {0, 0}}, // 右下
+        {{-bottomWidth,      -height,       0.0f}, {0.0f, -1.0f,  0.0f}, {0, 0}}, // 左下
+        {{-bottomWidth,      -height, -thickness}, {0.0f, -1.0f,  0.0f}, {0, 0}}, // 左上
 
         // 側面右
-        {{ cornerWidth, cornerHeight, -thickness}, { normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 右上
-        {{ cornerWidth, cornerHeight,       0.0f}, { normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 右下
-        {{ bottomWidth,      -height,       0.0f}, { normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 左下
-        {{ bottomWidth,      -height, -thickness}, { normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 左上
+        {{ cornerWidth, cornerHeight, -thickness}, { normalX,  normalY,  1.0f}, {0, 0}}, // 右上
+        {{ cornerWidth, cornerHeight,       0.0f}, { normalX,  normalY,  1.0f}, {0, 0}}, // 右下
+        {{ bottomWidth,      -height,       0.0f}, { normalX,  normalY,  1.0f}, {0, 0}}, // 左下
+        {{ bottomWidth,      -height, -thickness}, { normalX,  normalY,  1.0f}, {0, 0}}, // 左上
 
         // 側面左
-        {{-bottomWidth,      -height, -thickness}, {-normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 右上
-        {{-bottomWidth,      -height,       0.0f}, {-normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 右下
-        {{-cornerWidth, cornerHeight,       0.0f}, {-normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 左下
-        {{-cornerWidth, cornerHeight, -thickness}, {-normalX,  normalY,  1.0f}, {0, 0}, objId, texId}, // 左上
+        {{-bottomWidth,      -height, -thickness}, {-normalX,  normalY,  1.0f}, {0, 0}}, // 右上
+        {{-bottomWidth,      -height,       0.0f}, {-normalX,  normalY,  1.0f}, {0, 0}}, // 右下
+        {{-cornerWidth, cornerHeight,       0.0f}, {-normalX,  normalY,  1.0f}, {0, 0}}, // 左下
+        {{-cornerWidth, cornerHeight, -thickness}, {-normalX,  normalY,  1.0f}, {0, 0}}, // 左上
 
         // 側面右上
-        {{           0,       height, -thickness}, { cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 右上
-        {{           0,       height,       0.0f}, { cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 右下
-        {{ cornerWidth, cornerHeight,       0.0f}, { cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 左下
-        {{ cornerWidth, cornerHeight, -thickness}, { cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 左上
+        {{           0,       height, -thickness}, { cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}}, // 右上
+        {{           0,       height,       0.0f}, { cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}}, // 右下
+        {{ cornerWidth, cornerHeight,       0.0f}, { cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}}, // 左下
+        {{ cornerWidth, cornerHeight, -thickness}, { cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}}, // 左上
 
         // 側面左上
-        {{-cornerWidth, cornerHeight, -thickness}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 右上
-        {{-cornerWidth, cornerHeight,       0.0f}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 右下
-        {{           0,       height,       0.0f}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 左下
-        {{           0,       height, -thickness}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}, objId, texId}, // 左上  
+        {{-cornerWidth, cornerHeight, -thickness}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}}, // 右上
+        {{-cornerWidth, cornerHeight,       0.0f}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}}, // 右下
+        {{           0,       height,       0.0f}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}}, // 左下
+        {{           0,       height, -thickness}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}}, // 左上  
     };
+
+    for (auto& vertex : vertices)
+    {
+        vertex.objId = objId;
+        vertex.texId = texId;
+    }
 
     shogiObj->SetVertices(vertices);
 

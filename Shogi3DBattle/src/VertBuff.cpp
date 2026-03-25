@@ -24,11 +24,11 @@ HRESULT VertBuff::WriteToVertBuff(Board* board, std::vector<std::unique_ptr<Piec
     // バッファアドレスをそれぞれのオブジェクトに紐づける
     auto vertAddress = _buff->GetGPUVirtualAddress();
 
-    board->SetVertAddress(vertAddress);
+    board->SetBuffAddress(vertAddress);
     vertAddress += board->GetVerticesByteSize();
     for (auto& piece : pieces)
     {
-        piece->SetVertAddress(vertAddress);
+        piece->SetBuffAddress(vertAddress);
         vertAddress += piece->GetVerticesByteSize();
     }
 

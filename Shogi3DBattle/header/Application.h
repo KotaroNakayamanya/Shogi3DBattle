@@ -56,6 +56,9 @@ public:
     VertIndices* GetBoardVertIndices(); // 将棋盤頂点インデックスを返す
     VertIndices* GetPieceVertIndices(); // 駒の頂点インデックスを返す
 
+    std::vector<ShogiObj*> GetShogiObjects(); // すべての将棋オブジェクトを返す
+    std::vector<VertIndices*> GetAllVertIndices(); // すべての頂点インデックスを返す
+
     InputHandler* GetInputHandler(); // インプットハンドラを返す
 
     UINT GetWindowWidth();  // ウインドウ横サイズを返す

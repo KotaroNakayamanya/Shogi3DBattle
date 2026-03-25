@@ -4,7 +4,6 @@
 #include"IViewFactory.h"
 #include"IBuffFactory.h"
 
-#include"RenderTexBuff.h"
 #include"Device11.h"
 #include"DeviceContext.h"
 #include"CmdAllocator.h"

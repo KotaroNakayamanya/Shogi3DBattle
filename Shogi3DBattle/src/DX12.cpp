@@ -37,13 +37,9 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     if(FAILED(CreateHeap())) goto failed; // ヒープ作成
     CreateView(); // ビュー作成
     
-    // ルートシグネチャオブジェクト作成
-    if (FAILED(_device->CreateRootSignature(_rootSignature.get(), _csuHeap.get()))) goto failed;
-
-    // 頂点バッファ入力レイアウト作成
-    _device->CreateInputLayout(_inputLayout.get());
-    // シェーダー系作成
-    if(FAILED(CreateShader())) goto failed;
+    if (FAILED(_device->CreateRootSignature(_rootSignature.get(), _csuHeap.get()))) goto failed; // ルートシグネチャオブジェクト作成
+    _device->CreateInputLayout(_inputLayout.get()); // 頂点バッファ入力レイアウト作成
+    if(FAILED(CreateShader())) goto failed; // シェーダー系作成
 
     // パイプラインオブジェクト作成
     if (FAILED(_device->CreatePipeline(
@@ -169,14 +165,19 @@ HRESULT DX12::CreateBuff()
     auto& app = Application::GetInstance();
     
     auto  woodTex = app.GetWoodTex();
-    auto  board      = app.GetBoard();
-    auto& pieces     = app.GetPieces();
+    //auto  board      = app.GetBoard();
+    //auto& pieces     = app.GetPieces();
     
     auto  boardLineTex = app.GetBoardLineTex();
-
-    auto boardVertIndices = app.GetBoardVertIndices();
-    auto pieceVertIndices = app.GetPieceVertIndices();
     
+    auto shogiObjects   = app.GetShogiObjects();
+    auto allVertIndices = app.GetAllVertIndices();
+
+    std::vector<ShogiObj::ShogiObjType> boardType =
+    {
+        ShogiObj::BOARD_55,
+        ShogiObj::BOARD_99
+    };
 
 
     // バックバッファ作成
@@ -196,23 +197,23 @@ HRESULT DX12::CreateBuff()
     if (FAILED(_device->CreateBuff(_dsBuff.get(), widthSize, heightSize, Buff::DEPTH_STENCIL))) goto failed;
 
     // コンスタントバッファ作成
-    UINT boardNum, pieceNum, viewProjNum, totalMatNum;
-    boardNum    = 1;
-    pieceNum    = pieces.size();
+    UINT shogiObjNum, viewProjNum, totalMatNum;
+    shogiObjNum = shogiObjects.size();
     viewProjNum = 1;
-    totalMatNum = boardNum + pieceNum + viewProjNum;
+    totalMatNum = shogiObjNum + viewProjNum;
     widthSize  = (sizeof(DirectX::XMMATRIX)*totalMatNum + 0xff) & ~0xff; // 256アラインメント
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_constBuff.get(), widthSize, heightSize, Buff::CONSTANT))) goto failed;
 
     // 頂点バッファ作成
-    widthSize = board->GetVerticesByteSize();                              // 将棋盤
-    for(auto& piece : pieces) {widthSize += piece->GetVerticesByteSize();} // 駒
+    widthSize = 0;
+    for(auto& shogiObject : shogiObjects) {widthSize += shogiObject->GetVerticesByteSize();}
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_vertBuff.get(), widthSize, heightSize, Buff::VERTEX))) goto failed;
 
-    // インデックスバッファ作成
-    widthSize = boardVertIndices->GetVertIndicesByteSize() + pieceVertIndices->GetVertIndicesByteSize();
+    // 頂点インデックスバッファ作成
+    widthSize = 0;
+    for(auto& vertIndices : allVertIndices) {widthSize += vertIndices->GetVertIndicesByteSize();}
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_idxBuff.get(), widthSize, heightSize, Buff::INDEX))) goto failed;
 
@@ -222,15 +223,27 @@ HRESULT DX12::CreateBuff()
     if (FAILED(_device->CreateBuff(_woodTexBuff.get(), widthSize, heightSize, Buff::TEXTURE))) goto failed;
 
     // 将棋オブジェクト種類ごとのテクスチャバッファ作成
-    UINT buffNum;
-    buffNum = 9; // 将棋盤1, 駒8
-    _shogiObjTexBuffs.resize(9); // 将棋盤1 +駒種類8
+    UINT shogiObjTexNum;
+    shogiObjTexNum = 9; // 駒8　将棋盤2
+    _shogiObjTexBuffs.resize(shogiObjTexNum);
     for(auto& shogiObjTexBuff : _shogiObjTexBuffs) shogiObjTexBuff = std::make_unique<TexBuff>();
     widthSize = 256;
     widthSize = 256;
-    if (FAILED(_device->CreateBuff(_shogiObjTexBuffs[0].get(), widthSize, heightSize, Buff::TEXTURE))) goto failed;
-    for(UINT i = boardNum; i < buffNum; i++)
-        if (FAILED(_device->CreateBuff(_shogiObjTexBuffs[i].get(), widthSize, heightSize, Buff::RENDER_TEX))) goto failed;
+    for (UINT i = 0; i < shogiObjTexNum; i++)
+    {
+        // テクスチャのIDが将棋盤用のものかどうか調べる
+        ShogiObj::ShogiObjType shogiObjType;
+        shogiObjType = static_cast<ShogiObj::ShogiObjType>(i);
+        auto it = std::find(boardType.begin(), boardType.end(), shogiObjType);
+
+        Buff::BuffType buffType;
+        if(it != boardType.end()) // 将棋盤用のテクスチャであれば前準備で用意したテクスチャを使用する
+            buffType = Buff::TEXTURE;
+        else                      // それ以外は駒のテクスチャで、レンダリングして作成する
+            buffType = Buff::RENDER_TEX;
+
+        if (FAILED(_device->CreateBuff(_shogiObjTexBuffs[i].get(), widthSize, heightSize, buffType))) goto failed;
+    }
 
     return S_OK;
 
@@ -253,7 +266,7 @@ HRESULT DX12::CreateHeap()
     pieceTexNum = 8;
     UINT cbvNum, srvNum, uavNum;
     cbvNum = 1;
-    srvNum = 1 + boardTexNum + pieceTexNum; // 木材テクスチャ1 将棋盤テクスチャ1　駒テクスチャ8
+    srvNum = 1 + boardTexNum + pieceTexNum; // 木材テクスチャ1 将棋盤テクスチャ2　駒テクスチャ8
     uavNum = 0;
     if (FAILED(_device->CreateCSUHeap(_csuHeap.get(), cbvNum, srvNum, uavNum, Heap::CSU))) goto failed;
 
@@ -270,6 +283,7 @@ failed:
 void DX12::CreateView()
 {
     auto& app = Application::GetInstance();
+    auto shogiObjcts = app.GetShogiObjects();
 
     // バックバッファ用RTV作成
     for (UINT i = 0; i < _rtvHeap->GetDescNum(); i++)
@@ -290,25 +304,17 @@ void DX12::CreateView()
     }
 
     // 木材テクスチャ用SRV作成
+    auto woodTexNum = 1;
     _device->CreateCSUView(_csuHeap.get(), 0, _woodTexBuff.get(), View::SRV);
 
-    // 将棋盤テクスチャ用SRV作成
-    UINT otherTexNum;
-    otherTexNum = 1;
-    _device->CreateCSUView(_csuHeap.get(), 1, _shogiObjTexBuffs[0].get(), View::SRV);
-    // 駒テクスチャ用SRV作成
-    UINT shogiObjTexNum, boardTexNum, pieceTexNum;
-    
-    boardTexNum = 1;
-    pieceTexNum = 8;
-    shogiObjTexNum = otherTexNum + boardTexNum + pieceTexNum;
+    // 将棋オブジェクト用SRV作成
+    auto shogiObjTexNum = 9;
+    for (UINT i = 0; i < shogiObjTexNum; i++)
+        _device->CreateCSUView(_csuHeap.get(), i + woodTexNum, _shogiObjTexBuffs[i].get(), View::SRV);
 
-    for(UINT i = otherTexNum + boardTexNum; i < shogiObjTexNum; i++)
-        _device->CreateCSUView(_csuHeap.get(), i, _shogiObjTexBuffs[i - otherTexNum].get(), View::SRV);
-
-    // 駒の種類ごとのテクスチャ作成用RTV作成
-    for(UINT i = 0; i < pieceTexNum; i++)
-        _device->CreateView(_texRTVHeap.get(), i, _shogiObjTexBuffs[i + boardTexNum].get(), View::RTV);
+    // レンダーによるテクスチャ作成用RTV作成
+    for(UINT i = 0; i < 8; i++)
+        _device->CreateView(_texRTVHeap.get(), i, _shogiObjTexBuffs[i].get(), View::RTV);
 }
 
 // シェーダー系作成
@@ -366,7 +372,7 @@ HRESULT DX12::CreateD2D()
     _wrappedPieceTexBuffs.resize(pieceBuffNum);
     for(auto& wrappedPieceTexBuff : _wrappedPieceTexBuffs) wrappedPieceTexBuff = std::make_unique<WrappedBuff>();
     for (UINT i = 0; i < pieceBuffNum; i++)
-        if (FAILED(_device11->CreateWrappedBuff(_wrappedPieceTexBuffs[i].get(), _shogiObjTexBuffs[i + boardBuffNum].get()))) goto failed;
+        if (FAILED(_device11->CreateWrappedBuff(_wrappedPieceTexBuffs[i].get(), _shogiObjTexBuffs[i].get()))) goto failed;
 
     // Direct2Dレンダーターゲット作成
     _d2dPieceTexRenderTargets.resize(pieceBuffNum);
@@ -411,8 +417,8 @@ void DX12::CreatePieceTex(
 {
     InitRenderTex(shogiObjType); // レンダーテクスチャ初期処理
     ExeCmd(); // コマンド実行してリソースをレンダーターゲットにする
-    auto wrappedBuff = _wrappedPieceTexBuffs[shogiObjType - 1].get();
-    auto d2dRenderTarget = _d2dPieceTexRenderTargets[shogiObjType - 1].get();
+    auto wrappedBuff = _wrappedPieceTexBuffs[shogiObjType].get();
+    auto d2dRenderTarget = _d2dPieceTexRenderTargets[shogiObjType].get();
     StartD2D(wrappedBuff, d2dRenderTarget);
     auto size = 256 / 2;
     auto left   = 0;
@@ -435,7 +441,7 @@ void DX12::InitRenderTex(ShogiObj::ShogiObjType shogiObjType)
     _cmdList->SetResourceBarrier(resourceBarrier);
 
     // レンダーターゲットに設定
-    auto rtvHandle = _texRTVHeap->GetDescHandle(shogiObjType - 1);
+    auto rtvHandle = _texRTVHeap->GetDescHandle(shogiObjType);
     _cmdList->SetRenderTarget(rtvHandle);
 
     _cmdList->ClearRenderTarget(rtvHandle); // レンダーターゲットクリア
@@ -463,8 +469,9 @@ HRESULT DX12::WriteToBuff()
     if (FAILED(_vertBuff->WriteToVertBuff(board, pieces))) goto failed; // 頂点バッファに書き込み
     //if (FAILED(_idxBuff ->WriteToIdxBuff (board, pieces)))  goto failed; // インデックスバッファに書き込み
     if (FAILED(_idxBuff ->WriteToIdxBuff (boardVertIndices, pieceVertIndices)))  goto failed; // インデックスバッファに書き込み
-    _woodTexBuff->WriteToTexBuff(woodTex); // 木材テクスチャをバッファに書き込み
-    _shogiObjTexBuffs[board->GetTexId()]->WriteToTexBuff(boardLineTex); // 将棋盤黒線テクスチャをバッファに書き込み
+    if(FAILED(_woodTexBuff->WriteToTexBuff(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み
+
+    if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_55]->WriteToTexBuff(boardLineTex))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
 
     return S_OK;
 
@@ -580,9 +587,11 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(ShogiObj* shogiObj)
     D3D12_VERTEX_BUFFER_VIEW view;
 
     view.BufferLocation =  // 頂点バッファのスタート位置
-        shogiObj->GetVertAddress();
+        //shogiObj->GetVertAddress();
+        shogiObj->GetBuffAddress();
     view.StrideInBytes =   // 頂点1つ分のサイズ
-        shogiObj->GetVertexByteSize();
+        //shogiObj->GetVertexByteSize();
+        shogiObj->GetVertByteSize();
         view.SizeInBytes = // 頂点全体のサイズ
         shogiObj->GetVerticesByteSize();
 

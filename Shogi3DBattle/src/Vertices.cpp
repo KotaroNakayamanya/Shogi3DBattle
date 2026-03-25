@@ -1,7 +1,7 @@
 #include"Vertices.h"
 
 // 頂点１つ分のバイトサイズを返す
-UINT Vertices::GetVertexByteSize()
+UINT Vertices::GetVertByteSize()
 {
     return sizeof(_vertices[0]);
 }
@@ -9,7 +9,9 @@ UINT Vertices::GetVertexByteSize()
 // 頂点集合全体のバイトサイズを返す
 UINT Vertices::GetVerticesByteSize()
 {
-    return GetVertexByteSize() * static_cast<UINT>(_vertices.size());
+    auto aaa = GetVertByteSize();
+    auto bbb = static_cast<UINT>(_vertices.size());
+    return GetVertByteSize() * static_cast<UINT>(_vertices.size());
 }
 
 void Vertices::SetVertices(std::vector<Vertices::Vert> vertices){_vertices = vertices;} // 頂点集合セット

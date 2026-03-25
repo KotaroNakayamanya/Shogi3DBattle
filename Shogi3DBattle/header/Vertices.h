@@ -20,7 +20,7 @@ private:
     std::vector<Vert> _vertices; // 頂点集合
 
 public:
-    UINT GetVertexByteSize();   // 頂点１つ分のバイトサイズを返す
+    UINT GetVertByteSize();   // 頂点１つ分のバイトサイズを返す
     UINT GetVerticesByteSize(); // 頂点集合全体のバイトサイズを返す
 
     void SetVertices(std::vector<Vert> vertices); // 頂点集合セット
