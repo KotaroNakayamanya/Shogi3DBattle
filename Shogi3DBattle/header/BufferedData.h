@@ -2,15 +2,15 @@
 
 #include<d3d12.h>
 
-class BuffAddress
+class BufferedData
 {
 private:
     D3D12_GPU_VIRTUAL_ADDRESS _buffAddress; // バッファアドレス
 
 public:
     void SetBuffAddress (D3D12_GPU_VIRTUAL_ADDRESS buffAddress); // バッファアドレスセット
-    D3D12_GPU_VIRTUAL_ADDRESS GetBuffAddress();              // バッファアドレスを返す
+    D3D12_GPU_VIRTUAL_ADDRESS GetBuffAddress();                  // バッファアドレスを返す
 
-    BuffAddress();
-    ~BuffAddress();
+    BufferedData();
+    ~BufferedData();
 };

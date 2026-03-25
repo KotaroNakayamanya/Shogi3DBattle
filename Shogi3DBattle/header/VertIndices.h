@@ -1,14 +1,12 @@
 #pragma once
 
-#include"BuffAddress.h"
-#include<memory>
+#include"BufferedData.h"
 #include<vector>
 
-class VertIndices : public BuffAddress
+class VertIndices : public BufferedData
 {
 private:
     std::vector<USHORT> _vertIndices; // 頂点インデックス集合
-    std::unique_ptr<BuffAddress> _buffAddress; // バッファアドレス
 
 public:
     UINT GetVertIndicesSize();     // 頂点インデックスサイズを返す
@@ -17,8 +15,6 @@ public:
 
     void SetVertIndices(std::vector<USHORT> vertIndices); // 頂点インデックスセット
     std::vector<USHORT> GetVertIndices(); // 頂点インデックスを返す
-    void SetBuffAddress (D3D12_GPU_VIRTUAL_ADDRESS buffAddress); // バッファアドレスセット
-    D3D12_GPU_VIRTUAL_ADDRESS GetBuffAddress();              // バッファアドレスを返す
 
     VertIndices();
     ~VertIndices();

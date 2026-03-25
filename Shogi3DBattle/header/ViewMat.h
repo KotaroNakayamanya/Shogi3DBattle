@@ -1,31 +1,29 @@
 #pragma once
 
-#include<DirectXMath.h>
+#include"IMat.h"
 #include<VecCalc.h>
-#include<memory>
 
-class ViewMat
+class ViewMat : public IMat
 {
 private:
-    std::unique_ptr<DirectX::XMFLOAT3> _eye;    // 視点
-    std::unique_ptr<DirectX::XMFLOAT3> _target; // 視線対象
-    std::unique_ptr<DirectX::XMFLOAT3> _up;     // カメラの上側
-
-    DirectX::XMFLOAT3 GetEyeVec(); // eye - target でベクトルを取得
+    DirectX::XMFLOAT3 _eye;   // 視点位置
+    DirectX::XMFLOAT3 _focus; // 注視点位置
+    DirectX::XMFLOAT3 _up;    // カメラ上側
 
     void CheckUpdateEye(DirectX::XMFLOAT3 eye); // 視点アップデートチェック
 
 public:
-    DirectX::XMMATRIX GetViewMat(); // ビュー行列を返す
-
-    DirectX::XMFLOAT3* GetEyePtr();
-    DirectX::XMFLOAT3* GetTargetPtr();
-    
+    // ビュー行列を返す
+    DirectX::XMMATRIX GetMat() override;
 
     void RotationH(float x); // 水平方向に視点を回す
     void RotationV(float y); // 垂直方向に視点を回す
-    void MoveEye(float x, float y, float z);    // 視点移動
-    void MoveTarget(float x, float y, float z); // 視線対象移動
+    void MoveEye(float x, float y, float z);    // 視点位置移動
+    void MoveFocus(float x, float y, float z);  // 注視点位置移動
+
+    void SetEye  (float x, float y, float z); // 視点位置セット
+    void SetFocus(float x, float y, float z); // 注視点位置セット
+    void SetUp   (float x, float y, float z); // カメラ上側セット
 
     ViewMat();
     ~ViewMat();

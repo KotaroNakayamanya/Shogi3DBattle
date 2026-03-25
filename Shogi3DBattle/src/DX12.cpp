@@ -63,6 +63,19 @@ bool DX12::InitDX12(GameWindow* gameWindow)
 
     CreateRenderTex(); // レンダーテクスチャ作成
 
+
+    // ビュー行列作成
+    _viewMat->SetEye  (0.0f, -8.0f,  0.0f);
+    _viewMat->SetFocus(0.0f,  0.0f, -5.0f);
+    _viewMat->SetUp   (0.0f,  0.0f, -1.0f);
+
+    // プロジェクション行列作成
+    _projMat->SetFOV  (DirectX::XM_PIDIV2);
+    _projMat->SetAR   (16.0f / 9.0f);
+    _projMat->SetNearZ(1.0f);
+    _projMat->SetFarZ (150.0f);
+
+
     
     return true;
 

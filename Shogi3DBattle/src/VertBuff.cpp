@@ -3,7 +3,7 @@
 // 頂点バッファに書き込み
 HRESULT VertBuff::WriteToVertBuff(Board* board, std::vector<std::unique_ptr<Piece>>& pieces)
 {
-    ShogiObj::Vert* vertBuffMap;
+    Vertices::Vert* vertBuffMap;
 
     HRESULT result = _buff->Map(0, nullptr, (void**)&vertBuffMap);
     if (FAILED(result)) return result;

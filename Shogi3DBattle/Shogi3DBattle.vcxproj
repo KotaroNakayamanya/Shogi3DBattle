@@ -24,7 +24,7 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\BoardFactory.cpp" />
     <ClCompile Include="src\BoardVertIndicesFactory.cpp" />
-    <ClCompile Include="src\BuffAddress.cpp" />
+    <ClCompile Include="src\BufferedData.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
     <ClCompile Include="src\ConstBuffFactory.cpp" />
     <ClCompile Include="src\Board.cpp" />
@@ -56,6 +56,7 @@
     <ClCompile Include="src\IdxBuff.cpp" />
     <ClCompile Include="src\IdxBuffFactory.cpp" />
     <ClCompile Include="src\PieceVertIndicesFactory.cpp" />
+    <ClCompile Include="src\Vertices.cpp" />
     <ClCompile Include="src\VertIndices.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyConf.cpp" />
@@ -101,6 +102,7 @@
     <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\ViewRotation.cpp" />
     <ClCompile Include="src\VShader.cpp" />
+    <ClCompile Include="src\WorldMat.cpp" />
     <ClCompile Include="src\WrappedBuff.cpp" />
     <ClCompile Include="src\DepthWriteResourceStates.cpp" />
   </ItemGroup>
@@ -109,7 +111,7 @@
     <ClInclude Include="header\Application.h" />
     <ClInclude Include="header\BoardFactory.h" />
     <ClInclude Include="header\BoardVertIndicesFactory.h" />
-    <ClInclude Include="header\BuffAddress.h" />
+    <ClInclude Include="header\BufferedData.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
     <ClInclude Include="header\ConstBuffFactory.h" />
     <ClInclude Include="header\Board.h" />
@@ -142,7 +144,9 @@
     <ClInclude Include="header\IHeapProp.h" />
     <ClInclude Include="header\IDescOffset.h" />
     <ClInclude Include="header\IHeapDesc.h" />
+    <ClInclude Include="header\IMat.h" />
     <ClInclude Include="header\PieceVertIndicesFactory.h" />
+    <ClInclude Include="header\Vertices.h" />
     <ClInclude Include="header\VertIndices.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />
@@ -209,6 +213,7 @@
     <ClInclude Include="header\Viewport.h" />
     <ClInclude Include="header\ViewRotation.h" />
     <ClInclude Include="header\VShader.h" />
+    <ClInclude Include="header\WorldMat.h" />
     <ClInclude Include="header\WrappedBuff.h" />
     <ClInclude Include="header\DepthWriteResourceStates.h" />
   </ItemGroup>

@@ -259,6 +259,12 @@
     <Filter Include="ヘッダー ファイル\input_handler\key_map">
       <UniqueIdentifier>{54f4de9d-ec76-4f59-834a-1e00085e3871}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\mat">
+      <UniqueIdentifier>{fc19dabf-7165-4134-b5f0-631b66fb8856}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\mat">
+      <UniqueIdentifier>{4b4b839d-9110-4bfa-8fe1-f40e1ff19b55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -311,12 +317,6 @@
     </ClCompile>
     <ClCompile Include="src\Board.cpp">
       <Filter>ソース ファイル\shogi_obj\board</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ViewMat.cpp">
-      <Filter>ソース ファイル\dx12\csu\const</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProjMat.cpp">
-      <Filter>ソース ファイル\dx12\csu\const</Filter>
     </ClCompile>
     <ClCompile Include="src\PShader.cpp">
       <Filter>ソース ファイル\dx12\shader</Filter>
@@ -510,7 +510,19 @@
     <ClCompile Include="src\PieceVertIndicesFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\BuffAddress.cpp">
+    <ClCompile Include="src\BufferedData.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProjMat.cpp">
+      <Filter>ソース ファイル\mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ViewMat.cpp">
+      <Filter>ソース ファイル\mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WorldMat.cpp">
+      <Filter>ソース ファイル\mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vertices.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -571,12 +583,6 @@
     </ClInclude>
     <ClInclude Include="header\Board.h">
       <Filter>ヘッダー ファイル\shogi_obj\board</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ViewMat.h">
-      <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ProjMat.h">
-      <Filter>ヘッダー ファイル\DX12\csu\const</Filter>
     </ClInclude>
     <ClInclude Include="header\IMouse.h">
       <Filter>ヘッダー ファイル\mouse</Filter>
@@ -830,7 +836,22 @@
     <ClInclude Include="header\PieceVertIndicesFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="header\BuffAddress.h">
+    <ClInclude Include="header\BufferedData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IMat.h">
+      <Filter>ヘッダー ファイル\mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ProjMat.h">
+      <Filter>ヘッダー ファイル\mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ViewMat.h">
+      <Filter>ヘッダー ファイル\mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\WorldMat.h">
+      <Filter>ヘッダー ファイル\mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Vertices.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

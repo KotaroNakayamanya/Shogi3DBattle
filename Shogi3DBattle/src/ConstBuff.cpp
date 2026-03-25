@@ -27,7 +27,7 @@ void ConstBuff::WriteToConstBuff(
    constBuffMap->worldMat[board->GetObjId()] = board->GetWorldMat();
 
    // ビュープロジェクション行列
-   constBuffMap->viewProjMat = viewMat->GetViewMat() * projMat->GetProjMat();
+   constBuffMap->viewProjMat = viewMat->GetMat() * projMat->GetMat();
    
    _buff->Unmap(0, nullptr);
 }

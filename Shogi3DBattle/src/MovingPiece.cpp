@@ -23,7 +23,7 @@ ISceneState* MovingPiece::ExeCancelButton()
 ISceneState* MovingPiece::ExeUpButton()
 {
     _piece->MoveY(0.1f);
-    _viewMat->MoveTarget(0, 0.1f, 0);
+    _viewMat->MoveFocus(0, 0.1f, 0);
     _viewMat->MoveEye   (0, 0.1f, 0);
     //_moveForward->Exe();
     //_moveTargetForward->Exe();
@@ -36,7 +36,7 @@ ISceneState* MovingPiece::ExeUpButton()
 ISceneState* MovingPiece::ExeLeftButton()
 {
     _piece->MoveX(-0.1f);
-    _viewMat->MoveTarget(-0.1f, 0, 0);
+    _viewMat->MoveFocus(-0.1f, 0, 0);
     _viewMat->MoveEye   (-0.1f, 0, 0);
     //_moveLeft->Exe();
     //_moveTargetForward->Exe();
@@ -49,7 +49,7 @@ ISceneState* MovingPiece::ExeLeftButton()
 ISceneState* MovingPiece::ExeDownButton()
 {
     _piece->MoveY(-0.1f);
-    _viewMat->MoveTarget(0, -0.1f, 0);
+    _viewMat->MoveFocus(0, -0.1f, 0);
     _viewMat->MoveEye   (0, -0.1f, 0);
     //_moveBack->Exe();
     //_moveTargetForward->Exe();
@@ -61,7 +61,7 @@ ISceneState* MovingPiece::ExeDownButton()
 ISceneState* MovingPiece::ExeRightButton()
 {
     _piece->MoveX(0.1f);
-    _viewMat->MoveTarget(0.1f, 0, 0);
+    _viewMat->MoveFocus(0.1f, 0, 0);
     _viewMat->MoveEye   (0.1f, 0, 0);
     //_moveRight->Exe();
     //_moveTargetForward->Exe();

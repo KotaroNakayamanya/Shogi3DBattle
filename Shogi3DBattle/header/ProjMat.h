@@ -1,15 +1,24 @@
 #pragma once
 
-#include<DirectXMath.h>
+#include"IMat.h"
 #include<memory>
 
-class ProjMat
+class ProjMat : public IMat
 {
 private:
-    std::unique_ptr<DirectX::XMMATRIX> _projMat;
+    float _fov;   // 視野角
+    float _ar;    // アスペクト比
+    float _nearZ; // クリッピング手前側距離
+    float _farZ;  // クリッピング奥側距離
 
 public:
-    DirectX::XMMATRIX GetProjMat();
+    // プロジェクション行列を返す
+    DirectX::XMMATRIX GetMat() override;
+
+    void SetFOV(float fov); // 視野角セット
+    void SetAR(float ar);   // アスペクト比セット
+    void SetNearZ(float);   // クリッピング手前側距離セット
+    void SetFarZ(float);    // クリッピング奥側距離セット
 
     ProjMat();
     ~ProjMat();
