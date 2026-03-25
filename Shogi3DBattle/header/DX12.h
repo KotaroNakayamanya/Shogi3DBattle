@@ -13,6 +13,7 @@
 #include"ProjMat.h"
 
 #include"Board.h"
+#include"VertIndices.h"
 
 class DX12
 {
@@ -140,12 +141,10 @@ private:
 
     void Set3DCmd(); // 3Dコマンドセット
     D3D12_VERTEX_BUFFER_VIEW GetVertBuffView(ShogiObj* obj); // 頂点バッファビュー
-    D3D12_INDEX_BUFFER_VIEW  GetIdxBuffView (ShogiObj* obj); // インデックスバッファビュー
+    D3D12_INDEX_BUFFER_VIEW  GetIdxBuffView (VertIndices* vertIndices); // インデックスバッファビュー
 
 
     void ExeCmd(); // コマンド実行
-
-    void SetDrawObjCmd(ShogiObj* shogiObj); // オブジェクト描画コマンドセット
     
   
     void WaitProcessWithFence();

@@ -1,8 +1,7 @@
 #include"IdxBuff.h"
 
-
 // インデックスに書き込み
-HRESULT IdxBuff::WriteToIdxBuff(Board* board, std::vector<std::unique_ptr<Piece>>& pieces)
+HRESULT IdxBuff::WriteToIdxBuff(VertIndices* boardVertIndices, VertIndices* pieceVertIndices)
 {
     USHORT* idxBuffMap;
 
@@ -10,27 +9,20 @@ HRESULT IdxBuff::WriteToIdxBuff(Board* board, std::vector<std::unique_ptr<Piece>
     if (FAILED(result)) return result;
 
     // インデックスをすべて繋げた配列を作成
-    auto joinedIndices = board->GetIndices();
-    for (auto& piece : pieces)
-    {
-        auto pieceIndices = piece->GetIndices();
-        joinedIndices.insert(joinedIndices.end(), pieceIndices.begin(), pieceIndices.end());
-    }
+    auto joinedIndices = boardVertIndices->GetVertIndices();
+    auto tempIndices = pieceVertIndices->GetVertIndices();
+    joinedIndices.insert(joinedIndices.end(), tempIndices.begin(), tempIndices.end());
 
     std::copy(joinedIndices.begin(), joinedIndices.end(), idxBuffMap);
 
     _buff->Unmap(0, nullptr);
 
     // バッファアドレスをそれぞれのオブジェクトに紐づける
-    auto idxAddress = _buff->GetGPUVirtualAddress();
+    auto idxBuffAddress = _buff->GetGPUVirtualAddress();
 
-    board->SetIdxAddress(idxAddress);
-    idxAddress += board->GetIndicesByteSize();
-    for (auto& piece : pieces)
-    {
-        piece->SetIdxAddress(idxAddress);
-        idxAddress += piece->GetIndicesByteSize();
-    }
+    boardVertIndices->SetBuffAddress(idxBuffAddress);
+    idxBuffAddress += boardVertIndices->GetVertIndicesByteSize();
+    pieceVertIndices->SetBuffAddress(idxBuffAddress);
     
     return S_OK;
 }

@@ -15,7 +15,8 @@ Output VShader(
     // –@ü •½sˆÚ“®¬•ª‚Í0‚É‚·‚é
     float4 normal_w0 = normal;
     normal_w0.w = 0;
-    output.normal = mul(worldMat[objId], normal_w0);
+    float4 noneNormalizedNormal = mul(worldMat[objId], normal_w0);
+    output.normal = normalize(noneNormalizedNormal);
     
     output.uv     = uv;
     output.texId  = texId;

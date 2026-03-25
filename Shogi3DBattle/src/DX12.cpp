@@ -160,6 +160,9 @@ HRESULT DX12::CreateBuff()
     auto& pieces     = app.GetPieces();
     
     auto  boardLineTex = app.GetBoardLineTex();
+
+    auto boardVertIndices = app.GetBoardVertIndices();
+    auto pieceVertIndices = app.GetPieceVertIndices();
     
 
 
@@ -196,8 +199,7 @@ HRESULT DX12::CreateBuff()
     if (FAILED(_device->CreateBuff(_vertBuff.get(), widthSize, heightSize, Buff::VERTEX))) goto failed;
 
     // インデックスバッファ作成
-    widthSize = board->GetIndicesByteSize();                              // 将棋盤
-    for(auto& piece : pieces) {widthSize += piece->GetIndicesByteSize();} // 駒
+    widthSize = boardVertIndices->GetVertIndicesByteSize() + pieceVertIndices->GetVertIndicesByteSize();
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_idxBuff.get(), widthSize, heightSize, Buff::INDEX))) goto failed;
 
@@ -215,7 +217,6 @@ HRESULT DX12::CreateBuff()
     widthSize = 256;
     if (FAILED(_device->CreateBuff(_shogiObjTexBuffs[0].get(), widthSize, heightSize, Buff::TEXTURE))) goto failed;
     for(UINT i = boardNum; i < buffNum; i++)
-    //for (auto& piece : pieces)
         if (FAILED(_device->CreateBuff(_shogiObjTexBuffs[i].get(), widthSize, heightSize, Buff::RENDER_TEX))) goto failed;
 
     return S_OK;
@@ -256,8 +257,6 @@ failed:
 void DX12::CreateView()
 {
     auto& app = Application::GetInstance();
-    auto board = app.GetBoard();
-    auto& pieces = app.GetPieces();
 
     // バックバッファ用RTV作成
     for (UINT i = 0; i < _rtvHeap->GetDescNum(); i++)
@@ -445,9 +444,12 @@ HRESULT DX12::WriteToBuff()
     auto& pieces = app.GetPieces();
     auto  woodTex = app.GetWoodTex();
     auto  boardLineTex = app.GetBoardLineTex();
+    auto boardVertIndices = app.GetBoardVertIndices();
+    auto pieceVertIndices = app.GetPieceVertIndices();
 
     if (FAILED(_vertBuff->WriteToVertBuff(board, pieces))) goto failed; // 頂点バッファに書き込み
-    if (FAILED(_idxBuff ->WriteToIdxBuff (board, pieces)))  goto failed; // インデックスバッファに書き込み
+    //if (FAILED(_idxBuff ->WriteToIdxBuff (board, pieces)))  goto failed; // インデックスバッファに書き込み
+    if (FAILED(_idxBuff ->WriteToIdxBuff (boardVertIndices, pieceVertIndices)))  goto failed; // インデックスバッファに書き込み
     _woodTexBuff->WriteToTexBuff(woodTex); // 木材テクスチャをバッファに書き込み
     _shogiObjTexBuffs[board->GetTexId()]->WriteToTexBuff(boardLineTex); // 将棋盤黒線テクスチャをバッファに書き込み
 
@@ -502,16 +504,21 @@ void DX12::ExeD3D()
     auto& app    = Application::GetInstance();
     auto  board  = app.GetBoard();
     auto& pieces = app.GetPieces();
+    auto boardVertIndices = app.GetBoardVertIndices();
+    auto pieceVertIndices = app.GetPieceVertIndices();
 
     // 将棋盤描画コマンドセット
-    _cmdList->SetIdxBuffView(GetIdxBuffView(board));
-    SetDrawObjCmd(board);
+    _cmdList->SetIdxBuffView(GetIdxBuffView(boardVertIndices));
+    _cmdList->SetVertBuffView(GetVertBuffView(board));
+    _cmdList->SetDrawWithIdx(boardVertIndices);
 
     // 駒描画コマンドセット
-    _cmdList->SetIdxBuffView(GetIdxBuffView(pieces[0].get())); // 駒のインデックスは全部同じ
+    //_cmdList->SetIdxBuffView(GetIdxBuffView(pieces[0].get())); // 駒のインデックスは全部同じ
+    _cmdList->SetIdxBuffView(GetIdxBuffView(pieceVertIndices));
     for (UINT i = 0; i < pieces.size(); i++)
     {
-        SetDrawObjCmd(pieces[i].get());
+        _cmdList->SetVertBuffView(GetVertBuffView(pieces[i].get()));
+        _cmdList->SetDrawWithIdx(pieceVertIndices);
     }
 
     // ワールド行列、ビュープロジェクション行列をコンスタントバッファに書き込み
@@ -554,15 +561,6 @@ void DX12::Set3DCmd()
     _cmdList->SetScissorRects(1, scissorRects);
 }
 
-// オブジェクト描画コマンドセット
-void DX12::SetDrawObjCmd(ShogiObj* shogiObj)
-{
-    // 頂点バッファビューセット
-    _cmdList->SetVertBuffView(GetVertBuffView(shogiObj));
-    // インデックス描画セット
-    _cmdList->SetDrawWithIdx(shogiObj);
-}
-
 // 頂点バッファビュー
 D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(ShogiObj* shogiObj)
 {
@@ -579,16 +577,16 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(ShogiObj* shogiObj)
 }
 
 // インデックスバッファビュー
-D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(ShogiObj* shogiObj)
+D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(VertIndices* vertIndices)
 {
     D3D12_INDEX_BUFFER_VIEW view;
 
     view.BufferLocation = // インデックスバッファのスタート位置
-        shogiObj->GetIdxAddress();
+        vertIndices->GetBuffAddress();
     view.Format =         // フォーマット unsigned short
         DXGI_FORMAT_R16_UINT;
     view.SizeInBytes =    // インデックス全体のサイズ
-        shogiObj->GetIndicesByteSize();
+        vertIndices->GetVertIndicesByteSize();
 
     return view;
 }

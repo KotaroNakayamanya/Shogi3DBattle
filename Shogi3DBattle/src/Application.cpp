@@ -1,10 +1,11 @@
 ﻿#include"Application.h"
 
-#include"BoardFactory.h"
 #include"Pawn.h"
 #include<array>
 #include"BoardFactory.h"
 #include"PieceFactory.h"
+#include"BoardVertIndicesFactory.h"
+#include"PieceVertIndicesFactory.h"
 #include<functional>
 
 // 初期処理
@@ -37,7 +38,7 @@ void Application::CreateShogiObj()
         {
             switch (shogiObjType)
             {
-            case ShogiObj::BOARD:
+            case ShogiObj::BOARD_55:
                 _shogiObjFactory.reset(new BoardFactory());
                 break;
             
@@ -60,7 +61,11 @@ void Application::CreateShogiObj()
         };
 
     // 将棋盤作成
-    createShogiObjFunction(_board.get(), ShogiObj::BOARD);
+    createShogiObjFunction(_board.get(), ShogiObj::BOARD_55);
+    // 将棋盤インデックス作成
+    _vertIndicesFactory.reset(new BoardVertIndicesFactory());
+    _vertIndicesFactory->CreateVertIndices(_boardIndices.get());
+
 
 
     // 駒作成
@@ -94,7 +99,9 @@ void Application::CreateShogiObj()
     for (UINT i = 0; i < lanceNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::LANCE);
     for (UINT i = 0; i < pawnNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::PAWN);
 
-    // 将棋盤を拡大
+    // 駒の頂点インデックス集合作成
+    _vertIndicesFactory.reset(new PieceVertIndicesFactory());
+    _vertIndicesFactory->CreateVertIndices(_pieceIndices.get());
     
     // 駒の初期位置調整
     for (int i = 1; i < _pieces.size(); i++)
@@ -176,8 +183,6 @@ void Application::CreateTex()
     }
 
     UINT squareNum = 5; // マス数
-
-    //float halfSquareSize = lineSize / (squareNum + 1) / 2;
 
     float squareLength = static_cast<float>(lineSize) / (squareNum + 1);
     float halfSquareLength = squareLength / 2; // マスの半分のサイズ
@@ -448,6 +453,8 @@ UINT Application::GetWindowHeight(){return _gameWindow->GetWindowHeight();} // �
 ViewMat* Application::GetViewMat(){return _dx12->GetViewMat();} // ビュー行列を返す
 Tex* Application::GetWoodTex(){return _woodTex.get();} // テクスチャを返す
 Tex* Application::GetBoardLineTex(){return _boardLineTex.get();} // テクスチャを返す
+VertIndices* Application::GetBoardVertIndices(){return _boardIndices.get();} // 将棋盤頂点インデックスを返す
+VertIndices* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
 
 // シングルトンインスタンスを返す
 Application& Application::GetInstance()
@@ -461,5 +468,8 @@ Application::Application()
     _gameWindow = std::make_unique<GameWindow>();
     _board = std::make_unique<Board>();
     _dx12 = std::make_unique<DX12>();
+
+    _boardIndices = std::make_unique<VertIndices>();
+    _pieceIndices = std::make_unique<VertIndices>();
 }
 Application::~Application(){}

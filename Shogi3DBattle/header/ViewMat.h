@@ -1,6 +1,7 @@
 #pragma once
 
 #include<DirectXMath.h>
+#include<VecCalc.h>
 #include<memory>
 
 class ViewMat
@@ -13,24 +14,6 @@ private:
     DirectX::XMFLOAT3 GetEyeVec(); // eye - target でベクトルを取得
 
     void CheckUpdateEye(DirectX::XMFLOAT3 eye); // 視点アップデートチェック
-
-    DirectX::XMFLOAT3 GetNormFloat3( // 正規化
-        DirectX::XMFLOAT3 f);
-
-    DirectX::XMFLOAT3 GetFloat3AddFloat3( // XMFLOAT3 + XMFLOAT3
-        DirectX::XMFLOAT3 f1,
-        DirectX::XMFLOAT3 f2);
-
-    DirectX::XMFLOAT3 GetFloat3SubFloat3( // XMFLOAT3 - XMFLOAT3
-        DirectX::XMFLOAT3 f1,
-        DirectX::XMFLOAT3 f2);
-
-    DirectX::XMFLOAT3 GetFloat3MulMat( // XMFLOAT3 * XMMATRIX
-        DirectX::XMFLOAT3 f,
-        DirectX::XMMATRIX mat);
-
-    DirectX::XMFLOAT3 GetFloat3FromVec( // XMVECTOR → XMFLOAT3
-        DirectX::XMVECTOR v);
 
 public:
     DirectX::XMMATRIX GetViewMat(); // ビュー行列を返す

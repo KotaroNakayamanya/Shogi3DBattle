@@ -4,17 +4,23 @@
 #include"DX12.h"
 #include"InputHandler.h"
 #include"IShogiObjFactory.h"
+#include"VertIndices.h"
+#include"IVertIndicesFactory.h"
 
 
 class Application
 {
 private:
     std::unique_ptr<GameWindow>            _gameWindow; // ゲームウインドウ
-    std::unique_ptr<Board>                 _board;      // 将棋盤
-    std::vector<std::unique_ptr<Piece>>    _pieces;     // 駒
     std::unique_ptr<DX12>                  _dx12;       // DirectX
 
+    std::unique_ptr<Board>              _board;      // 将棋盤
+    std::unique_ptr<VertIndices>        _boardIndices; // 将棋盤の頂点インデックス
+    std::vector<std::unique_ptr<Piece>> _pieces;     // 駒
+    std::unique_ptr<VertIndices>        _pieceIndices; // 駒の頂点インデックス
+
     std::unique_ptr<IShogiObjFactory> _shogiObjFactory; // 将棋オブジェクトファクトリー
+    std::unique_ptr<IVertIndicesFactory> _vertIndicesFactory; // 頂点インデックスファクトリー
 
     void CreateShogiObj(); // 将棋オブジェクト作成
 
@@ -47,6 +53,8 @@ public:
     std::vector<std::unique_ptr<Piece>>& GetPieces(); // 駒を返す
     Tex* GetWoodTex(); // 木材テクスチャを返す
     Tex* GetBoardLineTex(); // 将棋盤黒線テクスチャを返す
+    VertIndices* GetBoardVertIndices(); // 将棋盤頂点インデックスを返す
+    VertIndices* GetPieceVertIndices(); // 駒の頂点インデックスを返す
 
     InputHandler* GetInputHandler(); // インプットハンドラを返す
 

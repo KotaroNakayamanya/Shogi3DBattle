@@ -8,7 +8,7 @@ void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     UINT texId = static_cast<UINT>(shogiObjType);
     shogiObj->SetTexId(texId);
     
-    float size = 60.0f;
+    float size = 100.0f;
 
     float thickness = size * 0.8f;
 
@@ -51,64 +51,23 @@ void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     shogiObj->SetVertices(vertices);
 
 
-    std::vector<USHORT> indices;
 
-    // (0 1 2) (2 3 0)で作れる
-    for (UINT i = 0; i < 5; i++)
+    // ワールド行列セット
+    DirectX::XMMATRIX worldMat;
+    switch (shogiObjType)
     {
-        UINT offset = 4 * i;
+        float rate;
+    case ShogiObj::BOARD_55:
+        rate = 60.0f / 100.0f;
+        worldMat = DirectX::XMMatrixScaling(rate, rate, rate);
+        break;
 
-        indices.push_back(0 + offset);
-        indices.push_back(1 + offset);
-        indices.push_back(2 + offset);
-
-        indices.push_back(2 + offset);
-        indices.push_back(3 + offset);
-        indices.push_back(0 + offset);
+    case ShogiObj::BOARD_99:
+    default:
+        worldMat = DirectX::XMMatrixIdentity();
+        break;
     }
-
-    //enum BoardVertName // 将棋盤の頂点に名前を付ける
-    //{
-    //    // 前面
-    //    frontLeftBottom,  // 左下
-    //    frontRightBottom, // 右下
-    //    frontLeftTop,     // 左上
-    //    frontRightTop,    // 右上
-
-    //    // 背面
-    //    backLeftBottom,  // 左下
-    //    backRightBottom, // 右下
-    //    backLeftTop,     // 左上
-    //    backRightTop,    // 右上
-    //};
-
-    //indices =
-    //{
-    //    // 前面
-    //    frontRightBottom, frontLeftBottom,  frontLeftTop,
-    //    frontLeftTop,     frontRightTop,    frontRightBottom,     
-    //    
-    //    // 上側面
-    //    frontRightTop, frontLeftTop, backLeftTop, 
-    //    backLeftTop,   backRightTop, frontRightTop,
-
-    //    // 右側面
-    //    frontRightBottom, frontRightTop,   backRightTop,
-    //    backRightTop,     backRightBottom, frontRightBottom,
-
-    //    // 下側面
-    //    frontLeftBottom, frontRightBottom, backRightBottom,
-    //    backRightBottom, backLeftBottom,   frontLeftBottom,
-
-    //    // 左側面
-    //    frontLeftTop, frontLeftBottom, backLeftBottom,
-    //    backLeftBottom, backLeftTop, frontLeftTop,
-
-    //    // 背面
-    //    backRightBottom, backLeftBottom, backLeftTop,
-    //    backLeftTop,     backRightTop,   backRightBottom
-    //};
-    shogiObj->SetIndices(indices);
+    shogiObj->SetWorldMat(worldMat);
 }
 
 BoardFactory::BoardFactory(){}

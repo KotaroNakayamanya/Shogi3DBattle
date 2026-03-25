@@ -181,39 +181,8 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
 
     shogiObj->SetVertices(vertices);
 
-
-    std::vector<USHORT> indices;
-
-    // 表面と裏面は(0 1 2), (2 3 0), (3 4 0)で作れる
-    for (int i = 0; i < 2; i++)
-    {
-        indices.push_back(0 + 5*i);
-        indices.push_back(1 + 5*i);
-        indices.push_back(2 + 5*i);
-
-        indices.push_back(2 + 5*i);
-        indices.push_back(3 + 5*i);
-        indices.push_back(0 + 5*i);
-
-        indices.push_back(3 + 5*i);
-        indices.push_back(4 + 5*i);
-        indices.push_back(0 + 5*i);
-    }
-
-    // 側面は(0 1 2), (2 3 0)で作れる
-    for (int i = 0; i < 5; i++)
-    {
-        int offset = 10;
-        indices.push_back(0 + offset + 4*i);
-        indices.push_back(1 + offset + 4*i);
-        indices.push_back(2 + offset + 4*i);
-
-        indices.push_back(2 + offset + 4*i);
-        indices.push_back(3 + offset + 4*i);
-        indices.push_back(0 + offset + 4*i);
-    }
-
-    shogiObj->SetIndices(indices);
+    // ワールド行列セット
+    shogiObj->SetWorldMat(DirectX::XMMatrixIdentity());
 }
 
 PieceFactory::~PieceFactory(){}

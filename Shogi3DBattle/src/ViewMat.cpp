@@ -17,8 +17,8 @@ void ViewMat::RotationH(float x)
     auto eyeVec = GetEyeVec(); // 視線対象を原点としたeyeのベクトル
     auto rotationHMat = DirectX::XMMatrixRotationZ(-x); // Z軸を中心に回らせる行列
 
-    auto newEyeVec = GetFloat3MulMat(eyeVec, rotationHMat); // ベクトルをZ軸中心に回す
-    auto newEye    = GetFloat3AddFloat3(newEyeVec, *_target.get()); // ベクトルを座標に戻す
+    auto newEyeVec = VecCalc::GetFloat3MulMat(eyeVec, rotationHMat); // ベクトルをZ軸中心に回す
+    auto newEye    = VecCalc::GetFloat3AddFloat3(newEyeVec, *_target.get()); // ベクトルを座標に戻す
 
     CheckUpdateEye(newEye);
 }
@@ -36,7 +36,7 @@ void ViewMat::RotationV(float y)
     eyeVec_z0.z    = 0;
 
     // xy要素のみのベクトルで正規化
-    auto normEyeVec_z0 = GetNormFloat3(eyeVec_z0);
+    auto normEyeVec_z0 = VecCalc::GetNormFloat(eyeVec_z0);
 
     // 正規化した者同士の内積はcosθとなる
     // (0, -1, 0)との内積の値は、yの符号を逆転したもの
@@ -50,10 +50,10 @@ void ViewMat::RotationV(float y)
     auto rotationHReverseMat = DirectX::XMMatrixRotationZ(-pi); //水平方向回転行列（戻し用）
     
     auto newEyeVec = eyeVec;
-    newEyeVec = GetFloat3MulMat(newEyeVec, rotationHMat);       // ベクトルを水平方向に回転する
-    newEyeVec = GetFloat3MulMat(newEyeVec, rotationVMat);       // ベクトルをX軸中心に回す
-    newEyeVec = GetFloat3MulMat(newEyeVec, rotationHReverseMat);// ベクトルの水平方向回転を戻す
-    auto newEye = GetFloat3AddFloat3(newEyeVec, *_target.get()); // ベクトルを座標に戻す
+    newEyeVec = VecCalc::GetFloat3MulMat(newEyeVec, rotationHMat);       // ベクトルを水平方向に回転する
+    newEyeVec = VecCalc::GetFloat3MulMat(newEyeVec, rotationVMat);       // ベクトルをX軸中心に回す
+    newEyeVec = VecCalc::GetFloat3MulMat(newEyeVec, rotationHReverseMat);// ベクトルの水平方向回転を戻す
+    auto newEye = VecCalc::GetFloat3AddFloat3(newEyeVec, *_target.get()); // ベクトルを座標に戻す
 
     CheckUpdateEye(newEye);
 }
@@ -80,7 +80,7 @@ void ViewMat::MoveTarget(float x, float y, float z)
 // eye - target でベクトルを取得
 DirectX::XMFLOAT3 ViewMat::GetEyeVec()
 {
-    return GetFloat3SubFloat3(*_eye.get(), *_target.get());
+    return VecCalc::GetFloat3SubFloat3(*_eye.get(), *_target.get());
 }
 
 // 視点アップデートチェック
@@ -89,75 +89,6 @@ void ViewMat::CheckUpdateEye(DirectX::XMFLOAT3 eye)
     //if(eye.z > -4.8f && eye.z < -1.0f)
         *_eye.get() = eye;
 }
-
-
-
-
-
-// 正規化
-DirectX::XMFLOAT3 ViewMat::GetNormFloat3(
-    DirectX::XMFLOAT3 f)
-{
-    auto v = DirectX::XMLoadFloat3(&f);
-    auto newV = DirectX::XMVector3Normalize(v);
-
-    DirectX::XMFLOAT3 newF = GetFloat3FromVec(newV);
-
-    return newF;
-}
-
-// XMFLOAT3 + XMFLOAT3
-DirectX::XMFLOAT3 ViewMat::GetFloat3AddFloat3(
-    DirectX::XMFLOAT3 f1,
-    DirectX::XMFLOAT3 f2)
-{
-    auto v1 = DirectX::XMLoadFloat3(&f1);
-    auto v2 = DirectX::XMLoadFloat3(&f2);
-    auto newV = DirectX::XMVectorAdd(v1, v2);
-
-    DirectX::XMFLOAT3 newF = GetFloat3FromVec(newV);
-
-    return  newF;
-}
-
-// XMFLOAT3 - XMFLOAT3
-DirectX::XMFLOAT3 ViewMat::GetFloat3SubFloat3(
-    DirectX::XMFLOAT3 f1,
-    DirectX::XMFLOAT3 f2)
-{
-    auto v1 = DirectX::XMLoadFloat3(&f1);
-    auto v2 = DirectX::XMLoadFloat3(&f2);
-    auto newV = DirectX::XMVectorSubtract(v1, v2);
-
-    DirectX::XMFLOAT3 newF = GetFloat3FromVec(newV);
-
-    return  newF;
-}
-
-// XMFLOAT3 * XMMATRIX
-DirectX::XMFLOAT3 ViewMat::GetFloat3MulMat(
-    DirectX::XMFLOAT3 f,
-    DirectX::XMMATRIX mat)
-{
-    auto v = DirectX::XMLoadFloat3(&f);
-    auto newV = DirectX::XMVector3Transform(v, mat);
-
-    DirectX::XMFLOAT3 newF = GetFloat3FromVec(newV);
-
-    return newF;
-}
-
-// XMVECTOR → XMFLOAT3
-DirectX::XMFLOAT3 ViewMat::GetFloat3FromVec(
-    DirectX::XMVECTOR v)
-{
-    DirectX::XMFLOAT3 f;
-    DirectX::XMStoreFloat3(&f, v);
-
-    return f;
-}
-
-
 
 DirectX::XMFLOAT3* ViewMat::GetEyePtr(){return _eye.get();}
 DirectX::XMFLOAT3* ViewMat::GetTargetPtr(){return _eye.get();}

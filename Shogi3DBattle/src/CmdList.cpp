@@ -96,9 +96,10 @@ void CmdList::SetIdxBuffView(D3D12_INDEX_BUFFER_VIEW idxBuffView)
 }
 
 // インデックス描画セット
-void CmdList::SetDrawWithIdx(ShogiObj* shogiObj)
+void CmdList::SetDrawWithIdx(VertIndices* vertIndices)
 {    
-    _cmdList->DrawIndexedInstanced(shogiObj->GetIdxNum(), 1, 0, 0, 0);
+    auto aaa = vertIndices->GetVertIndicesSize();
+    _cmdList->DrawIndexedInstanced(vertIndices->GetVertIndicesSize(), 1, 0, 0, 0);
 }
 
 // コマンドクローズ
