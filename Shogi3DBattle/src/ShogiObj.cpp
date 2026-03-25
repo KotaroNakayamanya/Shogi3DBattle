@@ -19,9 +19,9 @@ UINT ShogiObj::GetIndexByteSize(){return sizeof(_indices[0]);}
 // 頂点インデックス全体のバイトサイズを返す
 UINT ShogiObj::GetIndicesByteSize(){return GetIndexByteSize() * static_cast<UINT>(_indices.size());}
 // 将棋オブジェクトIDセット
-void ShogiObj::SetId(UINT id){_id = id;}
+void ShogiObj::SetObjId(UINT objId){_objId = objId;}
 // 将棋オブジェクトIDを返す
-UINT ShogiObj::GetId(){return _id;}
+UINT ShogiObj::GetObjId(){return _objId;}
 // テクスチャIDセット
 void ShogiObj::SetTexId(UINT texId){_texId = texId;}
 // テクスチャIDを返す

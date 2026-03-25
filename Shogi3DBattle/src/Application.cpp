@@ -28,9 +28,12 @@ failed:
 // 将棋オブジェクト作成
 void Application::CreateShogiObj()
 {
+    // オブジェクトごとのID格納用
+    UINT objId = 0;
+
     // 将棋オブジェクト作成用関数
-    std::function<void(ShogiObj*, ShogiObj::ShogiObjType, UINT)> createShogiObjFunction =
-        [this](ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UINT objId)
+    std::function<void(ShogiObj*, ShogiObj::ShogiObjType)> createShogiObjFunction =
+        [this, &objId](ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType)
         {
             switch (shogiObjType)
             {
@@ -53,19 +56,14 @@ void Application::CreateShogiObj()
                 return;
             }
 
-            _shogiObjFactory->CreateShogiObj(shogiObj, shogiObjType, objId);
+            _shogiObjFactory->CreateShogiObj(shogiObj, shogiObjType, objId++);
         };
 
-    UINT objId = 0;
-
     // 将棋盤作成
-    //_shogiObjFactory.reset(new BoardFactory());
-    //_shogiObjFactory->CreateShogiObj(_board.get(), ShogiObj::BOARD, objId++);
-    createShogiObjFunction(_board.get(), ShogiObj::BOARD, objId++);
+    createShogiObjFunction(_board.get(), ShogiObj::BOARD);
+
 
     // 駒作成
-    //_shogiObjFactory.reset(new PieceFactory());
-
     UINT kingNum =  2;
     UINT rookNum =  2;
     UINT bishopNum = 2;
@@ -87,86 +85,81 @@ void Application::CreateShogiObj()
     _pieces.resize(pieceNum);
     for(auto& piece : _pieces) piece = std::make_unique<Piece>();
 
-    
-    //// 王　作成
-    //UINT offset = 0;
-    //for (UINT i = 0; i < kingNum; i++)
-    //{
-    //    _pieces[i] = std::make_unique<Piece>();
-    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
-    //}
-    //// 飛車　作成
-    //for (UINT i = 0; i < rookNum; i++)
-    //{
-    //    _pieces[i] = std::make_unique<Piece>();
-    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
-    //}
-    //// 角　作成
-    //for (UINT i = 0; i < bishopNum; i++)
-    //{
-    //    _pieces[i] = std::make_unique<Piece>();
-    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
-    //}
-    //// 金　作成
-    //for (UINT i = 0; i < pawnNum; i++)
-    //{
-    //    _pieces[i] = std::make_unique<Piece>();
-    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
-    //}
-    //// 銀　作成
-    //for (UINT i = 0; i < pawnNum; i++)
-    //{
-    //    _pieces[i] = std::make_unique<Piece>();
-    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
-    //}
-    //// 圭　作成
-    //for (UINT i = 0; i < pawnNum; i++)
-    //{
-    //    _pieces[i] = std::make_unique<Piece>();
-    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
-    //}
-    //// 香　作成
-    //for (UINT i = 0; i < pawnNum; i++)
-    //{
-    //    _pieces[i] = std::make_unique<Piece>();
-    //    _shogiObjFactory->CreateShogiObj(_pieces[i].get(), ShogiObj::PAWN, objId++);
-    //}
+    for (UINT i = 0; i < kingNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::KING);
+    for (UINT i = 0; i < rookNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::ROOK);
+    for (UINT i = 0; i < bishopNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::BISHOP);
+    for (UINT i = 0; i < goldNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::GOLD);
+    for (UINT i = 0; i < silverNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::SILVER);
+    for (UINT i = 0; i < knightNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::KNIGHT);
+    for (UINT i = 0; i < lanceNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::LANCE);
+    for (UINT i = 0; i < pawnNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::PAWN);
 
-    for (UINT i = 0; i < kingNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::KING, objId);
-    for (UINT i = 0; i < rookNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::ROOK, objId);
-    for (UINT i = 0; i < bishopNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::BISHOP, objId);
-    for (UINT i = 0; i < goldNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::GOLD, objId);
-    for (UINT i = 0; i < silverNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::SILVER, objId);
-    for (UINT i = 0; i < knightNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::KNIGHT, objId);
-    for (UINT i = 0; i < lanceNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::LANCE, objId);
-    for (UINT i = 0; i < pawnNum; i++) createShogiObjFunction(_pieces[objId++ - 1].get(), ShogiObj::PAWN, objId);
-
-
-    _pieces[1]->MoveX(10.0f);
-    _pieces[1]->MoveY(10.0f);
-    _pieces[2]->MoveX(20.0f);
-    _pieces[2]->MoveY(10.0f);
-    _pieces[3]->MoveX(30.0f);
-    _pieces[3]->MoveY(10.0f);
-    _pieces[4]->MoveX(40.0f);
-    _pieces[4]->MoveY(10.0f);
-    _pieces[5]->MoveX(50.0f);
-    _pieces[5]->MoveY(10.0f);
-
-        
+    for (int i = 1; i < _pieces.size(); i++)
+    {
+        _pieces[i]->MoveX(i * 10);
+        _pieces[i]->MoveY(10.0f);
+    }
 }
 
 // テクスチャ作成
 void Application::CreateTex()
 {
+    // 木材テクスチャ作成
+    _woodTex = std::make_unique<Tex>();
+
+    std::vector<TexStruct::TexRGBA> woodTex;
+
+    UINT lineSize = 256;
+    UINT width  = lineSize;
+    UINT height = lineSize;
+
+    woodTex.resize(width * height);
+
+    // 基本色を入れる
+    for (auto& rgba : woodTex)
+    {
+        rgba.r = 226;
+        rgba.g = 232;
+        rgba.b =  75;
+        rgba.a = 255;
+    }
+
+    // 板目を入れる
+    UINT x = 0;
+    UINT y = 0;
+    UINT subtColor = 10;
+    for (auto& rgba : woodTex)
+    {
+        if ((x+y) % 20 == 0)
+        {
+            rgba.r -= subtColor;
+            rgba.g -= subtColor;
+            rgba.b -= subtColor;
+
+        }
+
+        // xとyの次の座標を取得
+        x++;            // xを足す
+        if (x >= width) // xが端を超えたらyを足してxを0に戻す
+        {
+            y++;
+            x = 0;
+        }
+    }
+
+    _woodTex->SetWidth (width);
+    _woodTex->SetHeight(height);
+    _woodTex->SetTex(woodTex);
+
+
     // 将棋盤黒線テクスチャ作成
     _boardLineTex = std::make_unique<Tex>();
 
     std::vector<TexStruct::TexRGBA> boardLineTex;
 
-    auto lineSize = 256;
-    UINT width  = lineSize;
-    UINT height = lineSize;
+    lineSize = 256;
+    width  = lineSize;
+    height = lineSize;
 
     boardLineTex.resize(width * height);
 
@@ -180,15 +173,19 @@ void Application::CreateTex()
     }
 
     UINT squareNum = 5; // マス数
-    UINT halfSquareLength = lineSize / (squareNum + 1) / 2; // マスの半分のサイズ
 
-    UINT drawLowerLimit  = halfSquareLength *  1;
-    UINT drawUpperLimit  = halfSquareLength * (1 + squareNum * 2);
+    //float halfSquareSize = lineSize / (squareNum + 1) / 2;
+
+    float squareLength = static_cast<float>(lineSize) / (squareNum + 1);
+    float halfSquareLength = squareLength / 2; // マスの半分のサイズ
+
+    UINT drawLowerLimit  = halfSquareLength *  1 + 0.5;
+    UINT drawUpperLimit  = halfSquareLength * (1 + squareNum * 2) + 0.5;
 
     
     // 黒線を描画する対象座標(x, y)に黒色を格納する
-    UINT x = 0;
-    UINT y = 0;
+    x = 0;
+    y = 0;
     UINT lineNum = squareNum + 1; // 横縦それぞれの線の本数
     for (auto& rgba : boardLineTex)
     {
@@ -196,7 +193,7 @@ void Application::CreateTex()
         for (UINT i = 0; i < lineNum; i++)
         {
             // 黒線対象の座標を取得(xとyのどちらにも使える)
-            UINT BlackLinePos = halfSquareLength * (1 + i * 2);
+            UINT BlackLinePos = halfSquareLength * (1 + i * 2) + 0.5;
 
             // x座標が黒線の直線上の値であるかチェック
             bool isXOnBlackLine = x == BlackLinePos;
@@ -236,32 +233,6 @@ void Application::CreateTex()
     _boardLineTex->SetWidth (width);
     _boardLineTex->SetHeight(height);
     _boardLineTex->SetTex(boardLineTex);
-
-
-
-
-    // 木材テクスチャ作成
-    _woodTex = std::make_unique<Tex>();
-
-    std::vector<TexStruct::TexRGBA> woodTex;
-
-    lineSize = 256;
-    width  = lineSize;
-    height = lineSize;
-
-    woodTex.resize(width * height);
-
-    for (auto& rgba : woodTex)
-    {
-        rgba.r = 226;
-        rgba.g = 232;
-        rgba.b =  75;
-        rgba.a = 255;
-    }
-
-    _woodTex->SetWidth (width);
-    _woodTex->SetHeight(height);
-    _woodTex->SetTex(woodTex);
  }
 
 Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す

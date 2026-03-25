@@ -6,7 +6,7 @@
 // 駒作成
 void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UINT objId)
 {
-    shogiObj->SetId(objId);
+    shogiObj->SetObjId(objId);
 
     // 使用する文字テクスチャのIDをセット
     UINT texId = static_cast<UINT>(shogiObjType);

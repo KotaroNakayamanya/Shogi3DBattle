@@ -20,8 +20,6 @@ private:
 
     // テクスチャ
     std::unique_ptr<Tex> _woodTex; // 木材テクスチャ
-
-    //std::vector<std::unique_ptr<Tex>> _shogiObjTex; // 将棋オブジェクトごとのテクスチャ
     std::unique_ptr<Tex> _boardLineTex; // 将棋盤黒線テクスチャ
     
 

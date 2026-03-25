@@ -32,7 +32,7 @@ public:
     };
 
 protected:
-    UINT _id; // 将棋オブジェクトID
+    UINT _objId; // 将棋オブジェクトID
     UINT _texId; // 使用するテクスチャID
     std::vector<Vert> _vertices; // 頂点集合
     std::vector<unsigned short>   _indices;  // 頂点インデックス
@@ -58,8 +58,8 @@ public:
     D3D12_GPU_VIRTUAL_ADDRESS GetVertAddress();             // 頂点アドレスを返す
     void SetIdxAddress (D3D12_GPU_VIRTUAL_ADDRESS address); // インデックスアドレスセット
     D3D12_GPU_VIRTUAL_ADDRESS GetIdxAddress();              // インデックスアドレスを返す
-    void SetId(UINT id); // 将棋オブジェクトIDセット
-    UINT GetId();        // 将棋オブジェクトIDを返す
+    void SetObjId(UINT objId); // 将棋オブジェクトIDセット
+    UINT GetObjId();        // 将棋オブジェクトIDを返す
     void SetTexId(UINT texId); // テクスチャIDセット
     UINT GetTexId();           // テクスチャIDを返す
 

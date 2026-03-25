@@ -13,7 +13,7 @@ struct Output
 
 
 
-Texture2D<float4> woodTex : register(t0);
+Texture2D<float4> woodTexs[1] : register(t0);
 Texture2D<float4> drawTex[9] : register(t1);
 
 SamplerState samp : register(s0); // 0番　サンプラー
