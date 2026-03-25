@@ -1,7 +1,7 @@
 #include"BoardFactory.h"
 
 // è´ä˚î’çÏê¨
-void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UINT objId)
+void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UCHAR objId)
 {
     shogiObj->SetObjId(objId);
 
@@ -51,7 +51,7 @@ void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     shogiObj->SetVertices(vertices);
 
 
-    std::vector<unsigned short> indices;
+    std::vector<USHORT> indices;
 
     // (0 1 2) (2 3 0)Ç≈çÏÇÍÇÈ
     for (UINT i = 0; i < 5; i++)

@@ -4,7 +4,7 @@
 // インデックスに書き込み
 HRESULT IdxBuff::WriteToIdxBuff(Board* board, std::vector<std::unique_ptr<Piece>>& pieces)
 {
-    unsigned short* idxBuffMap;
+    USHORT* idxBuffMap;
 
     HRESULT result = _buff->Map(0, nullptr, (void**)&idxBuffMap);
     if (FAILED(result)) return result;

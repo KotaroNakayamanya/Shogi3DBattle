@@ -94,6 +94,9 @@ void Application::CreateShogiObj()
     for (UINT i = 0; i < lanceNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::LANCE);
     for (UINT i = 0; i < pawnNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::PAWN);
 
+    // 将棋盤を拡大
+    
+    // 駒の初期位置調整
     for (int i = 1; i < _pieces.size(); i++)
     {
         _pieces[i]->MoveX(i * 10);

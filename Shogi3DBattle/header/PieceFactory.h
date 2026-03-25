@@ -10,7 +10,7 @@ protected:
 
 public:
     // pieceçÏê¨
-    void CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UINT objId) override;
+    void CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UCHAR objId) override;
 
     PieceFactory() = default;
     ~PieceFactory();

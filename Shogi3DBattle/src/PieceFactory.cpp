@@ -4,12 +4,12 @@
 #include"VecCalc.h"
 
 // 駒作成
-void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UINT objId)
+void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UCHAR objId)
 {
     shogiObj->SetObjId(objId);
 
     // 使用する文字テクスチャのIDをセット
-    UINT texId = static_cast<UINT>(shogiObjType);
+    UCHAR texId = shogiObjType;
     shogiObj->SetTexId(texId);   
 
     // 駒の種類ごとの大きさをミリメートルで格納
@@ -182,7 +182,7 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     shogiObj->SetVertices(vertices);
 
 
-    std::vector<unsigned short> indices;
+    std::vector<USHORT> indices;
 
     // 表面と裏面は(0 1 2), (2 3 0), (3 4 0)で作れる
     for (int i = 0; i < 2; i++)

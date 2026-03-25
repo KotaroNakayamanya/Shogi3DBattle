@@ -155,15 +155,13 @@ HRESULT DX12::CreateBuff()
 {
     auto& app = Application::GetInstance();
     
-    auto  gameWindow = app.GetGameWindow(); // ゲームウインドウ取得
+    auto  woodTex = app.GetWoodTex();
     auto  board      = app.GetBoard();
     auto& pieces     = app.GetPieces();
-    auto  woodTex = app.GetWoodTex();
+    
     auto  boardLineTex = app.GetBoardLineTex();
     
 
-    //auto swapChainDesc = _swapChain->GetDesc();
-    UINT widthSize, heightSize;
 
     // バックバッファ作成
     _backBuffs.resize(_swapChain->GetBackBuffNum());
@@ -174,24 +172,32 @@ HRESULT DX12::CreateBuff()
     }
 
     // デプスステンシルバッファ作成
-    widthSize  = gameWindow->GetWindowWidth();
-    heightSize = gameWindow->GetWindowHeight();
+    D3D12_RESOURCE_DESC backBuffDesc;
+    backBuffDesc = _backBuffs[0]->GetResourceDesc();
+    UINT widthSize, heightSize;
+    widthSize  = backBuffDesc.Width;
+    heightSize = backBuffDesc.Height;
     if (FAILED(_device->CreateBuff(_dsBuff.get(), widthSize, heightSize, Buff::DEPTH_STENCIL))) goto failed;
 
     // コンスタントバッファ作成
-    widthSize  = (sizeof(DirectX::XMMATRIX)*(40+1+1) + 0xff) & ~0xff; // 駒40 将棋盤1 ビュープロジェクション行列1 256アラインメント
+    UINT boardNum, pieceNum, viewProjNum, totalMatNum;
+    boardNum    = 1;
+    pieceNum    = pieces.size();
+    viewProjNum = 1;
+    totalMatNum = boardNum + pieceNum + viewProjNum;
+    widthSize  = (sizeof(DirectX::XMMATRIX)*totalMatNum + 0xff) & ~0xff; // 256アラインメント
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_constBuff.get(), widthSize, heightSize, Buff::CONSTANT))) goto failed;
 
     // 頂点バッファ作成
-    widthSize = board->GetVerticesByteSize();
-    for(auto& piece : pieces) {widthSize += piece->GetVerticesByteSize(); }
+    widthSize = board->GetVerticesByteSize();                              // 将棋盤
+    for(auto& piece : pieces) {widthSize += piece->GetVerticesByteSize();} // 駒
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_vertBuff.get(), widthSize, heightSize, Buff::VERTEX))) goto failed;
 
     // インデックスバッファ作成
-    widthSize = board->GetIndicesByteSize();
-    for(auto& piece : pieces) {widthSize += piece->GetIndicesByteSize(); }
+    widthSize = board->GetIndicesByteSize();                              // 将棋盤
+    for(auto& piece : pieces) {widthSize += piece->GetIndicesByteSize();} // 駒
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_idxBuff.get(), widthSize, heightSize, Buff::INDEX))) goto failed;
 
@@ -201,9 +207,8 @@ HRESULT DX12::CreateBuff()
     if (FAILED(_device->CreateBuff(_woodTexBuff.get(), widthSize, heightSize, Buff::TEXTURE))) goto failed;
 
     // 将棋オブジェクト種類ごとのテクスチャバッファ作成
-    UINT buffNum, boardNum;
-    boardNum = 1;
-    buffNum = 8 + boardNum;
+    UINT buffNum;
+    buffNum = 9; // 将棋盤1, 駒8
     _shogiObjTexBuffs.resize(9); // 将棋盤1 +駒種類8
     for(auto& shogiObjTexBuff : _shogiObjTexBuffs) shogiObjTexBuff = std::make_unique<TexBuff>();
     widthSize = 256;

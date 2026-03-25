@@ -23,6 +23,8 @@ protected:
     ComPtr<ID3D12Resource> _buff; // バッファ
 
 public:
+    D3D12_RESOURCE_DESC GetResourceDesc(); // リソースディスクリプタを返す
+
     void SetBuff(ComPtr<ID3D12Resource> buff); // バッファセット
     ID3D12Resource* GetBuff();                 // バッファを返す
 

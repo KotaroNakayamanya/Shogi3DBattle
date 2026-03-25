@@ -475,7 +475,7 @@ void Device::CreateInputLayout(InputLayout* inputLayout)
     { // オブジェクトインデックス
         "OBJECT_INDEX",
         0,
-        DXGI_FORMAT_R32_UINT,
+        DXGI_FORMAT_R8_UINT,
         0,
         D3D12_APPEND_ALIGNED_ELEMENT,
         D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
@@ -485,7 +485,7 @@ void Device::CreateInputLayout(InputLayout* inputLayout)
     { // テクスチャインデックス
         "TEXTURE_INDEX",
         0,
-        DXGI_FORMAT_R32_UINT,
+        DXGI_FORMAT_R8_UINT,
         0,
         D3D12_APPEND_ALIGNED_ELEMENT,
         D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
