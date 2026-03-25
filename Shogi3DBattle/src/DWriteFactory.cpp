@@ -28,7 +28,7 @@ HRESULT DWriteFactory::CreateDWriteTextFormat(
         DWRITE_FONT_WEIGHT_NORMAL,
         DWRITE_FONT_STYLE_NORMAL,
         DWRITE_FONT_STRETCH_ULTRA_CONDENSED,
-        60.0f,
+        50.0f,
         L"ja-jp",
         dWriteTextFormat->_dWriteTextFormat.ReleaseAndGetAddressOf());
     if(FAILED(result)) return result;

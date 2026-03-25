@@ -135,6 +135,9 @@ failed:
     return E_FAIL;
 }
 
+
+
+
 // DirectWriteファクトリー作成
 HRESULT DX12::CreateDWriteFactory()
 {
@@ -159,6 +162,7 @@ HRESULT DX12::CreateBuff()
     auto  boardLineTex = app.GetBoardLineTex();
     
 
+    //auto swapChainDesc = _swapChain->GetDesc();
     UINT widthSize, heightSize;
 
     // バックバッファ作成
@@ -371,41 +375,35 @@ failed:
 // レンダーテクスチャ作成
 void DX12::CreateRenderTex()
 {
-    
-    ShogiObj::ShogiObjType shogiObjType = ShogiObj::PAWN;
+    // 駒テクスチャ作成
+    CreatePieceTex(ShogiObj::KING,   L"王",   L"");
+    CreatePieceTex(ShogiObj::ROOK,   L"飛車", L"龍王");
+    CreatePieceTex(ShogiObj::BISHOP, L"角行", L"龍馬");
+    CreatePieceTex(ShogiObj::GOLD,   L"金将", L"");
+    CreatePieceTex(ShogiObj::SILVER, L"銀将", L"成銀");
+    CreatePieceTex(ShogiObj::KNIGHT, L"桂馬", L"成桂");
+    CreatePieceTex(ShogiObj::LANCE,  L"香車", L"成香");
+    CreatePieceTex(ShogiObj::PAWN,   L"歩",   L"と");
+}
+
+// 駒テクスチャ作成
+void DX12::CreatePieceTex(
+    ShogiObj::ShogiObjType shogiObjType,
+    std::wstring frontText,
+    std::wstring backText)
+{
     InitRenderTex(shogiObjType); // レンダーテクスチャ初期処理
     ExeCmd(); // コマンド実行してリソースをレンダーターゲットにする
     auto wrappedBuff = _wrappedPieceTexBuffs[shogiObjType - 1].get();
     auto d2dRenderTarget = _d2dPieceTexRenderTargets[shogiObjType - 1].get();
     StartD2D(wrappedBuff, d2dRenderTarget);
-    DrawStr(L"歩", 0, 0, 256/2-1, 256/2-1, _blackBrush->GetD2DSolidColorBrush());
-    DrawStr(L"と", 256/2, 0, 256, 256/2-1, _redBrush->GetD2DSolidColorBrush());
-    EndD2D(wrappedBuff);
-    _deviceContext->Flash(); // Direct2D描画
-    ExitRenderTex(shogiObjType); // レンダリング終了処理
-    ExeCmd(); // コマンド実行
-
-    shogiObjType = ShogiObj::KING;
-    InitRenderTex(shogiObjType); // レンダーテクスチャ初期処理
-    ExeCmd(); // コマンド実行してリソースをレンダーターゲットにする
-    wrappedBuff = _wrappedPieceTexBuffs[shogiObjType - 1].get();
-    d2dRenderTarget = _d2dPieceTexRenderTargets[shogiObjType - 1].get();
-    StartD2D(wrappedBuff, d2dRenderTarget);
-    DrawStr(L"王", 0, 10, 256/2-1, 256/2-1, _blackBrush->GetD2DSolidColorBrush());
-    DrawStr(L"", 256/2, 10, 256, 256/2-1, _redBrush->GetD2DSolidColorBrush());
-    EndD2D(wrappedBuff);
-    _deviceContext->Flash(); // Direct2D描画
-    ExitRenderTex(shogiObjType); // レンダリング終了処理
-    ExeCmd(); // コマンド実行
-
-    shogiObjType = ShogiObj::ROOK;
-    InitRenderTex(shogiObjType); // レンダーテクスチャ初期処理
-    ExeCmd(); // コマンド実行してリソースをレンダーターゲットにする
-    wrappedBuff = _wrappedPieceTexBuffs[shogiObjType - 1].get();
-    d2dRenderTarget = _d2dPieceTexRenderTargets[shogiObjType - 1].get();
-    StartD2D(wrappedBuff, d2dRenderTarget);
-    DrawStr(L"飛車", 0, 5, 256/2-1, 256/2-1, _blackBrush->GetD2DSolidColorBrush());
-    DrawStr(L"龍王", 256/2, 5, 256, 256/2-1, _redBrush->GetD2DSolidColorBrush());
+    auto size = 256 / 2;
+    auto left   = 0;
+    auto right  = size;
+    auto top    = 5;
+    auto bottom = size;
+    DrawStr(frontText, left,        top, right,        bottom, _blackBrush->GetD2DSolidColorBrush());
+    DrawStr(backText,  left + size, top, right + size, bottom, _redBrush->GetD2DSolidColorBrush());
     EndD2D(wrappedBuff);
     _deviceContext->Flash(); // Direct2D描画
     ExitRenderTex(shogiObjType); // レンダリング終了処理

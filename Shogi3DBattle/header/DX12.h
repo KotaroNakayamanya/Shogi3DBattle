@@ -48,6 +48,11 @@ private:
     std::vector<std::unique_ptr<D2DRenderTarget>> _d2dPieceTexRenderTargets; // 駒テクスチャ作成用レンダーターゲット
 
     void CreateRenderTex(); // レンダーテクスチャ作成
+    void CreatePieceTex(
+        ShogiObj::ShogiObjType shogiObjType,
+        std::wstring frontText,
+        std::wstring backText); // 駒テクスチャ作成
+
     void InitRenderTex(ShogiObj::ShogiObjType shogiObjType); // レンダーテクスチャ初期処理
     void ExitRenderTex(ShogiObj::ShogiObjType shogiObjType); // レンダリング終了処理
 
