@@ -4,9 +4,8 @@
 
 class Piece : public ShogiObj
 {
-public:
-    void MoveX(float x); // x軸方向に動くようにワールド行列を変換する
-    void MoveY(float y); // y軸方向に動くようにワールド行列を変換する      
+public:     
+    void Move(DirectX::XMFLOAT3 vec); // x軸方向に動くようにワールド行列を変換する
 
     Piece();
     ~Piece();

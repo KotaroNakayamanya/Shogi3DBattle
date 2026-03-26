@@ -1,20 +1,15 @@
 #pragma once
 
-#include<memory>
 #include"ISceneState.h"
-#include"ICommand.h"
-#include"IMouse.h"
 #include"Piece.h"
-#include"ViewMat.h"
+#include"Camera.h"
 #include<Windows.h>
-#include"MoveTargetForward.h"
-#include"MoveEyeForward.h"
 
 class MovingPiece : public ISceneState
 {
 private:
     Piece* _piece;     // 操作している駒
-    ViewMat* _viewMat; // カメラ用途のビュー行列
+    Camera* _camera; // カメラ
     HWND _hwnd;        // ウインドウハンドル
 
     ISceneState* ExeDecisionButton(); // 決定ボタン処理
@@ -23,6 +18,9 @@ private:
     ISceneState* ExeLeftButton(); // 左ボタン処理
     ISceneState* ExeDownButton(); // 下ボタン処理
     ISceneState* ExeRightButton(); // 右ボタン処理
+
+    void MovePieceAndCamera(DirectX::XMFLOAT3 vec); // 駒とカメラを動かす
+
     ISceneState* ExeMouseMove(int xMove, int yMove); // カーソル操作処理
 
 public:

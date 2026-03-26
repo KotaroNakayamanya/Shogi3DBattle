@@ -1,9 +1,4 @@
 #include"MovingPiece.h"
-#include"MoveForward.h"
-#include"MoveLeft.h"
-#include"MoveBack.h"
-#include"MoveRight.h"
-#include"ViewRotation.h"
 #include"Application.h"
 
 
@@ -53,12 +48,8 @@ ISceneState* MovingPiece::ExeCancelButton()
 // 上ボタン処理
 ISceneState* MovingPiece::ExeUpButton()
 {
-    _piece->MoveY(0.1f);
-    _viewMat->MoveFocus(0, 0.1f, 0);
-    _viewMat->MoveEye   (0, 0.1f, 0);
-    //_moveForward->Exe();
-    //_moveTargetForward->Exe();
-    //_moveEyeForward->Exe();
+    DirectX::XMFLOAT3 vec = {0, 0.1f, 0};
+    MovePieceAndCamera(vec);
 
     return this;
 }
@@ -66,12 +57,8 @@ ISceneState* MovingPiece::ExeUpButton()
 // 左ボタン処理
 ISceneState* MovingPiece::ExeLeftButton()
 {
-    _piece->MoveX(-0.1f);
-    _viewMat->MoveFocus(-0.1f, 0, 0);
-    _viewMat->MoveEye   (-0.1f, 0, 0);
-    //_moveLeft->Exe();
-    //_moveTargetForward->Exe();
-    //_moveEyeForward->Exe();
+    DirectX::XMFLOAT3 vec = {-0.1f, 0, 0};
+    MovePieceAndCamera(vec);
 
     return this;
 }
@@ -79,37 +66,37 @@ ISceneState* MovingPiece::ExeLeftButton()
 // 下ボタン処理
 ISceneState* MovingPiece::ExeDownButton()
 {
-    _piece->MoveY(-0.1f);
-    _viewMat->MoveFocus(0, -0.1f, 0);
-    _viewMat->MoveEye   (0, -0.1f, 0);
-    //_moveBack->Exe();
-    //_moveTargetForward->Exe();
-    //_moveEyeForward->Exe();
+    DirectX::XMFLOAT3 vec = {0, -0.1f, 0};
+    MovePieceAndCamera(vec);
 
     return this;
 }
 // 右ボタン処理
 ISceneState* MovingPiece::ExeRightButton()
 {
-    _piece->MoveX(0.1f);
-    _viewMat->MoveFocus(0.1f, 0, 0);
-    _viewMat->MoveEye   (0.1f, 0, 0);
-    //_moveRight->Exe();
-    //_moveTargetForward->Exe();
-    //_moveEyeForward->Exe();
+    DirectX::XMFLOAT3 vec = {0.1f, 0, 0};
+    MovePieceAndCamera(vec);
 
     return this;
 }
 
-// カーソル操作処理
+// 駒とカメラを動かす
+void MovingPiece::MovePieceAndCamera(DirectX::XMFLOAT3 vec)
+{
+    _piece->Move(vec);
+    _camera->MoveCamera(vec);
+    _camera->MoveFocus (vec);
+}
+
+// マウス移動処理
 ISceneState* MovingPiece::ExeMouseMove(int xMove, int yMove)
 {
     float fx = xMove / 1000.0f;
     float fy = yMove / 1000.0f;
 
-    _viewMat->RotationH(fx);
-    _viewMat->RotationV(fy);
-    //_mouseMove->Exe(xMove, yMove);
+    _camera->RotationH(fx); // 水平方向にカメラ回転
+    _camera->RotationV(fy); // 垂直方向にカメラ回転
+
     return this;
 }
 
@@ -118,15 +105,12 @@ ISceneState* MovingPiece::ExeMouseMove(int xMove, int yMove)
 
 MovingPiece::MovingPiece(Piece* piece)
 {
-    Application& app = Application::GetInstance();
+    auto& app = Application::GetInstance();
+    auto mainCamera = app.GetMainCamera();
 
-    _hwnd = app.GetHWND();
     _piece = piece;
-    _viewMat = app.GetViewMat();
-
-    
-
-    
+    _camera = mainCamera;
+    _hwnd = app.GetHWND();
 }
 
 MovingPiece::~MovingPiece(){}

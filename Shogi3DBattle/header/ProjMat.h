@@ -15,10 +15,10 @@ public:
     // プロジェクション行列を返す
     DirectX::XMMATRIX GetMat() override;
 
-    void SetFOV(float fov); // 視野角セット
-    void SetAR(float ar);   // アスペクト比セット
-    void SetNearZ(float);   // クリッピング手前側距離セット
-    void SetFarZ(float);    // クリッピング奥側距離セット
+    void SetFOV  (float fov);   // 視野角セット
+    void SetAR   (float ar);    // アスペクト比セット
+    void SetNearZ(float nearZ); // クリッピング手前側距離セット
+    void SetFarZ (float farZ);  // クリッピング奥側距離セット
 
     ProjMat();
     ~ProjMat();

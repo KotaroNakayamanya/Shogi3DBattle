@@ -122,10 +122,6 @@ private:
     std::unique_ptr<InputLayout> _inputLayout; // 入力レイアウト
     std::unique_ptr<RootSignature> _rootSignature; // ルートシグネチャ
     std::unique_ptr<Pipeline> _pipeline; // パイプライン
-    
-    // カメラ
-    std::unique_ptr<ViewMat> _viewMat; // ビュー行列
-    std::unique_ptr<ProjMat> _projMat; // プロジェクション行列
 
     void InitRenderTarget(); // レンダーターゲット初期処理
 
@@ -152,8 +148,6 @@ private:
 public:
     bool InitDX12(GameWindow* gameWindow); // DirectX12初期作成
     void ExeDX12(); // DirectX12実行処理
-
-    ViewMat* GetViewMat(); // ビュー行列を返す
 
     void ProcessChangeWindowSize( // ウインドウサイズ変更処理
         UINT width, UINT height);

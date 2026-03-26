@@ -4,8 +4,7 @@
 void ConstBuff::WriteToConstBuff(
     Board* board,
     std::vector<std::unique_ptr<Piece>>& pieces,
-    ViewMat* viewMat,
-    ProjMat* projMat)
+    Camera* camera)
 {
     typedef struct Mat
     {
@@ -27,7 +26,7 @@ void ConstBuff::WriteToConstBuff(
    constBuffMap->worldMat[board->GetObjId()] = board->GetMat();
 
    // ビュープロジェクション行列
-   constBuffMap->viewProjMat = viewMat->GetMat() * projMat->GetMat();
+   constBuffMap->viewProjMat = camera->GetViewProjMat();
    
    _buff->Unmap(0, nullptr);
 }

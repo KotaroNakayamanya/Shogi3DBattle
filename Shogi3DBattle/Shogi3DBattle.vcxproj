@@ -26,6 +26,7 @@
     <ClCompile Include="src\BoardVertIndicesFactory.cpp" />
     <ClCompile Include="src\BufferedData.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\ConstBuffFactory.cpp" />
     <ClCompile Include="src\Board.cpp" />
     <ClCompile Include="src\CBVFactory.cpp" />
@@ -61,12 +62,6 @@
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyMap.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MoveBack.cpp" />
-    <ClCompile Include="src\MoveEyeForward.cpp" />
-    <ClCompile Include="src\MoveForward.cpp" />
-    <ClCompile Include="src\MoveLeft.cpp" />
-    <ClCompile Include="src\MoveRight.cpp" />
-    <ClCompile Include="src\MoveTargetForward.cpp" />
     <ClCompile Include="src\MovingPiece.cpp" />
     <ClCompile Include="src\Pawn.cpp" />
     <ClCompile Include="src\Piece.cpp" />
@@ -99,7 +94,6 @@
     <ClCompile Include="src\VertBuffFactory.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
     <ClCompile Include="src\Viewport.cpp" />
-    <ClCompile Include="src\ViewRotation.cpp" />
     <ClCompile Include="src\VShader.cpp" />
     <ClCompile Include="src\WorldMat.cpp" />
     <ClCompile Include="src\WrappedBuff.cpp" />
@@ -112,6 +106,7 @@
     <ClInclude Include="header\BoardVertIndicesFactory.h" />
     <ClInclude Include="header\BufferedData.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
+    <ClInclude Include="header\Camera.h" />
     <ClInclude Include="header\ConstBuffFactory.h" />
     <ClInclude Include="header\Board.h" />
     <ClInclude Include="header\DefaultHeapProp.h" />
@@ -126,7 +121,6 @@
     <ClInclude Include="header\CSUHeapDesc.h" />
     <ClInclude Include="header\CSUHeapFactory.h" />
     <ClInclude Include="header\CSUOffset.h" />
-    <ClInclude Include="header\CursorMove.h" />
     <ClInclude Include="header\D2DDeviceContext.h" />
     <ClInclude Include="header\D2DRenderTarget.h" />
     <ClInclude Include="header\D2DSolicColorBrush.h" />
@@ -149,7 +143,6 @@
     <ClInclude Include="header\VertIndices.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />
-    <ClInclude Include="header\MoveCamera.h" />
     <ClInclude Include="header\GameWindow.h" />
     <ClInclude Include="header\DX12.h" />
     <ClInclude Include="header\DXGIFactory.h" />
@@ -161,13 +154,6 @@
     <ClInclude Include="header\InputHandler.h" />
     <ClInclude Include="header\InputLayout.h" />
     <ClInclude Include="header\KeyMap.h" />
-    <ClInclude Include="header\Move.h" />
-    <ClInclude Include="header\MoveBack.h" />
-    <ClInclude Include="header\MoveEyeForward.h" />
-    <ClInclude Include="header\MoveForward.h" />
-    <ClInclude Include="header\MoveLeft.h" />
-    <ClInclude Include="header\MoveRight.h" />
-    <ClInclude Include="header\MoveTargetForward.h" />
     <ClInclude Include="header\MovingPiece.h" />
     <ClInclude Include="header\Pawn.h" />
     <ClInclude Include="header\Piece.h" />
@@ -208,7 +194,6 @@
     <ClInclude Include="header\IViewFactory.h" />
     <ClInclude Include="header\ViewMat.h" />
     <ClInclude Include="header\Viewport.h" />
-    <ClInclude Include="header\ViewRotation.h" />
     <ClInclude Include="header\VShader.h" />
     <ClInclude Include="header\WorldMat.h" />
     <ClInclude Include="header\WrappedBuff.h" />

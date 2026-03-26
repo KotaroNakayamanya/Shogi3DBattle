@@ -4,8 +4,7 @@
 #include<memory>
 #include"Board.h"
 #include"Piece.h"
-#include"ViewMat.h"
-#include"ProjMat.h"
+#include"Camera.h"
 
 class ConstBuff : public Buff
 {
@@ -14,8 +13,7 @@ public:
     void WriteToConstBuff(
         Board* board,
         std::vector<std::unique_ptr<Piece>>& pieces,
-        ViewMat* viewMat,
-        ProjMat* projMat);
+        Camera* camera);
 
     ConstBuff();
     ~ConstBuff();

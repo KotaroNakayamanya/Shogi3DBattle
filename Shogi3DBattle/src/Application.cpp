@@ -17,13 +17,36 @@ bool Application::Init()
     if(_gameWindow->InitGameWindow() == false) goto failed;    // ゲームウインドウ初期処理
     CreateShogiObj(); // 将棋オブジェクト作成
     CreateTex(); // テクスチャ作成
+
+
+    // メインカメラ
+    // ビュー行列作成
+    ViewMat* viewMat;
+    viewMat = new ViewMat();
+    DirectX::XMFLOAT3 f;
+    f = {0.0f, -8.0f, 0.0f};  viewMat->SetEye  (f);
+    f = {0.0f,  0.0f, -5.0f}; viewMat->SetFocus(f);
+    f = {0.0f,  0.0f, -1.0f}; viewMat->SetUp   (f);
+    _mainCamera->SetViewMat(viewMat);
+
+    // プロジェクション行列作成
+    ProjMat* projMat;
+    projMat = new ProjMat();
+    projMat->SetFOV  (DirectX::XM_PIDIV2);
+    projMat->SetAR   (16.0f / 9.0f);
+    projMat->SetNearZ(1.0f);
+    projMat->SetFarZ (150.0f);
+    _mainCamera->SetProjMat(projMat);
+
+
+
+
     if(_dx12->InitDX12(_gameWindow.get()) == false) goto failed; // DirectX12初期処理
 
     
     InitKeyMap(); // 操作ボタン設定
    
     InitSceneState(); // シーンステート初期処理
-
     
     return true;
 
@@ -115,8 +138,8 @@ void Application::CreateShogiObj()
     // 駒の初期位置調整
     for (int i = 1; i < _pieces.size(); i++)
     {
-        _pieces[i]->MoveX(i * 10);
-        _pieces[i]->MoveY(10.0f);
+        DirectX::XMFLOAT3 vec = {i*10.0f, 10.0f, 0.0f};
+        _pieces[i]->Move(vec);
     }
 }
 
@@ -289,7 +312,6 @@ void Application::Run()
         }
         else
         {
-            //_inputHandler->ExeOperation(); // 操作開始
             _sceneState->ExeOperation(
                 _inputHandler->GetInputMemory(),
                 _inputHandler->GetCursorX(),
@@ -479,7 +501,7 @@ InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // イ
 HWND Application::GetHWND(){return _gameWindow->GetHWND();} // ウインドウハンドルを返す
 UINT Application::GetWindowWidth(){return _gameWindow->GetWindowWidth();}   // ウインドウ横サイズを返す
 UINT Application::GetWindowHeight(){return _gameWindow->GetWindowHeight();} // ウインドウ縦サイズを返す
-ViewMat* Application::GetViewMat(){return _dx12->GetViewMat();} // ビュー行列を返す
+Camera* Application::GetMainCamera(){return _mainCamera.get();} // メインカメラを返す
 Tex* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
 Tex* Application::GetBoardLineTex(){return _boardLineTex.get();} // 将棋盤黒線テクスチャを返す
 VertIndices* Application::GetBoardVertIndices(){return _boardIndices.get();} // 将棋盤頂点インデックスを返す
@@ -535,5 +557,7 @@ Application::Application()
 
     _keyMap = std::make_unique<KeyMap>();
     _inputHandler = std::make_unique<InputHandler>();
+
+    _mainCamera = std::make_unique<Camera>();
 }
 Application::~Application(){}

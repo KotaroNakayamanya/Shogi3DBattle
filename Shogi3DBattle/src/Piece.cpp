@@ -1,22 +1,9 @@
 #include"Piece.h"
 
-// x軸方向に動くようにワールド行列を変換する
-void Piece::MoveX(float x)
+// ワールド行列に平行移動を追加する
+void Piece::Move(DirectX::XMFLOAT3 vec)
 {
-    //_worldMat *= DirectX::XMMatrixTranslation(x, 0, 0);
-    auto moveXMat = DirectX::XMMatrixTranslation(x, 0, 0);
-    auto newMat = _worldMat * moveXMat;
-
-    _worldMat = newMat;
-}
-
-// y軸方向に動くようにワールド行列を変換する
-void Piece::MoveY(float y)
-{
-    auto moveYMat = DirectX::XMMatrixTranslation(0, y, 0);
-    auto newMat = _worldMat * moveYMat;
-
-    _worldMat = newMat;
+    _worldMat *= DirectX::XMMatrixTranslation(vec.x, vec.y, vec.z);
 }
 
 Piece::Piece(){}

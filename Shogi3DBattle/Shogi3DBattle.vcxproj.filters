@@ -345,27 +345,6 @@
     <ClCompile Include="src\Tex.cpp">
       <Filter>ソース ファイル\dx12\csu\texture</Filter>
     </ClCompile>
-    <ClCompile Include="src\MoveBack.cpp">
-      <Filter>ソース ファイル\obj_command\piece</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MoveLeft.cpp">
-      <Filter>ソース ファイル\obj_command\piece</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MoveRight.cpp">
-      <Filter>ソース ファイル\obj_command\piece</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MoveForward.cpp">
-      <Filter>ソース ファイル\obj_command\piece</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ViewRotation.cpp">
-      <Filter>ソース ファイル\obj_command\camera</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MoveTargetForward.cpp">
-      <Filter>ソース ファイル\obj_command\camera</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MoveEyeForward.cpp">
-      <Filter>ソース ファイル\obj_command\camera</Filter>
-    </ClCompile>
     <ClCompile Include="src\CSUHeap.cpp">
       <Filter>ソース ファイル\dx12\heap</Filter>
     </ClCompile>
@@ -528,6 +507,9 @@
     <ClCompile Include="src\BufferedData.cpp">
       <Filter>ソース ファイル\3d_object</Filter>
     </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -585,9 +567,6 @@
       <Filter>ヘッダー ファイル\3d_object\shogi_obj\board</Filter>
     </ClInclude>
     <ClInclude Include="header\IMouse.h">
-      <Filter>ヘッダー ファイル\mouse</Filter>
-    </ClInclude>
-    <ClInclude Include="header\CursorMove.h">
       <Filter>ヘッダー ファイル\mouse</Filter>
     </ClInclude>
     <ClInclude Include="header\ShogiObj.h">
@@ -728,33 +707,6 @@
     <ClInclude Include="header\PShaderResourceStates.h">
       <Filter>ヘッダー ファイル\DX12\buff\factory\resource_state</Filter>
     </ClInclude>
-    <ClInclude Include="header\Move.h">
-      <Filter>ヘッダー ファイル\obj_command\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveBack.h">
-      <Filter>ヘッダー ファイル\obj_command\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveForward.h">
-      <Filter>ヘッダー ファイル\obj_command\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveLeft.h">
-      <Filter>ヘッダー ファイル\obj_command\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveRight.h">
-      <Filter>ヘッダー ファイル\obj_command\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ViewRotation.h">
-      <Filter>ヘッダー ファイル\obj_command\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveCamera.h">
-      <Filter>ヘッダー ファイル\obj_command\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveEyeForward.h">
-      <Filter>ヘッダー ファイル\obj_command\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MoveTargetForward.h">
-      <Filter>ヘッダー ファイル\obj_command\camera</Filter>
-    </ClInclude>
     <ClInclude Include="header\ICommand.h">
       <Filter>ヘッダー ファイル\obj_command\piece</Filter>
     </ClInclude>
@@ -850,6 +802,9 @@
     </ClInclude>
     <ClInclude Include="header\VertIndices.h">
       <Filter>ヘッダー ファイル\3d_object</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Camera.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

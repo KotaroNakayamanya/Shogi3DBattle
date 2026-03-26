@@ -8,6 +8,8 @@
 #include"IVertIndicesFactory.h"
 #include"ISceneState.h"
 
+#include"Camera.h"
+
 class Application
 {
 private:
@@ -34,10 +36,11 @@ private:
 
     void CreateShogiObj(); // 将棋オブジェクト作成
 
-    
-    
-
     void CreateTex(); // テクスチャ作成
+
+
+    // カメラ
+    std::unique_ptr<Camera> _mainCamera; // メインカメラ
 
 
     
@@ -54,7 +57,6 @@ public:
     void Exit(); // 終了処理
 
     GameWindow* GetGameWindow(); // ゲームウインドウオブジェクトを返す
-    DX12* GetDX12(); // DX12オブジェクトを返す
     HWND GetHWND(); // ウインドウハンドルを返す
 
     Board* GetBoard(); // 将棋盤を返す
@@ -73,7 +75,7 @@ public:
     UINT GetWindowWidth();  // ウインドウ横サイズを返す
     UINT GetWindowHeight(); // ウインドウ縦サイズを返す
     
-    ViewMat* GetViewMat();
+    Camera* GetMainCamera(); // メインカメラを返す
 
     void ProcessChangeWindowSize(); // 画面サイズ変更処理
 

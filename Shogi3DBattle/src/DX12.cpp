@@ -60,18 +60,6 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     CreateRenderTex(); // レンダーテクスチャ作成
 
 
-    // ビュー行列作成
-    _viewMat->SetEye  (0.0f, -8.0f,  0.0f);
-    _viewMat->SetFocus(0.0f,  0.0f, -5.0f);
-    _viewMat->SetUp   (0.0f,  0.0f, -1.0f);
-
-    // プロジェクション行列作成
-    _projMat->SetFOV  (DirectX::XM_PIDIV2);
-    _projMat->SetAR   (16.0f / 9.0f);
-    _projMat->SetNearZ(1.0f);
-    _projMat->SetFarZ (150.0f);
-
-
     
     return true;
 
@@ -527,13 +515,14 @@ void DX12::ExeD3D()
     auto boardVertIndices = app.GetBoardVertIndices();
     auto pieceVertIndices = app.GetPieceVertIndices();
 
+    auto mainCamera = app.GetMainCamera();
+
     // 将棋盤描画コマンドセット
     _cmdList->SetIdxBuffView(GetIdxBuffView(boardVertIndices));
     _cmdList->SetVertBuffView(GetVertBuffView(board));
     _cmdList->SetDrawWithIdx(boardVertIndices);
 
     // 駒描画コマンドセット
-    //_cmdList->SetIdxBuffView(GetIdxBuffView(pieces[0].get())); // 駒のインデックスは全部同じ
     _cmdList->SetIdxBuffView(GetIdxBuffView(pieceVertIndices));
     for (UINT i = 0; i < pieces.size(); i++)
     {
@@ -541,12 +530,11 @@ void DX12::ExeD3D()
         _cmdList->SetDrawWithIdx(pieceVertIndices);
     }
 
-    // ワールド行列、ビュープロジェクション行列をコンスタントバッファに書き込み
+    // コンスタントバッファに書き込み
     _constBuff->WriteToConstBuff(
         board,
         pieces,
-        _viewMat.get(),
-        _projMat.get());
+        mainCamera);
 
     ExeCmd(); // コマンド実行
 }
@@ -736,7 +724,7 @@ void DX12::WaitProcessWithFence()
 
 
 
-ViewMat* DX12::GetViewMat(){return _viewMat.get();} // ビュー行列を返す
+//ViewMat* DX12::GetViewMat(){return _viewMat.get();} // ビュー行列を返す
 
 
 
@@ -757,8 +745,8 @@ DX12::DX12() {
     ::EnableDebugLayer();
 #endif
 
-    _viewMat = std::make_unique<ViewMat>();
-    _projMat = std::make_unique<ProjMat>();
+    //_viewMat = std::make_unique<ViewMat>();
+    //_projMat = std::make_unique<ProjMat>();
 
     _dxgiFactory = std::make_unique<DXGIFactory>();
     _adapter     = std::make_unique<Adapter>();
