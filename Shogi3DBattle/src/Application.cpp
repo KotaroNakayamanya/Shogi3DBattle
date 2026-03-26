@@ -7,16 +7,24 @@
 #include"BoardVertIndicesFactory.h"
 #include"PieceVertIndicesFactory.h"
 #include<functional>
+#include"MovingPiece.h"
 
 // 初期処理
 bool Application::Init()
 {
+    auto& pieces = Application::GetInstance().GetPieces();
+
     if(_gameWindow->InitGameWindow() == false) goto failed;    // ゲームウインドウ初期処理
     CreateShogiObj(); // 将棋オブジェクト作成
     CreateTex(); // テクスチャ作成
     if(_dx12->InitDX12(_gameWindow.get()) == false) goto failed; // DirectX12初期処理
-    _inputHandler = std::make_unique<InputHandler>(); // インプットハンドラ作成(初期は動ける状態）
 
+    
+    InitKeyMap(); // 操作ボタン設定
+   
+    InitSceneState(); // シーンステート初期処理
+
+    
     return true;
 
 failed:
@@ -245,7 +253,22 @@ void Application::CreateTex()
     _boardLineTex->SetWidth (width);
     _boardLineTex->SetHeight(height);
     _boardLineTex->SetTex(boardLineTex);
- }
+}
+
+// 操作ボタン初期処理
+void Application::InitKeyMap()
+{
+    _keyMap->RegisterKeyMap('W', InputHandler::UP);    //w　→　上ボタン
+    _keyMap->RegisterKeyMap('A', InputHandler::LEFT);  //a　→　左ボタン
+    _keyMap->RegisterKeyMap('S', InputHandler::DOWN);  //s　→　下ボタン
+    _keyMap->RegisterKeyMap('D', InputHandler::RIGHT); //d　→　右ボタン
+}
+
+// シーンステート初期処理
+void Application::InitSceneState()
+{
+    _sceneState = std::make_unique<MovingPiece>(_pieces[0].get());
+}
 
 
 
@@ -266,7 +289,14 @@ void Application::Run()
         }
         else
         {
-            _inputHandler->ExeOperation(); // 操作開始
+            //_inputHandler->ExeOperation(); // 操作開始
+            _sceneState->ExeOperation(
+                _inputHandler->GetInputMemory(),
+                _inputHandler->GetCursorX(),
+                _inputHandler->GetCursorXMove(),
+                _inputHandler->GetCursorY(),
+                _inputHandler->GetCursorYMove()); // 操作開始
+            _inputHandler->RemoveMouseMove();
             _dx12->ExeDX12();
         }
 
@@ -304,8 +334,9 @@ void Application::Exit()
 LRESULT CALLBACK WindowProcedure(
      HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    Application& app = Application::GetInstance(); // アプリケーションインスタンス取得
-    InputHandler* inputHandler = app.GetInputHandler(); // インプットハンドラ取得
+    auto& app = Application::GetInstance(); // アプリケーションインスタンス取得
+    auto inputHandler = app.GetInputHandler(); // インプットハンドラ取得
+    auto keyMap       = app.GetKeyMap(); // キーマップ
     
     static bool isCursorInited = false; // カーソル位置が画面中央にセットされているか
 
@@ -362,11 +393,11 @@ LRESULT CALLBACK WindowProcedure(
         return 0;
 
     case WM_KEYDOWN: // キー入力
-        inputHandler->MemoryInputKey(wParam);
+        inputHandler->MemoryInputButton(keyMap->ConvertKeyToButton(wParam));
         return 0;
 
     case WM_KEYUP: // キーから指を離した
-        inputHandler->RemoveInputKey(wParam);
+        inputHandler->RemoveInputButton(keyMap->ConvertKeyToButton(wParam));
         return 0;
 
     case WM_DESTROY: // ウインドウ破棄
@@ -444,18 +475,18 @@ LRESULT CALLBACK WindowProcedure(
 
 
 GameWindow* Application::GetGameWindow(){return _gameWindow.get();} // ゲームウインドウオブジェクトを返す
-DX12* Application::GetDX12(){return _dx12.get();} // DX12オブジェクトを返す}
 InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // インプットハンドラを返す
 HWND Application::GetHWND(){return _gameWindow->GetHWND();} // ウインドウハンドルを返す
 UINT Application::GetWindowWidth(){return _gameWindow->GetWindowWidth();}   // ウインドウ横サイズを返す
 UINT Application::GetWindowHeight(){return _gameWindow->GetWindowHeight();} // ウインドウ縦サイズを返す
 ViewMat* Application::GetViewMat(){return _dx12->GetViewMat();} // ビュー行列を返す
-Tex* Application::GetWoodTex(){return _woodTex.get();} // テクスチャを返す
-Tex* Application::GetBoardLineTex(){return _boardLineTex.get();} // テクスチャを返す
+Tex* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
+Tex* Application::GetBoardLineTex(){return _boardLineTex.get();} // 将棋盤黒線テクスチャを返す
 VertIndices* Application::GetBoardVertIndices(){return _boardIndices.get();} // 将棋盤頂点インデックスを返す
 VertIndices* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
 Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す
 std::vector<std::unique_ptr<Piece>>& Application::GetPieces(){return _pieces;} // 駒を返す
+KeyMap* Application::GetKeyMap(){return _keyMap.get();} // 将棋盤頂点インデックスを返す
 
 // すべての将棋オブジェクトを返す
 std::vector<ShogiObj*> Application::GetShogiObjects()
@@ -501,5 +532,8 @@ Application::Application()
 
     _boardIndices = std::make_unique<VertIndices>();
     _pieceIndices = std::make_unique<VertIndices>();
+
+    _keyMap = std::make_unique<KeyMap>();
+    _inputHandler = std::make_unique<InputHandler>();
 }
 Application::~Application(){}

@@ -6,33 +6,41 @@
 #include"IShogiObjFactory.h"
 #include"VertIndices.h"
 #include"IVertIndicesFactory.h"
-
+#include"ISceneState.h"
 
 class Application
 {
 private:
-    std::unique_ptr<GameWindow>            _gameWindow; // ゲームウインドウ
-    std::unique_ptr<DX12>                  _dx12;       // DirectX
+    std::unique_ptr<GameWindow> _gameWindow; // ゲームウインドウ
+    std::unique_ptr<DX12>       _dx12;       // DirectX
 
+    // 将棋オブジェクト
     std::unique_ptr<Board>              _board;      // 将棋盤
     std::unique_ptr<VertIndices>        _boardIndices; // 将棋盤の頂点インデックス
     std::vector<std::unique_ptr<Piece>> _pieces;     // 駒
     std::unique_ptr<VertIndices>        _pieceIndices; // 駒の頂点インデックス
-
-    std::unique_ptr<IShogiObjFactory> _shogiObjFactory; // 将棋オブジェクトファクトリー
+    std::unique_ptr<IShogiObjFactory>    _shogiObjFactory;    // 将棋オブジェクトファクトリー
     std::unique_ptr<IVertIndicesFactory> _vertIndicesFactory; // 頂点インデックスファクトリー
-
-    void CreateShogiObj(); // 将棋オブジェクト作成
 
     // テクスチャ
     std::unique_ptr<Tex> _woodTex; // 木材テクスチャ
     std::unique_ptr<Tex> _boardLineTex; // 将棋盤黒線テクスチャ
+
+    std::unique_ptr<ISceneState>  _sceneState;   // シーンステート
+    std::unique_ptr<InputHandler> _inputHandler; // インプットハンドラ
+    std::unique_ptr<KeyMap>       _keyMap;       // キーマップ
+    void InitKeyMap(); // 操作ボタン初期処理
+    void InitSceneState(); // シーンステート初期処理
+
+    void CreateShogiObj(); // 将棋オブジェクト作成
+
+    
     
 
     void CreateTex(); // テクスチャ作成
 
 
-    std::unique_ptr<InputHandler> _inputHandler; // インプットハンドラ
+    
 
     Application(); // デフォルトコンストラクタ禁止
     Application(const Application&) = delete; // コピー禁止
@@ -55,6 +63,7 @@ public:
     Tex* GetBoardLineTex(); // 将棋盤黒線テクスチャを返す
     VertIndices* GetBoardVertIndices(); // 将棋盤頂点インデックスを返す
     VertIndices* GetPieceVertIndices(); // 駒の頂点インデックスを返す
+    KeyMap* GetKeyMap(); // 将棋盤頂点インデックスを返す
 
     std::vector<ShogiObj*> GetShogiObjects(); // すべての将棋オブジェクトを返す
     std::vector<VertIndices*> GetAllVertIndices(); // すべての頂点インデックスを返す

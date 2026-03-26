@@ -79,24 +79,6 @@
     <Filter Include="ヘッダー ファイル\mouse">
       <UniqueIdentifier>{4432fb4b-b6dc-4503-bd59-b99cd6648243}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\shogi_obj">
-      <UniqueIdentifier>{6376bcf5-0473-4c76-b5a4-46d9742c14d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\shogi_obj\board">
-      <UniqueIdentifier>{87a704ed-e82c-4da5-8b2a-c2805a1f4977}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\shogi_obj\piece">
-      <UniqueIdentifier>{2bd42877-1574-4e0f-a8f7-2818e3cb5618}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\shogi_obj">
-      <UniqueIdentifier>{1d831363-e1a4-4b1f-9d15-cf0fc9915b12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\shogi_obj\piece">
-      <UniqueIdentifier>{3d481703-f3c4-41a4-b0ea-af4422b539b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\shogi_obj\board">
-      <UniqueIdentifier>{dca7bc76-6bfd-47e8-b136-fe2cf963029c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\dx12\factory">
       <UniqueIdentifier>{d56446de-5916-40ca-8a50-ebdc1a846640}</UniqueIdentifier>
     </Filter>
@@ -166,9 +148,6 @@
     <Filter Include="ソース ファイル\dx12\buff\factory\resource_desc">
       <UniqueIdentifier>{ed5ad725-a11a-4346-b047-7a6a4e94ee20}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\shogi_obj\factory">
-      <UniqueIdentifier>{65995f4d-91d0-4aad-aaf3-2260432487e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\dx12\swap_chain">
       <UniqueIdentifier>{e8a8cd52-ee38-46ad-a4b3-049929804045}</UniqueIdentifier>
     </Filter>
@@ -195,9 +174,6 @@
     </Filter>
     <Filter Include="ソース ファイル\dx12\draw_area">
       <UniqueIdentifier>{596b4283-5026-43f2-9ce0-0afdcd43baaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\input_handler\key_map">
-      <UniqueIdentifier>{31fe555d-f8f5-4f7d-bd70-caa2e40237e0}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\obj_command">
       <UniqueIdentifier>{8c4ce1f3-9c02-4eca-b771-14d02dd016a3}</UniqueIdentifier>
@@ -253,17 +229,47 @@
     <Filter Include="ヘッダー ファイル\DX12\resource_barrier">
       <UniqueIdentifier>{0f28c504-cd5d-4094-beca-d606b5a4d613}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\shogi_obj\factory">
-      <UniqueIdentifier>{471b672a-ce78-45e0-914a-746235cc279d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\input_handler\key_map">
-      <UniqueIdentifier>{54f4de9d-ec76-4f59-834a-1e00085e3871}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\mat">
       <UniqueIdentifier>{fc19dabf-7165-4134-b5f0-631b66fb8856}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\mat">
       <UniqueIdentifier>{4b4b839d-9110-4bfa-8fe1-f40e1ff19b55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\3d_object">
+      <UniqueIdentifier>{3e13e98a-014b-4f54-b232-5915bbe2e892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\3d_object\shogi_obj">
+      <UniqueIdentifier>{1d831363-e1a4-4b1f-9d15-cf0fc9915b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\3d_object\shogi_obj\piece">
+      <UniqueIdentifier>{3d481703-f3c4-41a4-b0ea-af4422b539b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\3d_object\shogi_obj\board">
+      <UniqueIdentifier>{dca7bc76-6bfd-47e8-b136-fe2cf963029c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\3d_object\shogi_obj\factory">
+      <UniqueIdentifier>{65995f4d-91d0-4aad-aaf3-2260432487e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\3d_object">
+      <UniqueIdentifier>{d881fad7-e34a-48b6-9fb2-44f03971fec5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\3d_object\shogi_obj">
+      <UniqueIdentifier>{6376bcf5-0473-4c76-b5a4-46d9742c14d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\3d_object\shogi_obj\board">
+      <UniqueIdentifier>{87a704ed-e82c-4da5-8b2a-c2805a1f4977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\3d_object\shogi_obj\piece">
+      <UniqueIdentifier>{2bd42877-1574-4e0f-a8f7-2818e3cb5618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\3d_object\shogi_obj\factory">
+      <UniqueIdentifier>{471b672a-ce78-45e0-914a-746235cc279d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\key_map">
+      <UniqueIdentifier>{31fe555d-f8f5-4f7d-bd70-caa2e40237e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\key_map">
+      <UniqueIdentifier>{54f4de9d-ec76-4f59-834a-1e00085e3871}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -279,8 +285,8 @@
     <ClCompile Include="src\GameWindow.cpp">
       <Filter>ソース ファイル\game_window</Filter>
     </ClCompile>
-    <ClCompile Include="src\KeyConf.cpp">
-      <Filter>ソース ファイル\input_handler\key_map</Filter>
+    <ClCompile Include="src\KeyMap.cpp">
+      <Filter>ソース ファイル\key_map</Filter>
     </ClCompile>
     <ClCompile Include="src\MovingPiece.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
@@ -289,10 +295,10 @@
       <Filter>ソース ファイル\input_handler</Filter>
     </ClCompile>
     <ClCompile Include="src\Piece.cpp">
-      <Filter>ソース ファイル\shogi_obj\piece</Filter>
+      <Filter>ソース ファイル\3d_object\shogi_obj\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\Pawn.cpp">
-      <Filter>ソース ファイル\shogi_obj\piece</Filter>
+      <Filter>ソース ファイル\3d_object\shogi_obj\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>ソース ファイル\dx12\swap_chain</Filter>
@@ -316,7 +322,7 @@
       <Filter>ソース ファイル\dx12\pipeline</Filter>
     </ClCompile>
     <ClCompile Include="src\Board.cpp">
-      <Filter>ソース ファイル\shogi_obj\board</Filter>
+      <Filter>ソース ファイル\3d_object\shogi_obj\board</Filter>
     </ClCompile>
     <ClCompile Include="src\PShader.cpp">
       <Filter>ソース ファイル\dx12\shader</Filter>
@@ -334,7 +340,7 @@
       <Filter>ソース ファイル\dx12\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\ShogiObj.cpp">
-      <Filter>ソース ファイル\shogi_obj</Filter>
+      <Filter>ソース ファイル\3d_object\shogi_obj</Filter>
     </ClCompile>
     <ClCompile Include="src\Tex.cpp">
       <Filter>ソース ファイル\dx12\csu\texture</Filter>
@@ -487,27 +493,15 @@
       <Filter>ソース ファイル\dx12\draw_area</Filter>
     </ClCompile>
     <ClCompile Include="src\BoardFactory.cpp">
-      <Filter>ソース ファイル\shogi_obj\factory</Filter>
+      <Filter>ソース ファイル\3d_object\shogi_obj\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\PieceFactory.cpp">
-      <Filter>ソース ファイル\shogi_obj\factory</Filter>
+      <Filter>ソース ファイル\3d_object\shogi_obj\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\RenderTexBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\VecCalc.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertIndices.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BoardVertIndicesFactory.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PieceVertIndicesFactory.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BufferedData.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\ProjMat.cpp">
@@ -520,7 +514,19 @@
       <Filter>ソース ファイル\mat</Filter>
     </ClCompile>
     <ClCompile Include="src\Vertices.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\3d_object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoardVertIndicesFactory.cpp">
+      <Filter>ソース ファイル\3d_object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PieceVertIndicesFactory.cpp">
+      <Filter>ソース ファイル\3d_object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertIndices.cpp">
+      <Filter>ソース ファイル\3d_object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BufferedData.cpp">
+      <Filter>ソース ファイル\3d_object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -536,11 +542,8 @@
     <ClInclude Include="header\GameWindow.h">
       <Filter>ヘッダー ファイル\game_window</Filter>
     </ClInclude>
-    <ClInclude Include="header\KeyConf.h">
-      <Filter>ヘッダー ファイル\input_handler\key_map</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ControllerButton.h">
-      <Filter>ヘッダー ファイル\input_handler\key_map</Filter>
+    <ClInclude Include="header\KeyMap.h">
+      <Filter>ヘッダー ファイル\key_map</Filter>
     </ClInclude>
     <ClInclude Include="header\ISceneState.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
@@ -552,10 +555,10 @@
       <Filter>ヘッダー ファイル\input_handler</Filter>
     </ClInclude>
     <ClInclude Include="header\Piece.h">
-      <Filter>ヘッダー ファイル\shogi_obj\piece</Filter>
+      <Filter>ヘッダー ファイル\3d_object\shogi_obj\piece</Filter>
     </ClInclude>
     <ClInclude Include="header\Pawn.h">
-      <Filter>ヘッダー ファイル\shogi_obj\piece</Filter>
+      <Filter>ヘッダー ファイル\3d_object\shogi_obj\piece</Filter>
     </ClInclude>
     <ClInclude Include="header\SwapChain.h">
       <Filter>ヘッダー ファイル\DX12\swap_chain</Filter>
@@ -579,7 +582,7 @@
       <Filter>ヘッダー ファイル\DX12\root_signature</Filter>
     </ClInclude>
     <ClInclude Include="header\Board.h">
-      <Filter>ヘッダー ファイル\shogi_obj\board</Filter>
+      <Filter>ヘッダー ファイル\3d_object\shogi_obj\board</Filter>
     </ClInclude>
     <ClInclude Include="header\IMouse.h">
       <Filter>ヘッダー ファイル\mouse</Filter>
@@ -588,7 +591,7 @@
       <Filter>ヘッダー ファイル\mouse</Filter>
     </ClInclude>
     <ClInclude Include="header\ShogiObj.h">
-      <Filter>ヘッダー ファイル\shogi_obj</Filter>
+      <Filter>ヘッダー ファイル\3d_object\shogi_obj</Filter>
     </ClInclude>
     <ClInclude Include="header\PShader.h">
       <Filter>ヘッダー ファイル\DX12\shader</Filter>
@@ -804,33 +807,18 @@
       <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\IShogiObjFactory.h">
-      <Filter>ヘッダー ファイル\shogi_obj\factory</Filter>
+      <Filter>ヘッダー ファイル\3d_object\shogi_obj\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\BoardFactory.h">
-      <Filter>ヘッダー ファイル\shogi_obj\factory</Filter>
+      <Filter>ヘッダー ファイル\3d_object\shogi_obj\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\PieceFactory.h">
-      <Filter>ヘッダー ファイル\shogi_obj\factory</Filter>
+      <Filter>ヘッダー ファイル\3d_object\shogi_obj\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\RenderTexBuffFactory.h">
       <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\VecCalc.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\VertIndices.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\IVertIndicesFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\BoardVertIndicesFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PieceVertIndicesFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\BufferedData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\IMat.h">
@@ -845,8 +833,23 @@
     <ClInclude Include="header\WorldMat.h">
       <Filter>ヘッダー ファイル\mat</Filter>
     </ClInclude>
+    <ClInclude Include="header\BoardVertIndicesFactory.h">
+      <Filter>ヘッダー ファイル\3d_object</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IVertIndicesFactory.h">
+      <Filter>ヘッダー ファイル\3d_object</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BufferedData.h">
+      <Filter>ヘッダー ファイル\3d_object</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PieceVertIndicesFactory.h">
+      <Filter>ヘッダー ファイル\3d_object</Filter>
+    </ClInclude>
     <ClInclude Include="header\Vertices.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\3d_object</Filter>
+    </ClInclude>
+    <ClInclude Include="header\VertIndices.h">
+      <Filter>ヘッダー ファイル\3d_object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

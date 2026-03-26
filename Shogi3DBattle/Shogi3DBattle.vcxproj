@@ -59,7 +59,7 @@
     <ClCompile Include="src\Vertices.cpp" />
     <ClCompile Include="src\VertIndices.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
-    <ClCompile Include="src\KeyConf.cpp" />
+    <ClCompile Include="src\KeyMap.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MoveBack.cpp" />
     <ClCompile Include="src\MoveEyeForward.cpp" />
@@ -151,7 +151,6 @@
     <ClInclude Include="header\IResourceStates.h" />
     <ClInclude Include="header\MoveCamera.h" />
     <ClInclude Include="header\GameWindow.h" />
-    <ClInclude Include="header\ControllerButton.h" />
     <ClInclude Include="header\DX12.h" />
     <ClInclude Include="header\DXGIFactory.h" />
     <ClInclude Include="header\Fence.h" />
@@ -161,7 +160,7 @@
     <ClInclude Include="header\IMouse.h" />
     <ClInclude Include="header\InputHandler.h" />
     <ClInclude Include="header\InputLayout.h" />
-    <ClInclude Include="header\KeyConf.h" />
+    <ClInclude Include="header\KeyMap.h" />
     <ClInclude Include="header\Move.h" />
     <ClInclude Include="header\MoveBack.h" />
     <ClInclude Include="header\MoveEyeForward.h" />

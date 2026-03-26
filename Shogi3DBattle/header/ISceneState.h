@@ -1,17 +1,18 @@
 #pragma once
 
+#include"KeyMap.h"
 #include<memory>
 
 class ISceneState
 {
 public:
-    virtual ISceneState* ExeDecisionButton() = 0; // 決定ボタン処理
-    virtual ISceneState* ExeCancelButton()   = 0; // キャンセルボタン処理
-    virtual ISceneState* ExeUpButton()       = 0; // 上ボタン処理
-    virtual ISceneState* ExeLeftButton()     = 0; // 左ボタン処理
-    virtual ISceneState* ExeDownButton()     = 0; // 下ボタン処理
-    virtual ISceneState* ExeRightButton()    = 0; // 右ボタン処理
-    virtual ISceneState* ExeMouseMove(int xMove, int yMove) = 0; // マウス操作処理
+    // 操作開始
+    virtual ISceneState* ExeOperation(
+        UCHAR inputMemory,
+        int cursorX,
+        int cursorXMove,
+        int cursorY,
+        int cursorYMove) = 0;
 
     ISceneState()  = default;
     ~ISceneState(){}

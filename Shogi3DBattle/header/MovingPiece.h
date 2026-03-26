@@ -13,28 +13,25 @@
 class MovingPiece : public ISceneState
 {
 private:
-    Piece* _piece;
-    ViewMat* _viewMat;
-    //std::unique_ptr<ICommand> _moveForward;
-    //std::unique_ptr<ICommand> _moveLeft;
-    //std::unique_ptr<ICommand> _moveBack;
-    //std::unique_ptr<ICommand> _moveRight;
+    Piece* _piece;     // 操作している駒
+    ViewMat* _viewMat; // カメラ用途のビュー行列
+    HWND _hwnd;        // ウインドウハンドル
 
-    //std::unique_ptr<IMouse>   _mouseMove;
-
-    //std::unique_ptr<MoveTargetForward> _moveTargetForward;
-    //std::unique_ptr<MoveEyeForward> _moveEyeForward;
-
-    HWND _hwnd;
+    ISceneState* ExeDecisionButton(); // 決定ボタン処理
+    ISceneState* ExeCancelButton(); // キャンセルボタン処理
+    ISceneState* ExeUpButton(); // 上ボタン処理
+    ISceneState* ExeLeftButton(); // 左ボタン処理
+    ISceneState* ExeDownButton(); // 下ボタン処理
+    ISceneState* ExeRightButton(); // 右ボタン処理
+    ISceneState* ExeMouseMove(int xMove, int yMove); // カーソル操作処理
 
 public:
-    ISceneState* ExeDecisionButton() override; // 決定ボタン処理
-    ISceneState* ExeCancelButton()   override; // キャンセルボタン処理
-    ISceneState* ExeUpButton()       override; // 上ボタン処理
-    ISceneState* ExeLeftButton()     override; // 左ボタン処理
-    ISceneState* ExeDownButton()     override; // 下ボタン処理
-    ISceneState* ExeRightButton()    override; // 右ボタン処理
-    ISceneState* ExeMouseMove(int xMove, int yMove) override; // カーソル操作処理
+    ISceneState* ExeOperation(
+        UCHAR inputMemory,
+        int cursorX,
+        int cursorXMove,
+        int cursorY,
+        int cursorYMove) override;
 
     MovingPiece(Piece* piece);
     ~MovingPiece();

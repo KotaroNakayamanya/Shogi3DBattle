@@ -1,111 +1,40 @@
 #include"InputHandler.h"
-#include"ISceneState.h"
-#include"KeyConf.h"
-#include"MovingPiece.h"
-#include"Pawn.h"
-#include"ViewMat.h"
-#include"Application.h"
+#include"KeyMap.h"
 
-// 操作開始
-void InputHandler::ExeOperation()
-{
-    ISceneState* newSceneState = nullptr;
-
-    if(_inputMemory & ControllerButton::mouseMove) // マウス操作処理
-    {
-        newSceneState = _sceneState->ExeMouseMove(_cursorXMove, _cursorYMove);
-        _inputMemory ^= ControllerButton::mouseMove; // マウス操作終了は明示する
-    }
-    if(_inputMemory & ControllerButton::decision)  // 決定ボタン処理
-        newSceneState = _sceneState->ExeDecisionButton();
-    if(_inputMemory & ControllerButton::cancel)    // キャンセルボタン処理
-        newSceneState = _sceneState->ExeCancelButton();
-    if(_inputMemory & ControllerButton::up)        // 上ボタン処理
-        newSceneState = _sceneState->ExeUpButton();
-    if(_inputMemory & ControllerButton::left)      // 左ボタン処理
-        newSceneState = _sceneState->ExeLeftButton();
-    if(_inputMemory & ControllerButton::down)      // 下ボタン処理
-        newSceneState = _sceneState->ExeDownButton();
-    if(_inputMemory & ControllerButton::right)     // 右ボタン処理
-        newSceneState = _sceneState->ExeRightButton();
-    
-       
-    CheckUpdateSceneState(newSceneState);
-}
-
-
-void InputHandler::MemoryLClick(){_inputMemory |= ControllerButton::decision;} // 左クリック記録
-void InputHandler::RemoveLClick(){_inputMemory ^= ControllerButton::decision;} // 左クリック解除
-void InputHandler::MemoryRClick(){_inputMemory |= ControllerButton::cancel;} // 右クリック記録
-void InputHandler::RemoveRClick(){_inputMemory ^= ControllerButton::cancel;} // 右クリック解除
-
-// キー入力記録
-void InputHandler::MemoryInputKey(WPARAM inputKey)
-{
-    // キーの入力を割り当てられている操作ボタンに変換する
-    auto keyConf = _keyConf->convertKeyToControllerButton(inputKey);
-
-    _inputMemory |= keyConf;
-}
-
-// キー入力解除
-void InputHandler::RemoveInputKey(WPARAM inputKey)
-{
-    // キーの入力を割り当てられている操作ボタンに変換する
-    auto keyConf = _keyConf->convertKeyToControllerButton(inputKey);
-
-    _inputMemory ^= keyConf;
-}
-
+void InputHandler::MemoryLClick()                 {_inputMemory |=  DECISION;} // 左クリック記録
+void InputHandler::RemoveLClick()                 {_inputMemory &= ~DECISION;} // 左クリック解除
+void InputHandler::MemoryRClick()                 {_inputMemory |=  CANCEL;}   // 右クリック記録
+void InputHandler::RemoveRClick()                 {_inputMemory &= ~CANCEL;}   // 右クリック解除
+void InputHandler::MemoryInputButton(UCHAR button){_inputMemory |=  button;}           // キー入力記録
+void InputHandler::RemoveInputButton(UCHAR button){_inputMemory &= ~button;}           // キー入力解除
 // マウス移動処理記録
 void InputHandler::MemoryMouseMove(int x, int y)
 {
+    // 右と上を正としてマウス動作距離を保存
     _cursorXMove = x - _cursorX;
     _cursorYMove = _cursorY - y;
 
+    // 現在のマウス位置を保存
     _cursorX = x;
     _cursorY = y;
 
-    _inputMemory |= ControllerButton::mouseMove;
+    _inputMemory |= MOUSE_MOVE;
 }
-//// マウス移動処理記録
-//void InputHandler::MemoryMouseMove(int xMove, int yMove)
-//{
-//    _cursorXMove = xMove;
-//    _cursorYMove = yMove;
-//    _inputMemory |= ControllerButton::mouseMove;
-//}
+void InputHandler::RemoveMouseMove(){_inputMemory &= ~MOUSE_MOVE;} // マウス移動解除
+
 
 void InputHandler::ClearInputMemory(){_inputMemory = 0;} // 入力クリア
 
-// シーンステート更新チェック
-void InputHandler::CheckUpdateSceneState(ISceneState* sceneState)
-{
-    // 新しいシーンステートがnullptr以外で、現在と異なれば更新する
-    bool isNotNull  = sceneState != nullptr;
-    bool isNotEqual = sceneState != _sceneState.get();
 
-    if (isNotNull && isNotEqual) SetSceneState(sceneState);
-}
-
-// シーンステート更新
-void InputHandler::SetSceneState(ISceneState* sceneState)
-{
-    _sceneState.reset(sceneState);
-}
-
-void InputHandler::SetCursorX(int x){_cursorX = x;}
-void InputHandler::SetCursorY(int y){_cursorY = y;}
+UCHAR InputHandler::GetInputMemory(){return _inputMemory;} // 入力記録を返す
+void InputHandler::SetCursorX(int x){_cursorX = x;}    // カーソルx位置セット
+int  InputHandler::GetCursorX()     {return _cursorX;} // カーソルx位置を返す
+void InputHandler::SetCursorY(int y){_cursorY = y;}    // カーソルy位置セット
+int  InputHandler::GetCursorY()     {return _cursorY;} // カーソルy位置を返す
+int  InputHandler::GetCursorXMove() {return _cursorXMove;} // カーソルx移動距離を返す
+int  InputHandler::GetCursorYMove() {return _cursorYMove;} // カーソルy移動距離を返す
 
 
-
-InputHandler::InputHandler()
-{
-    auto& pieces = Application::GetInstance().GetPieces();
-
-    _sceneState = std::make_unique<MovingPiece>(pieces[0].get());
-    _keyConf    = std::make_unique<KeyConf>();
-}
-
+InputHandler::InputHandler(){}
 InputHandler::~InputHandler(){}
 
