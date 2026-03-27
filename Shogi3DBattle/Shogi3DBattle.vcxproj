@@ -57,6 +57,7 @@
     <ClCompile Include="src\IdxBuff.cpp" />
     <ClCompile Include="src\IdxBuffFactory.cpp" />
     <ClCompile Include="src\PieceVertIndicesFactory.cpp" />
+    <ClCompile Include="src\StartMene.cpp" />
     <ClCompile Include="src\Vertices.cpp" />
     <ClCompile Include="src\VertIndices.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="header\IHeapDesc.h" />
     <ClInclude Include="header\IMat.h" />
     <ClInclude Include="header\PieceVertIndicesFactory.h" />
+    <ClInclude Include="header\StartMenu.h" />
     <ClInclude Include="header\Vertices.h" />
     <ClInclude Include="header\VertIndices.h" />
     <ClInclude Include="header\IResourceDesc.h" />

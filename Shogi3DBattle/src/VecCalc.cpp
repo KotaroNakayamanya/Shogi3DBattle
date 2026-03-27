@@ -83,3 +83,13 @@ DirectX::XMFLOAT2 VecCalc::GetFloat2FromVec(
 
     return f;
 }
+
+// XMMATRIX
+DirectX::XMFLOAT4X4 VecCalc::GetFoloat4x4FromMat(
+    DirectX::XMMATRIX mat)
+{
+    DirectX::XMFLOAT4X4 float4x4;
+    DirectX::XMStoreFloat4x4(&float4x4, mat);
+
+    return float4x4;
+}

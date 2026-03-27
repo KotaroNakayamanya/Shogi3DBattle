@@ -42,6 +42,9 @@ private:
     // カメラ
     std::unique_ptr<Camera> _mainCamera; // メインカメラ
 
+    // シーン更新チェック
+    void CheckUpdateScene(ISceneState* sceneState);
+
 
     
 
@@ -72,8 +75,8 @@ public:
 
     InputHandler* GetInputHandler(); // インプットハンドラを返す
 
-    UINT GetWindowWidth();  // ウインドウ横サイズを返す
-    UINT GetWindowHeight(); // ウインドウ縦サイズを返す
+    //UINT GetWindowWidth();  // ウインドウ横サイズを返す
+    //UINT GetWindowHeight(); // ウインドウ縦サイズを返す
     
     Camera* GetMainCamera(); // メインカメラを返す
 

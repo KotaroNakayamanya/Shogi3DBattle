@@ -2,15 +2,29 @@
 #include<cmath>
 #include"VecCalc.h"
 
+// カメラ位置セット
+void Camera::SetCameraPos(DirectX::XMFLOAT3 pos)
+{
+    _viewMat->SetEye(pos);
+}
+
 // カメラ移動
-void Camera::MoveCamera(DirectX::XMFLOAT3 vec)
+void Camera::MoveCameraPos(DirectX::XMFLOAT3 vec)
 {
     auto eye = _viewMat->GetEye();
     auto newEye = VecCalc::GetFloat3AddFloat3(eye, vec);
     _viewMat->SetEye(newEye);
 }
-// 注視点位置移動
-void  Camera::MoveFocus(DirectX::XMFLOAT3 vec)
+
+
+// フォーカス位置セット
+void Camera::SetFocusPos(DirectX::XMFLOAT3 pos)
+{
+    _viewMat->SetFocus(pos);
+}
+
+// フォーカス位置移動
+void  Camera::MoveFocusPos(DirectX::XMFLOAT3 vec)
 {
     auto focus = _viewMat->GetFocus();
     auto newFocus = VecCalc::GetFloat3AddFloat3(focus, vec);

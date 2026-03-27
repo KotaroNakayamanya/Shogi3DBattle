@@ -18,6 +18,11 @@ public:
     void DisplayWindow(); // ウインドウを表示する
     void DestroyClass();  // クラス破棄
 
+    void ShowCursor(); // カーソル表示
+    void HideCursor(); // カーソルを非表示
+
+    void SetCursorPosCenter(); // カーソルをウインドウ中央にセット
+    
     HWND GetHWND(); // ウインドウハンドルを返す
     void SetWindowWidth (UINT windowWidth);  // ウインドウ横サイズセット
     UINT GetWindowWidth();                   // ウインドウ横サイズを返す

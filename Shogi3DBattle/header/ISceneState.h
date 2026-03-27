@@ -6,8 +6,8 @@
 class ISceneState
 {
 public:
-    // 操作開始
-    virtual ISceneState* ExeOperation(
+    // シーン動作
+    virtual ISceneState* ExeSceneOperation(
         UCHAR inputMemory,
         int cursorX,
         int cursorXMove,

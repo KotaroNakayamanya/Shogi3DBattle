@@ -1,9 +1,9 @@
 #include"MovingPiece.h"
 #include"Application.h"
+#include"StartMenu.h"
 
-
-// 操作開始
-ISceneState* MovingPiece::ExeOperation(
+// 駒操作シーン動作
+ISceneState* MovingPiece::ExeSceneOperation(
     UCHAR inputMemory,
     int cursorX,
     int cursorXMove,
@@ -13,104 +13,135 @@ ISceneState* MovingPiece::ExeOperation(
     ISceneState* newSceneState = nullptr;
 
     if(inputMemory & InputHandler::MOUSE_MOVE) // マウス操作処理
+        ExeMouseMove(cursorXMove, cursorYMove);
+
+    float moveX = 0.0f, moveY = 0.0f;
+    if(inputMemory & InputHandler::RIGHT) moveX += 1.0f;
+    if(inputMemory & InputHandler::LEFT)  moveX -= 1.0f;
+    if(inputMemory & InputHandler::UP)    moveY += 1.0f;
+    if(inputMemory & InputHandler::DOWN)  moveY -= 1.0f;
+
+    if (moveX != 0.0f || moveY != 0.0f)
     {
-        newSceneState = ExeMouseMove(cursorXMove, cursorYMove);
+        DirectX::XMFLOAT3 moveXYVec = {moveX, moveY, 0};
+        auto normMoveXYVec = VecCalc::GetNormFloat(moveXYVec);
+
+        auto moveVec = normMoveXYVec;
+
+        MovePieceAndCamera(moveVec);
     }
+
     if(inputMemory & InputHandler::DECISION)  // 決定ボタン処理
-        newSceneState = ExeDecisionButton();
+        return ExeDecisionButton();
     if(inputMemory & InputHandler::CANCEL)    // キャンセルボタン処理
-        newSceneState = ExeCancelButton();
-    if(inputMemory & InputHandler::UP)        // 上ボタン処理
-        newSceneState = ExeUpButton();
-    if(inputMemory & InputHandler::LEFT)      // 左ボタン処理
-        newSceneState = ExeLeftButton();
-    if(inputMemory & InputHandler::DOWN)      // 下ボタン処理
-        newSceneState = ExeDownButton();
-    if(inputMemory & InputHandler::RIGHT)     // 右ボタン処理
-        newSceneState = ExeRightButton();
+        return ExeCancelButton();
+
+
+    
 
     return newSceneState;
 }
 
+
+
+
 // 決定ボタン
 ISceneState* MovingPiece::ExeDecisionButton()
 {
+    auto inputHandler = Application::GetInstance().GetInputHandler();
+    inputHandler->RemoveLClick();
     return this;
 }
 
 // キャンセルボタン処理
 ISceneState* MovingPiece::ExeCancelButton()
 {
-    DestroyWindow(_hwnd);
-    return this;
-}
+    ISceneState* newSceneState;
+    if (_isMoved) // 駒を動かしていたら駒を初期位置に戻し、カメラとフォーカスを平行移動する
+    {
+        // 元の位置に動かすまでのベクトルを取得
+        auto subtMat = _startWorldMat - _piece->GetMat();
+        auto subtFloat4x4 = VecCalc::GetFoloat4x4FromMat(subtMat);
+        auto vecX = subtFloat4x4._41;
+        auto vecY = subtFloat4x4._42;
+        auto vecZ = 0.0f;
+        DirectX::XMFLOAT3 moveVec = {vecX, vecY, vecZ};
 
-// 上ボタン処理
-ISceneState* MovingPiece::ExeUpButton()
-{
-    DirectX::XMFLOAT3 vec = {0, 0.1f, 0};
-    MovePieceAndCamera(vec);
+        // 駒のワールド行列を初期化、カメラを平行移動
+        _piece->SetWorldMat(_startWorldMat);
+        _mainCamera->MoveCameraPos(moveVec);
+        _mainCamera->MoveFocusPos (moveVec);
 
-    return this;
-}
+        // 駒は動いてない状態に
+        _isMoved = false;
+        newSceneState = this;
+    }   
+    else          // 駒を動かしていなければメニュー画面に戻す
+    {
+        // カーソル表示
+        auto& app = Application::GetInstance();
+        auto gameWindow = app.GetGameWindow();
+        gameWindow->ShowCursor();
+        // シーンをスタートメニューに変更
+        newSceneState = new StartMenu();
+    }
 
-// 左ボタン処理
-ISceneState* MovingPiece::ExeLeftButton()
-{
-    DirectX::XMFLOAT3 vec = {-0.1f, 0, 0};
-    MovePieceAndCamera(vec);
-
-    return this;
-}
-
-// 下ボタン処理
-ISceneState* MovingPiece::ExeDownButton()
-{
-    DirectX::XMFLOAT3 vec = {0, -0.1f, 0};
-    MovePieceAndCamera(vec);
-
-    return this;
-}
-// 右ボタン処理
-ISceneState* MovingPiece::ExeRightButton()
-{
-    DirectX::XMFLOAT3 vec = {0.1f, 0, 0};
-    MovePieceAndCamera(vec);
-
-    return this;
+     auto inputHandler = Application::GetInstance().GetInputHandler();
+    inputHandler->RemoveRClick();
+        
+    return newSceneState;
 }
 
 // 駒とカメラを動かす
 void MovingPiece::MovePieceAndCamera(DirectX::XMFLOAT3 vec)
 {
     _piece->Move(vec);
-    _camera->MoveCamera(vec);
-    _camera->MoveFocus (vec);
+    _mainCamera->MoveCameraPos(vec);
+    _mainCamera->MoveFocusPos (vec);
+    _isMoved = true;
 }
 
 // マウス移動処理
-ISceneState* MovingPiece::ExeMouseMove(int xMove, int yMove)
+void MovingPiece::ExeMouseMove(int xMove, int yMove)
 {
     float fx = xMove / 1000.0f;
     float fy = yMove / 1000.0f;
 
-    _camera->RotationH(fx); // 水平方向にカメラ回転
-    _camera->RotationV(fy); // 垂直方向にカメラ回転
-
-    return this;
+    _mainCamera->RotationH(fx); // 水平方向にカメラ回転
+    _mainCamera->RotationV(fy); // 垂直方向にカメラ回転
 }
+
 
 
 
 
 MovingPiece::MovingPiece(Piece* piece)
 {
-    auto& app = Application::GetInstance();
-    auto mainCamera = app.GetMainCamera();
+    _piece = piece; // 操作対象の駒を取得
+    _mainCamera = Application::GetInstance().GetMainCamera(); // メインカメラ取得
+    
+    auto worldMat = piece->GetMat(); // 駒のワールド行列取得
+    _startWorldMat = worldMat; // ワールド行列初期値として取得しておく
+    
+    
+    // カメラのフォーカス位置を駒の位置を基準にセット
+    auto worldFloat4x4 = VecCalc::GetFoloat4x4FromMat(worldMat);
+    auto focusX = worldFloat4x4._41;
+    auto focusY = worldFloat4x4._42;
+    auto focusZ = worldFloat4x4._43 - 8.0f;
+    DirectX::XMFLOAT3 focusPos = {focusX, focusY, focusZ};
+    _mainCamera->SetFocusPos(focusPos);
 
-    _piece = piece;
-    _camera = mainCamera;
-    _hwnd = app.GetHWND();
+    // カメラの位置をフォーカス位置に合わせてセット
+    DirectX::XMFLOAT3 cameraPos = {focusX, focusY - 10.0f, focusZ - 10.0f};
+    _mainCamera->SetCameraPos(cameraPos);
+
+    // カーソル非表示
+    auto gameWindow = Application::GetInstance().GetGameWindow();
+    gameWindow->HideCursor();
+
+
+    _isMoved = false;
 }
 
 MovingPiece::~MovingPiece(){}

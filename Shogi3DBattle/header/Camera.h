@@ -13,8 +13,11 @@ public:
     void RotationH(float x); // 水平方向に視点を回す
     void RotationV(float y); // 垂直方向に視点を回す
 
-    void MoveCamera(DirectX::XMFLOAT3 vec); // カメラ移動
-    void MoveFocus (DirectX::XMFLOAT3 vec); // 注視点位置移動
+    void SetCameraPos(DirectX::XMFLOAT3 pos); // カメラ位置セット
+    void MoveCameraPos(DirectX::XMFLOAT3 vec); // カメラ移動
+
+    void SetFocusPos(DirectX::XMFLOAT3 pos); // フォーカス位置セット
+    void MoveFocusPos (DirectX::XMFLOAT3 vec); // フォーカス位置移動
 
     DirectX::XMMATRIX GetViewProjMat(); // ビュープロジェクション行列を返す
 

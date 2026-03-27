@@ -27,5 +27,8 @@ public:
     static DirectX::XMFLOAT2 GetFloat2FromVec( // XMVECTOR Å® XMFLOAT2
         DirectX::XMVECTOR v);
 
+    static DirectX::XMFLOAT4X4 GetFoloat4x4FromMat( // XMMATRIX Å® XMFloat4X4
+        DirectX::XMMATRIX mat);
+
     ~VecCalc(){}
 };

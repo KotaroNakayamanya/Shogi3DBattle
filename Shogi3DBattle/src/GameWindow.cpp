@@ -60,6 +60,59 @@ void GameWindow::DestroyClass()
 
 
 
+// カーソル表示
+void GameWindow::ShowCursor()
+{
+    // 通常のカーソルを表示
+    HCURSOR cursor = LoadCursor(nullptr, IDC_ARROW);
+    SetCursor(cursor);
+    // クリップカーソル解除
+    ClipCursor(nullptr);
+}
+
+// カーソル非表示
+void GameWindow::HideCursor()
+{
+    // カーソルを透明に
+    BYTE AND[] = {0};
+    BYTE XOR[] = {0};
+    HCURSOR cursor;
+    cursor = CreateCursor(
+        nullptr,
+        0, // カーソル横中心点
+        0, // カーソル縦中心点
+        1, // カーソル横サイズ
+        1, // カーソル縦サイズ
+        AND,     // AND mask 
+        XOR);   // XOR mask );
+    SetCursor(cursor);
+
+    // ウインドウのスクリーン座標を取得する
+    RECT clientRect;
+    GetClientRect(_hwnd, &clientRect);
+    POINT screenLT = {clientRect.left,  clientRect.top};
+    POINT screenRB = {clientRect.right, clientRect.bottom};
+    ClientToScreen(_hwnd, &screenLT);
+    ClientToScreen(_hwnd, &screenRB);
+
+    // カーソルをウインドウ内に閉じ込める
+    RECT rc;
+    SetRect(&rc, screenLT.x, screenLT.y, screenRB.x, screenRB.y);
+    ClipCursor(&rc);
+}
+
+// カーソルをウインドウ中央にセット
+void GameWindow::SetCursorPosCenter()
+{
+    int centerX = _windowWidth  / 2;
+    int centerY = _windowHeight / 2;
+    POINT center = {centerX, centerY};
+    ClientToScreen(_hwnd, &center); // スクリーン座標に変換
+    SetCursorPos(center.x, center.y); // カーソルをウインドウ中央にセット
+}
+
+
+
 
 HWND GameWindow::GetHWND(){return _hwnd;} // ウインドウハンドルを返す 
 void GameWindow::SetWindowWidth (UINT windowWidth){_windowWidth = windowWidth;}    // ウインドウ横サイズセット

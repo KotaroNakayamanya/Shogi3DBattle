@@ -7,7 +7,7 @@
 #include"BoardVertIndicesFactory.h"
 #include"PieceVertIndicesFactory.h"
 #include<functional>
-#include"MovingPiece.h"
+#include"StartMenu.h"
 
 // 初期処理
 bool Application::Init()
@@ -290,7 +290,8 @@ void Application::InitKeyMap()
 // シーンステート初期処理
 void Application::InitSceneState()
 {
-    _sceneState = std::make_unique<MovingPiece>(_pieces[0].get());
+    //_sceneState = std::make_unique<MovingPiece>(_pieces[0].get());
+    _sceneState = std::make_unique<StartMenu>();
 }
 
 
@@ -312,13 +313,20 @@ void Application::Run()
         }
         else
         {
-            _sceneState->ExeOperation(
+            // シーン動作
+            ISceneState* newSceneState = _sceneState->ExeSceneOperation(
                 _inputHandler->GetInputMemory(),
                 _inputHandler->GetCursorX(),
                 _inputHandler->GetCursorXMove(),
                 _inputHandler->GetCursorY(),
-                _inputHandler->GetCursorYMove()); // 操作開始
+                _inputHandler->GetCursorYMove());
+            // シーン更新チェック
+            CheckUpdateScene(newSceneState);
+            // マウス入力を削除
+            //_inputHandler->RemoveLClick();
+            //_inputHandler->RemoveRClick();
             _inputHandler->RemoveMouseMove();
+            // 描画等実行
             _dx12->ExeDX12();
         }
 
@@ -331,6 +339,16 @@ void Application::Run()
 
         
     }
+}
+
+// シーン更新チェック
+void Application::CheckUpdateScene(ISceneState* sceneState)
+{
+    bool isNotNullPtr    = sceneState != nullptr;
+    bool isNotEqualScene = sceneState != _sceneState.get();
+
+    // シーンがnullではなく、現在以外のシーンであれば更新
+    if(isNotNullPtr && isNotEqualScene) _sceneState.reset(sceneState);
 }
 
 // 終了処理
@@ -357,20 +375,16 @@ LRESULT CALLBACK WindowProcedure(
      HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     auto& app = Application::GetInstance(); // アプリケーションインスタンス取得
-    auto inputHandler = app.GetInputHandler(); // インプットハンドラ取得
-    auto keyMap       = app.GetKeyMap(); // キーマップ
+    auto  inputHandler = app.GetInputHandler(); // インプットハンドラ取得
+    auto  keyMap       = app.GetKeyMap(); // キーマップ
     
     static bool isCursorInited = false; // カーソル位置が画面中央にセットされているか
 
-    static POINT screenLT;
-    static POINT screenRB;
-
-
+    auto gameWindow = app.GetGameWindow(); // ゲームウインドウ取得
 
     switch(msg){
     case WM_GETMINMAXINFO: // ウインドウサイズ制限
     {
-        GameWindow* gameWindow = app.GetGameWindow(); // ゲームウインドウ取得
 
         RECT windowRect = {0, 0, static_cast<LONG>(gameWindow->GetWindowWidth()), static_cast<LONG>(gameWindow->GetWindowHeight())};
         AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, false); // クライアント領域調整
@@ -400,8 +414,7 @@ LRESULT CALLBACK WindowProcedure(
     case WM_LBUTTONDOWN: // 左クリック
         inputHandler->MemoryLClick();
         return 0;
-
-    case WM_LBUTTONUP:   // 左クリック戻り
+    case WM_LBUTTONUP: // 左クリック離し
         inputHandler->RemoveLClick();
         return 0;
 
@@ -410,7 +423,7 @@ LRESULT CALLBACK WindowProcedure(
         inputHandler->MemoryRClick();  
         return 0;
 
-    case WM_RBUTTONUP:   // 右クリック戻り
+    case WM_RBUTTONUP: // 右クリック離し
         inputHandler->RemoveRClick();  
         return 0;
 
@@ -422,10 +435,6 @@ LRESULT CALLBACK WindowProcedure(
         inputHandler->RemoveInputButton(keyMap->ConvertKeyToButton(wParam));
         return 0;
 
-    case WM_DESTROY: // ウインドウ破棄
-        PostQuitMessage(0); // ループ処理終了
-        break;
-
     case WM_MOUSEMOVE: // マウス移動
     {
         UINT x = LOWORD(lParam);   // カーソル動作後の横位置
@@ -435,46 +444,22 @@ LRESULT CALLBACK WindowProcedure(
         {
             inputHandler->MemoryMouseMove(x, y);
 
-            bool isXNearEdge = x < 50 || x > (app.GetWindowWidth()  - 50);
-            bool isYNearEdge = y < 50 || y > (app.GetWindowHeight() - 50);
+            UINT windowWidth  = gameWindow->GetWindowWidth();
+            UINT windowHeight = gameWindow->GetWindowHeight();
+
+            bool isXNearEdge = x < 50 || x > (windowWidth  - 50);
+            bool isYNearEdge = y < 50 || y > (windowHeight - 50);
 
             if (isXNearEdge || isYNearEdge)
             {
-                int centerX = app.GetWindowWidth()  / 2;
-                int centerY = app.GetWindowHeight() / 2;
-                POINT center = {centerX, centerY};
-                ClientToScreen(hwnd, &center);
-                SetCursorPos(center.x, center.y); // カーソルをウインドウ中央にセット
-                inputHandler->SetCursorX(centerX);
-                inputHandler->SetCursorY(centerY);
+                // カーソルをウインドウ中央へ
+                gameWindow->SetCursorPosCenter();
+                inputHandler->SetCursorX(windowWidth  / 2); 
+                inputHandler->SetCursorY(windowHeight / 2);
             }
         }
         else
         {
-            // カーソルを透明に
-            BYTE AND[] = {0};
-            BYTE XOR[] = {0};
-            HCURSOR cursor;
-            cursor = CreateCursor(
-                 nullptr,
-                 0, // カーソル横中心点
-                 0, // カーソル縦中心点
-                 1, // カーソル横サイズ
-                 1, // カーソル縦サイズ
-                 AND,     // AND mask 
-                 XOR);   // XOR mask );
-            SetCursor(cursor);
-
-            RECT clientRect;
-            GetClientRect(hwnd, &clientRect);
-            screenLT = {clientRect.left,  clientRect.top};
-            screenRB = {clientRect.right, clientRect.bottom};
-            ClientToScreen(hwnd, &screenLT);
-            ClientToScreen(hwnd, &screenRB);
-
-            RECT rc;
-            SetRect(&rc, screenLT.x, screenLT.y, screenRB.x, screenRB.y);
-            ClipCursor(&rc);
 
             inputHandler->SetCursorX(x);
             inputHandler->SetCursorY(y);
@@ -485,7 +470,9 @@ LRESULT CALLBACK WindowProcedure(
         return 0;
     }
         
-
+    case WM_DESTROY: // ウインドウ破棄
+        PostQuitMessage(0); // ループ処理終了
+        break;
 
     default:
         break;
@@ -499,8 +486,6 @@ LRESULT CALLBACK WindowProcedure(
 GameWindow* Application::GetGameWindow(){return _gameWindow.get();} // ゲームウインドウオブジェクトを返す
 InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // インプットハンドラを返す
 HWND Application::GetHWND(){return _gameWindow->GetHWND();} // ウインドウハンドルを返す
-UINT Application::GetWindowWidth(){return _gameWindow->GetWindowWidth();}   // ウインドウ横サイズを返す
-UINT Application::GetWindowHeight(){return _gameWindow->GetWindowHeight();} // ウインドウ縦サイズを返す
 Camera* Application::GetMainCamera(){return _mainCamera.get();} // メインカメラを返す
 Tex* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
 Tex* Application::GetBoardLineTex(){return _boardLineTex.get();} // 将棋盤黒線テクスチャを返す
