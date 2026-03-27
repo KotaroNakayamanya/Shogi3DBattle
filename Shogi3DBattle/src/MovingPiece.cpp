@@ -1,6 +1,7 @@
 #include"MovingPiece.h"
 #include"Application.h"
 #include"StartMenu.h"
+#include<cmath>
 
 // 駒操作シーン動作
 ISceneState* MovingPiece::ExeSceneOperation(
@@ -11,6 +12,8 @@ ISceneState* MovingPiece::ExeSceneOperation(
     int cursorYMove)
 {
     ISceneState* newSceneState = nullptr;
+
+    
 
     if(inputMemory & InputHandler::MOUSE_MOVE) // マウス操作処理
         ExeMouseMove(cursorXMove, cursorYMove);
@@ -26,9 +29,26 @@ ISceneState* MovingPiece::ExeSceneOperation(
         DirectX::XMFLOAT3 moveXYVec = {moveX, moveY, 0};
         auto normMoveXYVec = VecCalc::GetNormFloat(moveXYVec);
 
-        auto moveVec = normMoveXYVec;
+        // z方向を0にし、正規化された視線ベクトルを取得
+        auto lookVec_z0 = _mainCamera->GetNormLookVec();
+        lookVec_z0.z = 0;
+        auto normLookVec_z0 = VecCalc::GetNormFloat(lookVec_z0);
 
-        MovePieceAndCamera(moveVec);
+        // normLookVec_z0.yの値は(0,1,0)との内積の結果になる
+        // 正規化したもの同士の内積のため、cosθの値である
+        auto cos = normLookVec_z0.y;
+
+        // normLookVec_z0.xの符号が負ならθは正方向、正ならθは負方向
+        auto theta = normLookVec_z0.x < 0 ?
+            std::acos(cos) : -std::acos(cos);
+
+        // θ分だけZ軸を中心に回転する行列を作る
+        auto rotationZ = DirectX::XMMatrixRotationZ(theta);
+
+        // xy座標での動きをカメラを正面とした動きに変換
+        auto normMoveVec = VecCalc::GetFloat3MulMat(normMoveXYVec, rotationZ);
+
+        MovePieceAndCamera(normMoveVec);
     }
 
     if(inputMemory & InputHandler::DECISION)  // 決定ボタン処理

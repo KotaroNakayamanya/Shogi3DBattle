@@ -19,6 +19,8 @@ public:
     void SetFocusPos(DirectX::XMFLOAT3 pos); // フォーカス位置セット
     void MoveFocusPos (DirectX::XMFLOAT3 vec); // フォーカス位置移動
 
+    DirectX::XMFLOAT3 GetNormLookVec(); // 正規化された視線ベクトルを返す
+
     DirectX::XMMATRIX GetViewProjMat(); // ビュープロジェクション行列を返す
 
     void SetViewMat(ViewMat* viewMat); // ビュー行列セット

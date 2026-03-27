@@ -11,8 +11,6 @@ private:
     Camera* _mainCamera; // メインカメラ
 
     DirectX::XMMATRIX _startWorldMat; // 初期ワールド行列
-    //DirectX::XMFLOAT3 _startCameraPos;      // 初期カメラ位置
-    //DirectX::XMFLOAT3 _startFocusPos;    // 初期フォーカス位置
 
     bool _isMoved; // 駒が動いたかどうか確認
 

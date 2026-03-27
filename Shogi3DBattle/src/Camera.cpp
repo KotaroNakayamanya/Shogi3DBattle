@@ -49,7 +49,12 @@ void Camera::RotationH(float x)
     
 }
 
-
+// 正規化された視線ベクトルを返す
+DirectX::XMFLOAT3 Camera::GetNormLookVec()
+{
+    auto lookVec = VecCalc::GetFloat3SubFloat3(_viewMat->GetFocus(), _viewMat->GetEye());
+    return VecCalc::GetNormFloat(lookVec);
+}
 
  
 // 垂直方向に視点を回す
