@@ -82,13 +82,12 @@ private:
 
     
     // Direct2Dテキストフォーマット
-    std::unique_ptr<DWriteTextFormat>   _dWriteTextFormat;   // ディレクトライトテキストフォーマット
-    std::unique_ptr<DWriteTextFormat> _pieceTextFormat; // 駒のテキストフォーマット
+    std::unique_ptr<TextFormat> _pieceTextFormat; // 駒のテキストフォーマット
 
     // ブラシ
-    std::unique_ptr<D2DSolidColorBrush> _blackBrush; // 黒色ブラシ
-    std::unique_ptr<D2DSolidColorBrush> _redBrush;   // 赤色ブラシ
-    void DrawStr(    // 文字を出力する
+    std::unique_ptr<Brush> _blackBrush; // 黒色ブラシ
+    std::unique_ptr<Brush> _redBrush;   // 赤色ブラシ
+    void DrawD2DText(    // 文字を出力する
         std::wstring str,
         float left,
         float top,

@@ -38,7 +38,7 @@
     <ClCompile Include="src\CSUOffset.cpp" />
     <ClCompile Include="src\D2DDeviceContext.cpp" />
     <ClCompile Include="src\D2DRenderTarget.cpp" />
-    <ClCompile Include="src\D2DSolidColorBrush.cpp" />
+    <ClCompile Include="src\Brush.cpp" />
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Device11.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
@@ -57,7 +57,8 @@
     <ClCompile Include="src\IdxBuff.cpp" />
     <ClCompile Include="src\IdxBuffFactory.cpp" />
     <ClCompile Include="src\PieceVertIndicesFactory.cpp" />
-    <ClCompile Include="src\StartMene.cpp" />
+    <ClCompile Include="src\StartMenu.cpp" />
+    <ClCompile Include="src\TextFormat.cpp" />
     <ClCompile Include="src\Vertices.cpp" />
     <ClCompile Include="src\VertIndices.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
@@ -124,7 +125,7 @@
     <ClInclude Include="header\CSUOffset.h" />
     <ClInclude Include="header\D2DDeviceContext.h" />
     <ClInclude Include="header\D2DRenderTarget.h" />
-    <ClInclude Include="header\D2DSolicColorBrush.h" />
+    <ClInclude Include="header\Brush.h" />
     <ClInclude Include="header\DSVFactory.h" />
     <ClInclude Include="header\DSVHeapDesc.h" />
     <ClInclude Include="header\DSVHeapFactory.h" />
@@ -185,7 +186,7 @@
     <ClInclude Include="header\TexHeapProp.h" />
     <ClInclude Include="header\TexResourceDesc.h" />
     <ClInclude Include="header\TexStruct.h" />
-    <ClInclude Include="header\DWriteTextFormat.h" />
+    <ClInclude Include="header\TextFormat.h" />
     <ClInclude Include="header\UploadHeapProp.h" />
     <ClInclude Include="header\VecCalc.h" />
     <ClInclude Include="header\VertBuff.h" />

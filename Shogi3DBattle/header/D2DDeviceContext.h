@@ -2,7 +2,7 @@
 
 #include"D2DRenderTarget.h"
 #include"WrappedBuff.h"
-#include"D2DSolicColorBrush.h"
+#include"Brush.h"
 #include<string>
 
 class D2DDeviceContext
@@ -20,9 +20,9 @@ public:
         WrappedBuff* wrappedBuff);
 
     // 黒色ブラシ作成
-    HRESULT CreateBlackBrush(D2DSolidColorBrush* colorBrush);
+    HRESULT CreateBlackBrush(Brush* brush);
     // 赤色ブラシ作成
-    HRESULT CreateRedBrush(D2DSolidColorBrush* colorBrush);
+    HRESULT CreateRedBrush(Brush* brush);
 
     void SetRenderTarget(D2DRenderTarget* d2dRenderTarget);
     void BeginDraw();

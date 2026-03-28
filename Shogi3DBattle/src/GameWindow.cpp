@@ -68,6 +68,8 @@ void GameWindow::ShowCursor()
     SetCursor(cursor);
     // クリップカーソル解除
     ClipCursor(nullptr);
+
+    _isHiddenCursor = false;
 }
 
 // カーソル非表示
@@ -99,6 +101,8 @@ void GameWindow::HideCursor()
     RECT rc;
     SetRect(&rc, screenLT.x, screenLT.y, screenRB.x, screenRB.y);
     ClipCursor(&rc);
+
+    _isHiddenCursor = true;
 }
 
 // カーソルをウインドウ中央にセット
@@ -111,6 +115,8 @@ void GameWindow::SetCursorPosCenter()
     SetCursorPos(center.x, center.y); // カーソルをウインドウ中央にセット
 }
 
+bool GameWindow::IsHiddenCursor(){return _isHiddenCursor;}// カーソル表示状況
+
 
 
 
@@ -120,5 +126,8 @@ UINT GameWindow::GetWindowWidth(){return _windowWidth;}                         
 void GameWindow::SetWindowHeight(UINT windowHeight){_windowHeight = windowHeight;} // ウインドウ縦サイズセット
 UINT GameWindow::GetWindowHeight(){return _windowHeight;}                          // ウインドウ縦サイズを返す
 
-GameWindow::GameWindow(){}
+GameWindow::GameWindow()
+{
+    _isHiddenCursor = false;
+}
 GameWindow::~GameWindow(){}

@@ -12,11 +12,10 @@ HRESULT Device11::CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext)
     
     // Direct2Dファクトリー作成
     ComPtr<ID2D1Factory3> d2dFactory;
-    constexpr D2D1_FACTORY_OPTIONS factoryOptions = {};
     result = D2D1CreateFactory(
         D2D1_FACTORY_TYPE_SINGLE_THREADED,
         __uuidof(ID2D1Factory3),
-        &factoryOptions,
+        nullptr,
         reinterpret_cast<void**>(d2dFactory.ReleaseAndGetAddressOf()));
     if(FAILED(result)) return result;
 
@@ -37,23 +36,49 @@ HRESULT Device11::CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext)
         d2dDeviceContextCom.ReleaseAndGetAddressOf());
     if(FAILED(result)) return result;
 
-    d2dDeviceContext->SetD2DDeviceContext(d2dDeviceContextCom);
+     d2dDeviceContext->SetD2DDeviceContext(d2dDeviceContextCom);
     return S_OK;
 }
 
-// ラップされたバッファ作成
-HRESULT Device11::CreateWrappedBuff(
+// ラップされたバックバッファ作成
+HRESULT Device11::CreateWrappedBackBuff(
     WrappedBuff* wrappedBuff,
     Buff* buff)
 {
     ComPtr<ID3D11Resource> wrappedBuffCom;
 
-    D3D11_RESOURCE_FLAGS flags = {D3D11_BIND_RENDER_TARGET};
+    D3D11_RESOURCE_FLAGS flags = {};
+    flags.BindFlags = D3D11_BIND_RENDER_TARGET;
 
     HRESULT result;
     result = _device11->CreateWrappedResource(
         buff->GetBuff(),
         &flags,
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        IID_PPV_ARGS(wrappedBuffCom.ReleaseAndGetAddressOf()));
+    if(FAILED(result)) return result;
+
+    wrappedBuff->SetWrappedBuff(wrappedBuffCom);
+    return S_OK;
+}
+
+// ラップされたテクスチャバッファ作成
+HRESULT Device11::CreateWrappedTexBuff(
+    WrappedBuff* wrappedBuff,
+    Buff* buff)
+{
+    ComPtr<ID3D11Resource> wrappedBuffCom;
+
+    D3D11_RESOURCE_FLAGS flags = {};
+    flags.BindFlags = D3D11_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
+    //flags.BindFlags = D3D10_BIND_SHADER_RESOURCE;
+
+    HRESULT result;
+    result = _device11->CreateWrappedResource(
+        buff->GetBuff(),
+        &flags,
+        //D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         IID_PPV_ARGS(wrappedBuffCom.ReleaseAndGetAddressOf()));

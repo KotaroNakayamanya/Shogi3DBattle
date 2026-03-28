@@ -41,6 +41,7 @@ private:
 
     // カメラ
     std::unique_ptr<Camera> _mainCamera; // メインカメラ
+    void CreateCamera(); // カメラ作成
 
     // シーン更新チェック
     void CheckUpdateScene(ISceneState* sceneState);
@@ -60,7 +61,6 @@ public:
     void Exit(); // 終了処理
 
     GameWindow* GetGameWindow(); // ゲームウインドウオブジェクトを返す
-    HWND GetHWND(); // ウインドウハンドルを返す
 
     Board* GetBoard(); // 将棋盤を返す
     std::vector<std::unique_ptr<Piece>>& GetPieces(); // 駒を返す
@@ -74,9 +74,6 @@ public:
     std::vector<VertIndices*> GetAllVertIndices(); // すべての頂点インデックスを返す
 
     InputHandler* GetInputHandler(); // インプットハンドラを返す
-
-    //UINT GetWindowWidth();  // ウインドウ横サイズを返す
-    //UINT GetWindowHeight(); // ウインドウ縦サイズを返す
     
     Camera* GetMainCamera(); // メインカメラを返す
 

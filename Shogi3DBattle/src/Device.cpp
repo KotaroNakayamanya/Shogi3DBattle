@@ -698,7 +698,7 @@ HRESULT Device::CreateD3D11(
     result = device11Origin.As(&device11Com);
     if(FAILED(result)) return result;
 
-    device11->SetDevice11(device11Com);
+    device11->     SetDevice11(device11Com);
     deviceContext->SetDeviceContext(deviceContextCom);
     return result;
 }

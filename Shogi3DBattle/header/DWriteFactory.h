@@ -2,7 +2,7 @@
 
 #include<dwrite.h>
 #include<wrl.h>
-#include"DWriteTextFormat.h"
+#include"TextFormat.h"
 #include<string>
 
 class DWriteFactory
@@ -17,10 +17,9 @@ private:
 
 public:
     // テキストフォーマット作成
-    HRESULT CreateDWriteTextFormat(
-        DWriteTextFormat* dWriteTextFormat,
+    HRESULT CreateTextFormat(
+        TextFormat* textFormat,
         std::wstring fontName);
-    /*HRESULT CreateDWriteTextFormat(DWriteTextFormat* dWriteTextFormat);*/
 
     DWriteFactory();
     ~DWriteFactory();

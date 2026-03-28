@@ -344,7 +344,7 @@ HRESULT DX12::CreateD2D()
     {
         // ラップされたバックバッファ作成
         _wrappedBackBuffs[i] = std::make_unique<WrappedBuff>();
-        if (FAILED(_device11->CreateWrappedBuff(_wrappedBackBuffs[i].get(), _backBuffs[i].get()))) goto failed;
+        if (FAILED(_device11->CreateWrappedBackBuff(_wrappedBackBuffs[i].get(), _backBuffs[i].get()))) goto failed;
     }
     for (UINT i = 0; i < backBuffNum; i++)
     {
@@ -360,7 +360,7 @@ HRESULT DX12::CreateD2D()
     _wrappedPieceTexBuffs.resize(pieceBuffNum);
     for(auto& wrappedPieceTexBuff : _wrappedPieceTexBuffs) wrappedPieceTexBuff = std::make_unique<WrappedBuff>();
     for (UINT i = 0; i < pieceBuffNum; i++)
-        if (FAILED(_device11->CreateWrappedBuff(_wrappedPieceTexBuffs[i].get(), _shogiObjTexBuffs[i].get()))) goto failed;
+        if (FAILED(_device11->CreateWrappedTexBuff(_wrappedPieceTexBuffs[i].get(), _shogiObjTexBuffs[i].get()))) goto failed;
 
     // Direct2Dレンダーターゲット作成
     _d2dPieceTexRenderTargets.resize(pieceBuffNum);
@@ -374,8 +374,31 @@ HRESULT DX12::CreateD2D()
     if(FAILED(_d2dDeviceContext->CreateBlackBrush(_blackBrush.get()))) goto failed;
     // 赤色ブラシ作成
     if(FAILED(_d2dDeviceContext->CreateRedBrush(_redBrush.get()))) goto failed;
-    // テキストフォーマット作成
-    if(FAILED(_dWriteFactory->CreateDWriteTextFormat(_dWriteTextFormat.get(), L"メイリオ"))) goto failed;
+    // 駒のテキストフォーマット作成
+    if(FAILED(_dWriteFactory->CreateTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed;
+
+    return S_OK;
+
+failed:
+    return E_FAIL;
+}
+
+// バッファに書き込み
+HRESULT DX12::WriteToBuff()
+{
+    auto& app    = Application::GetInstance();
+    auto  board  = app.GetBoard();
+    auto& pieces = app.GetPieces();
+    auto  woodTex = app.GetWoodTex();
+    auto  boardLineTex = app.GetBoardLineTex();
+    auto boardVertIndices = app.GetBoardVertIndices();
+    auto pieceVertIndices = app.GetPieceVertIndices();
+
+    if (FAILED(_vertBuff->WriteToVertBuff(board, pieces))) goto failed; // 頂点バッファに書き込み
+    if (FAILED(_idxBuff ->WriteToIdxBuff (boardVertIndices, pieceVertIndices)))  goto failed; // インデックスバッファに書き込み
+    if(FAILED(_woodTexBuff->WriteToTexBuff(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み
+
+    if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_55]->WriteToTexBuff(boardLineTex))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
 
     return S_OK;
 
@@ -395,7 +418,15 @@ void DX12::CreateRenderTex()
     CreatePieceTex(ShogiObj::KNIGHT, L"桂馬", L"成桂");
     CreatePieceTex(ShogiObj::LANCE,  L"香車", L"成香");
     CreatePieceTex(ShogiObj::PAWN,   L"歩",   L"と");
+
+    // リソース開放
+    for (auto& wrappedPieceTexBuff : _wrappedPieceTexBuffs) 
+        wrappedPieceTexBuff.reset(); // ラップされたレンダーテクスチャバッファ
+    _texRTVHeap.reset(); // テクスチャ用RTVヒープ
 }
+
+
+
 
 // 駒テクスチャ作成
 void DX12::CreatePieceTex(
@@ -403,29 +434,40 @@ void DX12::CreatePieceTex(
     std::wstring frontText,
     std::wstring backText)
 {
-    InitRenderTex(shogiObjType); // レンダーテクスチャ初期処理
-    ExeCmd(); // コマンド実行してリソースをレンダーターゲットにする
-    auto wrappedBuff = _wrappedPieceTexBuffs[shogiObjType].get();
-    auto d2dRenderTarget = _d2dPieceTexRenderTargets[shogiObjType].get();
-    StartD2D(wrappedBuff, d2dRenderTarget);
+    InitRenderTex(shogiObjType); // テクスチャへのレンダリング初期処理
+    
+    auto wrappedRenderTexBuff = _wrappedPieceTexBuffs[shogiObjType].get();         // ラップされたバッファ
+    auto d2dRenderTarget = _d2dPieceTexRenderTargets[shogiObjType].get(); // レンダーターゲット
+
+    StartD2D(wrappedRenderTexBuff, d2dRenderTarget); // Direct2D開始
+    
     auto size = 256 / 2;
-    auto left   = 0;
-    auto right  = size;
-    auto top    = 5;
-    auto bottom = size;
-    DrawStr(frontText, left,        top, right,        bottom, _blackBrush->GetD2DSolidColorBrush());
-    DrawStr(backText,  left + size, top, right + size, bottom, _redBrush->GetD2DSolidColorBrush());
-    EndD2D(wrappedBuff);
-    _deviceContext->Flash(); // Direct2D描画
+    D2D1_RECT_F rect = {0, 5, size, size};
+    _d2dDeviceContext->DrawTextW( // 黒色で駒表面を描画
+        frontText,
+        rect,
+        _pieceTextFormat->GetTextFormat(),
+        _blackBrush->GetBrush());
+
+    rect.left += size;
+    rect.right += size;
+    _d2dDeviceContext->DrawTextW( // 赤色で駒裏面を描画
+        backText,
+        rect,
+        _pieceTextFormat->GetTextFormat(),
+        _redBrush->GetBrush());
+
+    EndD2D(wrappedRenderTexBuff); // Direct2D終了
+
     ExitRenderTex(shogiObjType); // レンダリング終了処理
-    ExeCmd(); // コマンド実行
 }
 
-// レンダーテクスチャ初期処理
+// テクスチャへのレンダリング初期処理
 void DX12::InitRenderTex(ShogiObj::ShogiObjType shogiObjType)
 {
     // テクスチャのリソースバリアをレンダーターゲットに変更
-    auto resourceBarrier = _rb->GetRBTexToRenderTarget(_shogiObjTexBuffs[shogiObjType]->GetBuff());
+    auto renderTexBuff = _shogiObjTexBuffs[shogiObjType]->GetBuff();
+    auto resourceBarrier = _rb->GetRBTexToRenderTarget(renderTexBuff);
     _cmdList->SetResourceBarrier(resourceBarrier);
 
     // レンダーターゲットに設定
@@ -433,38 +475,36 @@ void DX12::InitRenderTex(ShogiObj::ShogiObjType shogiObjType)
     _cmdList->SetRenderTarget(rtvHandle);
 
     _cmdList->ClearRenderTarget(rtvHandle); // レンダーターゲットクリア
+
+    ExeCmd(); // コマンド実行
 }
 
-// レンダリング終了処理
+// Direct2D開始
+void DX12::StartD2D(WrappedBuff* wrappedBuff, D2DRenderTarget* d2dRenderTarget)
+{
+    _device11->AcquireWrappedBuff(wrappedBuff);
+    _d2dDeviceContext->SetRenderTarget(d2dRenderTarget);
+    _d2dDeviceContext->BeginDraw();
+    _d2dDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
+}
+
+// Direct2D終了
+void DX12::EndD2D(WrappedBuff* wrappedBuff)
+{
+    _d2dDeviceContext->EndDraw();
+    _device11->ReleaseWrappedBuff(wrappedBuff);
+    _deviceContext->Flash(); // Direct2D描画
+}
+
+// テクスチャへのレンダリング終了処理
 void DX12::ExitRenderTex(ShogiObj::ShogiObjType shogiObjType)
 {
     // テクスチャのリソースバリアをテクスチャに戻す
-    auto resourceBarrier = _rb->GetRBRenderTargetToTex(_shogiObjTexBuffs[shogiObjType]->GetBuff());
+    auto renderTexBuff = _shogiObjTexBuffs[shogiObjType]->GetBuff();
+    auto resourceBarrier = _rb->GetRBRenderTargetToTex(renderTexBuff);
      _cmdList->SetResourceBarrier(resourceBarrier);
-}
 
-// バッファに書き込み
-HRESULT DX12::WriteToBuff()
-{
-    auto& app    = Application::GetInstance();
-    auto  board  = app.GetBoard();
-    auto& pieces = app.GetPieces();
-    auto  woodTex = app.GetWoodTex();
-    auto  boardLineTex = app.GetBoardLineTex();
-    auto boardVertIndices = app.GetBoardVertIndices();
-    auto pieceVertIndices = app.GetPieceVertIndices();
-
-    if (FAILED(_vertBuff->WriteToVertBuff(board, pieces))) goto failed; // 頂点バッファに書き込み
-    //if (FAILED(_idxBuff ->WriteToIdxBuff (board, pieces)))  goto failed; // インデックスバッファに書き込み
-    if (FAILED(_idxBuff ->WriteToIdxBuff (boardVertIndices, pieceVertIndices)))  goto failed; // インデックスバッファに書き込み
-    if(FAILED(_woodTexBuff->WriteToTexBuff(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み
-
-    if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_55]->WriteToTexBuff(boardLineTex))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
-
-    return S_OK;
-
-failed:
-    return E_FAIL;
+    ExeCmd(); // コマンド実行
 }
 
 
@@ -474,6 +514,9 @@ failed:
 // コマンド実行
 void DX12::ExeDX12()
 {
+    
+    _currentBackBuffIdx = _swapChain->GetCurrentBackBufferIdx(); // バックバッファインデックス取得
+    
     InitRenderTarget(); // レンダーターゲット初期処理
     ExeD3D(); // Direct3D処理実行
     //ExeD2D(); // Direct2D処理実行
@@ -484,9 +527,6 @@ void DX12::ExeDX12()
 // レンダーターゲット初期処理
 void DX12::InitRenderTarget()
 {
-    // バックバッファインデックス取得
-    _currentBackBuffIdx = _swapChain->GetCurrentBackBufferIdx();
-
     // バックバッファリソースをレンダーターゲットに変更
     auto resourceBarrier = _rb->GetRBToRenderTarget(_backBuffs[_currentBackBuffIdx]->GetBuff());
     _cmdList->SetResourceBarrier(resourceBarrier);
@@ -623,41 +663,6 @@ void DX12::ExeD2D()
     StartD2D(wrappedBackBuff, d2dRenderTarget); // Direct2D開始
     //DrawStr(L"歩りゃあ", 0, 0, 720, 720);
     EndD2D(wrappedBackBuff); // Direct2D終了
-    _deviceContext->Flash(); // Direct2D描画
-}
-
-// Direct2D開始
-void DX12::StartD2D(WrappedBuff* wrappedBuff, D2DRenderTarget* d2dRenderTarget)
-{
-    _device11->AcquireWrappedBuff(wrappedBuff);
-    _d2dDeviceContext->SetRenderTarget(d2dRenderTarget);
-    _d2dDeviceContext->BeginDraw();
-    _d2dDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
-}
-
-// Direct2D終了
-void DX12::EndD2D(WrappedBuff* wrappedBuff)
-{
-    _d2dDeviceContext->EndDraw();
-    _device11->ReleaseWrappedBuff(wrappedBuff);
-}
-
-// 文字を出力する
-void DX12::DrawStr(
-    std::wstring str,
-    float left,
-    float top,
-    float right,
-    float bottom,
-    ID2D1SolidColorBrush* brush)
-{
-    D2D1_RECT_F rect = {left, top, right, bottom};
-
-    _d2dDeviceContext->DrawTextW(
-        str,
-        rect,
-        _dWriteTextFormat->GetDWriteTextFormat(),
-        brush);
 }
 
 
@@ -745,9 +750,6 @@ DX12::DX12() {
     ::EnableDebugLayer();
 #endif
 
-    //_viewMat = std::make_unique<ViewMat>();
-    //_projMat = std::make_unique<ProjMat>();
-
     _dxgiFactory = std::make_unique<DXGIFactory>();
     _adapter     = std::make_unique<Adapter>();
     _device      = std::make_unique<Device>();
@@ -760,10 +762,9 @@ DX12::DX12() {
     _device11      = std::make_unique<Device11>();
     _deviceContext = std::make_unique<DeviceContext>();
     _d2dDeviceContext = std::make_unique<D2DDeviceContext>();
-    _blackBrush = std::make_unique<D2DSolidColorBrush>();
-    _redBrush = std::make_unique<D2DSolidColorBrush>();
-    _dWriteTextFormat = std::make_unique<DWriteTextFormat>();
-    _pieceTextFormat = std::make_unique<DWriteTextFormat>();
+    _blackBrush = std::make_unique<Brush>();
+    _redBrush = std::make_unique<Brush>();
+    _pieceTextFormat = std::make_unique<TextFormat>();
 
     _cmdAllocator = std::make_unique<CmdAllocator>();
     _cmdList      = std::make_unique<CmdList>();

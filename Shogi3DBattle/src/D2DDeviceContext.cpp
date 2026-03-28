@@ -8,9 +8,17 @@ HRESULT D2DDeviceContext::CreateD2DRenderTarget(
 {
     ComPtr<ID2D1Bitmap1> d2dRenderTargetCom;
     
-    HWND hwnd = Application::GetInstance().GetHWND();
-    const UINT dpi = GetDpiForWindow(hwnd);
-    D3D11_RESOURCE_FLAGS flags = {D3D11_BIND_RENDER_TARGET};
+    HRESULT result;
+
+    // DXGIサーフェイス作成
+    ComPtr<IDXGISurface> dxgiSurface;
+    result = wrappedBuff->SetAsDXGISurfaceCom(&dxgiSurface);
+    if(FAILED(result)) return result;
+
+    // dpi取得
+    auto gameWindow = Application::GetInstance().GetGameWindow();
+    auto dpi = GetDpiForWindow(gameWindow->GetHWND());
+
     D2D1_BITMAP_PROPERTIES1 bitmapProps =
         D2D1::BitmapProperties1(
             D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
@@ -20,12 +28,7 @@ HRESULT D2DDeviceContext::CreateD2DRenderTarget(
             static_cast<float>(dpi),
             static_cast<float>(dpi));
 
-    HRESULT result;
-
-    // DXGIサーフェイス作成
-    ComPtr<IDXGISurface> dxgiSurface;
-    result = wrappedBuff->SetAsDXGISurfaceCom(&dxgiSurface);
-    if(FAILED(result)) return result;
+    
 
     result = _d2dDeviceContext->CreateBitmapFromDxgiSurface(
         dxgiSurface.Get(),
@@ -39,59 +42,63 @@ HRESULT D2DDeviceContext::CreateD2DRenderTarget(
 
 // 黒色ブラシ作成
 HRESULT D2DDeviceContext::CreateBlackBrush(
-    D2DSolidColorBrush* colorBrush)
+    Brush* brush)
 {
-    ComPtr<ID2D1SolidColorBrush> colorBrushCom;
+    ComPtr<ID2D1SolidColorBrush> brushCom;
 
     HRESULT result;
     result = _d2dDeviceContext->CreateSolidColorBrush(
         D2D1::ColorF(D2D1::ColorF::Black, 1.0f),
-        colorBrushCom.ReleaseAndGetAddressOf());
+        brushCom.ReleaseAndGetAddressOf());
     if(FAILED(result)) return result;
 
-    colorBrush->SetGetD2DSolidColorBrush(colorBrushCom);
+    brush->SetBrush(brushCom);
     return S_OK;
 }
 
 // 赤色ブラシ作成
 HRESULT D2DDeviceContext::CreateRedBrush(
-    D2DSolidColorBrush* colorBrush)
+    Brush* brush)
 {
-    ComPtr<ID2D1SolidColorBrush> colorBrushCom;
+    ComPtr<ID2D1SolidColorBrush> brushCom;
 
     HRESULT result;
     result = _d2dDeviceContext->CreateSolidColorBrush(
         D2D1::ColorF(D2D1::ColorF::Red, 1.0f),
-        colorBrushCom.ReleaseAndGetAddressOf());
+        brushCom.ReleaseAndGetAddressOf());
     if(FAILED(result)) return result;
 
-    colorBrush->SetGetD2DSolidColorBrush(colorBrushCom);
+    brush->SetBrush(brushCom);
     return S_OK;
 }
 
 
 
-
+// レンダーターゲットセット
 void D2DDeviceContext::SetRenderTarget(D2DRenderTarget* d2dRenderTarget)
 {
     _d2dDeviceContext->SetTarget(d2dRenderTarget->GetD2DRenderTarget());
 }
 
+// 描画開始
 void D2DDeviceContext::BeginDraw()
 {
     _d2dDeviceContext->BeginDraw();
 }
 
+// トランスフォーム
 void D2DDeviceContext::SetTransform(D2D1::Matrix3x2F mat)
 {
     _d2dDeviceContext->SetTransform(mat);
 }
 
+// 描画終了
 void D2DDeviceContext::EndDraw()
 {
     _d2dDeviceContext->EndDraw();
 }
 
+// テキスト描画
 void D2DDeviceContext::DrawTextW(
     std::wstring text,
     D2D1_RECT_F rect,

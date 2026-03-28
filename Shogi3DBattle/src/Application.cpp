@@ -19,24 +19,7 @@ bool Application::Init()
     CreateTex(); // テクスチャ作成
 
 
-    // メインカメラ
-    // ビュー行列作成
-    ViewMat* viewMat;
-    viewMat = new ViewMat();
-    DirectX::XMFLOAT3 f;
-    f = {0.0f, -8.0f, 0.0f};  viewMat->SetEye  (f);
-    f = {0.0f,  0.0f, -5.0f}; viewMat->SetFocus(f);
-    f = {0.0f,  0.0f, -1.0f}; viewMat->SetUp   (f);
-    _mainCamera->SetViewMat(viewMat);
-
-    // プロジェクション行列作成
-    ProjMat* projMat;
-    projMat = new ProjMat();
-    projMat->SetFOV  (DirectX::XM_PIDIV2);
-    projMat->SetAR   (16.0f / 9.0f);
-    projMat->SetNearZ(1.0f);
-    projMat->SetFarZ (150.0f);
-    _mainCamera->SetProjMat(projMat);
+    CreateCamera();
 
 
 
@@ -281,16 +264,38 @@ void Application::CreateTex()
 // 操作ボタン初期処理
 void Application::InitKeyMap()
 {
-    _keyMap->RegisterKeyMap('W', InputHandler::UP);    //w　→　上ボタン
-    _keyMap->RegisterKeyMap('A', InputHandler::LEFT);  //a　→　左ボタン
-    _keyMap->RegisterKeyMap('S', InputHandler::DOWN);  //s　→　下ボタン
-    _keyMap->RegisterKeyMap('D', InputHandler::RIGHT); //d　→　右ボタン
+    _keyMap->RegisterKeyMap('W', InputHandler::UP);    // w　→　上ボタン
+    _keyMap->RegisterKeyMap('A', InputHandler::LEFT);  // a　→　左ボタン
+    _keyMap->RegisterKeyMap('S', InputHandler::DOWN);  // s　→　下ボタン
+    _keyMap->RegisterKeyMap('D', InputHandler::RIGHT); // d　→　右ボタン
+}
+
+// カメラ作成
+void Application::CreateCamera()
+{
+    // メインカメラ
+    // ビュー行列作成
+    ViewMat* viewMat;
+    viewMat = new ViewMat();
+    DirectX::XMFLOAT3 f;
+    f = {0.0f, -8.0f, 0.0f};  viewMat->SetEye  (f);
+    f = {0.0f,  0.0f, -5.0f}; viewMat->SetFocus(f);
+    f = {0.0f,  0.0f, -1.0f}; viewMat->SetUp   (f);
+    _mainCamera->SetViewMat(viewMat);
+
+    // プロジェクション行列作成
+    ProjMat* projMat;
+    projMat = new ProjMat();
+    projMat->SetFOV  (DirectX::XM_PIDIV2);
+    projMat->SetAR   (16.0f / 9.0f);
+    projMat->SetNearZ(1.0f);
+    projMat->SetFarZ (150.0f);
+    _mainCamera->SetProjMat(projMat);
 }
 
 // シーンステート初期処理
 void Application::InitSceneState()
 {
-    //_sceneState = std::make_unique<MovingPiece>(_pieces[0].get());
     _sceneState = std::make_unique<StartMenu>();
 }
 
@@ -322,9 +327,7 @@ void Application::Run()
                 _inputHandler->GetCursorYMove());
             // シーン更新チェック
             CheckUpdateScene(newSceneState);
-            // マウス入力を削除
-            //_inputHandler->RemoveLClick();
-            //_inputHandler->RemoveRClick();
+            // マウス移動操作を削除
             _inputHandler->RemoveMouseMove();
             // 描画等実行
             _dx12->ExeDX12();
@@ -374,118 +377,126 @@ void Application::Exit()
 LRESULT CALLBACK WindowProcedure(
      HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    auto& app = Application::GetInstance(); // アプリケーションインスタンス取得
-    auto  inputHandler = app.GetInputHandler(); // インプットハンドラ取得
-    auto  keyMap       = app.GetKeyMap(); // キーマップ
-    
-    static bool isCursorInited = false; // カーソル位置が画面中央にセットされているか
+    auto inputHandler = Application::GetInstance().GetInputHandler(); // インプットハンドラ取得
+    static bool isCursorNotInited = true; // カーソル位置が画面中央にセットされているか
 
-    auto gameWindow = app.GetGameWindow(); // ゲームウインドウ取得
 
     switch(msg){
-    case WM_GETMINMAXINFO: // ウインドウサイズ制限
-    {
-
-        RECT windowRect = {0, 0, static_cast<LONG>(gameWindow->GetWindowWidth()), static_cast<LONG>(gameWindow->GetWindowHeight())};
-        AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, false); // クライアント領域調整
-
-        UINT windowWidth = windowRect.right - windowRect.left;
-        UINT windowHeight = windowRect.bottom - windowRect.top;
-
-        MINMAXINFO *pmmi = (MINMAXINFO *)lParam;
-        if (pmmi)
+        case WM_GETMINMAXINFO: // ウインドウサイズ制限
         {
-            pmmi->ptMinTrackSize.x = windowWidth;
-            pmmi->ptMaxTrackSize.x = windowWidth;
-            pmmi->ptMinTrackSize.y = windowHeight;
-            pmmi->ptMaxTrackSize.y = windowHeight;
+            auto gameWindow = Application::GetInstance().GetGameWindow(); // ゲームウインドウ取得
 
-        }
-        break;
-    }
-
-    case WM_ACTIVATEAPP: // ウインドウアクティブ
-        isCursorInited = false; // カーソルが飛んでいる可能性があるためfalseとする
-        ClipCursor(nullptr);
-        inputHandler->ClearInputMemory();
-        return 0;
-        
-
-    case WM_LBUTTONDOWN: // 左クリック
-        inputHandler->MemoryLClick();
-        return 0;
-    case WM_LBUTTONUP: // 左クリック離し
-        inputHandler->RemoveLClick();
-        return 0;
-
-
-    case WM_RBUTTONDOWN: // 右クリック
-        inputHandler->MemoryRClick();  
-        return 0;
-
-    case WM_RBUTTONUP: // 右クリック離し
-        inputHandler->RemoveRClick();  
-        return 0;
-
-    case WM_KEYDOWN: // キー入力
-        inputHandler->MemoryInputButton(keyMap->ConvertKeyToButton(wParam));
-        return 0;
-
-    case WM_KEYUP: // キーから指を離した
-        inputHandler->RemoveInputButton(keyMap->ConvertKeyToButton(wParam));
-        return 0;
-
-    case WM_MOUSEMOVE: // マウス移動
-    {
-        UINT x = LOWORD(lParam);   // カーソル動作後の横位置
-        UINT y = HIWORD(lParam);   // カーソル動作後の縦位置
-
-        if (isCursorInited)
-        {
-            inputHandler->MemoryMouseMove(x, y);
-
-            UINT windowWidth  = gameWindow->GetWindowWidth();
-            UINT windowHeight = gameWindow->GetWindowHeight();
-
-            bool isXNearEdge = x < 50 || x > (windowWidth  - 50);
-            bool isYNearEdge = y < 50 || y > (windowHeight - 50);
-
-            if (isXNearEdge || isYNearEdge)
+            RECT windowRect = // ウインドウサイズを定義
             {
-                // カーソルをウインドウ中央へ
-                gameWindow->SetCursorPosCenter();
-                inputHandler->SetCursorX(windowWidth  / 2); 
-                inputHandler->SetCursorY(windowHeight / 2);
+                0,
+                0,
+                static_cast<LONG>(gameWindow->GetWindowWidth()),
+                static_cast<LONG>(gameWindow->GetWindowHeight())
+            };
+            AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, false); // クライアント領域のサイズになるように調整
+
+            UINT windowWidth = windowRect.right - windowRect.left;
+            UINT windowHeight = windowRect.bottom - windowRect.top;
+
+            MINMAXINFO *pmmi = (MINMAXINFO *)lParam;
+            if (pmmi)
+            {
+                pmmi->ptMinTrackSize.x = windowWidth;
+                pmmi->ptMaxTrackSize.x = windowWidth;
+                pmmi->ptMinTrackSize.y = windowHeight;
+                pmmi->ptMaxTrackSize.y = windowHeight;
+
             }
+            break;
         }
-        else
+
+
+        case WM_ACTIVATEAPP: // ウインドウアクティブ
+            isCursorNotInited = true; // カーソルが飛んでいる可能性があるため初期化が必要
+            inputHandler->ClearInputMemory();
+            break;
+        
+        case WM_LBUTTONDOWN: // 左クリック
+            inputHandler->MemoryLClick();
+            break;
+        case WM_LBUTTONUP: // 左クリック離し
+            inputHandler->RemoveLClick();
+            break;
+
+        case WM_RBUTTONDOWN: // 右クリック
+            inputHandler->MemoryRClick();  
+            break;
+        case WM_RBUTTONUP: // 右クリック離し
+            inputHandler->RemoveRClick();  
+            break;
+
+        case WM_KEYDOWN: // キー入力
         {
-
-            inputHandler->SetCursorX(x);
-            inputHandler->SetCursorY(y);
-
-            isCursorInited = true; // カーソル初期済みをtrue
+            auto keyMap = Application::GetInstance().GetKeyMap(); // キーマップ取得
+            inputHandler->MemoryInputButton(keyMap->ConvertKeyToButton(wParam));
+            break;
+        }
+        case WM_KEYUP: // キーから指を離した
+        {
+            auto keyMap = Application::GetInstance().GetKeyMap(); // キーマップ取得
+            inputHandler->RemoveInputButton(keyMap->ConvertKeyToButton(wParam));
+            break;
         }
         
-        return 0;
-    }
-        
-    case WM_DESTROY: // ウインドウ破棄
-        PostQuitMessage(0); // ループ処理終了
-        break;
 
-    default:
-        break;
+        case WM_MOUSEMOVE: // マウス移動
+        {
+            UINT x = LOWORD(lParam);   // カーソル動作後の横位置
+            UINT y = HIWORD(lParam);   // カーソル動作後の縦位置
+
+            if (isCursorNotInited) // 初期化する
+            {
+                inputHandler->SetCursorX(x);
+                inputHandler->SetCursorY(y);
+                isCursorNotInited = false; // カーソル初期済みをtrue
+               
+            }
+            else // 初期化されていれば処理
+            {
+                inputHandler->MemoryMouseMove(x, y); // カーソル位置から移動量も記録
+
+                auto gameWindow = Application::GetInstance().GetGameWindow(); // ゲームウインドウ取得
+                // カーソル非表示の処理であれば、ウインドウ領域内にカーソルを閉じ込める処理をする
+                if (gameWindow->IsHiddenCursor())
+                {
+                    UINT windowWidth  = gameWindow->GetWindowWidth();  // ウインドウ横サイズ
+                    UINT windowHeight = gameWindow->GetWindowHeight(); // ウインドウ縦サイズ
+                    UINT edgeRange    = 50;                            // 端サイズ   
+
+                    bool isXNearEdge = edgeRange < x || x > (windowWidth  - edgeRange);
+                    bool isYNearEdge = edgeRange < y || y > (windowHeight - edgeRange);
+                    
+                    // カーソル位置がウインドウの端にいたら、中央に戻す
+                    if (isXNearEdge || isYNearEdge)
+                    {
+                        gameWindow->SetCursorPosCenter(); // カーソルをウインドウ中央へ
+                        inputHandler->SetCursorX(windowWidth  / 2); // カーソル横位置記録
+                        inputHandler->SetCursorY(windowHeight / 2); // カーソル縦位置記録
+                    }
+                }
+            }
+
+            break;
+        }
+
+        case WM_DESTROY: // ウインドウ破棄
+            PostQuitMessage(0); // ループ処理終了
+            break;
+
+        default:
+            break;
     }
     return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
 
-
-
 GameWindow* Application::GetGameWindow(){return _gameWindow.get();} // ゲームウインドウオブジェクトを返す
 InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // インプットハンドラを返す
-HWND Application::GetHWND(){return _gameWindow->GetHWND();} // ウインドウハンドルを返す
 Camera* Application::GetMainCamera(){return _mainCamera.get();} // メインカメラを返す
 Tex* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
 Tex* Application::GetBoardLineTex(){return _boardLineTex.get();} // 将棋盤黒線テクスチャを返す

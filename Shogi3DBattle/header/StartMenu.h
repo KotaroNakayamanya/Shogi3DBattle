@@ -7,7 +7,6 @@ class StartMenu : public ISceneState
 {
 public:
     Camera* _mainCamera; // メインカメラ
-    HWND _hwnd;        // ウインドウハンドル
 
     ISceneState* ExeDecisionButton(); // 決定ボタン処理
     ISceneState* ExeCancelButton(); // キャンセルボタン処理

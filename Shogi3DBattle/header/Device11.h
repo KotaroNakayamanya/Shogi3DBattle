@@ -17,8 +17,10 @@ private:
 public:
     // Direct2Dデバイスコンテキスト作成
     HRESULT CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext);
-    // ラップされたバッファ作成
-    HRESULT CreateWrappedBuff(WrappedBuff* wrappedBuff, Buff* buff);
+    // ラップされたバックバッファ作成
+    HRESULT CreateWrappedBackBuff(WrappedBuff* wrappedBuff, Buff* buff);
+    // ラップされたテクスチャバッファ作成
+    HRESULT CreateWrappedTexBuff(WrappedBuff* wrappedBuff, Buff* buff);
 
     // ラップされたバッファへのレンダリングを許可
     void AcquireWrappedBuff(WrappedBuff* wrappedBuff);

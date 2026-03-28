@@ -38,7 +38,8 @@ ISceneState* StartMenu::ExeDecisionButton()
 // キャンセルボタン処理
 ISceneState* StartMenu::ExeCancelButton()
 {
-    DestroyWindow(_hwnd);
+    auto gameWindow = Application::GetInstance().GetGameWindow();
+    DestroyWindow(gameWindow->GetHWND());
     return this;
 }
 
@@ -76,9 +77,5 @@ StartMenu::StartMenu()
     DirectX::XMFLOAT3 cameraPos = {cameraX, cameraY, cameraZ};
     _mainCamera->SetCameraPos(cameraPos);
 
-
-
-
-    _hwnd = app.GetHWND();
 }
 StartMenu::~StartMenu(){}

@@ -15,6 +15,8 @@ ISceneState* MovingPiece::ExeSceneOperation(
 
     
 
+    
+
     if(inputMemory & InputHandler::MOUSE_MOVE) // マウス操作処理
         ExeMouseMove(cursorXMove, cursorYMove);
 
@@ -48,6 +50,7 @@ ISceneState* MovingPiece::ExeSceneOperation(
         // xy座標での動きをカメラを正面とした動きに変換
         auto normMoveVec = VecCalc::GetFloat3MulMat(normMoveXYVec, rotationZ);
 
+        // 駒とカメラを動かす
         MovePieceAndCamera(normMoveVec);
     }
 

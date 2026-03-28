@@ -450,7 +450,7 @@
     <ClCompile Include="src\D2DRenderTarget.cpp">
       <Filter>ソース ファイル\dx12\d3d11\d2d</Filter>
     </ClCompile>
-    <ClCompile Include="src\D2DSolidColorBrush.cpp">
+    <ClCompile Include="src\Brush.cpp">
       <Filter>ソース ファイル\dx12\d3d11\d2d</Filter>
     </ClCompile>
     <ClCompile Include="src\WrappedBuff.cpp">
@@ -510,8 +510,11 @@
     <ClCompile Include="src\Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\StartMene.cpp">
+    <ClCompile Include="src\StartMenu.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextFormat.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -725,7 +728,7 @@
     <ClInclude Include="header\Adapter.h">
       <Filter>ヘッダー ファイル\DX12\factory</Filter>
     </ClInclude>
-    <ClInclude Include="header\DWriteTextFormat.h">
+    <ClInclude Include="header\TextFormat.h">
       <Filter>ヘッダー ファイル\DX12\d3d11</Filter>
     </ClInclude>
     <ClInclude Include="header\D2DDeviceContext.h">
@@ -734,7 +737,7 @@
     <ClInclude Include="header\D2DRenderTarget.h">
       <Filter>ヘッダー ファイル\DX12\d3d11\d2d</Filter>
     </ClInclude>
-    <ClInclude Include="header\D2DSolicColorBrush.h">
+    <ClInclude Include="header\Brush.h">
       <Filter>ヘッダー ファイル\DX12\d3d11\d2d</Filter>
     </ClInclude>
     <ClInclude Include="header\WrappedBuff.h">

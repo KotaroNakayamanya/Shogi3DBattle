@@ -78,11 +78,11 @@ void Camera::RotationV(float y)
     float cos = -normEyeVec_z0.y;
 
     // θを計算する 左手座標系により、z軸のマイナス側（上）から見たとき、反時計回りへの回転が正である
-    float pi = normEyeVec_z0.x > 0 ?
+    float theta = normEyeVec_z0.x > 0 ?
         -std::acos(cos) : std::acos(cos); 
 
-    auto rotationHMat = DirectX::XMMatrixRotationZ(pi); //水平方向回転行列
-    auto rotationHReverseMat = DirectX::XMMatrixRotationZ(-pi); //水平方向回転行列（戻し用）
+    auto rotationHMat = DirectX::XMMatrixRotationZ(theta); //水平方向回転行列
+    auto rotationHReverseMat = DirectX::XMMatrixRotationZ(-theta); //水平方向回転行列（戻し用）
     
     auto newEyeVec = eyeVec;
     newEyeVec = VecCalc::GetFloat3MulMat(newEyeVec, rotationHMat);       // ベクトルを水平方向に回転し、ベクトルを(0, -1, 0)に変換
