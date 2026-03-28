@@ -337,16 +337,21 @@ void DX12::CreateDrawArea()
 
     // マップ
     // ビューポート
-    _mapViewport->TopLeftX = 0; // 左上横位置
-    _mapViewport->TopLeftY = gameWindow->GetWindowHeight() / 2; // 左上縦位置
-    _mapViewport->Width    = gameWindow->GetWindowHeight() / 2;  // 横
-    _mapViewport->Height   = gameWindow->GetWindowHeight() / 2; // 縦
+    auto width  = gameWindow->GetWindowWidth()  / 2;
+    auto height = gameWindow->GetWindowHeight() / 2;
+    auto widthEdge = static_cast<int>(width - height) / 2;
+    auto topY = gameWindow->GetWindowHeight() - height;
+    int offset = 10;
+    _mapViewport->TopLeftX = -widthEdge + offset; // 左上横位置
+    _mapViewport->TopLeftY = topY - offset; // 左上縦位置
+    _mapViewport->Width    = width;  // 横
+    _mapViewport->Height   = height; // 縦
     _mapViewport->MaxDepth = 1.0f; // 深度最大値
     _mapViewport->MinDepth = 0.0f; // 深度最小値
     // シザー矩形
-    _mapScissorRect->left   = 0;                             // 左
-    _mapScissorRect->right  = gameWindow->GetWindowWidth();  // 右
-    _mapScissorRect->top    = 0;                             // 上
+    _mapScissorRect->left   = offset;                        // 左
+    _mapScissorRect->right  = width - widthEdge * 2;         // 右
+    _mapScissorRect->top    = topY - offset;                 // 上
     _mapScissorRect->bottom = gameWindow->GetWindowHeight(); // 下
 
 
@@ -687,10 +692,8 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(ShogiObj* shogiObj)
     D3D12_VERTEX_BUFFER_VIEW view;
 
     view.BufferLocation =  // 頂点バッファのスタート位置
-        //shogiObj->GetVertAddress();
         shogiObj->GetBuffAddress();
     view.StrideInBytes =   // 頂点1つ分のサイズ
-        //shogiObj->GetVertexByteSize();
         shogiObj->GetVertByteSize();
         view.SizeInBytes = // 頂点全体のサイズ
         shogiObj->GetVerticesByteSize();

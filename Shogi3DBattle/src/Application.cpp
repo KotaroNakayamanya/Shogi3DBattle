@@ -305,7 +305,7 @@ void Application::CreateCamera()
     // パースではないプロジェクション行列作成
     NonePersProjMat* mapProjMat;
     mapProjMat = new NonePersProjMat();
-    mapProjMat->SetWidth (60.0f);
+    mapProjMat->SetWidth (60.0f * 16 / 9);
     mapProjMat->SetHeight(60.0f);
     mapProjMat->SetNearZ(0.0f);
     mapProjMat->SetFarZ (30.0f);
