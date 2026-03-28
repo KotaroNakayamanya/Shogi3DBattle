@@ -56,6 +56,8 @@
     <ClCompile Include="src\HeapFactory.cpp" />
     <ClCompile Include="src\IdxBuff.cpp" />
     <ClCompile Include="src\IdxBuffFactory.cpp" />
+    <ClCompile Include="src\NonePersProjMat.cpp" />
+    <ClCompile Include="src\PersProjMat.cpp" />
     <ClCompile Include="src\PieceVertIndicesFactory.cpp" />
     <ClCompile Include="src\StartMenu.cpp" />
     <ClCompile Include="src\TextFormat.cpp" />
@@ -71,7 +73,6 @@
     <ClCompile Include="src\PShaderResourceStates.cpp" />
     <ClCompile Include="src\ReadResourceStates.cpp" />
     <ClCompile Include="src\Pipeline.cpp" />
-    <ClCompile Include="src\ProjMat.cpp" />
     <ClCompile Include="src\PShader.cpp" />
     <ClCompile Include="src\RenderTexBuffFactory.cpp" />
     <ClCompile Include="src\ResourceBarrier.cpp" />
@@ -81,7 +82,6 @@
     <ClCompile Include="src\RTVFactory.cpp" />
     <ClCompile Include="src\RTVHeapDesc.cpp" />
     <ClCompile Include="src\RTVOffset.cpp" />
-    <ClCompile Include="src\ScissorRect.cpp" />
     <ClCompile Include="src\SRVFactory.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Tex.cpp" />
@@ -95,7 +95,6 @@
     <ClCompile Include="src\ShogiObj.cpp" />
     <ClCompile Include="src\VertBuffFactory.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
-    <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\VShader.cpp" />
     <ClCompile Include="src\WorldMat.cpp" />
     <ClCompile Include="src\WrappedBuff.cpp" />
@@ -140,6 +139,8 @@
     <ClInclude Include="header\IDescOffset.h" />
     <ClInclude Include="header\IHeapDesc.h" />
     <ClInclude Include="header\IMat.h" />
+    <ClInclude Include="header\NonePersProjMat.h" />
+    <ClInclude Include="header\PersProjMat.h" />
     <ClInclude Include="header\PieceVertIndicesFactory.h" />
     <ClInclude Include="header\StartMenu.h" />
     <ClInclude Include="header\Vertices.h" />
@@ -164,7 +165,7 @@
     <ClInclude Include="header\PShaderResourceStates.h" />
     <ClInclude Include="header\ReadResourceStates.h" />
     <ClInclude Include="header\Pipeline.h" />
-    <ClInclude Include="header\ProjMat.h" />
+    <ClInclude Include="header\IProjMat.h" />
     <ClInclude Include="header\PShader.h" />
     <ClInclude Include="header\RenderTexBuffFactory.h" />
     <ClInclude Include="header\ResourceBarrier.h" />
@@ -176,7 +177,6 @@
     <ClInclude Include="header\RTVHeapDesc.h" />
     <ClInclude Include="header\RTVHeapFactory.h" />
     <ClInclude Include="header\RTVOffset.h" />
-    <ClInclude Include="header\ScissorRect.h" />
     <ClInclude Include="header\IShogiObjFactory.h" />
     <ClInclude Include="header\SRVFactory.h" />
     <ClInclude Include="header\SwapChain.h" />
@@ -196,7 +196,6 @@
     <ClInclude Include="header\View.h" />
     <ClInclude Include="header\IViewFactory.h" />
     <ClInclude Include="header\ViewMat.h" />
-    <ClInclude Include="header\Viewport.h" />
     <ClInclude Include="header\VShader.h" />
     <ClInclude Include="header\WorldMat.h" />
     <ClInclude Include="header\WrappedBuff.h" />

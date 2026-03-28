@@ -153,8 +153,6 @@ HRESULT DX12::CreateBuff()
     auto& app = Application::GetInstance();
     
     auto  woodTex = app.GetWoodTex();
-    //auto  board      = app.GetBoard();
-    //auto& pieces     = app.GetPieces();
     
     auto  boardLineTex = app.GetBoardLineTex();
     
@@ -323,8 +321,35 @@ void DX12::CreateDrawArea()
     // ゲームウインドウ取得
     auto gameWindow = Application::GetInstance().GetGameWindow();
 
-    _viewport->SetViewport(gameWindow); // ビューポート作成
-    _scissorRect->SetScissorRect(gameWindow); // シザー矩形作成
+    // メイン
+    // ビューポート
+    _mainViewport->TopLeftX = 0; // 左上横位置
+    _mainViewport->TopLeftY = 0; // 左上縦位置
+    _mainViewport->Width    = gameWindow->GetWindowWidth();  // 横
+    _mainViewport->Height   = gameWindow->GetWindowHeight(); // 縦
+    _mainViewport->MaxDepth = 1.0f; // 深度最大値
+    _mainViewport->MinDepth = 0.0f; // 深度最小値
+    // シザー矩形
+    _mainScissorRect->left   = 0;                             // 左
+    _mainScissorRect->right  = gameWindow->GetWindowWidth();  // 右
+    _mainScissorRect->top    = 0;                             // 上
+    _mainScissorRect->bottom = gameWindow->GetWindowHeight(); // 下
+
+    // マップ
+    // ビューポート
+    _mapViewport->TopLeftX = 0; // 左上横位置
+    _mapViewport->TopLeftY = gameWindow->GetWindowHeight() / 2; // 左上縦位置
+    _mapViewport->Width    = gameWindow->GetWindowHeight() / 2;  // 横
+    _mapViewport->Height   = gameWindow->GetWindowHeight() / 2; // 縦
+    _mapViewport->MaxDepth = 1.0f; // 深度最大値
+    _mapViewport->MinDepth = 0.0f; // 深度最小値
+    // シザー矩形
+    _mapScissorRect->left   = 0;                             // 左
+    _mapScissorRect->right  = gameWindow->GetWindowWidth();  // 右
+    _mapScissorRect->top    = 0;                             // 上
+    _mapScissorRect->bottom = gameWindow->GetWindowHeight(); // 下
+
+
 }
 
 
@@ -547,8 +572,6 @@ void DX12::InitRenderTarget()
 // Direct3D処理実行
 void DX12::ExeD3D()
 {
-    Set3DCmd(); // 3Dコマンドセット
-
     auto& app    = Application::GetInstance();
     auto  board  = app.GetBoard();
     auto& pieces = app.GetPieces();
@@ -556,6 +579,17 @@ void DX12::ExeD3D()
     auto pieceVertIndices = app.GetPieceVertIndices();
 
     auto mainCamera = app.GetMainCamera();
+    auto mapCamera = app.GetMapCamera();
+
+    Set3DCmd(); // 3Dコマンドセット
+
+    // ビューポートセット
+    D3D12_VIEWPORT viewports[] = {*_mainViewport.get()};
+    _cmdList->SetViewports(1, viewports);
+
+    // シザー矩形セット
+    D3D12_RECT scissorRects[] = {*_mainScissorRect.get()};
+    _cmdList->SetScissorRects(1, scissorRects);
 
     // 将棋盤描画コマンドセット
     _cmdList->SetIdxBuffView(GetIdxBuffView(boardVertIndices));
@@ -577,6 +611,52 @@ void DX12::ExeD3D()
         mainCamera);
 
     ExeCmd(); // コマンド実行
+
+
+
+
+    // バックバッファをレンダーターゲットに設定
+    auto rtvHandle = _rtvHeap->GetDescHandle(_currentBackBuffIdx);
+    auto dsvHandle = _dsvHeap->GetDescHandle(0);
+    _cmdList->SetRenderTarget(rtvHandle, dsvHandle);
+
+    // クリア処理
+    //_cmdList->ClearRenderTarget(rtvHandle); // レンダーターゲットクリア
+    _cmdList->ClearDepthStencil(dsvHandle); // デプスステンシルクリア
+
+    Set3DCmd(); // 3Dコマンドセット
+
+    // ビューポートセット
+    viewports[0] = {*_mapViewport.get()};
+    _cmdList->SetViewports(1, viewports);
+
+    // シザー矩形セット
+    scissorRects[0] = {*_mapScissorRect.get()};
+    _cmdList->SetScissorRects(1, scissorRects);
+
+    // 将棋盤描画コマンドセット
+    _cmdList->SetIdxBuffView(GetIdxBuffView(boardVertIndices));
+    _cmdList->SetVertBuffView(GetVertBuffView(board));
+    _cmdList->SetDrawWithIdx(boardVertIndices);
+
+    // 駒描画コマンドセット
+    _cmdList->SetIdxBuffView(GetIdxBuffView(pieceVertIndices));
+    for (UINT i = 0; i < pieces.size(); i++)
+    {
+        _cmdList->SetVertBuffView(GetVertBuffView(pieces[i].get()));
+        _cmdList->SetDrawWithIdx(pieceVertIndices);
+    }
+
+    // コンスタントバッファに書き込み
+    _constBuff->WriteToConstBuff(
+        board,
+        pieces,
+        mapCamera);
+
+    ExeCmd(); // コマンド実行
+
+
+    
 }
 
 // 3Dコマンドセット
@@ -599,14 +679,6 @@ void DX12::Set3DCmd()
 
     // トポロジーセット
     _cmdList->SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    // ビューポートセット
-    D3D12_VIEWPORT viewports[] = {_viewport->GetViewport()};
-    _cmdList->SetViewports(1, viewports);
-
-    // シザー矩形セット
-    D3D12_RECT scissorRects[] = {_scissorRect->GetScissorRect()};
-    _cmdList->SetScissorRects(1, scissorRects);
 }
 
 // 頂点バッファビュー
@@ -779,8 +851,10 @@ DX12::DX12() {
 
     _fence = std::make_unique<Fence>();
 
-    _viewport    = std::make_unique<Viewport>();
-    _scissorRect = std::make_unique<ScissorRect>();
+    _mainViewport    = std::make_unique<D3D12_VIEWPORT>();
+    _mainScissorRect = std::make_unique<D3D12_RECT>();
+    _mapViewport     = std::make_unique<D3D12_VIEWPORT>();
+    _mapScissorRect  = std::make_unique<D3D12_RECT>();
 
     _vShader       = std::make_unique<VShader>();
     _pShader       = std::make_unique<PShader>();

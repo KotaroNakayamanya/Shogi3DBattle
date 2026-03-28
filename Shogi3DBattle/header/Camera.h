@@ -1,13 +1,13 @@
 #pragma once
 
 #include"ViewMat.h"
-#include"ProjMat.h"
+#include"IProjMat.h"
 
 class Camera
 {
 private:
-    std::unique_ptr<ViewMat> _viewMat; // ビュー行列
-    std::unique_ptr<ProjMat> _projMat; // プロジェクション行列
+    std::unique_ptr<ViewMat>  _viewMat; // ビュー行列
+    std::unique_ptr<IProjMat> _projMat; // プロジェクション行列
 
 public:
     void RotationH(float x); // 水平方向に視点を回す
@@ -23,10 +23,10 @@ public:
 
     DirectX::XMMATRIX GetViewProjMat(); // ビュープロジェクション行列を返す
 
-    void SetViewMat(ViewMat* viewMat); // ビュー行列セット
-    ViewMat* GetViewMat();             // ビュー行列を返す
-    void SetProjMat(ProjMat* projMat); // プロジェクション行列セット
-    ProjMat* GetProjMat();             // プロジェクション行列を返す
+    void SetViewMat (ViewMat* viewMat); // ビュー行列セット
+    ViewMat* GetViewMat();              // ビュー行列を返す
+    void SetProjMat(IProjMat* projMat); // プロジェクション行列セット
+    IProjMat* GetProjMat();             // プロジェクション行列を返す
 
     Camera();
     ~Camera();

@@ -465,12 +465,6 @@
     <ClCompile Include="src\DeviceContext.cpp">
       <Filter>ソース ファイル\dx12\d3d11\context</Filter>
     </ClCompile>
-    <ClCompile Include="src\ScissorRect.cpp">
-      <Filter>ソース ファイル\dx12\draw_area</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Viewport.cpp">
-      <Filter>ソース ファイル\dx12\draw_area</Filter>
-    </ClCompile>
     <ClCompile Include="src\BoardFactory.cpp">
       <Filter>ソース ファイル\3d_object\shogi_obj\factory</Filter>
     </ClCompile>
@@ -482,9 +476,6 @@
     </ClCompile>
     <ClCompile Include="src\VecCalc.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProjMat.cpp">
-      <Filter>ソース ファイル\mat</Filter>
     </ClCompile>
     <ClCompile Include="src\ViewMat.cpp">
       <Filter>ソース ファイル\mat</Filter>
@@ -515,6 +506,12 @@
     </ClCompile>
     <ClCompile Include="src\TextFormat.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PersProjMat.cpp">
+      <Filter>ソース ファイル\mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NonePersProjMat.cpp">
+      <Filter>ソース ファイル\mat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -749,12 +746,6 @@
     <ClInclude Include="header\DWriteFactory.h">
       <Filter>ヘッダー ファイル\DX12\d3d11\factory</Filter>
     </ClInclude>
-    <ClInclude Include="header\ScissorRect.h">
-      <Filter>ヘッダー ファイル\DX12\draw_area</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Viewport.h">
-      <Filter>ヘッダー ファイル\DX12\draw_area</Filter>
-    </ClInclude>
     <ClInclude Include="header\InputLayout.h">
       <Filter>ヘッダー ファイル\DX12\input_layout</Filter>
     </ClInclude>
@@ -782,7 +773,7 @@
     <ClInclude Include="header\IMat.h">
       <Filter>ヘッダー ファイル\mat</Filter>
     </ClInclude>
-    <ClInclude Include="header\ProjMat.h">
+    <ClInclude Include="header\IProjMat.h">
       <Filter>ヘッダー ファイル\mat</Filter>
     </ClInclude>
     <ClInclude Include="header\ViewMat.h">
@@ -814,6 +805,12 @@
     </ClInclude>
     <ClInclude Include="header\StartMenu.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PersProjMat.h">
+      <Filter>ヘッダー ファイル\mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\NonePersProjMat.h">
+      <Filter>ヘッダー ファイル\mat</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

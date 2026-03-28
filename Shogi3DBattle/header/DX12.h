@@ -6,11 +6,8 @@
 #include"Device.h"
 #include"DWriteFactory.h"
 
-#include"Viewport.h"
-#include"ScissorRect.h"
 #include"ResourceBarrier.h"
 #include"ViewMat.h"
-#include"ProjMat.h"
 
 #include"Board.h"
 #include"VertIndices.h"
@@ -109,8 +106,11 @@ private:
     std::unique_ptr<ResourceBarrier> _rb; // リソースバリア
 
     // 描画領域
-    std::unique_ptr<Viewport> _viewport; // ビューポート
-    std::unique_ptr<ScissorRect> _scissorRect; // シザー矩形
+    std::unique_ptr<D3D12_VIEWPORT> _mainViewport;    // メインビューポート
+    std::unique_ptr<D3D12_RECT>     _mainScissorRect; // メインシザー矩形
+    std::unique_ptr<D3D12_VIEWPORT> _mapViewport;     // マップビューポート
+    std::unique_ptr<D3D12_RECT>     _mapScissorRect;  // マップシザー矩形
+
     void CreateDrawArea(); // 描画領域系作成
 
     // シェーダー

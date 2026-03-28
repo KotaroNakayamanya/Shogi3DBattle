@@ -41,6 +41,7 @@ private:
 
     // カメラ
     std::unique_ptr<Camera> _mainCamera; // メインカメラ
+    std::unique_ptr<Camera> _mapCamera;  // マップカメラ
     void CreateCamera(); // カメラ作成
 
     // シーン更新チェック
@@ -76,6 +77,7 @@ public:
     InputHandler* GetInputHandler(); // インプットハンドラを返す
     
     Camera* GetMainCamera(); // メインカメラを返す
+    Camera* GetMapCamera();  // マップカメラを返す
 
     void ProcessChangeWindowSize(); // 画面サイズ変更処理
 

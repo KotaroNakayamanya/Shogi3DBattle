@@ -100,10 +100,10 @@ DirectX::XMMATRIX Camera::GetViewProjMat()
     return _viewMat->GetMat() * _projMat->GetMat();
 }
 
-void Camera::SetViewMat(ViewMat* viewMat){_viewMat.reset(viewMat);} // ビュー行列セット
-ViewMat* Camera::GetViewMat()            {return _viewMat.get();}   // ビュー行列を返す
-void Camera::SetProjMat(ProjMat* projMat){_projMat.reset(projMat);} // プロジェクション行列セット
-ProjMat* Camera::GetProjMat()            {return _projMat.get();}   // プロジェクション行列を返す
+void Camera::SetViewMat(ViewMat* viewMat) {_viewMat.reset(viewMat);} // ビュー行列セット
+ViewMat* Camera::GetViewMat()             {return _viewMat.get();}   // ビュー行列を返す
+void Camera::SetProjMat(IProjMat* projMat){_projMat.reset(projMat);} // プロジェクション行列セット
+IProjMat* Camera::GetProjMat()            {return _projMat.get();}   // プロジェクション行列を返す
 
 Camera::Camera(){}
 Camera::~Camera(){}

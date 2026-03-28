@@ -9,6 +9,9 @@
 #include<functional>
 #include"StartMenu.h"
 
+#include"PersProjMat.h"
+#include"NonePersProjMat.h"
+
 // 初期処理
 bool Application::Init()
 {
@@ -275,22 +278,39 @@ void Application::CreateCamera()
 {
     // メインカメラ
     // ビュー行列作成
-    ViewMat* viewMat;
-    viewMat = new ViewMat();
+    ViewMat* mainViewMat;
+    mainViewMat = new ViewMat();
     DirectX::XMFLOAT3 f;
-    f = {0.0f, -8.0f, 0.0f};  viewMat->SetEye  (f);
-    f = {0.0f,  0.0f, -5.0f}; viewMat->SetFocus(f);
-    f = {0.0f,  0.0f, -1.0f}; viewMat->SetUp   (f);
-    _mainCamera->SetViewMat(viewMat);
+    f = {0.0f, -8.0f, 0.0f};  mainViewMat->SetEye  (f);
+    f = {0.0f,  0.0f, -5.0f}; mainViewMat->SetFocus(f);
+    f = {0.0f,  0.0f, -1.0f}; mainViewMat->SetUp   (f);
+    _mainCamera->SetViewMat(mainViewMat);
+    // パースによるプロジェクション行列作成
+    PersProjMat* mainProjMat;
+    mainProjMat = new PersProjMat();
+    mainProjMat->SetFOV  (DirectX::XM_PIDIV2);
+    mainProjMat->SetAR   (16.0f / 9.0f);
+    mainProjMat->SetNearZ(1.0f);
+    mainProjMat->SetFarZ (150.0f);
+    _mainCamera->SetProjMat(mainProjMat);
 
-    // プロジェクション行列作成
-    ProjMat* projMat;
-    projMat = new ProjMat();
-    projMat->SetFOV  (DirectX::XM_PIDIV2);
-    projMat->SetAR   (16.0f / 9.0f);
-    projMat->SetNearZ(1.0f);
-    projMat->SetFarZ (150.0f);
-    _mainCamera->SetProjMat(projMat);
+    // マップカメラ
+    // ビュー行列作成
+    ViewMat* mapViewMat;
+    mapViewMat = new ViewMat();
+    f = {30.0f, 30.0f, -10.0f};  mapViewMat->SetEye  (f);
+    f = {30.0f, 30.0f,   0.0f}; mapViewMat->SetFocus(f);
+    f = {0.0f,   1.0f,   0.0f}; mapViewMat->SetUp   (f);
+    _mapCamera->SetViewMat(mapViewMat);
+    // パースではないプロジェクション行列作成
+    NonePersProjMat* mapProjMat;
+    mapProjMat = new NonePersProjMat();
+    mapProjMat->SetWidth (60.0f);
+    mapProjMat->SetHeight(60.0f);
+    mapProjMat->SetNearZ(0.0f);
+    mapProjMat->SetFarZ (30.0f);
+    _mapCamera->SetProjMat(mapProjMat);
+
 }
 
 // シーンステート初期処理
@@ -497,7 +517,10 @@ LRESULT CALLBACK WindowProcedure(
 
 GameWindow* Application::GetGameWindow(){return _gameWindow.get();} // ゲームウインドウオブジェクトを返す
 InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // インプットハンドラを返す
+
 Camera* Application::GetMainCamera(){return _mainCamera.get();} // メインカメラを返す
+Camera* Application::GetMapCamera() {return _mapCamera.get();}  // マップカメラを返す
+
 Tex* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
 Tex* Application::GetBoardLineTex(){return _boardLineTex.get();} // 将棋盤黒線テクスチャを返す
 VertIndices* Application::GetBoardVertIndices(){return _boardIndices.get();} // 将棋盤頂点インデックスを返す
@@ -555,5 +578,6 @@ Application::Application()
     _inputHandler = std::make_unique<InputHandler>();
 
     _mainCamera = std::make_unique<Camera>();
+    _mapCamera  = std::make_unique<Camera>();
 }
 Application::~Application(){}
