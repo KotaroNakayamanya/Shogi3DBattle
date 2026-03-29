@@ -14,7 +14,8 @@ void ViewMat::SetEye  (DirectX::XMFLOAT3 eye)   {_eye   = eye;}   // ‹“_ˆÊ’uƒZƒ
 DirectX::XMFLOAT3 ViewMat::GetEye()             {return _eye;}    // ‹“_ˆÊ’u‚ğ•Ô‚·
 void ViewMat::SetFocus(DirectX::XMFLOAT3 focus) {_focus = focus;} // ’‹“_ˆÊ’uƒZƒbƒg
 DirectX::XMFLOAT3 ViewMat::GetFocus()           {return _focus;}  // ’‹“_ˆÊ’u‚ğ•Ô‚·
-void ViewMat::SetUp   (DirectX::XMFLOAT3 up)    {_up    = up;}    // ƒJƒƒ‰ã‘¤ƒZƒbƒg
+void ViewMat::SetUp   (DirectX::XMFLOAT3 up)    {_up    = up;}    // ƒJƒƒ‰ã‘¤ƒxƒNƒgƒ‹ƒZƒbƒg
+DirectX::XMFLOAT3 ViewMat::GetUp()              {return _up;}     // ƒJƒƒ‰ã‘¤ƒxƒNƒgƒ‹‚ğ•Ô‚·
 
 ViewMat::ViewMat(){}
 ViewMat::~ViewMat(){}

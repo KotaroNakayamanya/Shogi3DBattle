@@ -1,19 +1,21 @@
 #pragma once
 
-#include"IProjMat.h"
+#include"IMat.h"
+#include"ClipZRange.h"
 
-class NonePersProjMat : public IProjMat
+class NonePersProjMat : public IMat, public ClipZRange
 {
 private:
     float _width;  // 横サイズ
     float _height; // 縦サイズ
 
 public:
-    // パースを使用しないプロジェクション行列を返す
-    DirectX::XMMATRIX GetMat() override;
+    DirectX::XMMATRIX GetMat() override; // パースを使用しないプロジェクション行列を返す
 
-    void SetWidth (float width);  // 横サイズセット
-    void SetHeight(float height); // 縦サイズ比セット
+    void  SetWidth (float width);  // 横サイズセット
+    float GetWidth();              // 横サイズを返す
+    void  SetHeight(float height); // 縦サイズ比セット
+    float GetHeight();             // 縦サイズを返す
 
     NonePersProjMat();
     ~NonePersProjMat();

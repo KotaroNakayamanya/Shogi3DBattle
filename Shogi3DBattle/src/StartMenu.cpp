@@ -1,6 +1,7 @@
 #include"StartMenu.h"
 #include"Application.h"
-#include"MovingPiece.h"
+#include"SelectingPiece.h"
+//#include"MovingPiece.h"
 
 // スタートメニューシーン動作
 ISceneState* StartMenu::ExeSceneOperation(
@@ -29,10 +30,13 @@ ISceneState* StartMenu::ExeDecisionButton()
 {
     auto& app = Application::GetInstance();
     auto& pieces = app.GetPieces();
+    ISceneState* newSceneState = new SelectingPiece();
+    //ISceneState* newSceneState = new MovingPiece(pieces[0].get());
 
-    ISceneState* newSceneState = new MovingPiece(pieces[0].get());
+    auto inputHandler = Application::GetInstance().GetInputHandler();
+    inputHandler->RemoveLClick();
+
     return newSceneState;
-    //return this;
 }
 
 // キャンセルボタン処理
@@ -76,6 +80,9 @@ StartMenu::StartMenu()
     float cameraZ = focusZ - 50.0f;
     DirectX::XMFLOAT3 cameraPos = {cameraX, cameraY, cameraZ};
     _mainCamera->SetCameraPos(cameraPos);
+    // カメラ上側ベクトルセット
+    DirectX::XMFLOAT3 cameraUpVec = {0.0f, 0.0f, -1.0f};
+    _mainCamera->SetCameraUpVec(cameraUpVec);
 
 }
 StartMenu::~StartMenu(){}

@@ -298,17 +298,17 @@ void Application::CreateCamera()
     // ビュー行列作成
     ViewMat* mapViewMat;
     mapViewMat = new ViewMat();
-    f = {30.0f, 30.0f, -10.0f};  mapViewMat->SetEye  (f);
+    f = {30.0f, 30.0f, -30.0f};  mapViewMat->SetEye  (f);
     f = {30.0f, 30.0f,   0.0f}; mapViewMat->SetFocus(f);
     f = {0.0f,   1.0f,   0.0f}; mapViewMat->SetUp   (f);
     _mapCamera->SetViewMat(mapViewMat);
     // パースではないプロジェクション行列作成
     NonePersProjMat* mapProjMat;
     mapProjMat = new NonePersProjMat();
-    mapProjMat->SetWidth (60.0f * 16 / 9);
+    mapProjMat->SetWidth (60.0f);
     mapProjMat->SetHeight(60.0f);
     mapProjMat->SetNearZ(0.0f);
-    mapProjMat->SetFarZ (30.0f);
+    mapProjMat->SetFarZ (50.0f);
     _mapCamera->SetProjMat(mapProjMat);
 
 }
@@ -528,6 +528,9 @@ VertIndices* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 
 Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す
 std::vector<std::unique_ptr<Piece>>& Application::GetPieces(){return _pieces;} // 駒を返す
 KeyMap* Application::GetKeyMap(){return _keyMap.get();} // 将棋盤頂点インデックスを返す
+
+void Application::SetIsDrawMap(bool flag){_isDrawMap = flag;} // マップ描画フラグをセット
+bool Application::IsDrawMap()            {return _isDrawMap;} // マップ描画フラグを返す
 
 // すべての将棋オブジェクトを返す
 std::vector<ShogiObj*> Application::GetShogiObjects()

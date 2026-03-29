@@ -47,6 +47,8 @@ private:
     // シーン更新チェック
     void CheckUpdateScene(ISceneState* sceneState);
 
+    bool _isDrawMap = false;
+
 
     
 
@@ -78,6 +80,9 @@ public:
     
     Camera* GetMainCamera(); // メインカメラを返す
     Camera* GetMapCamera();  // マップカメラを返す
+
+    void SetIsDrawMap(bool flag); // マップ描画フラグをセット
+    bool IsDrawMap();             // マップ描画フラグを返す
 
     void ProcessChangeWindowSize(); // 画面サイズ変更処理
 

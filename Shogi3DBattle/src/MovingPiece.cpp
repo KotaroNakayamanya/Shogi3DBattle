@@ -1,6 +1,7 @@
 #include"MovingPiece.h"
 #include"Application.h"
-#include"StartMenu.h"
+//#include"StartMenu.h"
+#include"SelectingPiece.h"
 #include<cmath>
 
 // 駒操作シーン動作
@@ -12,10 +13,6 @@ ISceneState* MovingPiece::ExeSceneOperation(
     int cursorYMove)
 {
     ISceneState* newSceneState = nullptr;
-
-    
-
-    
 
     if(inputMemory & InputHandler::MOUSE_MOVE) // マウス操作処理
         ExeMouseMove(cursorXMove, cursorYMove);
@@ -71,8 +68,8 @@ ISceneState* MovingPiece::ExeSceneOperation(
 // 決定ボタン
 ISceneState* MovingPiece::ExeDecisionButton()
 {
-    auto inputHandler = Application::GetInstance().GetInputHandler();
-    inputHandler->RemoveLClick();
+    //auto inputHandler = Application::GetInstance().GetInputHandler();
+    //inputHandler->RemoveLClick();
     return this;
 }
 
@@ -105,11 +102,15 @@ ISceneState* MovingPiece::ExeCancelButton()
         auto& app = Application::GetInstance();
         auto gameWindow = app.GetGameWindow();
         gameWindow->ShowCursor();
-        // シーンをスタートメニューに変更
-        newSceneState = new StartMenu();
+
+        // マップ描画フラグを解除
+        Application::GetInstance().SetIsDrawMap(false); 
+        
+        // シーンを駒選択シーンに変更
+        newSceneState = new SelectingPiece();
     }
 
-     auto inputHandler = Application::GetInstance().GetInputHandler();
+    auto inputHandler = Application::GetInstance().GetInputHandler();
     inputHandler->RemoveRClick();
         
     return newSceneState;
@@ -159,12 +160,19 @@ MovingPiece::MovingPiece(Piece* piece)
     DirectX::XMFLOAT3 cameraPos = {focusX, focusY - 10.0f, focusZ - 10.0f};
     _mainCamera->SetCameraPos(cameraPos);
 
+    // カメラ上側ベクトルセット
+    DirectX::XMFLOAT3 cameraUpVec = {0.0f, 0.0f, -1.0f};
+    _mainCamera->SetCameraUpVec(cameraUpVec);
+
     // カーソル非表示
     auto gameWindow = Application::GetInstance().GetGameWindow();
     gameWindow->HideCursor();
 
 
     _isMoved = false;
+
+    // マップ描画フラグをセット
+    Application::GetInstance().SetIsDrawMap(true);
 }
 
 MovingPiece::~MovingPiece(){}

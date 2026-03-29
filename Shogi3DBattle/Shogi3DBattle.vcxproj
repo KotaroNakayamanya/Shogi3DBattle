@@ -59,6 +59,7 @@
     <ClCompile Include="src\NonePersProjMat.cpp" />
     <ClCompile Include="src\PersProjMat.cpp" />
     <ClCompile Include="src\PieceVertIndicesFactory.cpp" />
+    <ClCompile Include="src\SelectingPiece.cpp" />
     <ClCompile Include="src\StartMenu.cpp" />
     <ClCompile Include="src\TextFormat.cpp" />
     <ClCompile Include="src\Vertices.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="header\NonePersProjMat.h" />
     <ClInclude Include="header\PersProjMat.h" />
     <ClInclude Include="header\PieceVertIndicesFactory.h" />
+    <ClInclude Include="header\SelectingPiece.h" />
     <ClInclude Include="header\StartMenu.h" />
     <ClInclude Include="header\Vertices.h" />
     <ClInclude Include="header\VertIndices.h" />
@@ -165,7 +167,6 @@
     <ClInclude Include="header\PShaderResourceStates.h" />
     <ClInclude Include="header\ReadResourceStates.h" />
     <ClInclude Include="header\Pipeline.h" />
-    <ClInclude Include="header\IProjMat.h" />
     <ClInclude Include="header\PShader.h" />
     <ClInclude Include="header\RenderTexBuffFactory.h" />
     <ClInclude Include="header\ResourceBarrier.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="header\WorldMat.h" />
     <ClInclude Include="header\WrappedBuff.h" />
     <ClInclude Include="header\DepthWriteResourceStates.h" />
+    <ClInclude Include="header\ClipZRange.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\PixelShader.hlsl">

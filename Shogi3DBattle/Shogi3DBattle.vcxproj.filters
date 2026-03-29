@@ -513,6 +513,9 @@
     <ClCompile Include="src\NonePersProjMat.cpp">
       <Filter>ソース ファイル\mat</Filter>
     </ClCompile>
+    <ClCompile Include="src\SelectingPiece.cpp">
+      <Filter>ソース ファイル\scene_state</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -773,9 +776,6 @@
     <ClInclude Include="header\IMat.h">
       <Filter>ヘッダー ファイル\mat</Filter>
     </ClInclude>
-    <ClInclude Include="header\IProjMat.h">
-      <Filter>ヘッダー ファイル\mat</Filter>
-    </ClInclude>
     <ClInclude Include="header\ViewMat.h">
       <Filter>ヘッダー ファイル\mat</Filter>
     </ClInclude>
@@ -810,6 +810,12 @@
       <Filter>ヘッダー ファイル\mat</Filter>
     </ClInclude>
     <ClInclude Include="header\NonePersProjMat.h">
+      <Filter>ヘッダー ファイル\mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\SelectingPiece.h">
+      <Filter>ヘッダー ファイル\scene_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ClipZRange.h">
       <Filter>ヘッダー ファイル\mat</Filter>
     </ClInclude>
   </ItemGroup>

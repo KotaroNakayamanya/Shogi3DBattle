@@ -337,20 +337,20 @@ void DX12::CreateDrawArea()
 
     // マップ
     // ビューポート
-    auto width  = gameWindow->GetWindowWidth()  / 2;
+    //auto width  = gameWindow->GetWindowWidth()  / 2;
     auto height = gameWindow->GetWindowHeight() / 2;
-    auto widthEdge = static_cast<int>(width - height) / 2;
+    //auto widthEdge = static_cast<int>(width - height) / 2;
     auto topY = gameWindow->GetWindowHeight() - height;
     int offset = 10;
-    _mapViewport->TopLeftX = -widthEdge + offset; // 左上横位置
+    _mapViewport->TopLeftX = offset; // 左上横位置
     _mapViewport->TopLeftY = topY - offset; // 左上縦位置
-    _mapViewport->Width    = width;  // 横
+    _mapViewport->Width    = height;  // 横
     _mapViewport->Height   = height; // 縦
     _mapViewport->MaxDepth = 1.0f; // 深度最大値
     _mapViewport->MinDepth = 0.0f; // 深度最小値
     // シザー矩形
     _mapScissorRect->left   = offset;                        // 左
-    _mapScissorRect->right  = width - widthEdge * 2;         // 右
+    _mapScissorRect->right  = height;         // 右
     _mapScissorRect->top    = topY - offset;                 // 上
     _mapScissorRect->bottom = gameWindow->GetWindowHeight(); // 下
 
@@ -619,46 +619,49 @@ void DX12::ExeD3D()
 
 
 
-
-    // バックバッファをレンダーターゲットに設定
-    auto rtvHandle = _rtvHeap->GetDescHandle(_currentBackBuffIdx);
-    auto dsvHandle = _dsvHeap->GetDescHandle(0);
-    _cmdList->SetRenderTarget(rtvHandle, dsvHandle);
-
-    // クリア処理
-    //_cmdList->ClearRenderTarget(rtvHandle); // レンダーターゲットクリア
-    _cmdList->ClearDepthStencil(dsvHandle); // デプスステンシルクリア
-
-    Set3DCmd(); // 3Dコマンドセット
-
-    // ビューポートセット
-    viewports[0] = {*_mapViewport.get()};
-    _cmdList->SetViewports(1, viewports);
-
-    // シザー矩形セット
-    scissorRects[0] = {*_mapScissorRect.get()};
-    _cmdList->SetScissorRects(1, scissorRects);
-
-    // 将棋盤描画コマンドセット
-    _cmdList->SetIdxBuffView(GetIdxBuffView(boardVertIndices));
-    _cmdList->SetVertBuffView(GetVertBuffView(board));
-    _cmdList->SetDrawWithIdx(boardVertIndices);
-
-    // 駒描画コマンドセット
-    _cmdList->SetIdxBuffView(GetIdxBuffView(pieceVertIndices));
-    for (UINT i = 0; i < pieces.size(); i++)
+    if (Application::GetInstance().IsDrawMap())
     {
-        _cmdList->SetVertBuffView(GetVertBuffView(pieces[i].get()));
-        _cmdList->SetDrawWithIdx(pieceVertIndices);
+        // バックバッファをレンダーターゲットに設定
+        auto rtvHandle = _rtvHeap->GetDescHandle(_currentBackBuffIdx);
+        auto dsvHandle = _dsvHeap->GetDescHandle(0);
+        _cmdList->SetRenderTarget(rtvHandle, dsvHandle);
+
+        // クリア処理
+        //_cmdList->ClearRenderTarget(rtvHandle); // レンダーターゲットクリア
+        _cmdList->ClearDepthStencil(dsvHandle); // デプスステンシルクリア
+
+        Set3DCmd(); // 3Dコマンドセット
+
+        // ビューポートセット
+        viewports[0] = {*_mapViewport.get()};
+        _cmdList->SetViewports(1, viewports);
+
+        // シザー矩形セット
+        scissorRects[0] = {*_mapScissorRect.get()};
+        _cmdList->SetScissorRects(1, scissorRects);
+
+        // 将棋盤描画コマンドセット
+        _cmdList->SetIdxBuffView(GetIdxBuffView(boardVertIndices));
+        _cmdList->SetVertBuffView(GetVertBuffView(board));
+        _cmdList->SetDrawWithIdx(boardVertIndices);
+
+        // 駒描画コマンドセット
+        _cmdList->SetIdxBuffView(GetIdxBuffView(pieceVertIndices));
+        for (UINT i = 0; i < pieces.size(); i++)
+        {
+            _cmdList->SetVertBuffView(GetVertBuffView(pieces[i].get()));
+            _cmdList->SetDrawWithIdx(pieceVertIndices);
+        }
+
+        // コンスタントバッファに書き込み
+        _constBuff->WriteToConstBuff(
+            board,
+            pieces,
+            mapCamera);
+
+        ExeCmd(); // コマンド実行
     }
-
-    // コンスタントバッファに書き込み
-    _constBuff->WriteToConstBuff(
-        board,
-        pieces,
-        mapCamera);
-
-    ExeCmd(); // コマンド実行
+    
 
 
     

@@ -2,34 +2,7 @@
 #include<cmath>
 #include"VecCalc.h"
 
-// カメラ位置セット
-void Camera::SetCameraPos(DirectX::XMFLOAT3 pos)
-{
-    _viewMat->SetEye(pos);
-}
 
-// カメラ移動
-void Camera::MoveCameraPos(DirectX::XMFLOAT3 vec)
-{
-    auto eye = _viewMat->GetEye();
-    auto newEye = VecCalc::GetFloat3AddFloat3(eye, vec);
-    _viewMat->SetEye(newEye);
-}
-
-
-// フォーカス位置セット
-void Camera::SetFocusPos(DirectX::XMFLOAT3 pos)
-{
-    _viewMat->SetFocus(pos);
-}
-
-// フォーカス位置移動
-void  Camera::MoveFocusPos(DirectX::XMFLOAT3 vec)
-{
-    auto focus = _viewMat->GetFocus();
-    auto newFocus = VecCalc::GetFloat3AddFloat3(focus, vec);
-    _viewMat->SetFocus(newFocus);
-}
 
 // 水平方向に視点を回す
 void Camera::RotationH(float x)
@@ -100,10 +73,33 @@ DirectX::XMMATRIX Camera::GetViewProjMat()
     return _viewMat->GetMat() * _projMat->GetMat();
 }
 
-void Camera::SetViewMat(ViewMat* viewMat) {_viewMat.reset(viewMat);} // ビュー行列セット
-ViewMat* Camera::GetViewMat()             {return _viewMat.get();}   // ビュー行列を返す
-void Camera::SetProjMat(IProjMat* projMat){_projMat.reset(projMat);} // プロジェクション行列セット
-IProjMat* Camera::GetProjMat()            {return _projMat.get();}   // プロジェクション行列を返す
+// カメラ移動
+void Camera::MoveCameraPos(DirectX::XMFLOAT3 vec)
+{
+    auto eye = _viewMat->GetEye();
+    auto newEye = VecCalc::GetFloat3AddFloat3(eye, vec);
+    _viewMat->SetEye(newEye);
+}
+
+// フォーカス位置移動
+void  Camera::MoveFocusPos(DirectX::XMFLOAT3 vec)
+{
+    auto focus = _viewMat->GetFocus();
+    auto newFocus = VecCalc::GetFloat3AddFloat3(focus, vec);
+    _viewMat->SetFocus(newFocus);
+}
+
+void Camera::SetCameraPos(DirectX::XMFLOAT3 pos)  {_viewMat->SetEye(pos);}       // カメラ位置セット
+DirectX::XMFLOAT3 Camera::GetCameraPos()          {return _viewMat->GetEye();}   // カメラ位置を返す
+void Camera::SetFocusPos(DirectX::XMFLOAT3 pos)   {_viewMat->SetFocus(pos);}     // フォーカス位置セット
+DirectX::XMFLOAT3 Camera::GetFocusPos()           {return _viewMat->GetFocus();} // カメラ位置を返す
+void Camera::SetCameraUpVec(DirectX::XMFLOAT3 vec){_viewMat->SetUp(vec);}        // カメラ上側ベクトルセット
+DirectX::XMFLOAT3 Camera::GetCameraUpVec()        {return _viewMat->GetUp();}    // カメラ上側ベクトルを返す
+
+void Camera::SetViewMat(ViewMat* viewMat){_viewMat.reset(viewMat);} // ビュー行列セット
+ViewMat* Camera::GetViewMat()            {return _viewMat.get();}   // ビュー行列を返す
+void Camera::SetProjMat(IMat* projMat)   {_projMat.reset(projMat);} // プロジェクション行列セット
+IMat* Camera::GetProjMat()               {return _projMat.get();}   // プロジェクション行列を返す
 
 Camera::Camera(){}
 Camera::~Camera(){}
