@@ -9,6 +9,7 @@
 #include"ISceneState.h"
 
 #include"Camera.h"
+#include"UIObj.h"
 
 class Application
 {
@@ -23,6 +24,10 @@ private:
     std::unique_ptr<VertIndices>        _pieceIndices; // 駒の頂点インデックス
     std::unique_ptr<IShogiObjFactory>    _shogiObjFactory;    // 将棋オブジェクトファクトリー
     std::unique_ptr<IVertIndicesFactory> _vertIndicesFactory; // 頂点インデックスファクトリー
+
+    // 2Dオブジェクト
+    std::vector<UIObj> _uis; // UI
+
 
     // テクスチャ
     std::unique_ptr<Tex> _woodTex; // 木材テクスチャ
@@ -83,6 +88,11 @@ public:
 
     void SetIsDrawMap(bool flag); // マップ描画フラグをセット
     bool IsDrawMap();             // マップ描画フラグを返す
+
+    std::vector<UIObj>& GetUIs(); // UIを返す
+    bool IsDrawUINotEmpty(); // UIの空状況を返す
+    void PushUI(std::wstring text, D2D1_RECT_F rect, UIObj::UIType uiType);   // UIをプッシュする
+    void RemoveAllUI();      // UIを全て削除する
 
     void ProcessChangeWindowSize(); // 画面サイズ変更処理
 

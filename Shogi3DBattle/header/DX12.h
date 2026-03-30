@@ -78,19 +78,15 @@ private:
     HRESULT CreateDWriteFactory(); // DirectWriteファクトリー作成
 
     
-    // Direct2Dテキストフォーマット
+    // テキストフォーマット
     std::unique_ptr<TextFormat> _pieceTextFormat; // 駒のテキストフォーマット
+    std::unique_ptr<TextFormat> _uiTextFormat; // UIテキストフォーマット
 
     // ブラシ
     std::unique_ptr<Brush> _blackBrush; // 黒色ブラシ
     std::unique_ptr<Brush> _redBrush;   // 赤色ブラシ
-    void DrawD2DText(    // 文字を出力する
-        std::wstring str,
-        float left,
-        float top,
-        float right,
-        float bottom,
-        ID2D1SolidColorBrush* brush);
+    std::unique_ptr<Brush> _uiBrush;    // UI用ブラシ
+    
 
         
 

@@ -516,6 +516,9 @@
     <ClCompile Include="src\SelectingPiece.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
+    <ClCompile Include="src\UIObj.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -817,6 +820,9 @@
     </ClInclude>
     <ClInclude Include="header\ClipZRange.h">
       <Filter>ヘッダー ファイル\mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\UIObj.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

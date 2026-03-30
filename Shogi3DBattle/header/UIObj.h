@@ -1,0 +1,37 @@
+#pragma once
+
+#include<string>
+#include<d2d1_3.h>
+
+class UIObj
+{
+public:
+    enum UIType
+    {
+        NEW_START,      // はじめから
+        CONTINUE_START, // つづきから
+        OPTION,         // オプション
+        EXIT,           // アプリケーション終了
+        NONE            // (UI選択無し)
+    };
+private:
+    const std::wstring _text;       // テキスト
+    const UIType       _uiType;     // UIタイプ
+
+    D2D1_RECT_F  _rect;       // テキスト範囲
+    bool         _isSelected; // 選択状態
+
+    UIObj();
+
+public:
+    std::wstring GetText();   // テキストを返す
+    UIType       GetUIType(); // UIタイプを返す
+
+    void         SetRect(D2D1_RECT_F rect); // テキスト範囲セット
+    D2D1_RECT_F  GetRect();                 // テキスト範囲を返す
+    void         SetIsSelected(bool state); // 選択状態セット
+    bool         IsSelected();              // 選択状態を返す
+
+    UIObj(std::wstring text, D2D1_RECT_F rect, UIType uiType);
+    ~UIObj();
+};

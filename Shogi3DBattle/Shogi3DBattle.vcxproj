@@ -62,6 +62,7 @@
     <ClCompile Include="src\SelectingPiece.cpp" />
     <ClCompile Include="src\StartMenu.cpp" />
     <ClCompile Include="src\TextFormat.cpp" />
+    <ClCompile Include="src\UIObj.cpp" />
     <ClCompile Include="src\Vertices.cpp" />
     <ClCompile Include="src\VertIndices.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="header\PieceVertIndicesFactory.h" />
     <ClInclude Include="header\SelectingPiece.h" />
     <ClInclude Include="header\StartMenu.h" />
+    <ClInclude Include="header\UIObj.h" />
     <ClInclude Include="header\Vertices.h" />
     <ClInclude Include="header\VertIndices.h" />
     <ClInclude Include="header\IResourceDesc.h" />

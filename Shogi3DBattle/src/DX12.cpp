@@ -110,6 +110,7 @@ HRESULT DX12::CreateDXGIFactory()
     if(FAILED(result)) return result;
 
     _dxgiFactory->SetDXGIFactory(dxgiFactoryCom);
+
     return S_OK;
 }
 
@@ -400,12 +401,17 @@ HRESULT DX12::CreateD2D()
 
     // DirectWriteファクトリー作成
     if (FAILED(CreateDWriteFactory())) goto failed;
-    // 黒色ブラシ作成
-    if(FAILED(_d2dDeviceContext->CreateBlackBrush(_blackBrush.get()))) goto failed;
-    // 赤色ブラシ作成
-    if(FAILED(_d2dDeviceContext->CreateRedBrush(_redBrush.get()))) goto failed;
+    
+    // ブラシ作成
+    if(FAILED(_d2dDeviceContext->CreateBrush(_blackBrush.get(), D2D1::ColorF(D2D1::ColorF::Black)))) goto failed; // 黒色ブラシ作成
+    if(FAILED(_d2dDeviceContext->CreateBrush(_redBrush.get(), D2D1::ColorF(D2D1::ColorF::Red)))) goto failed; // 赤色ブラシ作成
+    if(FAILED(_d2dDeviceContext->CreateBrush(_uiBrush.get(), D2D1::ColorF(D2D1::ColorF::LightYellow, 0.9f)))) goto failed; // UIブラシ作成
+
+
     // 駒のテキストフォーマット作成
     if(FAILED(_dWriteFactory->CreateTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed;
+    // UIテキストフォーマット作成
+    if(FAILED(_dWriteFactory->CreateUITextFormat(_uiTextFormat.get(), L"メイリオ", 50.0f))) goto failed;
 
     return S_OK;
 
@@ -549,7 +555,7 @@ void DX12::ExeDX12()
     
     InitRenderTarget(); // レンダーターゲット初期処理
     ExeD3D(); // Direct3D処理実行
-    //ExeD2D(); // Direct2D処理実行
+    ExeD2D(); // Direct2D処理実行
     PrepareRenderTargetToFlip(); // 画面フリップ準備処理
     _swapChain->Flip(); // 画面フリップ
 }
@@ -737,9 +743,26 @@ void DX12::ExeD2D()
 {
     auto wrappedBackBuff = _wrappedBackBuffs[_currentBackBuffIdx].get();
     auto d2dRenderTarget = _d2dRenderTargets[_currentBackBuffIdx].get();
-
+    auto uis = Application::GetInstance().GetUIs();
     StartD2D(wrappedBackBuff, d2dRenderTarget); // Direct2D開始
-    //DrawStr(L"歩りゃあ", 0, 0, 720, 720);
+
+    for (auto& ui : uis)
+    {
+        // 四角形描画
+        _d2dDeviceContext->DrawRectangle(
+            ui.GetRect(),
+            _uiBrush->GetBrush(),
+            _blackBrush->GetBrush());
+
+        // テキスト描画　選択されていたら赤色
+        auto brushColor = ui.IsSelected() ? _redBrush->GetBrush() : _blackBrush->GetBrush();
+        _d2dDeviceContext->DrawTextW(
+        ui.GetText(),
+        ui.GetRect(),
+        _uiTextFormat->GetTextFormat(),
+        brushColor);
+    }
+        
     EndD2D(wrappedBackBuff); // Direct2D終了
 }
 
@@ -840,9 +863,14 @@ DX12::DX12() {
     _device11      = std::make_unique<Device11>();
     _deviceContext = std::make_unique<DeviceContext>();
     _d2dDeviceContext = std::make_unique<D2DDeviceContext>();
+
+    // ブラシ
     _blackBrush = std::make_unique<Brush>();
-    _redBrush = std::make_unique<Brush>();
+    _redBrush   = std::make_unique<Brush>();
+    _uiBrush    = std::make_unique<Brush>();
+
     _pieceTextFormat = std::make_unique<TextFormat>();
+    _uiTextFormat = std::make_unique<TextFormat>();
 
     _cmdAllocator = std::make_unique<CmdAllocator>();
     _cmdList      = std::make_unique<CmdList>();

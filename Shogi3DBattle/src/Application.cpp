@@ -316,7 +316,7 @@ void Application::CreateCamera()
 // シーンステート初期処理
 void Application::InitSceneState()
 {
-    _sceneState = std::make_unique<StartMenu>();
+    _sceneState = std::make_unique<StartMenu>(); // スタート画面
 }
 
 
@@ -331,6 +331,7 @@ void Application::Run()
 
     MSG msg = {};
     while (true) {
+
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
             TranslateMessage(&msg);
@@ -338,12 +339,15 @@ void Application::Run()
         }
         else
         {
+            POINT cursorPos;
+            GetCursorPos(&cursorPos);
+            ScreenToClient(_gameWindow->GetHWND(), &cursorPos);
             // シーン動作
             ISceneState* newSceneState = _sceneState->ExeSceneOperation(
                 _inputHandler->GetInputMemory(),
-                _inputHandler->GetCursorX(),
+                cursorPos.x,
                 _inputHandler->GetCursorXMove(),
-                _inputHandler->GetCursorY(),
+                cursorPos.y,
                 _inputHandler->GetCursorYMove());
             // シーン更新チェック
             CheckUpdateScene(newSceneState);
@@ -352,8 +356,6 @@ void Application::Run()
             // 描画等実行
             _dx12->ExeDX12();
         }
-
-        
 
         if (msg.message == WM_QUIT)
         {
@@ -531,6 +533,18 @@ KeyMap* Application::GetKeyMap(){return _keyMap.get();} // 将棋盤頂点イン
 
 void Application::SetIsDrawMap(bool flag){_isDrawMap = flag;} // マップ描画フラグをセット
 bool Application::IsDrawMap()            {return _isDrawMap;} // マップ描画フラグを返す
+
+bool Application::IsDrawUINotEmpty(){return _uis.size() > 0;} // UIの空状況を返す
+void Application::PushUI(std::wstring text, D2D1_RECT_F rect, UIObj::UIType uiType)
+{
+    //UIObj ui = {L"aaa", {0, 0, 1280, 720}};
+    //_uis.push_back(ui);
+    _uis.push_back({text, rect, uiType});
+
+//_uis.push_back(ui);
+}   // UIをプッシュする
+void Application::RemoveAllUI(){_uis.clear();}      // UIを全て削除する
+std::vector<UIObj>& Application::GetUIs(){return _uis;} // UIを返す
 
 // すべての将棋オブジェクトを返す
 std::vector<ShogiObj*> Application::GetShogiObjects()

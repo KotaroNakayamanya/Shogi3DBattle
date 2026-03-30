@@ -1,7 +1,6 @@
 #include"StartMenu.h"
 #include"Application.h"
 #include"SelectingPiece.h"
-//#include"MovingPiece.h"
 
 // スタートメニューシーン動作
 ISceneState* StartMenu::ExeSceneOperation(
@@ -11,9 +10,23 @@ ISceneState* StartMenu::ExeSceneOperation(
     int cursorY,
     int cursorYMove)
 {
-    static float rotationAngle = 0.01f;
-
+    // 将棋盤回転
+    static float rotationAngle = 0.005f;
     _mainCamera->RotationH(rotationAngle);
+
+    // UI選択チェック
+    _selectingUI = UIObj::NONE;
+    for (auto& ui : Application::GetInstance().GetUIs())
+    {
+        auto rect = ui.GetRect();
+        bool isCursorInWidthRange  = rect.left <= cursorX && cursorX <= rect.right;
+        bool isCursorInHeightRange = rect.top  <= cursorY && cursorY <= rect.bottom;
+        bool isSelected = isCursorInWidthRange && isCursorInHeightRange;
+
+        ui.SetIsSelected(isSelected);
+        if(isSelected) _selectingUI = ui.GetUIType();
+
+    }
 
     ISceneState* newSceneState = nullptr;
 
@@ -28,13 +41,51 @@ ISceneState* StartMenu::ExeSceneOperation(
 // 決定ボタン
 ISceneState* StartMenu::ExeDecisionButton()
 {
-    auto& app = Application::GetInstance();
-    auto& pieces = app.GetPieces();
-    ISceneState* newSceneState = new SelectingPiece();
-    //ISceneState* newSceneState = new MovingPiece(pieces[0].get());
+    ISceneState* newSceneState;
 
-    auto inputHandler = Application::GetInstance().GetInputHandler();
-    inputHandler->RemoveLClick();
+    switch (_selectingUI)
+    {
+        case UIObj::NEW_START:
+        {
+            auto& app = Application::GetInstance();
+            newSceneState = new SelectingPiece();
+            app.RemoveAllUI();
+
+            auto inputHandler = app.GetInputHandler();
+            inputHandler->RemoveLClick();
+
+            break;
+        }
+
+        case UIObj::EXIT:
+            DestroyWindow(Application::GetInstance().GetGameWindow()->GetHWND());
+            newSceneState = this;
+            break;
+
+        default:
+            newSceneState = this;
+            break;
+    }
+
+    //if (_selectingUI == UIObj::NEW_START)
+    //{
+    //    
+    //    //auto& pieces = app.GetPieces();
+    //    
+    //    
+
+    //    
+
+    //    auto inputHandler = Application::GetInstance().GetInputHandler();
+    //    inputHandler->RemoveLClick();
+    //}
+    //else
+    //{
+    //    newSceneState = this;
+    //}
+    
+
+    
 
     return newSceneState;
 }
@@ -83,6 +134,38 @@ StartMenu::StartMenu()
     // カメラ上側ベクトルセット
     DirectX::XMFLOAT3 cameraUpVec = {0.0f, 0.0f, -1.0f};
     _mainCamera->SetCameraUpVec(cameraUpVec);
+
+    // UIセット
+    auto gameWindow = app.GetGameWindow();
+    auto uiWidth = gameWindow->GetWindowWidth() / 3;
+    auto uiHeight = gameWindow->GetWindowHeight() / 9;
+
+    float left, top, right, bottom, heightOffset;
+    left = (gameWindow->GetWindowWidth() - uiWidth) / 2;
+    right = left + uiWidth;
+    heightOffset = uiHeight + 3.0f;
+
+    top  = gameWindow->GetWindowHeight() / 2;
+    bottom = top + uiHeight;
+    app.PushUI(L"はじめから対局", {left, top, right, bottom}, UIObj::NEW_START);
+
+    top    += heightOffset;
+    bottom += heightOffset;
+    app.PushUI(L"つづきから対局", {left, top, right, bottom}, UIObj::CONTINUE_START);
+
+    top    += heightOffset;
+    bottom += heightOffset;
+    app.PushUI(L"オプション", {left, top, right, bottom}, UIObj::OPTION);
+
+    top    += heightOffset;
+    bottom += heightOffset;
+    app.PushUI(L"ゲーム終了", {left, top, right, bottom}, UIObj::EXIT);
+
+
+
+    //text = L"aaaaa";
+    //rect = {0, 0, 1280, 720};
+
 
 }
 StartMenu::~StartMenu(){}

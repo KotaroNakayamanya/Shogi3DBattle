@@ -160,8 +160,8 @@ HRESULT DXGIFactory::CreateDevice(Device* device, Adapter* adapter)
 
 
 
-// DXGIファクトリーComセット
-void DXGIFactory::SetDXGIFactory(ComPtr<IDXGIFactory6> dxgiFactory){_dxgiFactory = dxgiFactory;}
+
+void DXGIFactory::SetDXGIFactory(ComPtr<IDXGIFactory6> dxgiFactory){_dxgiFactory = dxgiFactory;} // DXGIファクトリーセット
 
 DXGIFactory::DXGIFactory(){}
 DXGIFactory::~DXGIFactory(){}

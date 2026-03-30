@@ -40,31 +40,14 @@ HRESULT D2DDeviceContext::CreateD2DRenderTarget(
     return S_OK;
 }
 
-// 黒色ブラシ作成
-HRESULT D2DDeviceContext::CreateBlackBrush(
-    Brush* brush)
+// ブラシ作成
+HRESULT D2DDeviceContext::CreateBrush(Brush* brush, D2D1::ColorF color)
 {
     ComPtr<ID2D1SolidColorBrush> brushCom;
 
     HRESULT result;
     result = _d2dDeviceContext->CreateSolidColorBrush(
-        D2D1::ColorF(D2D1::ColorF::Black, 1.0f),
-        brushCom.ReleaseAndGetAddressOf());
-    if(FAILED(result)) return result;
-
-    brush->SetBrush(brushCom);
-    return S_OK;
-}
-
-// 赤色ブラシ作成
-HRESULT D2DDeviceContext::CreateRedBrush(
-    Brush* brush)
-{
-    ComPtr<ID2D1SolidColorBrush> brushCom;
-
-    HRESULT result;
-    result = _d2dDeviceContext->CreateSolidColorBrush(
-        D2D1::ColorF(D2D1::ColorF::Red, 1.0f),
+        color,
         brushCom.ReleaseAndGetAddressOf());
     if(FAILED(result)) return result;
 
@@ -111,6 +94,25 @@ void D2DDeviceContext::DrawTextW(
         textFormat,
         rect,
         brush);
+}
+
+// 四角形描画
+void D2DDeviceContext::DrawRectangle(
+    D2D1_RECT_F rect,
+    ID2D1Brush* fillBrush,
+    ID2D1Brush* strokeBrush)
+{
+    
+
+    _d2dDeviceContext->FillRectangle(
+        rect,fillBrush
+    );
+
+    _d2dDeviceContext->DrawRectangle(
+        rect,
+        strokeBrush,
+        2.0f,
+        nullptr);
 }
 
 

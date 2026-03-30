@@ -59,6 +59,41 @@ HRESULT DWriteFactory::CreateTextFormat(
     result = S_OK;
 }
 
+// UIテキストフォーマット作成
+HRESULT DWriteFactory::CreateUITextFormat(
+    TextFormat* textFormat,
+    std::wstring fontName,
+    float fontSize)
+{
+    ComPtr<IDWriteTextFormat> textFormatCom;
+
+    HRESULT result;
+
+    result = _dWriteFactory->CreateTextFormat(
+        fontName.c_str(),
+        nullptr,
+        DWRITE_FONT_WEIGHT_BOLD,
+        DWRITE_FONT_STYLE_NORMAL,
+        DWRITE_FONT_STRETCH_NORMAL,
+        fontSize,
+        L"ja-jp",
+        textFormatCom.ReleaseAndGetAddressOf());
+    if(FAILED(result)) return result;
+
+    // 横位置を中央に
+    result = textFormatCom->SetTextAlignment(
+        DWRITE_TEXT_ALIGNMENT_CENTER);
+    if(FAILED(result)) return result;
+
+    // 縦位置を中央に
+    result = textFormatCom->SetParagraphAlignment(
+        DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+    if(FAILED(result)) return result;
+
+    textFormat->SetTextFormat(textFormatCom);
+    result = S_OK;
+}
+
 
 
 DWriteFactory::DWriteFactory(){}
