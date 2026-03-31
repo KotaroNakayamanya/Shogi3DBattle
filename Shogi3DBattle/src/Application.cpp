@@ -57,6 +57,7 @@ void Application::CreateShogiObj()
             switch (shogiObjType)
             {
             case ShogiObj::BOARD_55:
+            case ShogiObj::BOARD_99:
                 _shogiObjFactory.reset(new BoardFactory());
                 break;
             
@@ -183,85 +184,205 @@ void Application::CreateTex()
     _woodTex->SetTex(woodTex);
 
 
+    //// 将棋盤黒線テクスチャ作成
+    //_boardLineTex = std::make_unique<Tex>();
+
+    //std::vector<TexStruct::TexRGBA> boardLineTex;
+
+    //lineSize = 256;
+    //width  = lineSize;
+    //height = lineSize;
+
+    //boardLineTex.resize(width * height);
+
+    //// 白色でクリア
+    //for (auto& rgba : boardLineTex)
+    //{
+    //    rgba.r = 255;
+    //    rgba.g = 255;
+    //    rgba.b = 255;
+    //    rgba.a = 255;
+    //}
+
+    //UINT squareNum = 5; // マス数
+
+    //float squareLength = static_cast<float>(lineSize) / (squareNum + 1);
+    //float halfSquareLength = squareLength / 2; // マスの半分のサイズ
+
+    //UINT drawLowerLimit  = halfSquareLength *  1 + 0.5;
+    //UINT drawUpperLimit  = halfSquareLength * (1 + squareNum * 2) + 0.5;
+
+    //
+    //// 黒線を描画する対象座標(x, y)に黒色を格納する
+    //x = 0;
+    //y = 0;
+    //UINT lineNum = squareNum + 1; // 横縦それぞれの線の本数
+    //for (auto& rgba : boardLineTex)
+    //{
+    //    // xy座標が横縦それぞれの線の上にあれば黒色を格納
+    //    for (UINT i = 0; i < lineNum; i++)
+    //    {
+    //        // 黒線対象の座標を取得(xとyのどちらにも使える)
+    //        UINT BlackLinePos = halfSquareLength * (1 + i * 2) + 0.5;
+
+    //        // x座標が黒線の直線上の値であるかチェック
+    //        bool isXOnBlackLine = x == BlackLinePos;
+    //        // y座標が線を描画する範囲にあるかチェック
+    //        bool isYDrawRange = drawLowerLimit <= y && y <= drawUpperLimit;
+    //        // 縦方向の線分上にあれば黒色
+    //        if (isXOnBlackLine && isYDrawRange)
+    //        {
+    //            rgba.r = 0;
+    //            rgba.g = 0;
+    //            rgba.b = 0;
+    //        }
+
+    //        
+    //        // y座標が黒線の直線上の値であるかチェック
+    //        bool isYOnBlackLine = y == BlackLinePos;
+    //        // x座標が線を描画する範囲にあるかチェック
+    //        bool isXDrawRange = drawLowerLimit <= x && x <= drawUpperLimit;
+    //        // 横方向の線分上にあれば黒色
+    //        if (isYOnBlackLine && isXDrawRange)
+    //        {
+    //            rgba.r = 0;
+    //            rgba.g = 0;
+    //            rgba.b = 0;
+    //        }
+    //    }
+
+    //    // xとyの次の座標を取得
+    //    x++;            // xを足す
+    //    if (x >= width) // xが端を超えたらyを足してxを0に戻す
+    //    {
+    //        y++;
+    //        x = 0;
+    //    }
+    //}
+
+    //_boardLineTex->SetWidth (width);
+    //_boardLineTex->SetHeight(height);
+    //_boardLineTex->SetTex(boardLineTex);
+
     // 将棋盤黒線テクスチャ作成
-    _boardLineTex = std::make_unique<Tex>();
+    // 
+    // 将棋盤黒線テクスチャ作成用関数
+    std::function<void(Tex*, ShogiObj::ShogiObjType)> createBoardLineTex =
+        [this](Tex* tex, ShogiObj::ShogiObjType shogiObjType)
+        {
+            std::vector<TexStruct::TexRGBA> boardLineTex;
 
-    std::vector<TexStruct::TexRGBA> boardLineTex;
+            UINT lineSize = 256;
+            UINT width  = lineSize;
+            UINT height = lineSize;
 
-    lineSize = 256;
-    width  = lineSize;
-    height = lineSize;
+            boardLineTex.resize(width * height);
 
-    boardLineTex.resize(width * height);
+            // 白色でクリア
+            for (auto& rgba : boardLineTex)
+            {
+                rgba.r = 255;
+                rgba.g = 255;
+                rgba.b = 255;
+                rgba.a = 255;
+            }
 
-    // 白色でクリア
-    for (auto& rgba : boardLineTex)
-    {
-        rgba.r = 255;
-        rgba.g = 255;
-        rgba.b = 255;
-        rgba.a = 255;
-    }
+            UINT squareNum; // マス数
 
-    UINT squareNum = 5; // マス数
+            switch (shogiObjType)
+            {
+                case ShogiObj::BOARD_55:
+                    squareNum = 5;
+                    break;
 
-    float squareLength = static_cast<float>(lineSize) / (squareNum + 1);
-    float halfSquareLength = squareLength / 2; // マスの半分のサイズ
+                case ShogiObj::BOARD_99:
+                    squareNum = 9;
+                    break;
 
-    UINT drawLowerLimit  = halfSquareLength *  1 + 0.5;
-    UINT drawUpperLimit  = halfSquareLength * (1 + squareNum * 2) + 0.5;
+                default:
+                    return;
+            }
+
+            float squareLength = static_cast<float>(lineSize) / (squareNum + 1);
+            float halfSquareLength = squareLength / 2; // マスの半分のサイズ
+
+            UINT drawLowerLimit  = halfSquareLength *  1 + 0.5;
+            UINT drawUpperLimit  = halfSquareLength * (1 + squareNum * 2) + 0.5;
 
     
-    // 黒線を描画する対象座標(x, y)に黒色を格納する
-    x = 0;
-    y = 0;
-    UINT lineNum = squareNum + 1; // 横縦それぞれの線の本数
-    for (auto& rgba : boardLineTex)
-    {
-        // xy座標が横縦それぞれの線の上にあれば黒色を格納
-        for (UINT i = 0; i < lineNum; i++)
-        {
-            // 黒線対象の座標を取得(xとyのどちらにも使える)
-            UINT BlackLinePos = halfSquareLength * (1 + i * 2) + 0.5;
-
-            // x座標が黒線の直線上の値であるかチェック
-            bool isXOnBlackLine = x == BlackLinePos;
-            // y座標が線を描画する範囲にあるかチェック
-            bool isYDrawRange = drawLowerLimit <= y && y <= drawUpperLimit;
-            // 縦方向の線分上にあれば黒色
-            if (isXOnBlackLine && isYDrawRange)
+            // 黒線を描画する対象座標(x, y)に黒色を格納する
+            UINT x = 0;
+            UINT y = 0;
+            UINT lineNum = squareNum + 1; // 横縦それぞれの線の本数
+            for (auto& rgba : boardLineTex)
             {
-                rgba.r = 0;
-                rgba.g = 0;
-                rgba.b = 0;
-            }
+                // xy座標が横縦それぞれの線の上にあれば黒色を格納
+                for (UINT i = 0; i < lineNum; i++)
+                {
+                    // 黒線対象の座標を取得(xとyのどちらにも使える)
+                    UINT BlackLinePos = halfSquareLength * (1 + i * 2) + 0.5;
+
+                    // x座標が黒線の直線上の値であるかチェック
+                    bool isXOnBlackLine = x == BlackLinePos;
+                    // y座標が線を描画する範囲にあるかチェック
+                    bool isYDrawRange = drawLowerLimit <= y && y <= drawUpperLimit;
+                    // 縦方向の線分上にあれば黒色
+                    if (isXOnBlackLine && isYDrawRange)
+                    {
+                        rgba.r = 0;
+                        rgba.g = 0;
+                        rgba.b = 0;
+                    }
 
             
-            // y座標が黒線の直線上の値であるかチェック
-            bool isYOnBlackLine = y == BlackLinePos;
-            // x座標が線を描画する範囲にあるかチェック
-            bool isXDrawRange = drawLowerLimit <= x && x <= drawUpperLimit;
-            // 横方向の線分上にあれば黒色
-            if (isYOnBlackLine && isXDrawRange)
-            {
-                rgba.r = 0;
-                rgba.g = 0;
-                rgba.b = 0;
-            }
-        }
+                    // y座標が黒線の直線上の値であるかチェック
+                    bool isYOnBlackLine = y == BlackLinePos;
+                    // x座標が線を描画する範囲にあるかチェック
+                    bool isXDrawRange = drawLowerLimit <= x && x <= drawUpperLimit;
+                    // 横方向の線分上にあれば黒色
+                    if (isYOnBlackLine && isXDrawRange)
+                    {
+                        rgba.r = 0;
+                        rgba.g = 0;
+                        rgba.b = 0;
+                    }
+                }
 
-        // xとyの次の座標を取得
-        x++;            // xを足す
-        if (x >= width) // xが端を超えたらyを足してxを0に戻す
-        {
-            y++;
-            x = 0;
-        }
+                // xとyの次の座標を取得
+                x++;            // xを足す
+                if (x >= width) // xが端を超えたらyを足してxを0に戻す
+                {
+                    y++;
+                    x = 0;
+                }
+            }
+
+            tex->SetWidth (width);
+            tex->SetHeight(height);
+            tex->SetTex(boardLineTex);
+        };
+
+    INT boardTexNum = 2;
+    _boardLineTexs.resize(boardTexNum);
+
+    std::vector<ShogiObj::ShogiObjType> boardType =
+    {
+        ShogiObj::BOARD_55,
+        ShogiObj::BOARD_99
+    };
+    _boardLineTexs.resize(boardType.size());
+    
+    
+    for(UINT i = 0; i < _boardLineTexs.size(); i++)
+    {
+        auto& boardLineTex = _boardLineTexs[i];
+        auto& type         = boardType[i];
+
+        boardLineTex = std::make_unique<Tex>();
+        createBoardLineTex(boardLineTex.get(), type);
     }
 
-    _boardLineTex->SetWidth (width);
-    _boardLineTex->SetHeight(height);
-    _boardLineTex->SetTex(boardLineTex);
+    
 }
 
 // 操作ボタン初期処理
@@ -524,7 +645,8 @@ Camera* Application::GetMainCamera(){return _mainCamera.get();} // メインカ�
 Camera* Application::GetMapCamera() {return _mapCamera.get();}  // マップカメラを返す
 
 Tex* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
-Tex* Application::GetBoardLineTex(){return _boardLineTex.get();} // 将棋盤黒線テクスチャを返す
+//Tex* Application::GetBoardLineTex(){return _boardLineTex.get();} // 将棋盤黒線テクスチャを返す
+std::vector<std::unique_ptr<Tex>>& Application::GetBoardLineTexs(){return _boardLineTexs;} // 将棋盤黒線テクスチャを返す
 VertIndices* Application::GetBoardVertIndices(){return _boardIndices.get();} // 将棋盤頂点インデックスを返す
 VertIndices* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
 Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す

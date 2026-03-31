@@ -31,7 +31,8 @@ private:
 
     // テクスチャ
     std::unique_ptr<Tex> _woodTex; // 木材テクスチャ
-    std::unique_ptr<Tex> _boardLineTex; // 将棋盤黒線テクスチャ
+    std::vector<std::unique_ptr<Tex>> _boardLineTexs; // 将棋盤黒線テクスチャ
+    //std::unique_ptr<Tex> _boardLineTex; // 将棋盤黒線テクスチャ
 
     std::unique_ptr<ISceneState>  _sceneState;   // シーンステート
     std::unique_ptr<InputHandler> _inputHandler; // インプットハンドラ
@@ -73,7 +74,8 @@ public:
     Board* GetBoard(); // 将棋盤を返す
     std::vector<std::unique_ptr<Piece>>& GetPieces(); // 駒を返す
     Tex* GetWoodTex(); // 木材テクスチャを返す
-    Tex* GetBoardLineTex(); // 将棋盤黒線テクスチャを返す
+    //Tex* GetBoardLineTex(); // 将棋盤黒線テクスチャを返す
+    std::vector<std::unique_ptr<Tex>>& GetBoardLineTexs(); // 将棋盤黒線テクスチャを返す
     VertIndices* GetBoardVertIndices(); // 将棋盤頂点インデックスを返す
     VertIndices* GetPieceVertIndices(); // 駒の頂点インデックスを返す
     KeyMap* GetKeyMap(); // 将棋盤頂点インデックスを返す

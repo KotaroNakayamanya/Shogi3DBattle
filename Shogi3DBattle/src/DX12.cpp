@@ -155,7 +155,8 @@ HRESULT DX12::CreateBuff()
     
     auto  woodTex = app.GetWoodTex();
     
-    auto  boardLineTex = app.GetBoardLineTex();
+    //auto& boardLineTexs = app.GetBoardLineTexs();
+    //auto  boardLineTex = app.GetBoardLineTex();
     
     auto shogiObjects   = app.GetShogiObjects();
     auto allVertIndices = app.GetAllVertIndices();
@@ -211,7 +212,7 @@ HRESULT DX12::CreateBuff()
 
     // 将棋オブジェクト種類ごとのテクスチャバッファ作成
     UINT shogiObjTexNum;
-    shogiObjTexNum = 9; // 駒8　将棋盤2
+    shogiObjTexNum = ShogiObj::TYPE_NUM;
     _shogiObjTexBuffs.resize(shogiObjTexNum);
     for(auto& shogiObjTexBuff : _shogiObjTexBuffs) shogiObjTexBuff = std::make_unique<TexBuff>();
     widthSize = 256;
@@ -386,7 +387,7 @@ HRESULT DX12::CreateD2D()
 
     // ラップされた駒テクスチャバッファ作成
     UINT boardBuffNum, pieceBuffNum;
-    boardBuffNum = 1;
+    boardBuffNum = 2;
     pieceBuffNum = _shogiObjTexBuffs.size() - boardBuffNum;
     _wrappedPieceTexBuffs.resize(pieceBuffNum);
     for(auto& wrappedPieceTexBuff : _wrappedPieceTexBuffs) wrappedPieceTexBuff = std::make_unique<WrappedBuff>();
@@ -426,7 +427,8 @@ HRESULT DX12::WriteToBuff()
     auto  board  = app.GetBoard();
     auto& pieces = app.GetPieces();
     auto  woodTex = app.GetWoodTex();
-    auto  boardLineTex = app.GetBoardLineTex();
+    //auto  boardLineTex = app.GetBoardLineTex();
+    auto& boardLineTexs = app.GetBoardLineTexs();
     auto boardVertIndices = app.GetBoardVertIndices();
     auto pieceVertIndices = app.GetPieceVertIndices();
 
@@ -434,7 +436,8 @@ HRESULT DX12::WriteToBuff()
     if (FAILED(_idxBuff ->WriteToIdxBuff (boardVertIndices, pieceVertIndices)))  goto failed; // インデックスバッファに書き込み
     if(FAILED(_woodTexBuff->WriteToTexBuff(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み
 
-    if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_55]->WriteToTexBuff(boardLineTex))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
+    if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_55]->WriteToTexBuff(boardLineTexs[0].get()))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
+    if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_99]->WriteToTexBuff(boardLineTexs[1].get()))) goto failed; // 9×9将棋盤黒線テクスチャをバッファに書き込み
 
     return S_OK;
 
