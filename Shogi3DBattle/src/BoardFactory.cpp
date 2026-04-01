@@ -12,7 +12,7 @@ void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
 
     float thickness = size * 0.8f;
 
-    std::vector<Vertices::Vert> vertices;
+    std::vector<ShogiObj::Vert> vertices;
 
     vertices =
     {   // è„ñ ê}

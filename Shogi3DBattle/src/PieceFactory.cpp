@@ -131,7 +131,7 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
 
     
 
-    std::vector<Vertices::Vert> vertices;
+    std::vector<ShogiObj::Vert> vertices;
 
     vertices = // í∏ì_èWçá
     {

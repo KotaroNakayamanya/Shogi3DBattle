@@ -339,9 +339,6 @@
     <ClCompile Include="src\Adapter.cpp">
       <Filter>ソース ファイル\dx12\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\ShogiObj.cpp">
-      <Filter>ソース ファイル\3d_object\shogi_obj</Filter>
-    </ClCompile>
     <ClCompile Include="src\Tex.cpp">
       <Filter>ソース ファイル\dx12\csu\texture</Filter>
     </ClCompile>
@@ -819,6 +816,9 @@
       <Filter>ヘッダー ファイル\mat</Filter>
     </ClInclude>
     <ClInclude Include="header\UIObj.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GameObj.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

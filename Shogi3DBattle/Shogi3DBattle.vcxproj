@@ -93,7 +93,6 @@
     <ClCompile Include="src\UploadHeapProp.cpp" />
     <ClCompile Include="src\VecCalc.cpp" />
     <ClCompile Include="src\VertBuff.cpp" />
-    <ClCompile Include="src\ShogiObj.cpp" />
     <ClCompile Include="src\VertBuffFactory.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
     <ClCompile Include="src\VShader.cpp" />
@@ -114,6 +113,7 @@
     <ClInclude Include="header\DefaultHeapProp.h" />
     <ClInclude Include="header\DSBuffFactory.h" />
     <ClInclude Include="header\DSResourceDesc.h" />
+    <ClInclude Include="header\GameObj.h" />
     <ClInclude Include="header\IBuffFactory.h" />
     <ClInclude Include="header\CBVFactory.h" />
     <ClInclude Include="header\CmdAllocator.h" />

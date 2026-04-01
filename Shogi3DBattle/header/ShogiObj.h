@@ -6,7 +6,10 @@
 #include"Vertices.h"
 #include"WorldMat.h"
 
-class ShogiObj : public Vertices, public WorldMat
+#include"GameObj.h"
+
+//class ShogiObj : public Vertices, public WorldMat
+class ShogiObj : public GameObj, public WorldMat
 {
 public:
     // 将棋オブジェクトタイプ
@@ -29,12 +32,12 @@ protected:
     //std::unique_ptr<Vertices> _vertices; // 頂点集合
     //std::unique_ptr<WorldMat> _worldMat; // ワールド行列
     UINT _startVertIdxInBuff; // バッファ内に書き込まれる場所のスタート位置
+    //D3D12_GPU_VIRTUAL_ADDRESS _vertBuffAddress;
+
     UCHAR _objId; // 将棋オブジェクトID
     UCHAR _texId; // 使用するテクスチャID
     
 public:
-    //void      SetVertices(Vertices* vertices){_vertices.reset(vertices);} // 頂点集合セット
-    //Vertices* GetVertices()                  {return _vertices.get();}    // 頂点集合を返す
     //void      SetWorldMat(WorldMat* worldMat){_worldMat.reset(worldMat);} // ワールド行列セット
     //WorldMat* GetWorldMat(WorldMat* worldMat){return _worldMat.get();}    // ワールド行列セット
 
@@ -45,10 +48,6 @@ public:
     void  SetTexId(UCHAR texId){_texId = texId;} // テクスチャIDセット
     UCHAR GetTexId()           {return _texId;}  // テクスチャIDを返す
 
-    ShogiObj()
-    {
-        //_vertices = std::make_unique<Vertices>();
-        //_worldMat = std::make_unique<WorldMat>();
-    }
-    ~ShogiObj(){}
+    ShogiObj () = default;
+    ~ShogiObj() = default;
 };

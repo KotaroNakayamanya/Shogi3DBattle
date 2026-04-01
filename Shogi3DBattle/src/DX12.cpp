@@ -195,7 +195,8 @@ HRESULT DX12::CreateBuff()
 
     // 頂点バッファ作成
     widthSize = 0;
-    for(auto& shogiObject : shogiObjects) {widthSize += shogiObject->GetVerticesByteSize();}
+    //for(auto& shogiObject : shogiObjects) {widthSize += shogiObject->GetVertices()->GetVerticesByteSize();}
+    for(auto& shogiObj : shogiObjects) widthSize += sizeof(ShogiObj::Vert) * shogiObj->GetVertices().size();
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_vertBuff.get(), widthSize, heightSize, Buff::VERTEX))) goto failed;
 
@@ -437,15 +438,11 @@ HRESULT DX12::WriteToBuff()
 
     // 頂点集合の書き込み位置をセット
     board->SetStartVertIdxInBuff(idx);
-    idx += board->GetVertNum();
-    board->SetBuffAddress(address);
-    address += board->GetVerticesByteSize();
+    idx += board->GetVertices().size();
     for (auto& piece : pieces)
     {
         piece->SetStartVertIdxInBuff(idx);
-        idx += piece->GetVertNum();
-        piece->SetBuffAddress(address);
-        address += piece->GetVerticesByteSize();
+        idx += piece->GetVertices().size();
     }
 
 
@@ -732,12 +729,17 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(ShogiObj* shogiObj)
 {
     D3D12_VERTEX_BUFFER_VIEW view;
 
+    auto buffAddress = _vertBuff->GetBuff()->GetGPUVirtualAddress();
+    //buffAddress += shogiObj->GetVertices()->GetVertByteSize() * shogiObj->GetStartVertIdxInBuff();
+    buffAddress += sizeof(GameObj::Vert) * shogiObj->GetStartVertIdxInBuff();
+
     view.BufferLocation =  // 頂点バッファのスタート位置
-        shogiObj->GetBuffAddress();
+        //shogiObj->GetVertBuffAddress();
+        buffAddress;
     view.StrideInBytes =   // 頂点1つ分のサイズ
-        shogiObj->GetVertByteSize();
-        view.SizeInBytes = // 頂点全体のサイズ
-        shogiObj->GetVerticesByteSize();
+        sizeof(GameObj::Vert);
+    view.SizeInBytes = // 頂点全体のサイズ
+        sizeof(GameObj::Vert) * shogiObj->GetVertices().size();
 
     return view;
 }
