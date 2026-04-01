@@ -1,5 +1,8 @@
 #include"Vertices.h"
 
+// 頂点数を返す 
+UINT Vertices::GetVertNum(){return _vertices.size();}
+
 // 頂点１つ分のバイトサイズを返す
 UINT Vertices::GetVertByteSize()
 {

@@ -427,12 +427,41 @@ HRESULT DX12::WriteToBuff()
     auto  board  = app.GetBoard();
     auto& pieces = app.GetPieces();
     auto  woodTex = app.GetWoodTex();
-    //auto  boardLineTex = app.GetBoardLineTex();
+
     auto& boardLineTexs = app.GetBoardLineTexs();
     auto boardVertIndices = app.GetBoardVertIndices();
     auto pieceVertIndices = app.GetPieceVertIndices();
 
-    if (FAILED(_vertBuff->WriteToVertBuff(board, pieces))) goto failed; // 頂点バッファに書き込み
+    UINT idx = 0;
+    UINT address = _vertBuff->GetBuff()->GetGPUVirtualAddress();
+
+    // 頂点集合の書き込み位置をセット
+    board->SetStartVertIdxInBuff(idx);
+    idx += board->GetVertNum();
+    board->SetBuffAddress(address);
+    address += board->GetVerticesByteSize();
+    for (auto& piece : pieces)
+    {
+        piece->SetStartVertIdxInBuff(idx);
+        idx += piece->GetVertNum();
+        piece->SetBuffAddress(address);
+        address += piece->GetVerticesByteSize();
+    }
+
+
+    // 将棋盤頂点集合をバッファに書き込み
+    if(FAILED(_vertBuff->WriteToBuff(board, board->GetStartVertIdxInBuff()))) goto failed;
+
+    // 駒の頂点集合をバッファに書き込み
+    for (auto& piece : pieces)
+    {
+        if(FAILED(_vertBuff->WriteToBuff(piece.get(), piece->GetStartVertIdxInBuff()))) goto failed;
+    }
+
+
+
+    //if (FAILED(_vertBuff->WriteToVertBuff(board, pieces))) goto failed; // 頂点バッファに書き込み
+
     if (FAILED(_idxBuff ->WriteToIdxBuff (boardVertIndices, pieceVertIndices)))  goto failed; // インデックスバッファに書き込み
     if(FAILED(_woodTexBuff->WriteToTexBuff(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み
 

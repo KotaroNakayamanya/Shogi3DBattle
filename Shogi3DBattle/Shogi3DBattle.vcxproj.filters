@@ -495,9 +495,6 @@
     <ClCompile Include="src\VertIndices.cpp">
       <Filter>ソース ファイル\3d_object</Filter>
     </ClCompile>
-    <ClCompile Include="src\BufferedData.cpp">
-      <Filter>ソース ファイル\3d_object</Filter>
-    </ClCompile>
     <ClCompile Include="src\Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
