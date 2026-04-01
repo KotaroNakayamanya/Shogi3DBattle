@@ -5,7 +5,8 @@ Output VShader(
     float4 normal : NORMAL,
     float2 uv     : TEXCOORD,
     uint   objId  : OBJECT_INDEX,
-    uint   texId : TEXTURE_INDEX)
+    uint   basicTexId  : BASIC_TEXTURE_INDEX,
+    uint   designTexId : DESIGN_TEXTURE_INDEX)
 {
     Output output;
     
@@ -19,7 +20,8 @@ Output VShader(
     output.normal = normalize(noneNormalizedNormal);
     
     output.uv     = uv;
-    output.texId  = texId;
+    output.basicTexId   = basicTexId;
+    output.designTexId  = designTexId;
     
     return output;
 }

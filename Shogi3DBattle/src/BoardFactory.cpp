@@ -51,7 +51,7 @@ void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     for (auto& vertex : vertices)
     {
         vertex.objId = objId;
-        vertex.texId = texId;
+        vertex.designTexId = texId;
     }
 
     shogiObj->SetVertices(vertices);

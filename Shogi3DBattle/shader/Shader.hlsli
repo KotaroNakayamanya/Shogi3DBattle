@@ -1,9 +1,10 @@
 struct Output
 {
-    float4 svpos  : SV_POSITION;
-    float4 normal : NORMAL;
-    float2 uv     : TEXCOORD;
-    uint   texId  : TEXTURE_INDEX;
+    float4 svpos        : SV_POSITION;
+    float4 normal       : NORMAL;
+    float2 uv           : TEXCOORD;
+    uint   basicTexId   : BASIC_TEXTURE_INDEX;
+    uint   designTexId  : DESIGN_TEXTURE_INDEX;
 };
 
 
@@ -11,10 +12,13 @@ struct Output
 //Texture2D<float4> tex: register(t1);
 //Texture2D<float4> tex : register(t0);
 
+tbuffer tbuff : register(t0)
+{
+    Texture2D<float4> basicTexs [1];
+    Texture2D<float4> designTexs[9];
+}
 
 
-Texture2D<float4> woodTexs[1] : register(t0);
-Texture2D<float4> drawTex[9] : register(t1);
 
 SamplerState samp : register(s0); // 0番　サンプラー
 

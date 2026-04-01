@@ -439,7 +439,7 @@ void Device::CreateInputLayout(InputLayout* inputLayout)
 {
     auto& layout = inputLayout->_inputLayout;
 
-    layout.resize(5);
+    layout.resize(6);
 
     layout[0] =
     { // 頂点
@@ -482,8 +482,18 @@ void Device::CreateInputLayout(InputLayout* inputLayout)
         0
     };
     layout[4] =
-    { // テクスチャインデックス
-        "TEXTURE_INDEX",
+    { // 基本テクスチャインデックス
+        "BASIC_TEXTURE_INDEX",
+        0,
+        DXGI_FORMAT_R8_UINT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+    layout[5] =
+    { // デザインテクスチャインデックス
+        "DESIGN_TEXTURE_INDEX",
         0,
         DXGI_FORMAT_R8_UINT,
         0,
