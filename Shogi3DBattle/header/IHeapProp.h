@@ -8,6 +8,5 @@ public:
     // ヒーププロパティを返す
     virtual D3D12_HEAP_PROPERTIES GetHeapProp() = 0;
 
-    IHeapProp() = default;
-    ~IHeapProp(){}
+    virtual ~IHeapProp() = default;
 };

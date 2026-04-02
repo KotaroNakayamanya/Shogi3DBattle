@@ -8,6 +8,6 @@ public:
     // 駒の頂点インデックス集合作成
     void CreateVertIndices(VertIndices* vertIndices) override;
 
-    PieceVertIndicesFactory();
-    ~PieceVertIndicesFactory();
+    PieceVertIndicesFactory () = default;
+    ~PieceVertIndicesFactory() = default;
 };

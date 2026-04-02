@@ -20,6 +20,3 @@ UINT VertIndices::GetVertIndicesByteSize()
 void VertIndices::SetVertIndices(std::vector<USHORT> vertIndices){_vertIndices = vertIndices;}
 // 頂点インデックスを返す
 std::vector<USHORT> VertIndices::GetVertIndices(){return _vertIndices;}
-
-VertIndices::VertIndices(){}
-VertIndices::~VertIndices(){}

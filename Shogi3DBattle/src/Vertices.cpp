@@ -19,6 +19,3 @@ UINT Vertices::GetVerticesByteSize()
 
 void Vertices::SetVertices(std::vector<Vertices::Vert> vertices){_vertices = vertices;} // 頂点集合セット
 std::vector<Vertices::Vert> Vertices::GetVertices()             {return _vertices;}     // 頂点集合を返す
-
-Vertices::Vertices(){}
-Vertices::~Vertices(){}

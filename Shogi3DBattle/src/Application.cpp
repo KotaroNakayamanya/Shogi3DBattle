@@ -1,6 +1,5 @@
 ﻿#include"Application.h"
 
-#include"Pawn.h"
 #include<array>
 #include"BoardFactory.h"
 #include"PieceFactory.h"
@@ -12,28 +11,20 @@
 #include"PersProjMat.h"
 #include"NonePersProjMat.h"
 
+#include"YellowWoodTexFactory.h"
+
 // 初期処理
 bool Application::Init()
-{
-    auto& pieces = Application::GetInstance().GetPieces();
-
-    if(_gameWindow->InitGameWindow() == false) goto failed;    // ゲームウインドウ初期処理
+{   
     CreateShogiObj(); // 将棋オブジェクト作成
-    CreateTex(); // テクスチャ作成
+    CreateTex();      // テクスチャ作成
+    CreateCamera();   // カメラ作成
+    InitKeyMap();     // 操作ボタン設定
+    InitSceneState(); // シーンステート初期処理
 
-
-    CreateCamera();
-
-
-
-
+    if(_gameWindow->InitGameWindow() == false) goto failed;      // ゲームウインドウ初期処理
     if(_dx12->InitDX12(_gameWindow.get()) == false) goto failed; // DirectX12初期処理
 
-    
-    InitKeyMap(); // 操作ボタン設定
-   
-    InitSceneState(); // シーンステート初期処理
-    
     return true;
 
 failed:
@@ -183,89 +174,10 @@ void Application::CreateTex()
     _woodTex->SetHeight(height);
     _woodTex->SetTex(woodTex);
 
+    //// 黄色木材テクスチャ作成
+    //_texFactory.reset(new YellowWoodTexFactory());
+    ////_texFactory->CreateTex();
 
-    //// 将棋盤黒線テクスチャ作成
-    //_boardLineTex = std::make_unique<Tex>();
-
-    //std::vector<TexStruct::TexRGBA> boardLineTex;
-
-    //lineSize = 256;
-    //width  = lineSize;
-    //height = lineSize;
-
-    //boardLineTex.resize(width * height);
-
-    //// 白色でクリア
-    //for (auto& rgba : boardLineTex)
-    //{
-    //    rgba.r = 255;
-    //    rgba.g = 255;
-    //    rgba.b = 255;
-    //    rgba.a = 255;
-    //}
-
-    //UINT squareNum = 5; // マス数
-
-    //float squareLength = static_cast<float>(lineSize) / (squareNum + 1);
-    //float halfSquareLength = squareLength / 2; // マスの半分のサイズ
-
-    //UINT drawLowerLimit  = halfSquareLength *  1 + 0.5;
-    //UINT drawUpperLimit  = halfSquareLength * (1 + squareNum * 2) + 0.5;
-
-    //
-    //// 黒線を描画する対象座標(x, y)に黒色を格納する
-    //x = 0;
-    //y = 0;
-    //UINT lineNum = squareNum + 1; // 横縦それぞれの線の本数
-    //for (auto& rgba : boardLineTex)
-    //{
-    //    // xy座標が横縦それぞれの線の上にあれば黒色を格納
-    //    for (UINT i = 0; i < lineNum; i++)
-    //    {
-    //        // 黒線対象の座標を取得(xとyのどちらにも使える)
-    //        UINT BlackLinePos = halfSquareLength * (1 + i * 2) + 0.5;
-
-    //        // x座標が黒線の直線上の値であるかチェック
-    //        bool isXOnBlackLine = x == BlackLinePos;
-    //        // y座標が線を描画する範囲にあるかチェック
-    //        bool isYDrawRange = drawLowerLimit <= y && y <= drawUpperLimit;
-    //        // 縦方向の線分上にあれば黒色
-    //        if (isXOnBlackLine && isYDrawRange)
-    //        {
-    //            rgba.r = 0;
-    //            rgba.g = 0;
-    //            rgba.b = 0;
-    //        }
-
-    //        
-    //        // y座標が黒線の直線上の値であるかチェック
-    //        bool isYOnBlackLine = y == BlackLinePos;
-    //        // x座標が線を描画する範囲にあるかチェック
-    //        bool isXDrawRange = drawLowerLimit <= x && x <= drawUpperLimit;
-    //        // 横方向の線分上にあれば黒色
-    //        if (isYOnBlackLine && isXDrawRange)
-    //        {
-    //            rgba.r = 0;
-    //            rgba.g = 0;
-    //            rgba.b = 0;
-    //        }
-    //    }
-
-    //    // xとyの次の座標を取得
-    //    x++;            // xを足す
-    //    if (x >= width) // xが端を超えたらyを足してxを0に戻す
-    //    {
-    //        y++;
-    //        x = 0;
-    //    }
-    //}
-
-    //_boardLineTex->SetWidth (width);
-    //_boardLineTex->SetHeight(height);
-    //_boardLineTex->SetTex(boardLineTex);
-
-    // 将棋盤黒線テクスチャ作成
-    // 
     // 将棋盤黒線テクスチャ作成用関数
     std::function<void(Tex*, ShogiObj::ShogiObjType)> createBoardLineTex =
         [this](Tex* tex, ShogiObj::ShogiObjType shogiObjType)
@@ -385,15 +297,6 @@ void Application::CreateTex()
     
 }
 
-// 操作ボタン初期処理
-void Application::InitKeyMap()
-{
-    _keyMap->RegisterKeyMap('W', InputHandler::UP);    // w　→　上ボタン
-    _keyMap->RegisterKeyMap('A', InputHandler::LEFT);  // a　→　左ボタン
-    _keyMap->RegisterKeyMap('S', InputHandler::DOWN);  // s　→　下ボタン
-    _keyMap->RegisterKeyMap('D', InputHandler::RIGHT); // d　→　右ボタン
-}
-
 // カメラ作成
 void Application::CreateCamera()
 {
@@ -402,9 +305,6 @@ void Application::CreateCamera()
     ViewMat* mainViewMat;
     mainViewMat = new ViewMat();
     DirectX::XMFLOAT3 f;
-    f = {0.0f, -8.0f, 0.0f};  mainViewMat->SetEye  (f);
-    f = {0.0f,  0.0f, -5.0f}; mainViewMat->SetFocus(f);
-    f = {0.0f,  0.0f, -1.0f}; mainViewMat->SetUp   (f);
     _mainCamera->SetViewMat(mainViewMat);
     // パースによるプロジェクション行列作成
     PersProjMat* mainProjMat;
@@ -419,19 +319,28 @@ void Application::CreateCamera()
     // ビュー行列作成
     ViewMat* mapViewMat;
     mapViewMat = new ViewMat();
-    f = {30.0f, 30.0f, -30.0f};  mapViewMat->SetEye  (f);
+    f = {30.0f, 30.0f, -30.0f}; mapViewMat->SetEye  (f);
     f = {30.0f, 30.0f,   0.0f}; mapViewMat->SetFocus(f);
     f = {0.0f,   1.0f,   0.0f}; mapViewMat->SetUp   (f);
     _mapCamera->SetViewMat(mapViewMat);
     // パースではないプロジェクション行列作成
     NonePersProjMat* mapProjMat;
     mapProjMat = new NonePersProjMat();
-    mapProjMat->SetWidth (60.0f);
-    mapProjMat->SetHeight(60.0f);
+    mapProjMat->SetWidth (70.0f);
+    mapProjMat->SetHeight(70.0f);
     mapProjMat->SetNearZ(0.0f);
     mapProjMat->SetFarZ (50.0f);
     _mapCamera->SetProjMat(mapProjMat);
 
+}
+
+// 操作ボタン初期処理
+void Application::InitKeyMap()
+{
+    _keyMap->RegisterKeyMap('W', InputHandler::UP);    // w　→　上ボタン
+    _keyMap->RegisterKeyMap('A', InputHandler::LEFT);  // a　→　左ボタン
+    _keyMap->RegisterKeyMap('S', InputHandler::DOWN);  // s　→　下ボタン
+    _keyMap->RegisterKeyMap('D', InputHandler::RIGHT); // d　→　右ボタン
 }
 
 // シーンステート初期処理
@@ -719,4 +628,3 @@ Application::Application()
     _mainCamera = std::make_unique<Camera>();
     _mapCamera  = std::make_unique<Camera>();
 }
-Application::~Application(){}

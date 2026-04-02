@@ -9,5 +9,5 @@ public:
     HRESULT CreateBuff(Buff* idxBuff, UINT widht, UINT height, ID3D12Device* device) override;
 
     IdxBuffFactory();
-    ~IdxBuffFactory();
+    ~IdxBuffFactory() = default;
 };

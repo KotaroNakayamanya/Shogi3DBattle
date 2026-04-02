@@ -11,6 +11,3 @@ D3D12_HEAP_PROPERTIES TexHeapProp::GetHeapProp()
 
     return texHeapProp;
 }
-
-TexHeapProp::TexHeapProp(){}
-TexHeapProp::~TexHeapProp(){}

@@ -7,7 +7,4 @@ class IResourceStates
 public:
     // リソースステートを返す
     virtual D3D12_RESOURCE_STATES GetResourceStates() = 0;
-
-    IResourceStates() = default;
-    ~IResourceStates(){}
 };

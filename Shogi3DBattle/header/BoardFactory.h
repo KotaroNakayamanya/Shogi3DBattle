@@ -8,6 +8,6 @@ public:
     // è´ä˚î’çÏê¨
     void CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UCHAR objId) override;
 
-    BoardFactory();
-    ~BoardFactory();
+    BoardFactory () = default;
+    ~BoardFactory() = default;
 };

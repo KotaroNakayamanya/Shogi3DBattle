@@ -24,13 +24,6 @@ HRESULT RenderTexBuffFactory::CreateBuff(Buff* constBuff, UINT width, UINT heigh
     resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
     HRESULT result;
-    //result = device->CreateCommittedResource(
-    //    &heapProp,
-    //    D3D12_HEAP_FLAG_NONE,
-    //    &resourceDesc,
-    //    resourceStates,
-    //    &clearValue,
-    //    IID_PPV_ARGS(constBuffCom.ReleaseAndGetAddressOf()));
     result = device->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
@@ -50,5 +43,3 @@ RenderTexBuffFactory::RenderTexBuffFactory()
     _resourceDesc   = std::make_unique<TexResourceDesc>();       // テクスチャリソースディスクリプタ
     _resourceStates = std::make_unique<PShaderResourceStates>(); // ピクセルシェーダーリソースステート
 }
-
-RenderTexBuffFactory::~RenderTexBuffFactory(){}

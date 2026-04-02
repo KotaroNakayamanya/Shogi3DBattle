@@ -8,6 +8,6 @@ class TexBuff : public Buff
 public:
     HRESULT WriteToTexBuff(Tex* tex); // テクスチャをバッファに書き込み
 
-    TexBuff();
-    ~TexBuff();
+    TexBuff () = default;
+    ~TexBuff() = default;
 };

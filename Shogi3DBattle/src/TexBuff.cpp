@@ -12,6 +12,3 @@ HRESULT TexBuff::WriteToTexBuff(Tex* tex)
         sizeof(TexStruct::TexRGBA) * tex->GetWidth(),
         0);
 }
-
-TexBuff::TexBuff(){}
-TexBuff::~TexBuff(){}

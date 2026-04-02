@@ -36,7 +36,7 @@ private:
     // バッファ
     std::vector<std::unique_ptr<Buff>> _backBuffs; // バックバッファ
     std::unique_ptr<Buff> _dsBuff; // デプスステンシルバッファ
-    std::unique_ptr<VertBuff> _vertBuff; // 頂点バッファ
+    std::unique_ptr<Buff> _vertBuff; // 頂点バッファ
     std::unique_ptr<IdxBuff>  _idxBuff;  // インデックスバッファ
     std::unique_ptr<ConstBuff> _constBuff; // コンスタントバッファ
 
@@ -148,5 +148,5 @@ public:
         UINT width, UINT height);
 
     DX12();
-    ~DX12();
+    ~DX12() = default;
 };

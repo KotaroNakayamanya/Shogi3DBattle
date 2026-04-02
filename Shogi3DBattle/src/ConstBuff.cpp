@@ -30,6 +30,3 @@ void ConstBuff::WriteToConstBuff(
    
    _buff->Unmap(0, nullptr);
 }
-
-ConstBuff::ConstBuff(){}
-ConstBuff::~ConstBuff(){}

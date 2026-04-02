@@ -36,5 +36,3 @@ DSBuffFactory::DSBuffFactory()
     _resourceDesc   = std::make_unique<DSResourceDesc>();           // デプスステンシルリソースディスクリプタ
     _resourceStates = std::make_unique<DepthWriteResourceStates>(); // デプスライトリソースステート
 }
-
-DSBuffFactory::~DSBuffFactory(){}

@@ -68,7 +68,6 @@
     <ClCompile Include="src\KeyMap.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MovingPiece.cpp" />
-    <ClCompile Include="src\Pawn.cpp" />
     <ClCompile Include="src\Piece.cpp" />
     <ClCompile Include="src\PieceFactory.cpp" />
     <ClCompile Include="src\PShaderResourceStates.cpp" />
@@ -92,13 +91,13 @@
     <ClCompile Include="src\TexResourceDesc.cpp" />
     <ClCompile Include="src\UploadHeapProp.cpp" />
     <ClCompile Include="src\VecCalc.cpp" />
-    <ClCompile Include="src\VertBuff.cpp" />
     <ClCompile Include="src\VertBuffFactory.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
     <ClCompile Include="src\VShader.cpp" />
     <ClCompile Include="src\WorldMat.cpp" />
     <ClCompile Include="src\WrappedBuff.cpp" />
     <ClCompile Include="src\DepthWriteResourceStates.cpp" />
+    <ClCompile Include="src\YellowWoodTexFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
@@ -145,6 +144,7 @@
     <ClInclude Include="header\PieceVertIndicesFactory.h" />
     <ClInclude Include="header\SelectingPiece.h" />
     <ClInclude Include="header\StartMenu.h" />
+    <ClInclude Include="header\ITexFactory.h" />
     <ClInclude Include="header\UIObj.h" />
     <ClInclude Include="header\Vertices.h" />
     <ClInclude Include="header\VertIndices.h" />
@@ -162,7 +162,6 @@
     <ClInclude Include="header\InputLayout.h" />
     <ClInclude Include="header\KeyMap.h" />
     <ClInclude Include="header\MovingPiece.h" />
-    <ClInclude Include="header\Pawn.h" />
     <ClInclude Include="header\Piece.h" />
     <ClInclude Include="header\PieceFactory.h" />
     <ClInclude Include="header\PShaderResourceStates.h" />
@@ -191,7 +190,6 @@
     <ClInclude Include="header\TextFormat.h" />
     <ClInclude Include="header\UploadHeapProp.h" />
     <ClInclude Include="header\VecCalc.h" />
-    <ClInclude Include="header\VertBuff.h" />
     <ClInclude Include="header\ShogiObj.h" />
     <ClInclude Include="header\VertBuffFactory.h" />
     <ClInclude Include="header\IVertIndicesFactory.h" />
@@ -203,6 +201,7 @@
     <ClInclude Include="header\WrappedBuff.h" />
     <ClInclude Include="header\DepthWriteResourceStates.h" />
     <ClInclude Include="header\ClipZRange.h" />
+    <ClInclude Include="header\YellowWoodTexFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\PixelShader.hlsl">

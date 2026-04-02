@@ -37,6 +37,3 @@ void PieceVertIndicesFactory::CreateVertIndices(VertIndices* vertIndices)
 
     vertIndices->SetVertIndices(tempVertIndices);
 }
-
-PieceVertIndicesFactory::PieceVertIndicesFactory(){}
-PieceVertIndicesFactory::~PieceVertIndicesFactory(){}

@@ -8,7 +8,6 @@
 
 #include"GameObj.h"
 
-//class ShogiObj : public Vertices, public WorldMat
 class ShogiObj : public GameObj, public WorldMat
 {
 public:
@@ -29,7 +28,6 @@ public:
     };
 
 protected:
-    //std::unique_ptr<Vertices> _vertices; // 頂点集合
     //std::unique_ptr<WorldMat> _worldMat; // ワールド行列
     UINT _startVertIdxInBuff; // バッファ内に書き込まれる場所のスタート位置
     //D3D12_GPU_VIRTUAL_ADDRESS _vertBuffAddress;
@@ -48,6 +46,6 @@ public:
     void  SetTexId(UCHAR texId){_texId = texId;} // テクスチャIDセット
     UCHAR GetTexId()           {return _texId;}  // テクスチャIDを返す
 
-    ShogiObj () = default;
-    ~ShogiObj() = default;
+    ShogiObj         () = default;
+    virtual ~ShogiObj() = default;
 };

@@ -15,6 +15,3 @@ D3D12_RESOURCE_DESC TexResourceDesc::GetResourceDesc(UINT width, UINT height)
 
     return texResourceDesc;
 }
-
-TexResourceDesc::TexResourceDesc(){}
-TexResourceDesc::~TexResourceDesc(){}

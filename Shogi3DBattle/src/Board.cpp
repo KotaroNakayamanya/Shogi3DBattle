@@ -16,6 +16,3 @@ void Board::ChangeBoardTo99()
 
     _worldMat = DirectX::XMMatrixIdentity();
 }
-
-Board::Board(){}
-Board::~Board(){}

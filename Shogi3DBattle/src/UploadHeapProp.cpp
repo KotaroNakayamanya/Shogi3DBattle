@@ -11,6 +11,3 @@ D3D12_HEAP_PROPERTIES UploadHeapProp::GetHeapProp()
 
     return uploadHeapProp;
 }
-
-UploadHeapProp::UploadHeapProp(){}
-UploadHeapProp::~UploadHeapProp(){}

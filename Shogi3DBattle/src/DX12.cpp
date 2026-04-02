@@ -3,7 +3,6 @@
 #include"Application.h"
 #include<algorithm>
 #include<cassert>
-#include<Pawn.h>
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -445,14 +444,13 @@ HRESULT DX12::WriteToBuff()
         idx += piece->GetVertices().size();
     }
 
-
     // 将棋盤頂点集合をバッファに書き込み
-    if(FAILED(_vertBuff->WriteToBuff(board, board->GetStartVertIdxInBuff()))) goto failed;
+    if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(board->GetVertices(), board->GetStartVertIdxInBuff()))) goto failed;
 
     // 駒の頂点集合をバッファに書き込み
     for (auto& piece : pieces)
     {
-        if(FAILED(_vertBuff->WriteToBuff(piece.get(), piece->GetStartVertIdxInBuff()))) goto failed;
+        if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(piece->GetVertices(), piece->GetStartVertIdxInBuff()))) goto failed;
     }
 
 
@@ -926,7 +924,7 @@ DX12::DX12() {
 
     _vShader       = std::make_unique<VShader>();
     _pShader       = std::make_unique<PShader>();
-    _vertBuff      = std::make_unique<VertBuff>();
+    _vertBuff      = std::make_unique<Buff>();
     _idxBuff       = std::make_unique<IdxBuff>();
     _constBuff     = std::make_unique<ConstBuff>();
     _woodTexBuff       = std::make_unique<TexBuff>();
@@ -941,5 +939,3 @@ DX12::DX12() {
 
     _rb = std::make_unique<ResourceBarrier>();
 }
-
-DX12::~DX12(){}

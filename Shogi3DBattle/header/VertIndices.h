@@ -16,6 +16,6 @@ public:
     void SetVertIndices(std::vector<USHORT> vertIndices); // 頂点インデックスセット
     std::vector<USHORT> GetVertIndices(); // 頂点インデックスを返す
 
-    VertIndices();
-    ~VertIndices();
+    VertIndices()  = default;
+    ~VertIndices() = default;
 };

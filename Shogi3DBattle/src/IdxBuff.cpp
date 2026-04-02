@@ -26,6 +26,3 @@ HRESULT IdxBuff::WriteToIdxBuff(VertIndices* boardVertIndices, VertIndices* piec
     
     return S_OK;
 }
-
-IdxBuff::IdxBuff(){}
-IdxBuff::~IdxBuff(){}

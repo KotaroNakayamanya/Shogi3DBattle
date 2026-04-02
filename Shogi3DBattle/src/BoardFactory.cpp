@@ -75,6 +75,3 @@ void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     }
     shogiObj->SetWorldMat(worldMat);
 }
-
-BoardFactory::BoardFactory(){}
-BoardFactory::~BoardFactory(){}

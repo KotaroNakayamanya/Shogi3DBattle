@@ -15,6 +15,3 @@ D3D12_RESOURCE_DESC BuffResourceDesc::GetResourceDesc(UINT width, UINT height)
 
     return buffResourceDesc;
 }
-
-BuffResourceDesc::BuffResourceDesc(){}
-BuffResourceDesc::~BuffResourceDesc(){}

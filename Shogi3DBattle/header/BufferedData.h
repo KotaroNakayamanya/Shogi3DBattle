@@ -11,6 +11,6 @@ public:
     void SetBuffAddress (D3D12_GPU_VIRTUAL_ADDRESS buffAddress){_buffAddress = buffAddress;} // バッファアドレスセット
     D3D12_GPU_VIRTUAL_ADDRESS GetBuffAddress()                 {return _buffAddress;}                  // バッファアドレスを返す
 
-    BufferedData(){}
-    ~BufferedData(){}
+    BufferedData         () = default;
+    virtual ~BufferedData() = default;
 };

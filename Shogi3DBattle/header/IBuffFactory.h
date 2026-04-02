@@ -17,6 +17,5 @@ public:
     // バッファ作成
     virtual HRESULT CreateBuff(Buff* buff, UINT widht, UINT height, ID3D12Device* device) = 0;
 
-    IBuffFactory() = default;
-    ~IBuffFactory(){}
+    virtual ~IBuffFactory() = default;
 };

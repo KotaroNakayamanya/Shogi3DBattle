@@ -32,5 +32,3 @@ TexBuffFactory::TexBuffFactory()
     _resourceDesc   = std::make_unique<TexResourceDesc>();       // テクスチャリソースディスクリプタ
     _resourceStates = std::make_unique<PShaderResourceStates>(); // ピクセルシェーダーリソースステート
 }
-
-TexBuffFactory::~TexBuffFactory(){}

@@ -2,6 +2,7 @@
 
 #include<d3d12.h>
 #include<wrl.h>
+#include"GameObj.h"
 
 class Buff
 {
@@ -23,12 +24,16 @@ protected:
     ComPtr<ID3D12Resource> _buff; // バッファ
 
 public:
-    HRESULT WriteToBuff(); // バッファへ書き込み
+    template<typename T>
+    HRESULT WriteToBuff(std::vector<T> vec, unsigned int idx); // バッファへ書き込み
+
     D3D12_RESOURCE_DESC GetResourceDesc(); // リソースディスクリプタを返す
 
-    void SetBuff(ComPtr<ID3D12Resource> buff); // バッファセット
-    ID3D12Resource* GetBuff();                 // バッファを返す
+    void            SetBuff(ComPtr<ID3D12Resource> buff); // バッファセット
+    ID3D12Resource* GetBuff();                            // バッファを返す
 
-    Buff();
-    ~Buff();
+    virtual ~Buff() = default;
 };
+
+template HRESULT Buff::WriteToBuff<GameObj::Vert> (std::vector<GameObj::Vert> , unsigned int idx);
+template HRESULT Buff::WriteToBuff<unsigned short>(std::vector<unsigned short>, unsigned int idx);

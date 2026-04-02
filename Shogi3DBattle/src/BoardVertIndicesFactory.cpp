@@ -21,6 +21,3 @@ void BoardVertIndicesFactory::CreateVertIndices(VertIndices* vertIndices)
 
     vertIndices->SetVertIndices(tempVertIndices);
 }
-
-BoardVertIndicesFactory::BoardVertIndicesFactory(){}
-BoardVertIndicesFactory::~BoardVertIndicesFactory(){}

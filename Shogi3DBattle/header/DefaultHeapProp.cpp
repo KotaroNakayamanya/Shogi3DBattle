@@ -11,6 +11,3 @@ D3D12_HEAP_PROPERTIES DefaultHeapProp::GetHeapProp()
 
     return defaultHeapProp;
 }
-
-DefaultHeapProp::DefaultHeapProp(){}
-DefaultHeapProp::~DefaultHeapProp(){}

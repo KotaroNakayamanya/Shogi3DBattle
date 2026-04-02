@@ -8,6 +8,5 @@ public:
     // リソースディスクリプタを返す
     virtual D3D12_RESOURCE_DESC GetResourceDesc(UINT width, UINT height) = 0;
 
-    IResourceDesc() = default;
-    ~IResourceDesc(){}
+    virtual ~IResourceDesc() = default;
 };

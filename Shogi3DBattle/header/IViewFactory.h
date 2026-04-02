@@ -9,6 +9,6 @@ public:
     // ƒrƒ…[ì¬
     virtual void CreateView(Heap* heap, UINT i, Buff* buff, ID3D12Device* device) = 0;
 
-    IViewFactory() = default;
-    ~IViewFactory(){}
+    IViewFactory()          = default;
+    virtual ~IViewFactory() = default;
 };

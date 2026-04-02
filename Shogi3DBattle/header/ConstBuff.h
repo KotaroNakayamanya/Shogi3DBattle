@@ -15,6 +15,6 @@ public:
         std::vector<std::unique_ptr<Piece>>& pieces,
         Camera* camera);
 
-    ConstBuff();
-    ~ConstBuff();
+    ConstBuff()  = default;
+    ~ConstBuff() = default;
 };

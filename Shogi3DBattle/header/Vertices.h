@@ -27,6 +27,6 @@ public:
     void SetVertices(std::vector<Vert> vertices); // 頂点集合セット
     std::vector<Vert> GetVertices(); // 頂点集合を返す
 
-    Vertices();
-    ~Vertices();
+    Vertices()  = default;
+    ~Vertices() = default;
 };

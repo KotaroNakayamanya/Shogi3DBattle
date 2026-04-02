@@ -15,6 +15,3 @@ D3D12_RESOURCE_DESC DSResourceDesc::GetResourceDesc(UINT width, UINT height)
 
     return dsResourceDesc;
 }
-
-DSResourceDesc::DSResourceDesc(){}
-DSResourceDesc::~DSResourceDesc(){}

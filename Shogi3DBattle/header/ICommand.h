@@ -8,5 +8,5 @@ public:
     virtual void Exe() = 0;  // é¿çs
     virtual void Undo() = 0; // é¿çséÊÇËè¡Çµ
 
-    ~ICommand(){}
+    virtual ~ICommand() = default;
 };

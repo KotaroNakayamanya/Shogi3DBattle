@@ -21,7 +21,7 @@ private:
     D2D1_RECT_F  _rect;       // テキスト範囲
     bool         _isSelected; // 選択状態
 
-    UIObj();
+    UIObj() = default;
 
 public:
     std::wstring GetText();   // テキストを返す
@@ -32,6 +32,7 @@ public:
     void         SetIsSelected(bool state); // 選択状態セット
     bool         IsSelected();              // 選択状態を返す
 
-    UIObj(std::wstring text, D2D1_RECT_F rect, UIType uiType);
-    ~UIObj();
+    UIObj(std::wstring text, D2D1_RECT_F rect, UIType uiType)
+        : _text(text), _rect(rect), _uiType(uiType), _isSelected(false){}
+    ~UIObj() = default;
 };

@@ -1,15 +1,24 @@
 #include"Buff.h"
 
-// リソースディスクリプタを返す
-D3D12_RESOURCE_DESC Buff::GetResourceDesc()
+// バッファへ書き込み
+template<typename T>
+HRESULT Buff::WriteToBuff(std::vector<T> vec, unsigned int idx)
 {
-    return _buff->GetDesc();
+    T* buffMap;
+
+    HRESULT result = _buff->Map(0, nullptr, (void**)&buffMap);
+    if (FAILED(result)) return result;
+
+    buffMap += idx;
+
+    std::copy(vec.begin(), vec.end(), buffMap);
+
+    _buff->Unmap(0, nullptr);
 }
 
-// バッファセット
-void Buff::SetBuff(ComPtr<ID3D12Resource> buff){_buff = buff;}
-// バックバッファを返す
-ID3D12Resource* Buff::GetBuff(){return _buff.Get();}
+D3D12_RESOURCE_DESC Buff::GetResourceDesc(){return _buff->GetDesc();} // リソースディスクリプタを返す
 
-Buff::Buff(){}
-Buff::~Buff(){}
+
+
+void            Buff::SetBuff(ComPtr<ID3D12Resource> buff){_buff = buff;}       // バッファセット
+ID3D12Resource* Buff::GetBuff()                           {return _buff.Get();} // バックバッファを返す

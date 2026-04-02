@@ -32,5 +32,3 @@ VertBuffFactory::VertBuffFactory()
     _resourceDesc   = std::make_unique<BuffResourceDesc>();   // バッファリソースディスクリプタ
     _resourceStates = std::make_unique<ReadResourceStates>(); // ジェネリックリード
 }
-
-VertBuffFactory::~VertBuffFactory(){}
