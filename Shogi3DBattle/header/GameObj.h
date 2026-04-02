@@ -19,19 +19,11 @@ public:
     };
 
 private:
-    //std::vector<Vert> _vertices;            // 頂点集合
     std::unique_ptr<BufferedData<Vert>> _vertices;            // 頂点集合
-    std::vector<unsigned short>  _indices;  // インデックス集合
     
 public:
-    //void                         SetVertices(std::vector<Vert> vertices)         {_vertices = vertices;} // 頂点集合セット
-    //std::vector<Vert>            GetVertices()                                   {return _vertices;}     // 頂点集合を返す
-
     void                SetVertices(BufferedData<Vert> vertices){_vertices.reset(new BufferedData<Vert>(vertices));} // 頂点集合セット
     BufferedData<Vert>* GetVertices()                           {return _vertices.get();}                            // 頂点集合を返す
-
-    void                         SetIndices (std::vector<unsigned short> indices){_indices = indices;}   // インデックス集合セット
-    std::vector<unsigned short>  GetIndices ()                                   {return _indices;}      // インデックス集合を返す
 
     ~GameObj() = default;
 };

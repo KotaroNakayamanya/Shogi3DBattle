@@ -436,21 +436,23 @@ HRESULT DX12::WriteToBuff()
     UINT address = _vertBuff->GetBuff()->GetGPUVirtualAddress();
 
     // 頂点集合の書き込み位置をセット
-    board->SetStartVertIdxInBuff(idx);
-    //idx += board->GetVertices().size();
+    //board->SetStartVertIdxInBuff(idx);
+    board->GetVertices()->SetStartDataIdx(idx);
     idx += board->GetVertices()->GetDatas().size();
     for (auto& piece : pieces)
     {
-        piece->SetStartVertIdxInBuff(idx);
-        //idx += piece->GetVertices().size();
+        //piece->SetStartVertIdxInBuff(idx);
+        piece->GetVertices()->SetStartDataIdx(idx);
         idx += piece->GetVertices()->GetDatas().size();
     }
     // 将棋盤頂点集合をバッファに書き込み
-    if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(board->GetVertices(), board->GetStartVertIdxInBuff()))) goto failed;
+    //if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(board->GetVertices(), board->GetStartVertIdxInBuff()))) goto failed;
+    if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(board->GetVertices(), board->GetVertices()->GetStartDataIdx()))) goto failed;
     // 駒の頂点集合をバッファに書き込み
     for (auto& piece : pieces)
     {
-        if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(piece->GetVertices(), piece->GetStartVertIdxInBuff()))) goto failed;
+        //if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(piece->GetVertices(), piece->GetStartVertIdxInBuff()))) goto failed;
+        if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(piece->GetVertices(), piece->GetVertices()->GetStartDataIdx()))) goto failed;
     }
 
     // インデックス集合の書き込み位置をセット
@@ -725,8 +727,8 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(ShogiObj* shogiObj)
     D3D12_VERTEX_BUFFER_VIEW view;
 
     auto buffAddress = _vertBuff->GetBuff()->GetGPUVirtualAddress();
-    //buffAddress += shogiObj->GetVertices()->GetVertByteSize() * shogiObj->GetStartVertIdxInBuff();
-    buffAddress += sizeof(GameObj::Vert) * shogiObj->GetStartVertIdxInBuff();
+    //buffAddress += sizeof(GameObj::Vert) * shogiObj->GetStartVertIdxInBuff();
+    buffAddress += sizeof(GameObj::Vert) * shogiObj->GetVertices()->GetStartDataIdx();
 
     view.BufferLocation =  // 頂点バッファのスタート位置
         //shogiObj->GetVertBuffAddress();
