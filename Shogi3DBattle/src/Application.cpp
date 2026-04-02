@@ -331,7 +331,6 @@ void Application::CreateCamera()
     mapProjMat->SetNearZ(0.0f);
     mapProjMat->SetFarZ (50.0f);
     _mapCamera->SetProjMat(mapProjMat);
-
 }
 
 // 操作ボタン初期処理

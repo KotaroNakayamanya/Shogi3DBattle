@@ -6,5 +6,5 @@ class PieceVertIndicesFactory : public IVertIndicesFactory
 {
 public:
     // 駒の頂点インデックス集合作成
-    void CreateVertIndices(BufferedData<unsigned short>* bufferedData) override;
+    void CreateVertIndices(NaturalBufferedData<unsigned short>* bufferedData) override;
 };

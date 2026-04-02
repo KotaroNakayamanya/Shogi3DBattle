@@ -1,7 +1,7 @@
 #include"PieceVertIndicesFactory.h"
 
 // 駒の頂点インデックス集合作成
-void PieceVertIndicesFactory::CreateVertIndices(BufferedData<unsigned short>* bufferedData)
+void PieceVertIndicesFactory::CreateVertIndices(NaturalBufferedData<unsigned short>* bufferedData)
 {
     std::vector<unsigned short> vertIndices;
 

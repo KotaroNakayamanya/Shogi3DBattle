@@ -1,8 +1,8 @@
 #pragma once
 
-#include"IMat.h"
+#include"Mat.h"
 
-class WorldMat : public IMat
+class WorldMat : public Mat
 {
 protected:
     DirectX::XMMATRIX _worldMat;

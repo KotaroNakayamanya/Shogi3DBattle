@@ -1,16 +1,15 @@
 #pragma once
 
 #include"ViewMat.h"
-//#include"IProjMat.h"
 
-#include"IMat.h"
+#include"Mat.h"
 #include<memory>
 
 class Camera
 {
 private:
     std::unique_ptr<ViewMat>  _viewMat; // ビュー行列
-    std::unique_ptr<IMat> _projMat; // プロジェクション行列
+    std::unique_ptr<Mat>      _projMat; // プロジェクション行列
 
 public:
     void RotationH(float x); // 水平方向に視点を回す
@@ -37,9 +36,6 @@ public:
 
     void SetViewMat(ViewMat* viewMat); // ビュー行列セット
     ViewMat* GetViewMat();             // ビュー行列を返す
-    void SetProjMat(IMat* projMat);    // プロジェクション行列セット
-    IMat* GetProjMat();                // プロジェクション行列を返す
-
-    Camera();
-    ~Camera();
+    void SetProjMat(Mat* projMat);    // プロジェクション行列セット
+    Mat* GetProjMat();                // プロジェクション行列を返す
 };

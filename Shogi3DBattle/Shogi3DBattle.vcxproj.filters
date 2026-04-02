@@ -752,7 +752,7 @@
     <ClInclude Include="header\VecCalc.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="header\IMat.h">
+    <ClInclude Include="header\Mat.h">
       <Filter>ヘッダー ファイル\mat</Filter>
     </ClInclude>
     <ClInclude Include="header\ViewMat.h">

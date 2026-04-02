@@ -1,7 +1,7 @@
 #include"BoardVertIndicesFactory.h"
 
 // 将棋盤頂点インデックス集合作成
-void BoardVertIndicesFactory::CreateVertIndices(BufferedData<unsigned short>* bufferedData)
+void BoardVertIndicesFactory::CreateVertIndices(NaturalBufferedData<unsigned short>* bufferedData)
 {
     std::vector<unsigned short> vertIndices;
 

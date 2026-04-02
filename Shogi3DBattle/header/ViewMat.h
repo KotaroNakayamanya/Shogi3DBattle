@@ -1,9 +1,9 @@
 #pragma once
 
-#include"IMat.h"
+#include"Mat.h"
 #include<VecCalc.h>
 
-class ViewMat : public IMat
+class ViewMat : public Mat
 {
 private:
     DirectX::XMFLOAT3 _eye;   // 視点位置
@@ -11,7 +11,7 @@ private:
     DirectX::XMFLOAT3 _up;    // カメラ上側
 
 public:
-    DirectX::XMMATRIX GetMat() override;    // ビュー行列を返す
+    DirectX::XMMATRIX GetMat() override; // ビュー行列を返す
 
     void SetEye  (DirectX::XMFLOAT3 eye);   // 視点位置セット
     DirectX::XMFLOAT3 GetEye();             // 視点位置を返す

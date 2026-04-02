@@ -98,8 +98,5 @@ DirectX::XMFLOAT3 Camera::GetCameraUpVec()        {return _viewMat->GetUp();}   
 
 void Camera::SetViewMat(ViewMat* viewMat){_viewMat.reset(viewMat);} // ビュー行列セット
 ViewMat* Camera::GetViewMat()            {return _viewMat.get();}   // ビュー行列を返す
-void Camera::SetProjMat(IMat* projMat)   {_projMat.reset(projMat);} // プロジェクション行列セット
-IMat* Camera::GetProjMat()               {return _projMat.get();}   // プロジェクション行列を返す
-
-Camera::Camera(){}
-Camera::~Camera(){}
+void Camera::SetProjMat(Mat* projMat)    {_projMat.reset(projMat);} // プロジェクション行列セット
+Mat* Camera::GetProjMat()                {return _projMat.get();}   // プロジェクション行列を返す
