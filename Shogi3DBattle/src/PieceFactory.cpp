@@ -186,9 +186,8 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
         vertex.designTexId = texId;
     }
 
-    BufferedData<GameObj::Vert> vertData;
+    NaturalBufferedData<GameObj::Vert> vertData;
     vertData.SetDatas(vertices);
-    //shogiObj->SetVertices()(vertices);
     shogiObj->SetVertices(vertData);
 
     // ワールド行列セット

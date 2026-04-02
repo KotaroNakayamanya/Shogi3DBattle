@@ -68,8 +68,6 @@ ISceneState* MovingPiece::ExeSceneOperation(
 // Œˆ’èƒ{ƒ^ƒ“
 ISceneState* MovingPiece::ExeDecisionButton()
 {
-    //auto inputHandler = Application::GetInstance().GetInputHandler();
-    //inputHandler->RemoveLClick();
     return this;
 }
 

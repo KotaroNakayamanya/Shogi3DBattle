@@ -3,7 +3,8 @@
 #include<DirectXMath.h>
 #include<memory>
 #include<vector>
-#include<BufferedData.h>
+//#include<BufferedData.h>
+#include<NaturalBufferedData.h>
 
 class GameObj
 {
@@ -19,11 +20,11 @@ public:
     };
 
 private:
-    std::unique_ptr<BufferedData<Vert>> _vertices;            // 頂点集合
+    std::unique_ptr<NaturalBufferedData<Vert>> _vertices; // 頂点集合
     
 public:
-    void                SetVertices(BufferedData<Vert> vertices){_vertices.reset(new BufferedData<Vert>(vertices));} // 頂点集合セット
-    BufferedData<Vert>* GetVertices()                           {return _vertices.get();}                            // 頂点集合を返す
+    void                SetVertices(NaturalBufferedData<Vert> vertices)             {_vertices.reset(new NaturalBufferedData<Vert>(vertices));} // 頂点集合セット
+    NaturalBufferedData<Vert>* GetVertices()                                        {return _vertices.get();}                                         // 頂点集合を返す
 
     ~GameObj() = default;
 };

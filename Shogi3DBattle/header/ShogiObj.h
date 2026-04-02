@@ -27,15 +27,10 @@ public:
     };
 
 protected:
-    //std::unique_ptr<WorldMat> _worldMat; // ワールド行列
-
     UCHAR _objId; // 将棋オブジェクトID
     UCHAR _texId; // 使用するテクスチャID
     
 public:
-    //void      SetWorldMat(WorldMat* worldMat){_worldMat.reset(worldMat);} // ワールド行列セット
-    //WorldMat* GetWorldMat(WorldMat* worldMat){return _worldMat.get();}    // ワールド行列セット
-
     void  SetObjId(UCHAR objId){_objId = objId;} // 将棋オブジェクトIDセット
     UCHAR GetObjId()           {return _objId;}  // 将棋オブジェクトIDを返す
     void  SetTexId(UCHAR texId){_texId = texId;} // テクスチャIDセット
