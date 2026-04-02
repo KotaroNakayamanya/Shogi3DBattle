@@ -53,7 +53,6 @@
     <ClCompile Include="src\Fence.cpp" />
     <ClCompile Include="src\GameWindow.cpp" />
     <ClCompile Include="src\HeapFactory.cpp" />
-    <ClCompile Include="src\IdxBuff.cpp" />
     <ClCompile Include="src\IdxBuffFactory.cpp" />
     <ClCompile Include="src\NonePersProjMat.cpp" />
     <ClCompile Include="src\PersProjMat.cpp" />
@@ -62,7 +61,6 @@
     <ClCompile Include="src\StartMenu.cpp" />
     <ClCompile Include="src\TextFormat.cpp" />
     <ClCompile Include="src\UIObj.cpp" />
-    <ClCompile Include="src\VertIndices.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyMap.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -146,7 +144,6 @@
     <ClInclude Include="header\StartMenu.h" />
     <ClInclude Include="header\ITexFactory.h" />
     <ClInclude Include="header\UIObj.h" />
-    <ClInclude Include="header\VertIndices.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />
     <ClInclude Include="header\GameWindow.h" />
@@ -155,7 +152,6 @@
     <ClInclude Include="header\Fence.h" />
     <ClInclude Include="header\CSUHeap.h" />
     <ClInclude Include="header\ICommand.h" />
-    <ClInclude Include="header\IdxBuff.h" />
     <ClInclude Include="header\IMouse.h" />
     <ClInclude Include="header\InputHandler.h" />
     <ClInclude Include="header\InputLayout.h" />

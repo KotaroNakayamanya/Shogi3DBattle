@@ -25,8 +25,7 @@ protected:
 
 public:
     template<typename T>
-    //HRESULT WriteToBuff(std::vector<T> vec, unsigned int idx); // バッファへ書き込み
-    HRESULT WriteToBuff(BufferedData<T>* bufferedData, unsigned int idx); // バッファへ書き込み
+    HRESULT WriteToBuff(BufferedData<T>* bufferedData); // バッファへ書き込み
 
     D3D12_RESOURCE_DESC GetResourceDesc(); // リソースディスクリプタを返す
 
@@ -35,33 +34,17 @@ public:
 
     virtual ~Buff() = default;
 };
-//
-//// バッファへ書き込み
-//template<typename T>
-//HRESULT Buff::WriteToBuff(std::vector<T> vec, unsigned int idx)
-//{
-//    T* buffMap;
-//
-//    HRESULT result = _buff->Map(0, nullptr, (void**)&buffMap);
-//    if (FAILED(result)) return result;
-//
-//    buffMap += idx;
-//
-//    std::copy(vec.begin(), vec.end(), buffMap);
-//
-//    _buff->Unmap(0, nullptr);
-//}
 
 // バッファへ書き込み
 template<typename T>
-HRESULT Buff::WriteToBuff(BufferedData<T>* bufferedData, unsigned int idx)
+HRESULT Buff::WriteToBuff(BufferedData<T>* bufferedData)
 {
     T* buffMap;
 
     HRESULT result = _buff->Map(0, nullptr, (void**)&buffMap);
     if (FAILED(result)) return result;
 
-    buffMap += idx;
+    buffMap += bufferedData->GetStartDataIdx();
     std::vector<T> datas = bufferedData->GetDatas();
 
     std::copy(datas.begin(), datas.end(), buffMap);

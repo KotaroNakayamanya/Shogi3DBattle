@@ -4,13 +4,14 @@
 #include"DX12.h"
 #include"InputHandler.h"
 #include"IShogiObjFactory.h"
-#include"VertIndices.h"
 #include"IVertIndicesFactory.h"
 #include"ISceneState.h"
 #include"ITexFactory.h"
 
 #include"Camera.h"
 #include"UIObj.h"
+
+#include"BufferedData.h"
 
 class Application
 {
@@ -20,11 +21,11 @@ private:
 
 
     // 将棋オブジェクト
-    std::unique_ptr<Board>              _board;      // 将棋盤
-    std::unique_ptr<VertIndices>        _boardIndices; // 将棋盤の頂点インデックス
+    std::unique_ptr<Board>                        _board;        // 将棋盤
+    std::unique_ptr<BufferedData<unsigned short>> _boardIndices; // 将棋盤の頂点インデックス
 
-    std::vector<std::unique_ptr<Piece>> _pieces;     // 駒
-    std::unique_ptr<VertIndices>        _pieceIndices; // 駒の頂点インデックス
+    std::vector<std::unique_ptr<Piece>>           _pieces;       // 駒
+    std::unique_ptr<BufferedData<unsigned short>> _pieceIndices; // 駒の頂点インデックス
 
     void CreateShogiObj(); // 将棋オブジェクト作成
     std::unique_ptr<IShogiObjFactory>    _shogiObjFactory;    // 将棋オブジェクトファクトリー
@@ -85,12 +86,12 @@ public:
     std::vector<std::unique_ptr<Piece>>& GetPieces(); // 駒を返す
     Tex* GetWoodTex(); // 木材テクスチャを返す
     std::vector<std::unique_ptr<Tex>>& GetBoardLineTexs(); // 将棋盤黒線テクスチャを返す
-    VertIndices* GetBoardVertIndices(); // 将棋盤頂点インデックスを返す
-    VertIndices* GetPieceVertIndices(); // 駒の頂点インデックスを返す
+    BufferedData<unsigned short>* GetBoardVertIndices(); // 将棋盤頂点インデックスを返す
+    BufferedData<unsigned short>* GetPieceVertIndices(); // 駒の頂点インデックスを返す
     KeyMap* GetKeyMap(); // 将棋盤頂点インデックスを返す
 
     std::vector<ShogiObj*> GetShogiObjects(); // すべての将棋オブジェクトを返す
-    std::vector<VertIndices*> GetAllVertIndices(); // すべての頂点インデックスを返す
+    std::vector<BufferedData<unsigned short>*> GetAllVertIndices(); // すべての頂点インデックスを返す
 
     InputHandler* GetInputHandler(); // インプットハンドラを返す
     

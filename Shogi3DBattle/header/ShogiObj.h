@@ -28,8 +28,6 @@ public:
 
 protected:
     //std::unique_ptr<WorldMat> _worldMat; // ワールド行列
-    //UINT _startVertIdxInBuff; // バッファ内に書き込まれる場所のスタート位置
-    //D3D12_GPU_VIRTUAL_ADDRESS _vertBuffAddress;
 
     UCHAR _objId; // 将棋オブジェクトID
     UCHAR _texId; // 使用するテクスチャID
@@ -38,8 +36,6 @@ public:
     //void      SetWorldMat(WorldMat* worldMat){_worldMat.reset(worldMat);} // ワールド行列セット
     //WorldMat* GetWorldMat(WorldMat* worldMat){return _worldMat.get();}    // ワールド行列セット
 
-    //void  SetStartVertIdxInBuff(UINT startIdx){_startVertIdxInBuff = startIdx;} // バッファ内の頂点集合スタート位置セット
-    //UINT  GetStartVertIdxInBuff()             {return _startVertIdxInBuff;}     // バッファ内の頂点集合スタート位置を返す
     void  SetObjId(UCHAR objId){_objId = objId;} // 将棋オブジェクトIDセット
     UCHAR GetObjId()           {return _objId;}  // 将棋オブジェクトIDを返す
     void  SetTexId(UCHAR texId){_texId = texId;} // テクスチャIDセット

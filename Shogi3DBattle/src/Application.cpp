@@ -556,8 +556,10 @@ Camera* Application::GetMapCamera() {return _mapCamera.get();}  // マップカ�
 Tex* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
 //Tex* Application::GetBoardLineTex(){return _boardLineTex.get();} // 将棋盤黒線テクスチャを返す
 std::vector<std::unique_ptr<Tex>>& Application::GetBoardLineTexs(){return _boardLineTexs;} // 将棋盤黒線テクスチャを返す
-VertIndices* Application::GetBoardVertIndices(){return _boardIndices.get();} // 将棋盤頂点インデックスを返す
-VertIndices* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
+//VertIndices* Application::GetBoardVertIndices(){return _boardIndices.get();} // 将棋盤頂点インデックスを返す
+//VertIndices* Application::GetBoardVertIndices(){return _boardIndices.get();}
+BufferedData<unsigned short>* Application::GetBoardVertIndices(){return _boardIndices.get();} // 駒の頂点インデックスを返す
+BufferedData<unsigned short>* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
 Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す
 std::vector<std::unique_ptr<Piece>>& Application::GetPieces(){return _pieces;} // 駒を返す
 KeyMap* Application::GetKeyMap(){return _keyMap.get();} // 将棋盤頂点インデックスを返す
@@ -591,9 +593,9 @@ std::vector<ShogiObj*> Application::GetShogiObjects()
 }
 
 // すべての頂点インデックスを返す
-std::vector<VertIndices*> Application::GetAllVertIndices()
+std::vector<BufferedData<unsigned short>*> Application::GetAllVertIndices()
 {
-    std::vector<VertIndices*> allVertIndices;
+    std::vector<BufferedData<unsigned short>*> allVertIndices;
 
     // 将棋盤を格納
     allVertIndices.push_back(_boardIndices.get());
@@ -619,8 +621,10 @@ Application::Application()
     _board = std::make_unique<Board>();
     _dx12 = std::make_unique<DX12>();
 
-    _boardIndices = std::make_unique<VertIndices>();
-    _pieceIndices = std::make_unique<VertIndices>();
+    //_boardIndices = std::make_unique<VertIndices>();
+    //_pieceIndices = std::make_unique<VertIndices>();
+    _boardIndices = std::make_unique<BufferedData<unsigned short>>();
+    _pieceIndices = std::make_unique<BufferedData<unsigned short>>();
 
     _keyMap = std::make_unique<KeyMap>();
     _inputHandler = std::make_unique<InputHandler>();

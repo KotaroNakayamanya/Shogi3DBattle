@@ -17,7 +17,6 @@
 #include"Fence.h"
 #include"VShader.h"
 #include"PShader.h"
-#include"IdxBuff.h"
 #include"TexBuff.h"
 #include"ConstBuff.h"
 #include"CSUHeap.h"

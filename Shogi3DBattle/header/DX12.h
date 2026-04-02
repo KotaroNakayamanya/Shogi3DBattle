@@ -10,7 +10,6 @@
 #include"ViewMat.h"
 
 #include"Board.h"
-#include"VertIndices.h"
 
 class DX12
 {
@@ -37,7 +36,7 @@ private:
     std::vector<std::unique_ptr<Buff>> _backBuffs; // バックバッファ
     std::unique_ptr<Buff> _dsBuff; // デプスステンシルバッファ
     std::unique_ptr<Buff> _vertBuff; // 頂点バッファ
-    std::unique_ptr<IdxBuff>  _idxBuff;  // インデックスバッファ
+    std::unique_ptr<Buff> _idxBuff;  // インデックスバッファ
     std::unique_ptr<ConstBuff> _constBuff; // コンスタントバッファ
 
     std::unique_ptr<TexBuff>   _woodTexBuff; // 木材テクスチャバッファ
@@ -132,7 +131,8 @@ private:
 
     void Set3DCmd(); // 3Dコマンドセット
     D3D12_VERTEX_BUFFER_VIEW GetVertBuffView(ShogiObj* obj); // 頂点バッファビュー
-    D3D12_INDEX_BUFFER_VIEW  GetIdxBuffView (VertIndices* vertIndices); // インデックスバッファビュー
+    //D3D12_INDEX_BUFFER_VIEW  GetIdxBuffView (VertIndices* vertIndices); // インデックスバッファビュー
+    D3D12_INDEX_BUFFER_VIEW  GetIdxBuffView (BufferedData<unsigned short>* bufferedData); // インデックスバッファビュー
 
 
     void ExeCmd(); // コマンド実行

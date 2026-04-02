@@ -4,7 +4,6 @@
 #include<wrl.h>
 #include"ShogiObj.h"
 #include"CmdAllocator.h"
-#include"VertIndices.h"
 
 class CmdList
 {
@@ -42,7 +41,7 @@ public:
     void SetVertBuffView(D3D12_VERTEX_BUFFER_VIEW vertBuffView); // 頂点バッファビューセット
     void SetIdxBuffView(D3D12_INDEX_BUFFER_VIEW idxBuffView);    // インデックスバッファビューセット
 
-    void SetDrawWithIdx(VertIndices* vertIndices); // インデックス描画セット
+    void SetDrawWithIdx(BufferedData<unsigned short>* bufferedData); // インデックス描画セット
 
     void Close(); // コマンドクローズ
 

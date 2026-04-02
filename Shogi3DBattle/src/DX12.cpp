@@ -201,7 +201,7 @@ HRESULT DX12::CreateBuff()
 
     // 頂点インデックスバッファ作成
     widthSize = 0;
-    for(auto& vertIndices : allVertIndices) {widthSize += vertIndices->GetVertIndicesByteSize();}
+    for(auto& vertIndices : allVertIndices) {widthSize += sizeof(unsigned short) * vertIndices->GetDatas().size();}
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_idxBuff.get(), widthSize, heightSize, Buff::INDEX))) goto failed;
 
@@ -339,9 +339,7 @@ void DX12::CreateDrawArea()
 
     // マップ
     // ビューポート
-    //auto width  = gameWindow->GetWindowWidth()  / 2;
     auto height = gameWindow->GetWindowHeight() / 2;
-    //auto widthEdge = static_cast<int>(width - height) / 2;
     auto topY = gameWindow->GetWindowHeight() - height;
     int offset = 10;
     _mapViewport->TopLeftX = offset; // 左上横位置
@@ -436,27 +434,30 @@ HRESULT DX12::WriteToBuff()
     UINT address = _vertBuff->GetBuff()->GetGPUVirtualAddress();
 
     // 頂点集合の書き込み位置をセット
-    //board->SetStartVertIdxInBuff(idx);
     board->GetVertices()->SetStartDataIdx(idx);
     idx += board->GetVertices()->GetDatas().size();
     for (auto& piece : pieces)
     {
-        //piece->SetStartVertIdxInBuff(idx);
         piece->GetVertices()->SetStartDataIdx(idx);
         idx += piece->GetVertices()->GetDatas().size();
     }
     // 将棋盤頂点集合をバッファに書き込み
-    //if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(board->GetVertices(), board->GetStartVertIdxInBuff()))) goto failed;
-    if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(board->GetVertices(), board->GetVertices()->GetStartDataIdx()))) goto failed;
+    if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(board->GetVertices()))) goto failed;
     // 駒の頂点集合をバッファに書き込み
     for (auto& piece : pieces)
     {
-        //if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(piece->GetVertices(), piece->GetStartVertIdxInBuff()))) goto failed;
-        if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(piece->GetVertices(), piece->GetVertices()->GetStartDataIdx()))) goto failed;
+        if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(piece->GetVertices()))) goto failed;
     }
 
     // インデックス集合の書き込み位置をセット
-    if (FAILED(_idxBuff ->WriteToIdxBuff (boardVertIndices, pieceVertIndices)))  goto failed; // インデックスバッファに書き込み
+    idx = 0;
+    boardVertIndices->SetStartDataIdx(idx);
+    idx += boardVertIndices->GetDatas().size();
+    pieceVertIndices->SetStartDataIdx(idx);
+    if (FAILED(_idxBuff->WriteToBuff<unsigned short>(boardVertIndices))) goto failed; // インデックスバッファに書き込み
+    if (FAILED(_idxBuff->WriteToBuff<unsigned short>(pieceVertIndices))) goto failed; // インデックスバッファに書き込み
+
+
     if(FAILED(_woodTexBuff->WriteToTexBuff(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み
 
     if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_55]->WriteToTexBuff(boardLineTexs[0].get()))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
@@ -743,16 +744,19 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(ShogiObj* shogiObj)
 }
 
 // インデックスバッファビュー
-D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(VertIndices* vertIndices)
+D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(BufferedData<unsigned short>* bufferedData)
 {
     D3D12_INDEX_BUFFER_VIEW view;
 
+    auto startBuffAddress = _idxBuff->GetBuff()->GetGPUVirtualAddress();
+    startBuffAddress += sizeof(unsigned short) * bufferedData->GetStartDataIdx();
+
     view.BufferLocation = // インデックスバッファのスタート位置
-        vertIndices->GetBuffAddress();
+        startBuffAddress;
     view.Format =         // フォーマット unsigned short
         DXGI_FORMAT_R16_UINT;
     view.SizeInBytes =    // インデックス全体のサイズ
-        vertIndices->GetVertIndicesByteSize();
+        sizeof(unsigned short) * bufferedData->GetDatas().size();
 
     return view;
 }
@@ -862,10 +866,6 @@ void DX12::WaitProcessWithFence()
 
 
 
-//ViewMat* DX12::GetViewMat(){return _viewMat.get();} // ビュー行列を返す
-
-
-
 
 //// ウインドウサイズ変更処理
 //void DX12::ProcessChangeWindowSize(UINT width, UINT height)
@@ -924,9 +924,8 @@ DX12::DX12() {
 
     _vShader       = std::make_unique<VShader>();
     _pShader       = std::make_unique<PShader>();
-    //_vertBuff      = std::make_unique<Buff>();
     _vertBuff      = std::make_unique<Buff>();
-    _idxBuff       = std::make_unique<IdxBuff>();
+    _idxBuff       = std::make_unique<Buff>();
     _constBuff     = std::make_unique<ConstBuff>();
     _woodTexBuff       = std::make_unique<TexBuff>();
 
