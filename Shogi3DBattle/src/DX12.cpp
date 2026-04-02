@@ -58,7 +58,6 @@ bool DX12::InitDX12(GameWindow* gameWindow)
 
     CreateRenderTex(); // レンダーテクスチャ作成
 
-
     
     return true;
 
@@ -431,7 +430,7 @@ HRESULT DX12::WriteToBuff()
     auto pieceVertIndices = app.GetPieceVertIndices();
 
     UINT idx = 0;
-    UINT address = _vertBuff->GetBuff()->GetGPUVirtualAddress();
+    UINT address = _vertBuff->GetStartAddress();
 
     // 頂点集合の書き込み位置をセット
     board->GetVertices()->SetStartDataIdx(idx);
@@ -727,7 +726,7 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(ShogiObj* shogiObj)
 {
     D3D12_VERTEX_BUFFER_VIEW view;
 
-    auto buffAddress = _vertBuff->GetBuff()->GetGPUVirtualAddress();
+    auto buffAddress = _vertBuff->GetStartAddress();
     //buffAddress += sizeof(GameObj::Vert) * shogiObj->GetStartVertIdxInBuff();
     buffAddress += sizeof(GameObj::Vert) * shogiObj->GetVertices()->GetStartDataIdx();
 
@@ -748,7 +747,7 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(BufferedData<unsigned short>* buffe
 {
     D3D12_INDEX_BUFFER_VIEW view;
 
-    auto startBuffAddress = _idxBuff->GetBuff()->GetGPUVirtualAddress();
+    auto startBuffAddress = _idxBuff->GetStartAddress();
     startBuffAddress += sizeof(unsigned short) * bufferedData->GetStartDataIdx();
 
     view.BufferLocation = // インデックスバッファのスタート位置

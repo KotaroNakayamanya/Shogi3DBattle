@@ -24,6 +24,8 @@ protected:
     ComPtr<ID3D12Resource> _buff; // バッファ
 
 public:
+    D3D12_GPU_VIRTUAL_ADDRESS GetStartAddress(); // バッファのスタート位置アドレスを返す
+
     template<typename T>
     HRESULT WriteToBuff(BufferedData<T>* bufferedData); // バッファへ書き込み
 
