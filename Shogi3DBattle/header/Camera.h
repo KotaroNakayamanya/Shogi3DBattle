@@ -1,17 +1,19 @@
 #pragma once
 
+#include"BufferedData.h"
 #include"ViewMat.h"
-
 #include"IMat.h"
 #include<memory>
 
-class Camera
+class Camera : public BufferedData<DirectX::XMMATRIX>
 {
 private:
-    std::unique_ptr<ViewMat>  _viewMat; // ビュー行列
-    std::unique_ptr<IMat>      _projMat; // プロジェクション行列
+    std::unique_ptr<ViewMat> _viewMat; // ビュー行列
+    std::unique_ptr<IMat>    _projMat; // プロジェクション行列
 
 public:
+    std::vector<DirectX::XMMATRIX> GetDatas() override; // データ集合を返す
+
     DirectX::XMMATRIX GetViewProjMat(); // ビュープロジェクション行列を返す
 
     void RotationH(float x); // 水平方向に視点を回す

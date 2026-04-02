@@ -37,7 +37,7 @@ private:
     std::unique_ptr<Buff> _dsBuff; // デプスステンシルバッファ
     std::unique_ptr<Buff> _vertBuff; // 頂点バッファ
     std::unique_ptr<Buff> _idxBuff;  // インデックスバッファ
-    std::unique_ptr<ConstBuff> _constBuff; // コンスタントバッファ
+    std::unique_ptr<Buff> _constBuff; // コンスタントバッファ
 
     std::unique_ptr<TexBuff>   _woodTexBuff; // 木材テクスチャバッファ
     std::vector<std::unique_ptr<TexBuff>> _shogiObjTexBuffs; // 将棋オブジェクト種類ごとのテクスチャバッファ

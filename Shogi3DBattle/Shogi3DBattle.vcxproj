@@ -32,7 +32,6 @@
     <ClCompile Include="src\CmdAllocator.cpp" />
     <ClCompile Include="src\CmdList.cpp" />
     <ClCompile Include="src\CmdQueue.cpp" />
-    <ClCompile Include="src\ConstBuff.cpp" />
     <ClCompile Include="src\CSUHeapDesc.cpp" />
     <ClCompile Include="src\CSUOffset.cpp" />
     <ClCompile Include="src\D2DDeviceContext.cpp" />
@@ -116,7 +115,6 @@
     <ClInclude Include="header\CmdAllocator.h" />
     <ClInclude Include="header\CmdList.h" />
     <ClInclude Include="header\CmdQueue.h" />
-    <ClInclude Include="header\ConstBuff.h" />
     <ClInclude Include="header\CSUHeapDesc.h" />
     <ClInclude Include="header\CSUHeapFactory.h" />
     <ClInclude Include="header\CSUOffset.h" />
@@ -182,7 +180,6 @@
     <ClInclude Include="header\TexBuffFactory.h" />
     <ClInclude Include="header\TexHeapProp.h" />
     <ClInclude Include="header\TexResourceDesc.h" />
-    <ClInclude Include="header\TexStruct.h" />
     <ClInclude Include="header\TextFormat.h" />
     <ClInclude Include="header\UploadHeapProp.h" />
     <ClInclude Include="header\VecCalc.h" />

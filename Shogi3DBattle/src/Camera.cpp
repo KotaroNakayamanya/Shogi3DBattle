@@ -2,6 +2,7 @@
 #include<cmath>
 #include"VecCalc.h"
 
+std::vector<DirectX::XMMATRIX> Camera::GetDatas(){return{GetViewProjMat()};} // データ集合を返す
 
 
 // 水平方向に視点を回す

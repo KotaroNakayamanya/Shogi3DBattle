@@ -1,7 +1,7 @@
 #include"Tex.h"
 
-void Tex::SetTex(std::vector<TexStruct::TexRGBA> tex){_tex = tex;} // テクスチャセット
-std::vector<TexStruct::TexRGBA> Tex::GetTex(){return _tex;} // テクスチャを返す
+void Tex::SetPixels(std::vector<Tex::Pixel> pixels){_pixels = pixels;} // ピクセル集合セット
+std::vector<Tex::Pixel> Tex::GetPixels(){return _pixels;} // ピクセル集合を返す
 void Tex::SetWidth (UINT width) {_width  = width;}  // 横サイズセット
 UINT Tex::GetWidth ()           {return _width;}    // 横サイズを返す
 void Tex::SetHeight(UINT height){_height = height;} // 縦サイズセット

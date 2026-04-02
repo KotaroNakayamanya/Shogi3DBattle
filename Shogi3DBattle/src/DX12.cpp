@@ -153,9 +153,6 @@ HRESULT DX12::CreateBuff()
     
     auto  woodTex = app.GetWoodTex();
     
-    //auto& boardLineTexs = app.GetBoardLineTexs();
-    //auto  boardLineTex = app.GetBoardLineTex();
-    
     auto shogiObjects   = app.GetShogiObjects();
     auto allVertIndices = app.GetAllVertIndices();
 
@@ -429,6 +426,9 @@ HRESULT DX12::WriteToBuff()
     auto boardVertIndices = app.GetBoardVertIndices();
     auto pieceVertIndices = app.GetPieceVertIndices();
 
+    auto mainCamera = app.GetMainCamera();
+    auto mapCamera  = app.GetMapCamera();
+
     UINT idx = 0;
     UINT address = _vertBuff->GetStartAddress();
 
@@ -463,6 +463,8 @@ HRESULT DX12::WriteToBuff()
         piece->GetWorldMat()->SetStartDataIdx(idx); // 駒
         idx += piece->GetWorldMat()->GetDatas().size();
     }
+    mainCamera->SetStartDataIdx(idx);
+    mapCamera ->SetStartDataIdx(idx);
 
 
     if(FAILED(_woodTexBuff->WriteToTexBuff(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み
@@ -649,11 +651,14 @@ void DX12::ExeD3D()
         _cmdList->SetDrawWithIdx(pieceVertIndices);
     }
 
-    // コンスタントバッファに書き込み
-    _constBuff->WriteToConstBuff(
-        board,
-        pieces,
-        mainCamera);
+    // 定数バッファに書き込み
+    if(FAILED(_constBuff->WriteToBuff(board->GetWorldMat()))) return; // 将棋盤書き込み
+    for(auto& piece : pieces)
+        if(FAILED(_constBuff->WriteToBuff(piece->GetWorldMat()))) return; // 駒書き込み
+    if(FAILED(_constBuff->WriteToBuff(mainCamera))) return; // メインカメラ書き込み
+    
+
+    //_constBuff->WriteToBuff<DirectX::XMMATRIX>(mapCamera);
 
     ExeCmd(); // コマンド実行
 
@@ -693,11 +698,8 @@ void DX12::ExeD3D()
             _cmdList->SetDrawWithIdx(pieceVertIndices);
         }
 
-        // コンスタントバッファに書き込み
-        _constBuff->WriteToConstBuff(
-            board,
-            pieces,
-            mapCamera);
+        // カメラをマップカメラに変更
+        _constBuff->WriteToBuff<DirectX::XMMATRIX>(mapCamera);
 
         ExeCmd(); // コマンド実行
     }
@@ -933,7 +935,7 @@ DX12::DX12() {
     _pShader       = std::make_unique<PShader>();
     _vertBuff      = std::make_unique<Buff>();
     _idxBuff       = std::make_unique<Buff>();
-    _constBuff     = std::make_unique<ConstBuff>();
+    _constBuff     = std::make_unique<Buff>();
     _woodTexBuff       = std::make_unique<TexBuff>();
 
     

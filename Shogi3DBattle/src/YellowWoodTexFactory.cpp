@@ -3,18 +3,13 @@
 // 黄色木材テクスチャ作成
 void YellowWoodTexFactory::CreateTex(std::unique_ptr<Tex> tex)
 {
-    //// 木材テクスチャ作成
-    //_woodTex = std::make_unique<Tex>();
-
-    //std::vector<TexStruct::TexRGBA> woodTex;
     Tex* tempTex = new Tex();
 
     unsigned int lineSize = 256;
     unsigned int width  = lineSize;
     unsigned int height = lineSize;
 
-    //woodTex.resize(width * height);
-    auto pixels = tempTex->GetTex();
+    auto pixels = tempTex->GetPixels();
     pixels.resize(width * height);
 
     // 基本色を入れる

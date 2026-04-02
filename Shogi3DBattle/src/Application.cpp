@@ -130,34 +130,34 @@ void Application::CreateTex()
     // 木材テクスチャ作成
     _woodTex = std::make_unique<Tex>();
 
-    std::vector<TexStruct::TexRGBA> woodTex;
+    std::vector<Tex::Pixel> woodPixels;
 
     UINT lineSize = 256;
     UINT width  = lineSize;
     UINT height = lineSize;
 
-    woodTex.resize(width * height);
+    woodPixels.resize(width * height);
 
     // 基本色を入れる
-    for (auto& rgba : woodTex)
+    for (auto& pixel : woodPixels)
     {
-        rgba.r = 226;
-        rgba.g = 232;
-        rgba.b =  75;
-        rgba.a = 255;
+        pixel.r = 226;
+        pixel.g = 232;
+        pixel.b =  75;
+        pixel.a = 255;
     }
 
     // 板目を入れる
     UINT x = 0;
     UINT y = 0;
     UINT subtColor = 10;
-    for (auto& rgba : woodTex)
+    for (auto& pixel : woodPixels)
     {
         if ((x+y) % 20 == 0)
         {
-            rgba.r -= subtColor;
-            rgba.g -= subtColor;
-            rgba.b -= subtColor;
+            pixel.r -= subtColor;
+            pixel.g -= subtColor;
+            pixel.b -= subtColor;
 
         }
 
@@ -172,7 +172,7 @@ void Application::CreateTex()
 
     _woodTex->SetWidth (width);
     _woodTex->SetHeight(height);
-    _woodTex->SetTex(woodTex);
+    _woodTex->SetPixels(woodPixels);
 
     //// 黄色木材テクスチャ作成
     //_texFactory.reset(new YellowWoodTexFactory());
@@ -182,21 +182,21 @@ void Application::CreateTex()
     std::function<void(Tex*, ShogiObj::ShogiObjType)> createBoardLineTex =
         [this](Tex* tex, ShogiObj::ShogiObjType shogiObjType)
         {
-            std::vector<TexStruct::TexRGBA> boardLineTex;
+            std::vector<Tex::Pixel> boardLinePixels;
 
             UINT lineSize = 256;
             UINT width  = lineSize;
             UINT height = lineSize;
 
-            boardLineTex.resize(width * height);
+            boardLinePixels.resize(width * height);
 
             // 白色でクリア
-            for (auto& rgba : boardLineTex)
+            for (auto& pixel : boardLinePixels)
             {
-                rgba.r = 255;
-                rgba.g = 255;
-                rgba.b = 255;
-                rgba.a = 255;
+                pixel.r = 255;
+                pixel.g = 255;
+                pixel.b = 255;
+                pixel.a = 255;
             }
 
             UINT squareNum; // マス数
@@ -226,7 +226,7 @@ void Application::CreateTex()
             UINT x = 0;
             UINT y = 0;
             UINT lineNum = squareNum + 1; // 横縦それぞれの線の本数
-            for (auto& rgba : boardLineTex)
+            for (auto& pixel : boardLinePixels)
             {
                 // xy座標が横縦それぞれの線の上にあれば黒色を格納
                 for (UINT i = 0; i < lineNum; i++)
@@ -241,9 +241,9 @@ void Application::CreateTex()
                     // 縦方向の線分上にあれば黒色
                     if (isXOnBlackLine && isYDrawRange)
                     {
-                        rgba.r = 0;
-                        rgba.g = 0;
-                        rgba.b = 0;
+                        pixel.r = 0;
+                        pixel.g = 0;
+                        pixel.b = 0;
                     }
 
             
@@ -254,9 +254,9 @@ void Application::CreateTex()
                     // 横方向の線分上にあれば黒色
                     if (isYOnBlackLine && isXDrawRange)
                     {
-                        rgba.r = 0;
-                        rgba.g = 0;
-                        rgba.b = 0;
+                        pixel.r = 0;
+                        pixel.g = 0;
+                        pixel.b = 0;
                     }
                 }
 
@@ -271,7 +271,7 @@ void Application::CreateTex()
 
             tex->SetWidth (width);
             tex->SetHeight(height);
-            tex->SetTex(boardLineTex);
+            tex->SetPixels(boardLinePixels);
         };
 
     INT boardTexNum = 2;

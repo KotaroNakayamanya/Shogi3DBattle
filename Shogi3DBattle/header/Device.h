@@ -18,7 +18,6 @@
 #include"VShader.h"
 #include"PShader.h"
 #include"TexBuff.h"
-#include"ConstBuff.h"
 #include"CSUHeap.h"
 #include"RootSignature.h"
 #include"InputLayout.h"
