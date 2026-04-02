@@ -190,8 +190,11 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     vertData.SetDatas(vertices);
     shogiObj->SetVertices(vertData);
 
+
     // ワールド行列セット
-    shogiObj->SetWorldMat(DirectX::XMMatrixIdentity());
+    WorldMat worldMatObj;
+    worldMatObj.SetWorldMat(DirectX::XMMatrixIdentity());
+    shogiObj->SetWorldMat(worldMatObj);
 }
 
 PieceFactory::~PieceFactory(){}

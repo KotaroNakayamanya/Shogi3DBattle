@@ -7,7 +7,8 @@
 
 #include"GameObj.h"
 
-class ShogiObj : public GameObj, public WorldMat
+//class ShogiObj : public GameObj, public WorldMat
+class ShogiObj : public GameObj
 {
 public:
     // 将棋オブジェクトタイプ

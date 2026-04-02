@@ -432,6 +432,7 @@ HRESULT DX12::WriteToBuff()
     UINT idx = 0;
     UINT address = _vertBuff->GetStartAddress();
 
+
     // 頂点集合の書き込み位置をセット
     board->GetVertices()->SetStartDataIdx(idx);
     idx += board->GetVertices()->GetDatas().size();
@@ -440,21 +441,21 @@ HRESULT DX12::WriteToBuff()
         piece->GetVertices()->SetStartDataIdx(idx);
         idx += piece->GetVertices()->GetDatas().size();
     }
-    // 将棋盤頂点集合をバッファに書き込み
-    if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(board->GetVertices()))) goto failed;
-    // 駒の頂点集合をバッファに書き込み
+    if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(board->GetVertices()))) goto failed; // 将棋盤頂点集合をバッファに書き込み
     for (auto& piece : pieces)
-    {
-        if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(piece->GetVertices()))) goto failed;
-    }
+        if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(piece->GetVertices()))) goto failed; // 駒の頂点集合をバッファに書き込み
+
 
     // インデックス集合の書き込み位置をセット
     idx = 0;
     boardVertIndices->SetStartDataIdx(idx);
     idx += boardVertIndices->GetDatas().size();
     pieceVertIndices->SetStartDataIdx(idx);
-    if (FAILED(_idxBuff->WriteToBuff<unsigned short>(boardVertIndices))) goto failed; // インデックスバッファに書き込み
-    if (FAILED(_idxBuff->WriteToBuff<unsigned short>(pieceVertIndices))) goto failed; // インデックスバッファに書き込み
+    if (FAILED(_idxBuff->WriteToBuff<unsigned short>(boardVertIndices))) goto failed; // 将棋盤インデックス集合をバッファに書き込み
+    if (FAILED(_idxBuff->WriteToBuff<unsigned short>(pieceVertIndices))) goto failed; // 駒のインデックス集合をバッファに書き込み
+
+    // 定数データの書き込み位置をセット（後に書き込む）
+    
 
 
     if(FAILED(_woodTexBuff->WriteToTexBuff(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み

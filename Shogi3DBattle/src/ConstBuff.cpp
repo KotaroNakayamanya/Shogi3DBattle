@@ -19,11 +19,11 @@ void ConstBuff::WriteToConstBuff(
    // 駒ワールド行列
    for (auto& piece : pieces)
    {
-       constBuffMap->worldMat[piece->GetObjId()] = piece->GetMat();
+       constBuffMap->worldMat[piece->GetObjId()] = piece->GetWorldMat()->GetMat();
    }
 
    // 将棋盤ワールド行列
-   constBuffMap->worldMat[board->GetObjId()] = board->GetMat();
+   constBuffMap->worldMat[board->GetObjId()] = board->GetWorldMat()->GetMat();
 
    // ビュープロジェクション行列
    constBuffMap->viewProjMat = camera->GetViewProjMat();

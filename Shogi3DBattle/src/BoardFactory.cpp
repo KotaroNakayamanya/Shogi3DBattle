@@ -75,5 +75,7 @@ void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
         worldMat = DirectX::XMMatrixIdentity();
         break;
     }
-    shogiObj->SetWorldMat(worldMat);
+    WorldMat worldMatObj;
+    worldMatObj.SetWorldMat(worldMat);
+    shogiObj->SetWorldMat(worldMatObj);
 }

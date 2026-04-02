@@ -78,7 +78,7 @@ ISceneState* MovingPiece::ExeCancelButton()
     if (_isMoved) // 駒を動かしていたら駒を初期位置に戻し、カメラとフォーカスを平行移動する
     {
         // 元の位置に動かすまでのベクトルを取得
-        auto subtMat = _startWorldMat - _piece->GetMat();
+        auto subtMat = _startWorldMat - _piece->GetWorldMat()->GetMat();
         auto subtFloat4x4 = VecCalc::GetFoloat4x4FromMat(subtMat);
         auto vecX = subtFloat4x4._41;
         auto vecY = subtFloat4x4._42;
@@ -86,7 +86,7 @@ ISceneState* MovingPiece::ExeCancelButton()
         DirectX::XMFLOAT3 moveVec = {vecX, vecY, vecZ};
 
         // 駒のワールド行列を初期化、カメラを平行移動
-        _piece->SetWorldMat(_startWorldMat);
+        _piece->GetWorldMat()->SetWorldMat(_startWorldMat);
         _mainCamera->MoveCameraPos(moveVec);
         _mainCamera->MoveFocusPos (moveVec);
 
@@ -142,7 +142,7 @@ MovingPiece::MovingPiece(Piece* piece)
     _piece = piece; // 操作対象の駒を取得
     _mainCamera = Application::GetInstance().GetMainCamera(); // メインカメラ取得
     
-    auto worldMat = piece->GetMat(); // 駒のワールド行列取得
+    auto worldMat = piece->GetWorldMat()->GetMat(); // 駒のワールド行列取得
     _startWorldMat = worldMat; // ワールド行列初期値として取得しておく
     
     
