@@ -136,7 +136,7 @@
     <ClInclude Include="header\IHeapProp.h" />
     <ClInclude Include="header\IDescOffset.h" />
     <ClInclude Include="header\IHeapDesc.h" />
-    <ClInclude Include="header\Mat.h" />
+    <ClInclude Include="header\IMat.h" />
     <ClInclude Include="header\NaturalBufferedData.h" />
     <ClInclude Include="header\NonePersProjMat.h" />
     <ClInclude Include="header\PersProjMat.h" />

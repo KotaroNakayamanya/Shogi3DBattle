@@ -1,9 +1,9 @@
 #pragma once
 
-#include"Mat.h"
+#include"IMat.h"
 #include"ClipZRange.h"
 
-class NonePersProjMat : public Mat, public ClipZRange
+class NonePersProjMat : public IMat, public ClipZRange
 {
 private:
     float _width;  // â°ÉTÉCÉY

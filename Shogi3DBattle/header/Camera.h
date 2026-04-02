@@ -2,20 +2,21 @@
 
 #include"ViewMat.h"
 
-#include"Mat.h"
+#include"IMat.h"
 #include<memory>
 
 class Camera
 {
 private:
     std::unique_ptr<ViewMat>  _viewMat; // ビュー行列
-    std::unique_ptr<Mat>      _projMat; // プロジェクション行列
+    std::unique_ptr<IMat>      _projMat; // プロジェクション行列
 
 public:
+    DirectX::XMMATRIX GetViewProjMat(); // ビュープロジェクション行列を返す
+
     void RotationH(float x); // 水平方向に視点を回す
     void RotationV(float y); // 垂直方向に視点を回す
 
-    
     void SetCameraPos(DirectX::XMFLOAT3 pos);   // カメラ位置セット
     DirectX::XMFLOAT3 GetCameraPos();           // カメラ位置を返す
     void SetFocusPos(DirectX::XMFLOAT3 pos);    // フォーカス位置セット
@@ -29,13 +30,13 @@ public:
 
     DirectX::XMFLOAT3 GetNormLookVec(); // 正規化された視線ベクトルを返す
 
-    DirectX::XMMATRIX GetViewProjMat(); // ビュープロジェクション行列を返す
+    
 
     
 
 
     void SetViewMat(ViewMat* viewMat); // ビュー行列セット
     ViewMat* GetViewMat();             // ビュー行列を返す
-    void SetProjMat(Mat* projMat);    // プロジェクション行列セット
-    Mat* GetProjMat();                // プロジェクション行列を返す
+    void SetProjMat(IMat* projMat);    // プロジェクション行列セット
+    IMat* GetProjMat();                // プロジェクション行列を返す
 };

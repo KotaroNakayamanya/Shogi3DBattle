@@ -455,7 +455,14 @@ HRESULT DX12::WriteToBuff()
     if (FAILED(_idxBuff->WriteToBuff<unsigned short>(pieceVertIndices))) goto failed; // 駒のインデックス集合をバッファに書き込み
 
     // 定数データの書き込み位置をセット（後に書き込む）
-    
+    idx = 0;
+    board->GetWorldMat()->SetStartDataIdx(idx); // 将棋盤
+    idx += board->GetWorldMat()->GetDatas().size();
+    for (auto& piece : pieces)
+    {
+        piece->GetWorldMat()->SetStartDataIdx(idx); // 駒
+        idx += piece->GetWorldMat()->GetDatas().size();
+    }
 
 
     if(FAILED(_woodTexBuff->WriteToTexBuff(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み

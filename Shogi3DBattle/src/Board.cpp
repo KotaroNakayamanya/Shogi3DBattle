@@ -7,7 +7,6 @@ void Board::ChangeBoardTo55()
 
     float rate = 6.0f / 10.0f;
     _worldMat->SetWorldMat(DirectX::XMMatrixScaling(rate, rate, rate));
-    //_worldMat = DirectX::XMMatrixScaling(rate, rate, rate);
 }
 
 // «Šû”Õ‚ğ9~9‚É•ÏX
