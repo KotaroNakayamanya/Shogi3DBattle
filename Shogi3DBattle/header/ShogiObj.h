@@ -3,7 +3,6 @@
 #include<d3d12.h>
 #include<vector>
 #include<memory>
-#include"Vertices.h"
 #include"WorldMat.h"
 
 #include"GameObj.h"
@@ -46,6 +45,5 @@ public:
     void  SetTexId(UCHAR texId){_texId = texId;} // テクスチャIDセット
     UCHAR GetTexId()           {return _texId;}  // テクスチャIDを返す
 
-    ShogiObj         () = default;
     virtual ~ShogiObj() = default;
 };

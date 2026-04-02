@@ -62,7 +62,6 @@
     <ClCompile Include="src\StartMenu.cpp" />
     <ClCompile Include="src\TextFormat.cpp" />
     <ClCompile Include="src\UIObj.cpp" />
-    <ClCompile Include="src\Vertices.cpp" />
     <ClCompile Include="src\VertIndices.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyMap.cpp" />
@@ -104,6 +103,7 @@
     <ClInclude Include="header\Application.h" />
     <ClInclude Include="header\BoardFactory.h" />
     <ClInclude Include="header\BoardVertIndicesFactory.h" />
+    <ClInclude Include="header\BuffData.h" />
     <ClInclude Include="header\BufferedData.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
     <ClInclude Include="header\Camera.h" />
@@ -146,7 +146,6 @@
     <ClInclude Include="header\StartMenu.h" />
     <ClInclude Include="header\ITexFactory.h" />
     <ClInclude Include="header\UIObj.h" />
-    <ClInclude Include="header\Vertices.h" />
     <ClInclude Include="header\VertIndices.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />

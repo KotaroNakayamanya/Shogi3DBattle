@@ -1,9 +1,9 @@
 #pragma once
 
-#include"BufferedData.h"
+#include"BuffData.h"
 #include<vector>
 
-class VertIndices : public BufferedData
+class VertIndices : public BuffData
 {
 private:
     std::vector<USHORT> _vertIndices; // 頂点インデックス集合
@@ -14,8 +14,5 @@ public:
     UINT GetVertIndicesByteSize(); // 頂点インデックス全体のバイトサイズを返す
 
     void SetVertIndices(std::vector<USHORT> vertIndices); // 頂点インデックスセット
-    std::vector<USHORT> GetVertIndices(); // 頂点インデックスを返す
-
-    VertIndices()  = default;
-    ~VertIndices() = default;
+    std::vector<USHORT> GetVertIndices(); // 頂点インデックスを返す    
 };

@@ -477,9 +477,6 @@
     <ClCompile Include="src\WorldMat.cpp">
       <Filter>ソース ファイル\mat</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vertices.cpp">
-      <Filter>ソース ファイル\game_object</Filter>
-    </ClCompile>
     <ClCompile Include="src\VertIndices.cpp">
       <Filter>ソース ファイル\game_object</Filter>
     </ClCompile>
@@ -779,13 +776,10 @@
     <ClInclude Include="header\IVertIndicesFactory.h">
       <Filter>ヘッダー ファイル\game_object</Filter>
     </ClInclude>
-    <ClInclude Include="header\BufferedData.h">
+    <ClInclude Include="header\BuffData.h">
       <Filter>ヘッダー ファイル\game_object</Filter>
     </ClInclude>
     <ClInclude Include="header\PieceVertIndicesFactory.h">
-      <Filter>ヘッダー ファイル\game_object</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Vertices.h">
       <Filter>ヘッダー ファイル\game_object</Filter>
     </ClInclude>
     <ClInclude Include="header\VertIndices.h">
@@ -820,6 +814,9 @@
     </ClInclude>
     <ClInclude Include="header\UIObj.h">
       <Filter>ヘッダー ファイル\game_object</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BufferedData.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,16 +1,17 @@
 #pragma once
 
-#include<d3d12.h>
+#include<vector>
 
+template <typename T>
 class BufferedData
 {
 private:
-    D3D12_GPU_VIRTUAL_ADDRESS _buffAddress; // バッファアドレス
+    std::vector<T> _datas;        // バッファに書き込むデータ
+    unsigned int   _startDataIdx; // バッファ内のデータ書き込みスタート位置
 
 public:
-    void SetBuffAddress (D3D12_GPU_VIRTUAL_ADDRESS buffAddress){_buffAddress = buffAddress;} // バッファアドレスセット
-    D3D12_GPU_VIRTUAL_ADDRESS GetBuffAddress()                 {return _buffAddress;}                  // バッファアドレスを返す
-
-    BufferedData         () = default;
-    virtual ~BufferedData() = default;
+    void           SetDatas       (std::vector<T> datas){_datas = datas;}       // データ集合セット
+    std::vector<T> GetDatas       ()                    {return _datas;}        // データ集合を返す
+    void           SetStartDataIdx(unsigned int idx)    {_startDataIdx = idx;}  // データスタート位置セット
+    unsigned int   GetStartDataIdx()                    {return _startDataIdx;} // データスタート位置セット
 };

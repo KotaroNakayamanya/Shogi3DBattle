@@ -194,8 +194,8 @@ HRESULT DX12::CreateBuff()
 
     // 頂点バッファ作成
     widthSize = 0;
-    //for(auto& shogiObject : shogiObjects) {widthSize += shogiObject->GetVertices()->GetVerticesByteSize();}
-    for(auto& shogiObj : shogiObjects) widthSize += sizeof(ShogiObj::Vert) * shogiObj->GetVertices().size();
+    //for(auto& shogiObj : shogiObjects) widthSize += sizeof(ShogiObj::Vert) * shogiObj->GetVertices().size();
+    for(auto& shogiObj : shogiObjects) widthSize += sizeof(ShogiObj::Vert) * shogiObj->GetVertices()->GetDatas().size();
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_vertBuff.get(), widthSize, heightSize, Buff::VERTEX))) goto failed;
 
@@ -437,26 +437,23 @@ HRESULT DX12::WriteToBuff()
 
     // 頂点集合の書き込み位置をセット
     board->SetStartVertIdxInBuff(idx);
-    idx += board->GetVertices().size();
+    //idx += board->GetVertices().size();
+    idx += board->GetVertices()->GetDatas().size();
     for (auto& piece : pieces)
     {
         piece->SetStartVertIdxInBuff(idx);
-        idx += piece->GetVertices().size();
+        //idx += piece->GetVertices().size();
+        idx += piece->GetVertices()->GetDatas().size();
     }
-
     // 将棋盤頂点集合をバッファに書き込み
     if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(board->GetVertices(), board->GetStartVertIdxInBuff()))) goto failed;
-
     // 駒の頂点集合をバッファに書き込み
     for (auto& piece : pieces)
     {
         if(FAILED(_vertBuff->WriteToBuff<GameObj::Vert>(piece->GetVertices(), piece->GetStartVertIdxInBuff()))) goto failed;
     }
 
-
-
-    //if (FAILED(_vertBuff->WriteToVertBuff(board, pieces))) goto failed; // 頂点バッファに書き込み
-
+    // インデックス集合の書き込み位置をセット
     if (FAILED(_idxBuff ->WriteToIdxBuff (boardVertIndices, pieceVertIndices)))  goto failed; // インデックスバッファに書き込み
     if(FAILED(_woodTexBuff->WriteToTexBuff(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み
 
@@ -737,7 +734,8 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(ShogiObj* shogiObj)
     view.StrideInBytes =   // 頂点1つ分のサイズ
         sizeof(GameObj::Vert);
     view.SizeInBytes = // 頂点全体のサイズ
-        sizeof(GameObj::Vert) * shogiObj->GetVertices().size();
+        //sizeof(GameObj::Vert) * shogiObj->GetVertices().size();
+        sizeof(GameObj::Vert) * shogiObj->GetVertices()->GetDatas().size();
 
     return view;
 }
@@ -924,6 +922,7 @@ DX12::DX12() {
 
     _vShader       = std::make_unique<VShader>();
     _pShader       = std::make_unique<PShader>();
+    //_vertBuff      = std::make_unique<Buff>();
     _vertBuff      = std::make_unique<Buff>();
     _idxBuff       = std::make_unique<IdxBuff>();
     _constBuff     = std::make_unique<ConstBuff>();

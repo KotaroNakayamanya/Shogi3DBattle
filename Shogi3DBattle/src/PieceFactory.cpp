@@ -186,7 +186,10 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
         vertex.designTexId = texId;
     }
 
-    shogiObj->SetVertices(vertices);
+    BufferedData<GameObj::Vert> vertData;
+    vertData.SetDatas(vertices);
+    //shogiObj->SetVertices()(vertices);
+    shogiObj->SetVertices(vertData);
 
     // ワールド行列セット
     shogiObj->SetWorldMat(DirectX::XMMatrixIdentity());
