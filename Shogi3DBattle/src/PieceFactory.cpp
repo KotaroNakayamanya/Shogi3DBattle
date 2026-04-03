@@ -4,7 +4,7 @@
 #include"VecCalc.h"
 
 // 駒作成
-void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UCHAR objId)
+void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, GameObj::GameObjType shogiObjType, UCHAR objId)
 {
     // 将棋オブジェクトIDセット
     shogiObj->SetObjId(objId);
@@ -196,5 +196,3 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType sho
     worldMatObj.SetWorldMat(DirectX::XMMatrixIdentity());
     shogiObj->SetWorldMat(worldMatObj);
 }
-
-PieceFactory::~PieceFactory(){}

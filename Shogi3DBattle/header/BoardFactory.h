@@ -6,8 +6,5 @@ class BoardFactory : public IShogiObjFactory
 {
 public:
     // è´ä˚î’çÏê¨
-    void CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UCHAR objId) override;
-
-    BoardFactory () = default;
-    ~BoardFactory() = default;
+    void CreateShogiObj(ShogiObj* shogiObj, GameObj::GameObjType shogiObjType, UCHAR objId) override;
 };

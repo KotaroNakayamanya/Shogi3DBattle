@@ -39,8 +39,6 @@ private:
     std::unique_ptr<Buff> _idxBuff;  // インデックスバッファ
     std::unique_ptr<Buff> _constBuff; // コンスタントバッファ
 
-    //std::unique_ptr<TexBuff>   _woodTexBuff; // 木材テクスチャバッファ
-    //std::vector<std::unique_ptr<TexBuff>> _shogiObjTexBuffs; // 将棋オブジェクト種類ごとのテクスチャバッファ
     std::unique_ptr<Buff>   _woodTexBuff; // 木材テクスチャバッファ
     std::vector<std::unique_ptr<Buff>> _shogiObjTexBuffs; // 将棋オブジェクト種類ごとのテクスチャバッファ
 
@@ -49,12 +47,12 @@ private:
 
     void CreateRenderTex(); // レンダーテクスチャ作成
     void CreatePieceTex(
-        ShogiObj::ShogiObjType shogiObjType,
+        GameObj::GameObjType shogiObjType,
         std::wstring frontText,
         std::wstring backText); // 駒テクスチャ作成
 
-    void InitRenderTex(ShogiObj::ShogiObjType shogiObjType); // レンダーテクスチャ初期処理
-    void ExitRenderTex(ShogiObj::ShogiObjType shogiObjType); // レンダリング終了処理
+    void InitRenderTex(GameObj::GameObjType shogiObjType); // レンダーテクスチャ初期処理
+    void ExitRenderTex(GameObj::GameObjType shogiObjType); // レンダリング終了処理
 
     HRESULT CreateBuff(); // バッファ系作成
     HRESULT WriteToBuff(); // バッファに書き込み  
@@ -112,8 +110,8 @@ private:
     void CreateDrawArea(); // 描画領域系作成
 
     // シェーダー
-    std::unique_ptr<VShader> _vShader; // 頂点シェーダー
-    std::unique_ptr<PShader> _pShader; // ピクセルシェーダー
+    std::unique_ptr<Shader> _vShader; // 頂点シェーダー
+    std::unique_ptr<Shader> _pShader; // ピクセルシェーダー
     HRESULT CreateShader(); // シェーダー系作成
 
     std::unique_ptr<InputLayout> _inputLayout; // 入力レイアウト

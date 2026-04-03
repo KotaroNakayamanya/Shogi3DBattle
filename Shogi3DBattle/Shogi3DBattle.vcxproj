@@ -57,6 +57,7 @@
     <ClCompile Include="src\PersProjMat.cpp" />
     <ClCompile Include="src\PieceVertIndicesFactory.cpp" />
     <ClCompile Include="src\SelectingPiece.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\StartMenu.cpp" />
     <ClCompile Include="src\TextFormat.cpp" />
     <ClCompile Include="src\UIObj.cpp" />
@@ -69,7 +70,6 @@
     <ClCompile Include="src\PShaderResourceStates.cpp" />
     <ClCompile Include="src\ReadResourceStates.cpp" />
     <ClCompile Include="src\Pipeline.cpp" />
-    <ClCompile Include="src\PShader.cpp" />
     <ClCompile Include="src\RenderTexBuffFactory.cpp" />
     <ClCompile Include="src\ResourceBarrier.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
@@ -88,7 +88,6 @@
     <ClCompile Include="src\VecCalc.cpp" />
     <ClCompile Include="src\VertBuffFactory.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
-    <ClCompile Include="src\VShader.cpp" />
     <ClCompile Include="src\WorldMat.cpp" />
     <ClCompile Include="src\WrappedBuff.cpp" />
     <ClCompile Include="src\DepthWriteResourceStates.cpp" />
@@ -99,7 +98,6 @@
     <ClInclude Include="header\Application.h" />
     <ClInclude Include="header\BoardFactory.h" />
     <ClInclude Include="header\BoardVertIndicesFactory.h" />
-    <ClInclude Include="header\BuffData.h" />
     <ClInclude Include="header\BufferedData.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
     <ClInclude Include="header\Camera.h" />
@@ -139,6 +137,7 @@
     <ClInclude Include="header\PersProjMat.h" />
     <ClInclude Include="header\PieceVertIndicesFactory.h" />
     <ClInclude Include="header\SelectingPiece.h" />
+    <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\StartMenu.h" />
     <ClInclude Include="header\ITexFactory.h" />
     <ClInclude Include="header\UIObj.h" />
@@ -160,7 +159,6 @@
     <ClInclude Include="header\PShaderResourceStates.h" />
     <ClInclude Include="header\ReadResourceStates.h" />
     <ClInclude Include="header\Pipeline.h" />
-    <ClInclude Include="header\PShader.h" />
     <ClInclude Include="header\RenderTexBuffFactory.h" />
     <ClInclude Include="header\ResourceBarrier.h" />
     <ClInclude Include="header\RootSignature.h" />
@@ -187,7 +185,6 @@
     <ClInclude Include="header\View.h" />
     <ClInclude Include="header\IViewFactory.h" />
     <ClInclude Include="header\ViewMat.h" />
-    <ClInclude Include="header\VShader.h" />
     <ClInclude Include="header\WorldMat.h" />
     <ClInclude Include="header\WrappedBuff.h" />
     <ClInclude Include="header\DepthWriteResourceStates.h" />

@@ -15,8 +15,7 @@
 #include"GameWindow.h"
 #include"Buff.h"
 #include"Fence.h"
-#include"VShader.h"
-#include"PShader.h"
+#include"Shader.h"
 #include"CSUHeap.h"
 #include"RootSignature.h"
 #include"InputLayout.h"
@@ -75,7 +74,6 @@ public:
 
     HRESULT CreateFence(Fence* fence); // フェンス作成
     
-    //HRESULT CreateRenderTexBuff(RenderTexBuff* renderTexBuff, Buff* backBuff); // レンダーターゲット兼テクスチャバッファ作成
     HRESULT CreateBuff(Buff* buff, UINT width, UINT height, Buff::BuffType buffType);                        // バッファ作成
     HRESULT CreateHeap   (Heap* heap, UINT descNum, Heap::HeapType heapType);                                // ヒープ作成
     HRESULT CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum, Heap::HeapType heapType); // ヒープ作成（CSU）
@@ -84,15 +82,19 @@ public:
 
     HRESULT CreateRootSignature(RootSignature* rootSignature, CSUHeap* csuHeap); // ルートシグネチャ作成
     void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成
-    HRESULT CreateVShader(VShader* vShader); // 頂点シェーダー作成
-    HRESULT CreatePShader(PShader* pShader); // ピクセルシェーダー作成
+
+    HRESULT CreateShader( // シェーダー作成
+        Shader* shader,
+        std::wstring fileName,
+        std::string funcName,
+        std::string shaderType);
 
     HRESULT CreatePipeline( // パイプラインステート作成
         Pipeline* pipeline,
         RootSignature* rootSignature,
         InputLayout* inputLayout,
-        VShader* vShader,
-        PShader* pShader);
+        Shader* vShader,
+        Shader* pShader);
 
     HRESULT CreateD3D11( // Direct3D11系作成
         Device11* device11,

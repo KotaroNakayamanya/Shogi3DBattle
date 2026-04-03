@@ -42,8 +42,8 @@ void Application::CreateShogiObj()
     UINT objId = 0;
 
     // 将棋オブジェクト作成用関数
-    std::function<void(ShogiObj*, ShogiObj::ShogiObjType)> createShogiObjFunction =
-        [this, &objId](ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType)
+    std::function<void(ShogiObj*, GameObj::GameObjType)> createShogiObjFunction =
+        [this, &objId](ShogiObj* shogiObj, GameObj::GameObjType shogiObjType)
         {
             switch (shogiObjType)
             {
@@ -179,8 +179,8 @@ void Application::CreateTex()
     ////_texFactory->CreateTex();
 
     // 将棋盤黒線テクスチャ作成用関数
-    std::function<void(Texture*, ShogiObj::ShogiObjType)> createBoardLineTex =
-        [this](Texture* tex, ShogiObj::ShogiObjType shogiObjType)
+    std::function<void(Texture*, GameObj::GameObjType)> createBoardLineTex =
+        [this](Texture* tex, GameObj::GameObjType shogiObjType)
         {
             std::vector<Pixel> boardLinePixels;
 
@@ -277,7 +277,7 @@ void Application::CreateTex()
     INT boardTexNum = 2;
     _boardLineTexs.resize(boardTexNum);
 
-    std::vector<ShogiObj::ShogiObjType> boardType =
+    std::vector<GameObj::GameObjType> boardType =
     {
         ShogiObj::BOARD_55,
         ShogiObj::BOARD_99

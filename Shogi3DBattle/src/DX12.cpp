@@ -156,7 +156,7 @@ HRESULT DX12::CreateBuff()
     auto shogiObjects   = app.GetShogiObjects();
     auto allVertIndices = app.GetAllVertIndices();
 
-    std::vector<ShogiObj::ShogiObjType> boardType =
+    std::vector<GameObj::GameObjType> boardType =
     {
         ShogiObj::BOARD_55,
         ShogiObj::BOARD_99
@@ -216,8 +216,8 @@ HRESULT DX12::CreateBuff()
     for (UINT i = 0; i < shogiObjTexNum; i++)
     {
         // テクスチャのIDが将棋盤用のものかどうか調べる
-        ShogiObj::ShogiObjType shogiObjType;
-        shogiObjType = static_cast<ShogiObj::ShogiObjType>(i);
+        GameObj::GameObjType shogiObjType;
+        shogiObjType = static_cast<GameObj::GameObjType>(i);
         auto it = std::find(boardType.begin(), boardType.end(), shogiObjType);
 
         Buff::BuffType buffType;
@@ -304,8 +304,8 @@ void DX12::CreateView()
 // シェーダー系作成
 HRESULT DX12::CreateShader()
 {
-    if (FAILED(_device->CreateVShader(_vShader.get()))) goto failed; // 頂点シェーダー作成
-    if (FAILED(_device->CreatePShader(_pShader.get()))) goto failed; // ピクセルシェーダー作成
+    if (FAILED(_device->CreateShader(_vShader.get(), L"VertexShader.hlsl", "VShader", "vs_5_1"))) goto failed; // 頂点シェーダー作成
+    if (FAILED(_device->CreateShader(_pShader.get(), L"PixelShader.hlsl",  "PShader", "ps_5_1"))) goto failed; // ピクセルシェーダー作成
 
     return S_OK;
 
@@ -502,7 +502,7 @@ void DX12::CreateRenderTex()
 
 // 駒テクスチャ作成
 void DX12::CreatePieceTex(
-    ShogiObj::ShogiObjType shogiObjType,
+    GameObj::GameObjType shogiObjType,
     std::wstring frontText,
     std::wstring backText)
 {
@@ -535,7 +535,7 @@ void DX12::CreatePieceTex(
 }
 
 // テクスチャへのレンダリング初期処理
-void DX12::InitRenderTex(ShogiObj::ShogiObjType shogiObjType)
+void DX12::InitRenderTex(GameObj::GameObjType shogiObjType)
 {
     // テクスチャのリソースバリアをレンダーターゲットに変更
     auto renderTexBuff = _shogiObjTexBuffs[shogiObjType]->GetBuff();
@@ -569,7 +569,7 @@ void DX12::EndD2D(WrappedBuff* wrappedBuff)
 }
 
 // テクスチャへのレンダリング終了処理
-void DX12::ExitRenderTex(ShogiObj::ShogiObjType shogiObjType)
+void DX12::ExitRenderTex(GameObj::GameObjType shogiObjType)
 {
     // テクスチャのリソースバリアをテクスチャに戻す
     auto renderTexBuff = _shogiObjTexBuffs[shogiObjType]->GetBuff();
@@ -931,8 +931,8 @@ DX12::DX12() {
     _mapViewport     = std::make_unique<D3D12_VIEWPORT>();
     _mapScissorRect  = std::make_unique<D3D12_RECT>();
 
-    _vShader       = std::make_unique<VShader>();
-    _pShader       = std::make_unique<PShader>();
+    _vShader       = std::make_unique<Shader>();
+    _pShader       = std::make_unique<Shader>();
     _vertBuff      = std::make_unique<Buff>();
     _idxBuff       = std::make_unique<Buff>();
     _constBuff     = std::make_unique<Buff>();

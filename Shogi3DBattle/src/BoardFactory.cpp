@@ -1,7 +1,7 @@
 #include"BoardFactory.h"
 
 // «Šû”Õì¬
-void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UCHAR objId)
+void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, GameObj::GameObjType shogiObjType, UCHAR objId)
 {
     shogiObj->SetObjId(objId);
 

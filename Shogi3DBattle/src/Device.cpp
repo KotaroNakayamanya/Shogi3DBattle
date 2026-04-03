@@ -225,37 +225,33 @@ void Device::CreateCSUView(CSUHeap* csuHeap, UINT i, Buff* buff, View::ViewType 
 
 
 
-
-// 頂点シェーダバイナリ作成
-HRESULT Device::CreateVShader(VShader* vShader)
+// シェーダー作成
+HRESULT Device::CreateShader(
+    Shader* shader,
+    std::wstring fileName,
+    std::string funcName,
+    std::string shaderType)
 {
-    return D3DCompileFromFile(
-        L"shader/VertexShader.hlsl",
+    ComPtr<ID3DBlob> shaderCom;
+   
+    std::wstring path = L"shader/";
+
+    HRESULT result;
+    result = D3DCompileFromFile(
+        (path + fileName).c_str(),
         nullptr,
         D3D_COMPILE_STANDARD_FILE_INCLUDE,
-        "VShader",
-        "vs_5_1",
+        funcName.c_str(),
+        shaderType.c_str(),
         D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
         0,
-        vShader->_vShader.ReleaseAndGetAddressOf(),
+        shaderCom.ReleaseAndGetAddressOf(),
         nullptr);
-}
+    if(FAILED(result)) return result;
 
-// ピクセルシェーダー作成
-HRESULT Device::CreatePShader(PShader* pShader)
-{
-    return D3DCompileFromFile(
-        L"shader/PixelShader.hlsl",
-        nullptr,
-        D3D_COMPILE_STANDARD_FILE_INCLUDE,
-        "PShader",
-        "ps_5_1",
-        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-        0,
-        pShader->_pShader.ReleaseAndGetAddressOf(),
-        nullptr);
+    shader->SetShader(shaderCom);
+    return S_OK;
 }
-
 
 
 
@@ -511,15 +507,15 @@ HRESULT Device::CreatePipeline(
     Pipeline* pipeline,
     RootSignature* rootSignature,
     InputLayout* inputLayout,
-    VShader* vShader,
-    PShader* pShader)
+    Shader* vShader,
+    Shader* pShader)
 {
     D3D12_GRAPHICS_PIPELINE_STATE_DESC desc =
         GetPipelineStateDesc(
             rootSignature->_rootSignature.Get(),
             inputLayout->_inputLayout,
-            vShader->_vShader.Get(),
-            pShader->_pShader.Get());
+            vShader->GetShader(),
+            pShader->GetShader());
 
     return _device->CreateGraphicsPipelineState(
         &desc,

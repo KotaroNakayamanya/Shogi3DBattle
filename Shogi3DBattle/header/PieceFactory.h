@@ -10,8 +10,5 @@ protected:
 
 public:
     // pieceçÏê¨
-    void CreateShogiObj(ShogiObj* shogiObj, ShogiObj::ShogiObjType shogiObjType, UCHAR objId) override;
-
-    PieceFactory() = default;
-    ~PieceFactory();
+    void CreateShogiObj(ShogiObj* shogiObj, GameObj::GameObjType shogiObjType, UCHAR objId) override;
 };

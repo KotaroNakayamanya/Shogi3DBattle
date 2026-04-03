@@ -172,9 +172,6 @@
     <Filter Include="ソース ファイル\dx12\shader\hlsl">
       <UniqueIdentifier>{162b5be9-6f57-4d9c-b2f7-57a516f119d4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\dx12\draw_area">
-      <UniqueIdentifier>{596b4283-5026-43f2-9ce0-0afdcd43baaf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\obj_command">
       <UniqueIdentifier>{8c4ce1f3-9c02-4eca-b771-14d02dd016a3}</UniqueIdentifier>
     </Filter>
@@ -229,50 +226,74 @@
     <Filter Include="ヘッダー ファイル\DX12\resource_barrier">
       <UniqueIdentifier>{0f28c504-cd5d-4094-beca-d606b5a4d613}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\mat">
-      <UniqueIdentifier>{fc19dabf-7165-4134-b5f0-631b66fb8856}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\mat">
-      <UniqueIdentifier>{4b4b839d-9110-4bfa-8fe1-f40e1ff19b55}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\key_map">
       <UniqueIdentifier>{31fe555d-f8f5-4f7d-bd70-caa2e40237e0}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\key_map">
       <UniqueIdentifier>{54f4de9d-ec76-4f59-834a-1e00085e3871}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\game_object">
+    <Filter Include="ヘッダー ファイル\buffered_data">
+      <UniqueIdentifier>{01903c31-7a31-41e5-92f9-f56d4d7a3b22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object">
       <UniqueIdentifier>{d881fad7-e34a-48b6-9fb2-44f03971fec5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\game_object\shogi_obj">
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\shogi_obj">
       <UniqueIdentifier>{6376bcf5-0473-4c76-b5a4-46d9742c14d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\game_object\shogi_obj\board">
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\shogi_obj\board">
       <UniqueIdentifier>{87a704ed-e82c-4da5-8b2a-c2805a1f4977}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\game_object\shogi_obj\piece">
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\shogi_obj\piece">
       <UniqueIdentifier>{2bd42877-1574-4e0f-a8f7-2818e3cb5618}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\game_object\shogi_obj\factory">
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\shogi_obj\factory">
       <UniqueIdentifier>{471b672a-ce78-45e0-914a-746235cc279d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\game_object">
+    <Filter Include="ヘッダー ファイル\buffered_data\camera">
+      <UniqueIdentifier>{a78ac816-a598-4763-9e7a-2ff808c950ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\texture">
+      <UniqueIdentifier>{44432d83-16dc-4546-9d63-92123a216c25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\mat">
+      <UniqueIdentifier>{fc19dabf-7165-4134-b5f0-631b66fb8856}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data">
+      <UniqueIdentifier>{d63670e8-482e-4889-851a-c810232a8a6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_object">
       <UniqueIdentifier>{3e13e98a-014b-4f54-b232-5915bbe2e892}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\game_object\shogi_obj">
+    <Filter Include="ソース ファイル\buffered_data\game_object\shogi_obj">
       <UniqueIdentifier>{1d831363-e1a4-4b1f-9d15-cf0fc9915b12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\game_object\shogi_obj\piece">
+    <Filter Include="ソース ファイル\buffered_data\game_object\shogi_obj\piece">
       <UniqueIdentifier>{3d481703-f3c4-41a4-b0ea-af4422b539b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\game_object\shogi_obj\board">
+    <Filter Include="ソース ファイル\buffered_data\game_object\shogi_obj\board">
       <UniqueIdentifier>{dca7bc76-6bfd-47e8-b136-fe2cf963029c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\game_object\shogi_obj\factory">
+    <Filter Include="ソース ファイル\buffered_data\game_object\shogi_obj\factory">
       <UniqueIdentifier>{65995f4d-91d0-4aad-aaf3-2260432487e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\game_object\ui_obj">
+    <Filter Include="ソース ファイル\buffered_data\game_object\ui_obj">
       <UniqueIdentifier>{65e7c6ff-c5b2-475f-a1c4-c3d7217c4d09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\mat">
+      <UniqueIdentifier>{4b4b839d-9110-4bfa-8fe1-f40e1ff19b55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\texutre">
+      <UniqueIdentifier>{3cdc27ce-8990-4015-94e0-2c5d42ddb6af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\texture\factory">
+      <UniqueIdentifier>{83c8fac9-d219-4c53-82b0-85da80e3001a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\factory">
+      <UniqueIdentifier>{b51f4ee6-d02d-4c8c-920d-2bfe256db2fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\ui_obj">
+      <UniqueIdentifier>{ebc9e406-b167-4c56-8680-5810b3868a77}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -298,7 +319,7 @@
       <Filter>ソース ファイル\input_handler</Filter>
     </ClCompile>
     <ClCompile Include="src\Piece.cpp">
-      <Filter>ソース ファイル\game_object\shogi_obj\piece</Filter>
+      <Filter>ソース ファイル\buffered_data\game_object\shogi_obj\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>ソース ファイル\dx12\swap_chain</Filter>
@@ -322,13 +343,7 @@
       <Filter>ソース ファイル\dx12\pipeline</Filter>
     </ClCompile>
     <ClCompile Include="src\Board.cpp">
-      <Filter>ソース ファイル\game_object\shogi_obj\board</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PShader.cpp">
-      <Filter>ソース ファイル\dx12\shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VShader.cpp">
-      <Filter>ソース ファイル\dx12\shader</Filter>
+      <Filter>ソース ファイル\buffered_data\game_object\shogi_obj\board</Filter>
     </ClCompile>
     <ClCompile Include="src\Device.cpp">
       <Filter>ソース ファイル\dx12\factory</Filter>
@@ -338,9 +353,6 @@
     </ClCompile>
     <ClCompile Include="src\Adapter.cpp">
       <Filter>ソース ファイル\dx12\factory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture.cpp">
-      <Filter>ソース ファイル\dx12\csu\texture</Filter>
     </ClCompile>
     <ClCompile Include="src\CSUHeap.cpp">
       <Filter>ソース ファイル\dx12\heap</Filter>
@@ -451,25 +463,19 @@
       <Filter>ソース ファイル\dx12\d3d11\context</Filter>
     </ClCompile>
     <ClCompile Include="src\BoardFactory.cpp">
-      <Filter>ソース ファイル\game_object\shogi_obj\factory</Filter>
+      <Filter>ソース ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\PieceFactory.cpp">
-      <Filter>ソース ファイル\game_object\shogi_obj\factory</Filter>
+      <Filter>ソース ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\RenderTexBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\VecCalc.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\ViewMat.cpp">
-      <Filter>ソース ファイル\mat</Filter>
+      <Filter>ソース ファイル\buffered_data\mat</Filter>
     </ClCompile>
     <ClCompile Include="src\WorldMat.cpp">
-      <Filter>ソース ファイル\mat</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Camera.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\buffered_data\mat</Filter>
     </ClCompile>
     <ClCompile Include="src\StartMenu.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
@@ -478,25 +484,37 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\PersProjMat.cpp">
-      <Filter>ソース ファイル\mat</Filter>
+      <Filter>ソース ファイル\buffered_data\mat</Filter>
     </ClCompile>
     <ClCompile Include="src\NonePersProjMat.cpp">
-      <Filter>ソース ファイル\mat</Filter>
+      <Filter>ソース ファイル\buffered_data\mat</Filter>
     </ClCompile>
     <ClCompile Include="src\SelectingPiece.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
-    <ClCompile Include="src\YellowWoodTexFactory.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\UIObj.cpp">
-      <Filter>ソース ファイル\game_object\ui_obj</Filter>
+      <Filter>ソース ファイル\buffered_data\game_object\ui_obj</Filter>
     </ClCompile>
     <ClCompile Include="src\BoardVertIndicesFactory.cpp">
-      <Filter>ソース ファイル\game_object\shogi_obj\factory</Filter>
+      <Filter>ソース ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\PieceVertIndicesFactory.cpp">
-      <Filter>ソース ファイル\game_object\shogi_obj\factory</Filter>
+      <Filter>ソース ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>ソース ファイル\dx12\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>ソース ファイル\buffered_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VecCalc.cpp">
+      <Filter>ソース ファイル\buffered_data\mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\YellowWoodTexFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\texutre</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>ソース ファイル\buffered_data\texutre</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -522,7 +540,7 @@
       <Filter>ヘッダー ファイル\input_handler</Filter>
     </ClInclude>
     <ClInclude Include="header\Piece.h">
-      <Filter>ヘッダー ファイル\game_object\shogi_obj\piece</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\piece</Filter>
     </ClInclude>
     <ClInclude Include="header\SwapChain.h">
       <Filter>ヘッダー ファイル\DX12\swap_chain</Filter>
@@ -546,22 +564,13 @@
       <Filter>ヘッダー ファイル\DX12\root_signature</Filter>
     </ClInclude>
     <ClInclude Include="header\Board.h">
-      <Filter>ヘッダー ファイル\game_object\shogi_obj\board</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\board</Filter>
     </ClInclude>
     <ClInclude Include="header\IMouse.h">
       <Filter>ヘッダー ファイル\mouse</Filter>
     </ClInclude>
     <ClInclude Include="header\ShogiObj.h">
-      <Filter>ヘッダー ファイル\game_object\shogi_obj</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PShader.h">
-      <Filter>ヘッダー ファイル\DX12\shader</Filter>
-    </ClInclude>
-    <ClInclude Include="header\VShader.h">
-      <Filter>ヘッダー ファイル\DX12\shader</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Texture.h">
-      <Filter>ヘッダー ファイル\DX12\csu\texture</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj</Filter>
     </ClInclude>
     <ClInclude Include="header\IHeapDesc.h">
       <Filter>ヘッダー ファイル\DX12\heap\factory\heap_desc</Filter>
@@ -723,76 +732,79 @@
       <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\IShogiObjFactory.h">
-      <Filter>ヘッダー ファイル\game_object\shogi_obj\factory</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\BoardFactory.h">
-      <Filter>ヘッダー ファイル\game_object\shogi_obj\factory</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\PieceFactory.h">
-      <Filter>ヘッダー ファイル\game_object\shogi_obj\factory</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\RenderTexBuffFactory.h">
       <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
     </ClInclude>
-    <ClInclude Include="header\VecCalc.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="header\IMat.h">
-      <Filter>ヘッダー ファイル\mat</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
     </ClInclude>
     <ClInclude Include="header\ViewMat.h">
-      <Filter>ヘッダー ファイル\mat</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
     </ClInclude>
     <ClInclude Include="header\WorldMat.h">
-      <Filter>ヘッダー ファイル\mat</Filter>
-    </ClInclude>
-    <ClInclude Include="header\BoardVertIndicesFactory.h">
-      <Filter>ヘッダー ファイル\game_object</Filter>
-    </ClInclude>
-    <ClInclude Include="header\IVertIndicesFactory.h">
-      <Filter>ヘッダー ファイル\game_object</Filter>
-    </ClInclude>
-    <ClInclude Include="header\BuffData.h">
-      <Filter>ヘッダー ファイル\game_object</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PieceVertIndicesFactory.h">
-      <Filter>ヘッダー ファイル\game_object</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Camera.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
     </ClInclude>
     <ClInclude Include="header\StartMenu.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
     <ClInclude Include="header\PersProjMat.h">
-      <Filter>ヘッダー ファイル\mat</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
     </ClInclude>
     <ClInclude Include="header\NonePersProjMat.h">
-      <Filter>ヘッダー ファイル\mat</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
     </ClInclude>
     <ClInclude Include="header\SelectingPiece.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
     <ClInclude Include="header\ClipZRange.h">
-      <Filter>ヘッダー ファイル\mat</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Shader.h">
+      <Filter>ヘッダー ファイル\DX12\shader</Filter>
     </ClInclude>
     <ClInclude Include="header\GameObj.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ITexFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\YellowWoodTexFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\UIObj.h">
-      <Filter>ヘッダー ファイル\game_object</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
     </ClInclude>
     <ClInclude Include="header\BufferedData.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\buffered_data</Filter>
+    </ClInclude>
+    <ClInclude Include="header\VecCalc.h">
+      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Camera.h">
+      <Filter>ヘッダー ファイル\buffered_data\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Texture.h">
+      <Filter>ヘッダー ファイル\buffered_data\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ITexFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\texture\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\YellowWoodTexFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\texture\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\NaturalBufferedData.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\buffered_data</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IVertIndicesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BoardVertIndicesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PieceVertIndicesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="header\UIObj.h">
+      <Filter>ヘッダー ファイル\buffered_data\ui_obj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
