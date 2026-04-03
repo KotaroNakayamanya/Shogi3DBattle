@@ -81,7 +81,6 @@
     <ClCompile Include="src\SRVFactory.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\TexBuff.cpp" />
     <ClCompile Include="src\TexBuffFactory.cpp" />
     <ClCompile Include="src\TexHeapProp.cpp" />
     <ClCompile Include="src\TexResourceDesc.cpp" />
@@ -176,7 +175,6 @@
     <ClInclude Include="header\SRVFactory.h" />
     <ClInclude Include="header\SwapChain.h" />
     <ClInclude Include="header\Texture.h" />
-    <ClInclude Include="header\TexBuff.h" />
     <ClInclude Include="header\TexBuffFactory.h" />
     <ClInclude Include="header\TexHeapProp.h" />
     <ClInclude Include="header\TexResourceDesc.h" />

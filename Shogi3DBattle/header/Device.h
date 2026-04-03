@@ -17,7 +17,6 @@
 #include"Fence.h"
 #include"VShader.h"
 #include"PShader.h"
-#include"TexBuff.h"
 #include"CSUHeap.h"
 #include"RootSignature.h"
 #include"InputLayout.h"

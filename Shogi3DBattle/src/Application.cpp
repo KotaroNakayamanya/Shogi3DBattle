@@ -130,7 +130,7 @@ void Application::CreateTex()
     // 木材テクスチャ作成
     _woodTex = std::make_unique<Texture>();
 
-    std::vector<Texture::Pixel> woodPixels;
+    std::vector<Pixel> woodPixels;
 
     UINT lineSize = 256;
     UINT width  = lineSize;
@@ -182,7 +182,7 @@ void Application::CreateTex()
     std::function<void(Texture*, ShogiObj::ShogiObjType)> createBoardLineTex =
         [this](Texture* tex, ShogiObj::ShogiObjType shogiObjType)
         {
-            std::vector<Texture::Pixel> boardLinePixels;
+            std::vector<Pixel> boardLinePixels;
 
             UINT lineSize = 256;
             UINT width  = lineSize;

@@ -39,8 +39,11 @@ private:
     std::unique_ptr<Buff> _idxBuff;  // インデックスバッファ
     std::unique_ptr<Buff> _constBuff; // コンスタントバッファ
 
-    std::unique_ptr<TexBuff>   _woodTexBuff; // 木材テクスチャバッファ
-    std::vector<std::unique_ptr<TexBuff>> _shogiObjTexBuffs; // 将棋オブジェクト種類ごとのテクスチャバッファ
+    //std::unique_ptr<TexBuff>   _woodTexBuff; // 木材テクスチャバッファ
+    //std::vector<std::unique_ptr<TexBuff>> _shogiObjTexBuffs; // 将棋オブジェクト種類ごとのテクスチャバッファ
+    std::unique_ptr<Buff>   _woodTexBuff; // 木材テクスチャバッファ
+    std::vector<std::unique_ptr<Buff>> _shogiObjTexBuffs; // 将棋オブジェクト種類ごとのテクスチャバッファ
+
     std::vector<std::unique_ptr<WrappedBuff>> _wrappedPieceTexBuffs; // ラップされた駒テクスチャバッファ
     std::vector<std::unique_ptr<D2DRenderTarget>> _d2dPieceTexRenderTargets; // 駒テクスチャ作成用レンダーターゲット
 

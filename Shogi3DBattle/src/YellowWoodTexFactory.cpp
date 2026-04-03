@@ -9,7 +9,7 @@ void YellowWoodTexFactory::CreateTex(std::unique_ptr<Texture> tex)
     unsigned int width  = lineSize;
     unsigned int height = lineSize;
 
-    auto pixels = tempTex->GetPixels();
+    auto pixels = tempTex->GetDatas();
     pixels.resize(width * height);
 
     // Šî–{F‚ğ“ü‚ê‚é

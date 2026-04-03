@@ -210,7 +210,7 @@ HRESULT DX12::CreateBuff()
     UINT shogiObjTexNum;
     shogiObjTexNum = ShogiObj::TYPE_NUM;
     _shogiObjTexBuffs.resize(shogiObjTexNum);
-    for(auto& shogiObjTexBuff : _shogiObjTexBuffs) shogiObjTexBuff = std::make_unique<TexBuff>();
+    for(auto& shogiObjTexBuff : _shogiObjTexBuffs) shogiObjTexBuff = std::make_unique<Buff>();
     widthSize = 256;
     widthSize = 256;
     for (UINT i = 0; i < shogiObjTexNum; i++)
@@ -467,10 +467,10 @@ HRESULT DX12::WriteToBuff()
     mapCamera ->SetStartDataIdx(idx);
 
 
-    if(FAILED(_woodTexBuff->WriteToTexBuff(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み
+    if(FAILED(_woodTexBuff->WriteToBuff<Pixel>(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み
 
-    if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_55]->WriteToTexBuff(boardLineTexs[0].get()))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
-    if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_99]->WriteToTexBuff(boardLineTexs[1].get()))) goto failed; // 9×9将棋盤黒線テクスチャをバッファに書き込み
+    if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_55]->WriteToBuff<Pixel>(boardLineTexs[0].get()))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
+    if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_99]->WriteToBuff<Pixel>(boardLineTexs[1].get()))) goto failed; // 9×9将棋盤黒線テクスチャをバッファに書き込み
 
     return S_OK;
 
@@ -936,7 +936,7 @@ DX12::DX12() {
     _vertBuff      = std::make_unique<Buff>();
     _idxBuff       = std::make_unique<Buff>();
     _constBuff     = std::make_unique<Buff>();
-    _woodTexBuff       = std::make_unique<TexBuff>();
+    _woodTexBuff   = std::make_unique<Buff>();
 
     
     _rootSignature = std::make_unique<RootSignature>();
