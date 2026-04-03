@@ -128,9 +128,9 @@ void Application::CreateShogiObj()
 void Application::CreateTex()
 {
     // 木材テクスチャ作成
-    _woodTex = std::make_unique<Tex>();
+    _woodTex = std::make_unique<Texture>();
 
-    std::vector<Tex::Pixel> woodPixels;
+    std::vector<Texture::Pixel> woodPixels;
 
     UINT lineSize = 256;
     UINT width  = lineSize;
@@ -179,10 +179,10 @@ void Application::CreateTex()
     ////_texFactory->CreateTex();
 
     // 将棋盤黒線テクスチャ作成用関数
-    std::function<void(Tex*, ShogiObj::ShogiObjType)> createBoardLineTex =
-        [this](Tex* tex, ShogiObj::ShogiObjType shogiObjType)
+    std::function<void(Texture*, ShogiObj::ShogiObjType)> createBoardLineTex =
+        [this](Texture* tex, ShogiObj::ShogiObjType shogiObjType)
         {
-            std::vector<Tex::Pixel> boardLinePixels;
+            std::vector<Texture::Pixel> boardLinePixels;
 
             UINT lineSize = 256;
             UINT width  = lineSize;
@@ -290,7 +290,7 @@ void Application::CreateTex()
         auto& boardLineTex = _boardLineTexs[i];
         auto& type         = boardType[i];
 
-        boardLineTex = std::make_unique<Tex>();
+        boardLineTex = std::make_unique<Texture>();
         createBoardLineTex(boardLineTex.get(), type);
     }
 
@@ -552,8 +552,8 @@ InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // イ
 Camera* Application::GetMainCamera(){return _mainCamera.get();} // メインカメラを返す
 Camera* Application::GetMapCamera() {return _mapCamera.get();}  // マップカメラを返す
 
-Tex* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
-std::vector<std::unique_ptr<Tex>>& Application::GetBoardLineTexs(){return _boardLineTexs;}
+Texture* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
+std::vector<std::unique_ptr<Texture>>& Application::GetBoardLineTexs(){return _boardLineTexs;}
 NaturalBufferedData<unsigned short>* Application::GetBoardVertIndices(){return _boardIndices.get();} // 駒の頂点インデックスを返す
 NaturalBufferedData<unsigned short>* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
 Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す

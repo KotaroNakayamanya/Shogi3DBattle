@@ -3,7 +3,7 @@
 #include<d3d12.h>
 #include<vector>
 
-class Tex
+class Texture
 {
 public:
     struct Pixel
@@ -24,7 +24,4 @@ public:
     UINT GetWidth();             // 横サイズを返す
     void SetHeight(UINT height); // 縦サイズセット
     UINT GetHeight();            // 縦サイズを返す
-
-    Tex();
-    ~Tex();
 };

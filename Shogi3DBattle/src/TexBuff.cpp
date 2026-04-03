@@ -1,7 +1,7 @@
 #include"TexBuff.h"
 
 // テクスチャをバッファに書き込み
-HRESULT TexBuff::WriteToTexBuff(Tex* tex)
+HRESULT TexBuff::WriteToTexBuff(Texture* tex)
 {
     //const auto& texture = tex->GetTex();
     const auto& texture = tex->GetPixels();
@@ -10,6 +10,6 @@ HRESULT TexBuff::WriteToTexBuff(Tex* tex)
         0,
         nullptr,
         texture.data(),
-        sizeof(Tex::Pixel) * tex->GetWidth(),
+        sizeof(Texture::Pixel) * tex->GetWidth(),
         0);
 }

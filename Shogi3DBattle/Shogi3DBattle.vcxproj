@@ -80,7 +80,7 @@
     <ClCompile Include="src\RTVOffset.cpp" />
     <ClCompile Include="src\SRVFactory.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
-    <ClCompile Include="src\Tex.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\TexBuff.cpp" />
     <ClCompile Include="src\TexBuffFactory.cpp" />
     <ClCompile Include="src\TexHeapProp.cpp" />
@@ -175,7 +175,7 @@
     <ClInclude Include="header\IShogiObjFactory.h" />
     <ClInclude Include="header\SRVFactory.h" />
     <ClInclude Include="header\SwapChain.h" />
-    <ClInclude Include="header\Tex.h" />
+    <ClInclude Include="header\Texture.h" />
     <ClInclude Include="header\TexBuff.h" />
     <ClInclude Include="header\TexBuffFactory.h" />
     <ClInclude Include="header\TexHeapProp.h" />

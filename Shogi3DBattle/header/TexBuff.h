@@ -1,13 +1,10 @@
 #pragma once
 
 #include"Buff.h"
-#include"Tex.h"
+#include"Texture.h"
 
 class TexBuff : public Buff
 {
 public:
-    HRESULT WriteToTexBuff(Tex* tex); // テクスチャをバッファに書き込み
-
-    TexBuff () = default;
-    ~TexBuff() = default;
+    HRESULT WriteToTexBuff(Texture* tex); // テクスチャをバッファに書き込み
 };

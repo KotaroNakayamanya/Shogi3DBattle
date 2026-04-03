@@ -1,9 +1,9 @@
 #include"YellowWoodTexFactory.h"
 
 // 黄色木材テクスチャ作成
-void YellowWoodTexFactory::CreateTex(std::unique_ptr<Tex> tex)
+void YellowWoodTexFactory::CreateTex(std::unique_ptr<Texture> tex)
 {
-    Tex* tempTex = new Tex();
+    Texture* tempTex = new Texture();
 
     unsigned int lineSize = 256;
     unsigned int width  = lineSize;

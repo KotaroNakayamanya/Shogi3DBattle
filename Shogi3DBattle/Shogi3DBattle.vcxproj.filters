@@ -339,7 +339,7 @@
     <ClCompile Include="src\Adapter.cpp">
       <Filter>ソース ファイル\dx12\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tex.cpp">
+    <ClCompile Include="src\Texture.cpp">
       <Filter>ソース ファイル\dx12\csu\texture</Filter>
     </ClCompile>
     <ClCompile Include="src\CSUHeap.cpp">
@@ -563,7 +563,7 @@
     <ClInclude Include="header\VShader.h">
       <Filter>ヘッダー ファイル\DX12\shader</Filter>
     </ClInclude>
-    <ClInclude Include="header\Tex.h">
+    <ClInclude Include="header\Texture.h">
       <Filter>ヘッダー ファイル\DX12\csu\texture</Filter>
     </ClInclude>
     <ClInclude Include="header\IHeapDesc.h">
