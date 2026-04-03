@@ -25,14 +25,12 @@ private:
     std::unique_ptr<NaturalBufferedData<unsigned short>> _boardIndices; // 将棋盤の頂点インデックス
 
     std::vector<std::unique_ptr<Piece>>           _pieces;       // 駒
-    //std::unique_ptr<BufferedData<unsigned short>> _pieceIndices; // 駒の頂点インデックス
     std::unique_ptr<NaturalBufferedData<unsigned short>> _pieceIndices; // 駒の頂点インデックス
 
     void CreateGameObj(); // 将棋オブジェクト作成
 
     // ファクトリー
     std::unique_ptr<IGameObjFactory>    _gameObjFactory;    // ゲームオブジェクトファクトリー
-    //std::unique_ptr<IVertIndicesFactory> _vertIndicesFactory; // 頂点インデックスファクトリー
     std::unique_ptr<IBufferedDataFactory<unsigned short>> _vertIndicesFactory; // インデックス集合ファクトリー
     std::unique_ptr<IBufferedDataFactory<Pixel>> _texFactory;    // テクスチャファクトリー
 

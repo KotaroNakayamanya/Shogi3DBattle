@@ -39,6 +39,6 @@ std::unique_ptr<BufferedData<unsigned short>> PieceVertIndicesFactory::CreateBuf
     NaturalBufferedData<unsigned short>* vertIndicesPtr = new NaturalBufferedData<unsigned short>();
     vertIndicesPtr->SetDatas(vertIndices);
     std::unique_ptr<BufferedData<unsigned short>> uniquePtr(vertIndicesPtr);
+
     return uniquePtr;
-    //bufferedData->SetDatas(vertIndices);
 }

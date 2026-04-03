@@ -74,7 +74,6 @@ void Application::CreateGameObj()
     createGameObjFunction(_board.get(), GameObj::BOARD_55);
     // 将棋盤インデックス作成
     _vertIndicesFactory.reset(new BoardVertIndicesFactory());
-    //_vertIndicesFactory->CreateVertIndices(_boardIndices.get());
     _boardIndices = GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, unsigned short>(_vertIndicesFactory.get());
 
 
@@ -112,7 +111,6 @@ void Application::CreateGameObj()
 
     // 駒の頂点インデックス集合作成
     _vertIndicesFactory.reset(new PieceVertIndicesFactory());
-    //_vertIndicesFactory->CreateVertIndices(_pieceIndices.get());
     _pieceIndices = GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, unsigned short>(_vertIndicesFactory.get());
     
     // 駒の初期位置調整
@@ -131,15 +129,7 @@ void Application::CreateTex()
 {
     //// 黄色木材テクスチャ作成
     _texFactory.reset(new YellowWoodTexFactory());
-    //auto tempTexSmartPtr = _texFactory->CreateBufferedData();
-    //auto tempTexPtr = tempTexSmartPtr.get();
-    //tempTexSmartPtr.release();
-    //auto downCastPtr = static_cast<Texture*>(tempTexPtr);
-    //_woodTex.reset(downCastPtr);
     _woodTex = GetDownCastUniquePtr<Texture, Pixel>(_texFactory.get());
-
-    //_woodTex = std::dynamic_pointer_cast<Texture>(_texFactory->CreateBufferedData());
-
 
     // 将棋盤黒線テクスチャ作成用関数
     std::function<void(Texture*, GameObj::GameObjType)> createBoardLineTex =
