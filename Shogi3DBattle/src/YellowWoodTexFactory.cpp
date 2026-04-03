@@ -1,7 +1,7 @@
 #include"YellowWoodTexFactory.h"
 
 // 黄色木材テクスチャ作成
-std::unique_ptr<Texture> YellowWoodTexFactory::CreateTex()
+std::unique_ptr<BufferedData<Pixel>> YellowWoodTexFactory::CreateBufferedData()
 {
     std::unique_ptr<Texture> tex = std::make_unique<Texture>();
 

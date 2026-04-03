@@ -6,7 +6,7 @@
 #include"IGameObjFactory.h"
 #include"IVertIndicesFactory.h"
 #include"ISceneState.h"
-#include"ITexFactory.h"
+#include"IBufferedDataFactory.h"
 
 #include"Camera.h"
 #include"UI.h"
@@ -37,7 +37,7 @@ private:
     std::unique_ptr<Texture> _woodTex; // 木材テクスチャ
     std::vector<std::unique_ptr<Texture>> _boardLineTexs; // 将棋盤黒線テクスチャ
     void CreateTex(); // テクスチャ作成
-    std::unique_ptr<ITexFactory>    _texFactory;    // テクスチャファクトリー
+    std::unique_ptr<IBufferedDataFactory<Pixel>> _texFactory;    // テクスチャファクトリー
 
 
     // 2Dオブジェクト

@@ -710,7 +710,7 @@
     <ClInclude Include="header\Texture.h">
       <Filter>ヘッダー ファイル\buffered_data\texture</Filter>
     </ClInclude>
-    <ClInclude Include="header\ITexFactory.h">
+    <ClInclude Include="header\IBufferedDataFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\texture\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\YellowWoodTexFactory.h">

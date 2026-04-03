@@ -139,7 +139,7 @@
     <ClInclude Include="header\SelectingPiece.h" />
     <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\StartMenu.h" />
-    <ClInclude Include="header\ITexFactory.h" />
+    <ClInclude Include="header\IBufferedDataFactory.h" />
     <ClInclude Include="header\UI.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />

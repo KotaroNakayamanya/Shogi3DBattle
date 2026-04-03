@@ -129,7 +129,14 @@ void Application::CreateTex()
 {
     //// 黄色木材テクスチャ作成
     _texFactory.reset(new YellowWoodTexFactory());
-    _woodTex = _texFactory->CreateTex();
+    auto tempTexSmartPtr = _texFactory->CreateBufferedData();
+    auto tempTexPtr = tempTexSmartPtr.get();
+    tempTexSmartPtr.release();
+    auto downCastPtr = static_cast<Texture*>(tempTexPtr);
+    _woodTex.reset(downCastPtr);
+
+    //_woodTex = std::dynamic_pointer_cast<Texture>(_texFactory->CreateBufferedData());
+
 
     // 将棋盤黒線テクスチャ作成用関数
     std::function<void(Texture*, GameObj::GameObjType)> createBoardLineTex =
