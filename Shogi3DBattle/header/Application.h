@@ -29,15 +29,20 @@ private:
     std::unique_ptr<NaturalBufferedData<unsigned short>> _pieceIndices; // 駒の頂点インデックス
 
     void CreateGameObj(); // 将棋オブジェクト作成
-    std::unique_ptr<IGameObjFactory>    _gameObjFactory;    // ゲームオブジェクトファクトリー
-    std::unique_ptr<IVertIndicesFactory> _vertIndicesFactory; // 頂点インデックスファクトリー
 
+    // ファクトリー
+    std::unique_ptr<IGameObjFactory>    _gameObjFactory;    // ゲームオブジェクトファクトリー
+    //std::unique_ptr<IVertIndicesFactory> _vertIndicesFactory; // 頂点インデックスファクトリー
+    std::unique_ptr<IBufferedDataFactory<unsigned short>> _vertIndicesFactory; // インデックス集合ファクトリー
+    std::unique_ptr<IBufferedDataFactory<Pixel>> _texFactory;    // テクスチャファクトリー
+
+    template<typename T1, typename T2>
+    std::unique_ptr<T1> GetDownCastUniquePtr(IBufferedDataFactory<T2>* bufferedDataFactory); 
 
     // テクスチャ
     std::unique_ptr<Texture> _woodTex; // 木材テクスチャ
     std::vector<std::unique_ptr<Texture>> _boardLineTexs; // 将棋盤黒線テクスチャ
     void CreateTex(); // テクスチャ作成
-    std::unique_ptr<IBufferedDataFactory<Pixel>> _texFactory;    // テクスチャファクトリー
 
 
     // 2Dオブジェクト

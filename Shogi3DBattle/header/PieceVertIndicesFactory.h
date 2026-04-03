@@ -1,10 +1,9 @@
 #pragma once
 
-#include"IVertIndicesFactory.h"
+#include"IBufferedDataFactory.h"
 
-class PieceVertIndicesFactory : public IVertIndicesFactory
+class PieceVertIndicesFactory : public IBufferedDataFactory<unsigned short>
 {
 public:
-    // 駒の頂点インデックス集合作成
-    void CreateVertIndices(NaturalBufferedData<unsigned short>* bufferedData) override;
+    std::unique_ptr<BufferedData<unsigned short>> CreateBufferedData() override; // 駒のインデックス集合作成
 };

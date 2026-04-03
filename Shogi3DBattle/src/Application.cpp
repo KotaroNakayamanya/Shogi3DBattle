@@ -74,7 +74,8 @@ void Application::CreateGameObj()
     createGameObjFunction(_board.get(), GameObj::BOARD_55);
     // 将棋盤インデックス作成
     _vertIndicesFactory.reset(new BoardVertIndicesFactory());
-    _vertIndicesFactory->CreateVertIndices(_boardIndices.get());
+    //_vertIndicesFactory->CreateVertIndices(_boardIndices.get());
+    _boardIndices = GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, unsigned short>(_vertIndicesFactory.get());
 
 
 
@@ -111,7 +112,8 @@ void Application::CreateGameObj()
 
     // 駒の頂点インデックス集合作成
     _vertIndicesFactory.reset(new PieceVertIndicesFactory());
-    _vertIndicesFactory->CreateVertIndices(_pieceIndices.get());
+    //_vertIndicesFactory->CreateVertIndices(_pieceIndices.get());
+    _pieceIndices = GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, unsigned short>(_vertIndicesFactory.get());
     
     // 駒の初期位置調整
     for (int i = 1; i < _pieces.size(); i++)
@@ -129,11 +131,12 @@ void Application::CreateTex()
 {
     //// 黄色木材テクスチャ作成
     _texFactory.reset(new YellowWoodTexFactory());
-    auto tempTexSmartPtr = _texFactory->CreateBufferedData();
-    auto tempTexPtr = tempTexSmartPtr.get();
-    tempTexSmartPtr.release();
-    auto downCastPtr = static_cast<Texture*>(tempTexPtr);
-    _woodTex.reset(downCastPtr);
+    //auto tempTexSmartPtr = _texFactory->CreateBufferedData();
+    //auto tempTexPtr = tempTexSmartPtr.get();
+    //tempTexSmartPtr.release();
+    //auto downCastPtr = static_cast<Texture*>(tempTexPtr);
+    //_woodTex.reset(downCastPtr);
+    _woodTex = GetDownCastUniquePtr<Texture, Pixel>(_texFactory.get());
 
     //_woodTex = std::dynamic_pointer_cast<Texture>(_texFactory->CreateBufferedData());
 
@@ -306,6 +309,18 @@ void Application::InitKeyMap()
 void Application::InitSceneState()
 {
     _sceneState = std::make_unique<StartMenu>(); // スタート画面
+}
+
+// ダウンキャストしたユニークポインタを返す
+template<typename T1, typename T2>
+std::unique_ptr<T1> Application::GetDownCastUniquePtr(IBufferedDataFactory<T2>* bufferedDataFactory)
+{ 
+    auto tempUniquePtr = bufferedDataFactory->CreateBufferedData();
+    auto tempPtr = tempUniquePtr.get();
+    tempUniquePtr.release();
+    auto downCastPtr = static_cast<T1*>(tempPtr);
+    std::unique_ptr<T1> uniquePtr(downCastPtr);
+    return uniquePtr;
 }
 
 

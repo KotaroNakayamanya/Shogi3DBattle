@@ -5,8 +5,6 @@ std::unique_ptr<BufferedData<Pixel>> YellowWoodTexFactory::CreateBufferedData()
 {
     std::unique_ptr<Texture> tex = std::make_unique<Texture>();
 
-    //Texture* tempTex = new Texture();
-
     unsigned int lineSize = 256;
     unsigned int width  = lineSize;
     unsigned int height = lineSize;
