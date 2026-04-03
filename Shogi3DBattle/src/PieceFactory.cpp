@@ -4,48 +4,48 @@
 #include"VecCalc.h"
 
 // 駒作成
-void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, GameObj::GameObjType shogiObjType, UCHAR objId)
+void PieceFactory::CreateGameObj(GameObj* gameObj, GameObj::GameObjType shogiObjType, unsigned char objId)
 {
     // 将棋オブジェクトIDセット
-    shogiObj->SetObjId(objId);
+    gameObj->SetObjId(objId);
 
     // 使用する文字テクスチャのIDをセット
-    UCHAR texId = shogiObjType;
-    shogiObj->SetTexId(texId);   
+    unsigned char texId = shogiObjType;
+    gameObj->SetTexId(texId);   
 
     // 駒の種類ごとの大きさをミリメートルで格納
     float mmBottomWidth;
     float mmHeight;
     switch (shogiObjType)
     {
-    case ShogiObj::KING:
+    case GameObj::KING:
         mmBottomWidth  = 285.0f;
         mmHeight = 320.0f;
         break;
     
-    case ShogiObj::ROOK:
-    case ShogiObj::BISHOP:
+    case GameObj::ROOK:
+    case GameObj::BISHOP:
         mmBottomWidth  = 260.0f;
         mmHeight = 300.0f;
         break;
 
-    case ShogiObj::GOLD:
-    case ShogiObj::SILVER:
+    case GameObj::GOLD:
+    case GameObj::SILVER:
         mmBottomWidth  = 250.0f;
         mmHeight = 285.0f;
         break;
     
-    case ShogiObj::KNIGHT:
+    case GameObj::KNIGHT:
         mmBottomWidth  = 235.0f;
         mmHeight = 275.0f;
         break;
 
-    case ShogiObj::LANCE:
+    case GameObj::LANCE:
         mmBottomWidth  = 225.0f;
         mmHeight = 275.0f;
         break;
 
-    case ShogiObj::PAWN:
+    case GameObj::PAWN:
         mmBottomWidth  = 225.0f;
         mmHeight = 260.0f;
         break;
@@ -131,7 +131,7 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, GameObj::GameObjType shogi
 
     
 
-    std::vector<ShogiObj::Vert> vertices;
+    std::vector<GameObj::Vert> vertices;
 
     vertices = // 頂点集合
     {
@@ -188,11 +188,11 @@ void PieceFactory::CreateShogiObj(ShogiObj* shogiObj, GameObj::GameObjType shogi
 
     NaturalBufferedData<GameObj::Vert> vertData;
     vertData.SetDatas(vertices);
-    shogiObj->SetVertices(vertData);
+    gameObj->SetVertices(vertData);
 
 
     // ワールド行列セット
     WorldMat worldMatObj;
     worldMatObj.SetWorldMat(DirectX::XMMatrixIdentity());
-    shogiObj->SetWorldMat(worldMatObj);
+    gameObj->SetWorldMat(worldMatObj);
 }

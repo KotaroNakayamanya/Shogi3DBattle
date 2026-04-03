@@ -1,18 +1,18 @@
 #include"BoardFactory.h"
 
 // 将棋盤作成
-void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, GameObj::GameObjType shogiObjType, UCHAR objId)
+void BoardFactory::CreateGameObj(GameObj* gameObj, GameObj::GameObjType gameObjType, unsigned char objId)
 {
-    shogiObj->SetObjId(objId);
+    gameObj->SetObjId(objId);
 
-    UCHAR texId = static_cast<UINT>(shogiObjType);
-    shogiObj->SetTexId(texId);
+    unsigned char texId = static_cast<unsigned char>(gameObjType);
+    gameObj->SetTexId(texId);
     
     float size = 100.0f;
 
     float thickness = size * 0.8f;
 
-    std::vector<ShogiObj::Vert> vertices;
+    std::vector<GameObj::Vert> vertices;
 
     vertices =
     {   // 上面図
@@ -56,26 +56,26 @@ void BoardFactory::CreateShogiObj(ShogiObj* shogiObj, GameObj::GameObjType shogi
 
     NaturalBufferedData<GameObj::Vert> vertData;
     vertData.SetDatas(vertices);
-    shogiObj->SetVertices(vertData);
+    gameObj->SetVertices(vertData);
 
 
 
     // ワールド行列セット
     DirectX::XMMATRIX worldMat;
-    switch (shogiObjType)
+    switch (gameObjType)
     {
         float rate;
-    case ShogiObj::BOARD_55:
+    case GameObj::BOARD_55:
         rate = 60.0f / 100.0f;
         worldMat = DirectX::XMMatrixScaling(rate, rate, rate);
         break;
 
-    case ShogiObj::BOARD_99:
+    case GameObj::BOARD_99:
     default:
         worldMat = DirectX::XMMatrixIdentity();
         break;
     }
     WorldMat worldMatObj;
     worldMatObj.SetWorldMat(worldMat);
-    shogiObj->SetWorldMat(worldMatObj);
+    gameObj->SetWorldMat(worldMatObj);
 }

@@ -153,13 +153,13 @@ HRESULT DX12::CreateBuff()
     
     auto  woodTex = app.GetWoodTex();
     
-    auto shogiObjects   = app.GetShogiObjects();
+    auto shogiObjects   = app.GetGameObjects();
     auto allVertIndices = app.GetAllVertIndices();
 
     std::vector<GameObj::GameObjType> boardType =
     {
-        ShogiObj::BOARD_55,
-        ShogiObj::BOARD_99
+        GameObj::BOARD_55,
+        GameObj::BOARD_99
     };
 
 
@@ -191,7 +191,7 @@ HRESULT DX12::CreateBuff()
     // 頂点バッファ作成
     widthSize = 0;
     //for(auto& shogiObj : shogiObjects) widthSize += sizeof(ShogiObj::Vert) * shogiObj->GetVertices().size();
-    for(auto& shogiObj : shogiObjects) widthSize += sizeof(ShogiObj::Vert) * shogiObj->GetVertices()->GetDatas().size();
+    for(auto& shogiObj : shogiObjects) widthSize += sizeof(GameObj::Vert) * shogiObj->GetVertices()->GetDatas().size();
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_vertBuff.get(), widthSize, heightSize, Buff::VERTEX))) goto failed;
 
@@ -208,7 +208,7 @@ HRESULT DX12::CreateBuff()
 
     // 将棋オブジェクト種類ごとのテクスチャバッファ作成
     UINT shogiObjTexNum;
-    shogiObjTexNum = ShogiObj::TYPE_NUM;
+    shogiObjTexNum = GameObj::TYPE_NUM;
     _shogiObjTexBuffs.resize(shogiObjTexNum);
     for(auto& shogiObjTexBuff : _shogiObjTexBuffs) shogiObjTexBuff = std::make_unique<Buff>();
     widthSize = 256;
@@ -267,7 +267,7 @@ failed:
 void DX12::CreateView()
 {
     auto& app = Application::GetInstance();
-    auto shogiObjcts = app.GetShogiObjects();
+    auto shogiObjcts = app.GetGameObjects();
 
     // バックバッファ用RTV作成
     for (UINT i = 0; i < _rtvHeap->GetDescNum(); i++)
@@ -469,8 +469,8 @@ HRESULT DX12::WriteToBuff()
 
     if(FAILED(_woodTexBuff->WriteToBuff<Pixel>(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み
 
-    if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_55]->WriteToBuff<Pixel>(boardLineTexs[0].get()))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
-    if(FAILED(_shogiObjTexBuffs[ShogiObj::BOARD_99]->WriteToBuff<Pixel>(boardLineTexs[1].get()))) goto failed; // 9×9将棋盤黒線テクスチャをバッファに書き込み
+    if(FAILED(_shogiObjTexBuffs[GameObj::BOARD_55]->WriteToBuff<Pixel>(boardLineTexs[0].get()))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
+    if(FAILED(_shogiObjTexBuffs[GameObj::BOARD_99]->WriteToBuff<Pixel>(boardLineTexs[1].get()))) goto failed; // 9×9将棋盤黒線テクスチャをバッファに書き込み
 
     return S_OK;
 
@@ -482,14 +482,14 @@ failed:
 void DX12::CreateRenderTex()
 {
     // 駒テクスチャ作成
-    CreatePieceTex(ShogiObj::KING,   L"王",   L"");
-    CreatePieceTex(ShogiObj::ROOK,   L"飛車", L"龍王");
-    CreatePieceTex(ShogiObj::BISHOP, L"角行", L"龍馬");
-    CreatePieceTex(ShogiObj::GOLD,   L"金将", L"");
-    CreatePieceTex(ShogiObj::SILVER, L"銀将", L"成銀");
-    CreatePieceTex(ShogiObj::KNIGHT, L"桂馬", L"成桂");
-    CreatePieceTex(ShogiObj::LANCE,  L"香車", L"成香");
-    CreatePieceTex(ShogiObj::PAWN,   L"歩",   L"と");
+    CreatePieceTex(GameObj::KING,   L"王",   L"");
+    CreatePieceTex(GameObj::ROOK,   L"飛車", L"龍王");
+    CreatePieceTex(GameObj::BISHOP, L"角行", L"龍馬");
+    CreatePieceTex(GameObj::GOLD,   L"金将", L"");
+    CreatePieceTex(GameObj::SILVER, L"銀将", L"成銀");
+    CreatePieceTex(GameObj::KNIGHT, L"桂馬", L"成桂");
+    CreatePieceTex(GameObj::LANCE,  L"香車", L"成香");
+    CreatePieceTex(GameObj::PAWN,   L"歩",   L"と");
 
     // リソース開放
     for (auto& wrappedPieceTexBuff : _wrappedPieceTexBuffs) 
@@ -732,22 +732,19 @@ void DX12::Set3DCmd()
 }
 
 // 頂点バッファビュー
-D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(ShogiObj* shogiObj)
+D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(GameObj* gameObj)
 {
     D3D12_VERTEX_BUFFER_VIEW view;
 
     auto buffAddress = _vertBuff->GetStartAddress();
-    //buffAddress += sizeof(GameObj::Vert) * shogiObj->GetStartVertIdxInBuff();
-    buffAddress += sizeof(GameObj::Vert) * shogiObj->GetVertices()->GetStartDataIdx();
+    buffAddress += sizeof(GameObj::Vert) * gameObj->GetVertices()->GetStartDataIdx();
 
     view.BufferLocation =  // 頂点バッファのスタート位置
-        //shogiObj->GetVertBuffAddress();
         buffAddress;
     view.StrideInBytes =   // 頂点1つ分のサイズ
         sizeof(GameObj::Vert);
     view.SizeInBytes = // 頂点全体のサイズ
-        //sizeof(GameObj::Vert) * shogiObj->GetVertices().size();
-        sizeof(GameObj::Vert) * shogiObj->GetVertices()->GetDatas().size();
+        sizeof(GameObj::Vert) * gameObj->GetVertices()->GetDatas().size();
 
     return view;
 }

@@ -569,9 +569,6 @@
     <ClInclude Include="header\IMouse.h">
       <Filter>ヘッダー ファイル\mouse</Filter>
     </ClInclude>
-    <ClInclude Include="header\ShogiObj.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj</Filter>
-    </ClInclude>
     <ClInclude Include="header\IHeapDesc.h">
       <Filter>ヘッダー ファイル\DX12\heap\factory\heap_desc</Filter>
     </ClInclude>
@@ -731,7 +728,7 @@
     <ClInclude Include="header\TexBuffFactory.h">
       <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
     </ClInclude>
-    <ClInclude Include="header\IShogiObjFactory.h">
+    <ClInclude Include="header\IGameObjFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\BoardFactory.h">

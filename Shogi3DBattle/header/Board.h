@@ -1,8 +1,8 @@
 #pragma once
 
-#include"ShogiObj.h"
+#include"GameObj.h"
 
-class Board : public ShogiObj
+class Board : public GameObj
 {
 private:
 public:

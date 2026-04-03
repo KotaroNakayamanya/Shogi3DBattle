@@ -1,10 +1,10 @@
 #pragma once
 
-#include"IShogiObjFactory.h"
+#include"IGameObjFactory.h"
 
-class BoardFactory : public IShogiObjFactory
+class BoardFactory : public IGameObjFactory
 {
 public:
     // è´ä˚î’çÏê¨
-    void CreateShogiObj(ShogiObj* shogiObj, GameObj::GameObjType shogiObjType, UCHAR objId) override;
+    void CreateGameObj(GameObj* gameObj, GameObj::GameObjType gameObjType, unsigned char objId) override;
 };

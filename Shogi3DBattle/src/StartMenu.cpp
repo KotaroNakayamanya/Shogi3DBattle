@@ -109,12 +109,12 @@ StartMenu::StartMenu()
     auto board = app.GetBoard();
     switch (board->GetTexId())
     {
-        case ShogiObj::BOARD_55:
+        case GameObj::BOARD_55:
             focusX = 30.0f;
             focusY = 30.0f;
             break;
 
-        case ShogiObj::BOARD_99:
+        case GameObj::BOARD_99:
             focusX = 50.0f;
             focusY = 50.0f;
             break;

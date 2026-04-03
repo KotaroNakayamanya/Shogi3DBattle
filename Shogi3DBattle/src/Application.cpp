@@ -16,7 +16,7 @@
 // 初期処理
 bool Application::Init()
 {   
-    CreateShogiObj(); // 将棋オブジェクト作成
+    CreateGameObj(); // 将棋オブジェクト作成
     CreateTex();      // テクスチャ作成
     CreateCamera();   // カメラ作成
     InitKeyMap();     // 操作ボタン設定
@@ -35,43 +35,43 @@ failed:
 
 
 
-// 将棋オブジェクト作成
-void Application::CreateShogiObj()
+// オブジェクト作成
+void Application::CreateGameObj()
 {
     // オブジェクトごとのID格納用
     UINT objId = 0;
 
     // 将棋オブジェクト作成用関数
-    std::function<void(ShogiObj*, GameObj::GameObjType)> createShogiObjFunction =
-        [this, &objId](ShogiObj* shogiObj, GameObj::GameObjType shogiObjType)
+    std::function<void(GameObj*, GameObj::GameObjType)> createGameObjFunction =
+        [this, &objId](GameObj* shogiObj, GameObj::GameObjType shogiObjType)
         {
             switch (shogiObjType)
             {
-            case ShogiObj::BOARD_55:
-            case ShogiObj::BOARD_99:
-                _shogiObjFactory.reset(new BoardFactory());
+            case GameObj::BOARD_55:
+            case GameObj::BOARD_99:
+                _gameObjFactory.reset(new BoardFactory());
                 break;
             
-            case ShogiObj::KING:
-            case ShogiObj::ROOK:
-            case ShogiObj::BISHOP:
-            case ShogiObj::GOLD:
-            case ShogiObj::SILVER:
-            case ShogiObj::KNIGHT:
-            case ShogiObj::LANCE:
-            case ShogiObj::PAWN:
-                _shogiObjFactory.reset(new PieceFactory());
+            case GameObj::KING:
+            case GameObj::ROOK:
+            case GameObj::BISHOP:
+            case GameObj::GOLD:
+            case GameObj::SILVER:
+            case GameObj::KNIGHT:
+            case GameObj::LANCE:
+            case GameObj::PAWN:
+                _gameObjFactory.reset(new PieceFactory());
                 break;
 
             default:
                 return;
             }
 
-            _shogiObjFactory->CreateShogiObj(shogiObj, shogiObjType, objId++);
+            _gameObjFactory->CreateGameObj(shogiObj, shogiObjType, objId++);
         };
 
     // 将棋盤作成
-    createShogiObjFunction(_board.get(), ShogiObj::BOARD_55);
+    createGameObjFunction(_board.get(), GameObj::BOARD_55);
     // 将棋盤インデックス作成
     _vertIndicesFactory.reset(new BoardVertIndicesFactory());
     _vertIndicesFactory->CreateVertIndices(_boardIndices.get());
@@ -100,14 +100,14 @@ void Application::CreateShogiObj()
     _pieces.resize(pieceNum);
     for(auto& piece : _pieces) piece = std::make_unique<Piece>();
 
-    for (UINT i = 0; i < kingNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::KING);
-    for (UINT i = 0; i < rookNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::ROOK);
-    for (UINT i = 0; i < bishopNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::BISHOP);
-    for (UINT i = 0; i < goldNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::GOLD);
-    for (UINT i = 0; i < silverNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::SILVER);
-    for (UINT i = 0; i < knightNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::KNIGHT);
-    for (UINT i = 0; i < lanceNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::LANCE);
-    for (UINT i = 0; i < pawnNum; i++) createShogiObjFunction(_pieces[objId - 1].get(), ShogiObj::PAWN);
+    for (UINT i = 0; i < kingNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::KING);
+    for (UINT i = 0; i < rookNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::ROOK);
+    for (UINT i = 0; i < bishopNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::BISHOP);
+    for (UINT i = 0; i < goldNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::GOLD);
+    for (UINT i = 0; i < silverNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::SILVER);
+    for (UINT i = 0; i < knightNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::KNIGHT);
+    for (UINT i = 0; i < lanceNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::LANCE);
+    for (UINT i = 0; i < pawnNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::PAWN);
 
     // 駒の頂点インデックス集合作成
     _vertIndicesFactory.reset(new PieceVertIndicesFactory());
@@ -203,11 +203,11 @@ void Application::CreateTex()
 
             switch (shogiObjType)
             {
-                case ShogiObj::BOARD_55:
+                case GameObj::BOARD_55:
                     squareNum = 5;
                     break;
 
-                case ShogiObj::BOARD_99:
+                case GameObj::BOARD_99:
                     squareNum = 9;
                     break;
 
@@ -279,8 +279,8 @@ void Application::CreateTex()
 
     std::vector<GameObj::GameObjType> boardType =
     {
-        ShogiObj::BOARD_55,
-        ShogiObj::BOARD_99
+        GameObj::BOARD_55,
+        GameObj::BOARD_99
     };
     _boardLineTexs.resize(boardType.size());
     
@@ -576,9 +576,9 @@ void Application::RemoveAllUI(){_uis.clear();}      // UIを全て削除する
 std::vector<UIObj>& Application::GetUIs(){return _uis;} // UIを返す
 
 // すべての将棋オブジェクトを返す
-std::vector<ShogiObj*> Application::GetShogiObjects()
+std::vector<GameObj*> Application::GetGameObjects()
 {
-    std::vector<ShogiObj*> shogiObjects;
+    std::vector<GameObj*> shogiObjects;
 
     // 将棋盤を格納
     shogiObjects.push_back(_board.get());

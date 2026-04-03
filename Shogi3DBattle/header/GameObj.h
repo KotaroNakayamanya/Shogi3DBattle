@@ -38,12 +38,18 @@ public:
 protected:
     std::unique_ptr<NaturalBufferedData<Vert>> _vertices; // 頂点集合
     std::unique_ptr<WorldMat>                  _worldMat; // ワールド行列
+    unsigned char _objId; // 将棋オブジェクトID
+    unsigned char _texId; // 使用するテクスチャID
     
 public:
     void                       SetVertices(NaturalBufferedData<Vert> vertices){_vertices.reset(new NaturalBufferedData<Vert>(vertices));} // 頂点集合セット
     NaturalBufferedData<Vert>* GetVertices()                                  {return _vertices.get();}                                   // 頂点集合を返す
     void                       SetWorldMat(WorldMat worldMat)                 {_worldMat.reset(new WorldMat(worldMat));}                  // ワールド行列セット
     WorldMat*                  GetWorldMat()                                  {return _worldMat.get();}                                   // ワールド行列セット
+    void  SetObjId(unsigned char objId){_objId = objId;} // 将棋オブジェクトIDセット
+    unsigned char GetObjId()           {return _objId;}  // 将棋オブジェクトIDを返す
+    void  SetTexId(unsigned char texId){_texId = texId;} // テクスチャIDセット
+    unsigned char GetTexId()           {return _texId;}  // テクスチャIDを返す
 
     ~GameObj() = default;
 };

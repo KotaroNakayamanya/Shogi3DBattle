@@ -1,8 +1,8 @@
 #pragma once
 
-#include"IShogiObjFactory.h"
+#include"IGameObjFactory.h"
 
-class PieceFactory : public IShogiObjFactory
+class PieceFactory : public IGameObjFactory
 {
 protected:
     float _height;
@@ -10,5 +10,5 @@ protected:
 
 public:
     // pieceçÏê¨
-    void CreateShogiObj(ShogiObj* shogiObj, GameObj::GameObjType shogiObjType, UCHAR objId) override;
+    void CreateGameObj(GameObj* gameObj, GameObj::GameObjType gameObjType, unsigned char objId) override;
 };
