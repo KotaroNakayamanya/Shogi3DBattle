@@ -35,7 +35,7 @@ failed:
 
 
 
-// オブジェクト作成
+// ゲームオブジェクト作成
 void Application::CreateGameObj()
 {
     // オブジェクトごとのID格納用
@@ -127,56 +127,9 @@ void Application::CreateGameObj()
 // テクスチャ作成
 void Application::CreateTex()
 {
-    // 木材テクスチャ作成
-    _woodTex = std::make_unique<Texture>();
-
-    std::vector<Pixel> woodPixels;
-
-    UINT lineSize = 256;
-    UINT width  = lineSize;
-    UINT height = lineSize;
-
-    woodPixels.resize(width * height);
-
-    // 基本色を入れる
-    for (auto& pixel : woodPixels)
-    {
-        pixel.r = 226;
-        pixel.g = 232;
-        pixel.b =  75;
-        pixel.a = 255;
-    }
-
-    // 板目を入れる
-    UINT x = 0;
-    UINT y = 0;
-    UINT subtColor = 10;
-    for (auto& pixel : woodPixels)
-    {
-        if ((x+y) % 20 == 0)
-        {
-            pixel.r -= subtColor;
-            pixel.g -= subtColor;
-            pixel.b -= subtColor;
-
-        }
-
-        // xとyの次の座標を取得
-        x++;            // xを足す
-        if (x >= width) // xが端を超えたらyを足してxを0に戻す
-        {
-            y++;
-            x = 0;
-        }
-    }
-
-    _woodTex->SetWidth (width);
-    _woodTex->SetHeight(height);
-    _woodTex->SetPixels(woodPixels);
-
     //// 黄色木材テクスチャ作成
-    //_texFactory.reset(new YellowWoodTexFactory());
-    ////_texFactory->CreateTex();
+    _texFactory.reset(new YellowWoodTexFactory());
+    _woodTex = _texFactory->CreateTex();
 
     // 将棋盤黒線テクスチャ作成用関数
     std::function<void(Texture*, GameObj::GameObjType)> createBoardLineTex =
@@ -271,7 +224,7 @@ void Application::CreateTex()
 
             tex->SetWidth (width);
             tex->SetHeight(height);
-            tex->SetPixels(boardLinePixels);
+            tex->SetDatas(boardLinePixels);
         };
 
     INT boardTexNum = 2;

@@ -1,15 +1,17 @@
 #include"YellowWoodTexFactory.h"
 
 // 黄色木材テクスチャ作成
-void YellowWoodTexFactory::CreateTex(std::unique_ptr<Texture> tex)
+std::unique_ptr<Texture> YellowWoodTexFactory::CreateTex()
 {
-    Texture* tempTex = new Texture();
+    std::unique_ptr<Texture> tex = std::make_unique<Texture>();
+
+    //Texture* tempTex = new Texture();
 
     unsigned int lineSize = 256;
     unsigned int width  = lineSize;
     unsigned int height = lineSize;
 
-    auto pixels = tempTex->GetDatas();
+    std::vector<Pixel> pixels;
     pixels.resize(width * height);
 
     // 基本色を入れる
@@ -44,8 +46,9 @@ void YellowWoodTexFactory::CreateTex(std::unique_ptr<Texture> tex)
         }
     }
 
-    tempTex->SetWidth (width);
-    tempTex->SetHeight(height);
-    
-    tex.reset(tempTex);
+    tex->SetWidth (width);
+    tex->SetHeight(height);
+    tex->SetDatas(pixels);
+
+    return tex;    
 }

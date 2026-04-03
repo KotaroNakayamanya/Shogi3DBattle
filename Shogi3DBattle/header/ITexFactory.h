@@ -6,8 +6,7 @@
 class ITexFactory
 {
 public:
-    virtual void CreateTex(std::unique_ptr<Texture> tex) = 0; // テクスチャ作成
+    virtual std::unique_ptr<Texture> CreateTex() = 0; // テクスチャ作成
 
-    ITexFactory         () = default;
     virtual ~ITexFactory() = default;
 };

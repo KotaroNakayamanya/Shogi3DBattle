@@ -13,17 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ヘッダー ファイル\struct">
-      <UniqueIdentifier>{be4e91d5-d58e-421f-9cd4-595eac7aa787}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\DX12">
       <UniqueIdentifier>{0e035323-ee1f-4428-9320-4d22a40c736c}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\DX12\csu">
       <UniqueIdentifier>{8e35ec3d-b74e-4de4-8151-9baa1815ee54}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\game_window">
-      <UniqueIdentifier>{127d3bb3-f6f7-4aa5-b5f4-b485b8c74824}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\dx12">
       <UniqueIdentifier>{57166d13-f0c8-4ec6-b25f-be519ec0030e}</UniqueIdentifier>
@@ -31,20 +25,11 @@
     <Filter Include="ソース ファイル\dx12\csu">
       <UniqueIdentifier>{e9b92a4c-31a8-488f-ae82-24e612e18f8f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\game_window">
-      <UniqueIdentifier>{32ab675c-7748-4ec7-b4ff-8d5a0f2e212b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\scene_state">
       <UniqueIdentifier>{78332d16-03d8-4c5d-ba6e-85e4652863a7}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\scene_state">
       <UniqueIdentifier>{147c356d-309b-43f8-ae42-31545dbfb11d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\input_handler">
-      <UniqueIdentifier>{848ceee7-25ae-4f3f-b2ec-f6112d60fe86}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\input_handler">
-      <UniqueIdentifier>{79f60200-9c50-49ab-8d6c-22fc61ba1bf6}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\DX12\csu\const">
       <UniqueIdentifier>{1f71074d-b8ae-44d3-871f-5d2af0338ab6}</UniqueIdentifier>
@@ -75,9 +60,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\DX12\shader">
       <UniqueIdentifier>{b44911ac-f69a-40cd-b8e6-c76fe61b7248}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\mouse">
-      <UniqueIdentifier>{4432fb4b-b6dc-4503-bd59-b99cd6648243}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\dx12\factory">
       <UniqueIdentifier>{d56446de-5916-40ca-8a50-ebdc1a846640}</UniqueIdentifier>
@@ -172,23 +154,8 @@
     <Filter Include="ソース ファイル\dx12\shader\hlsl">
       <UniqueIdentifier>{162b5be9-6f57-4d9c-b2f7-57a516f119d4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\obj_command">
-      <UniqueIdentifier>{8c4ce1f3-9c02-4eca-b771-14d02dd016a3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\obj_command">
       <UniqueIdentifier>{e29343ca-5ba6-4323-a4a5-e280dd4badbe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\obj_command\piece">
-      <UniqueIdentifier>{574efc24-c1cf-4a2f-9b15-cdb916740aff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\obj_command\piece">
-      <UniqueIdentifier>{3c9fa434-5203-4001-a971-49777abcede5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\obj_command\camera">
-      <UniqueIdentifier>{0da8114b-10ad-4354-8178-f30438c1af34}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\obj_command\camera">
-      <UniqueIdentifier>{904fbbc2-070d-4eae-9852-fba68df2b7ed}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\DX12\command">
       <UniqueIdentifier>{b401d5ab-f915-4127-898e-9dd429f5bd44}</UniqueIdentifier>
@@ -226,12 +193,6 @@
     <Filter Include="ヘッダー ファイル\DX12\resource_barrier">
       <UniqueIdentifier>{0f28c504-cd5d-4094-beca-d606b5a4d613}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\key_map">
-      <UniqueIdentifier>{31fe555d-f8f5-4f7d-bd70-caa2e40237e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\key_map">
-      <UniqueIdentifier>{54f4de9d-ec76-4f59-834a-1e00085e3871}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data">
       <UniqueIdentifier>{01903c31-7a31-41e5-92f9-f56d4d7a3b22}</UniqueIdentifier>
     </Filter>
@@ -249,9 +210,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\game_object\shogi_obj\factory">
       <UniqueIdentifier>{471b672a-ce78-45e0-914a-746235cc279d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\camera">
-      <UniqueIdentifier>{a78ac816-a598-4763-9e7a-2ff808c950ba}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\texture">
       <UniqueIdentifier>{44432d83-16dc-4546-9d63-92123a216c25}</UniqueIdentifier>
@@ -274,26 +232,14 @@
     <Filter Include="ヘッダー ファイル\buffered_data\game_object\factory">
       <UniqueIdentifier>{b51f4ee6-d02d-4c8c-920d-2bfe256db2fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\ui_obj">
-      <UniqueIdentifier>{ebc9e406-b167-4c56-8680-5810b3868a77}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\ui_obj">
-      <UniqueIdentifier>{65e7c6ff-c5b2-475f-a1c4-c3d7217c4d09}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\buffered_data\game_obj">
       <UniqueIdentifier>{3e13e98a-014b-4f54-b232-5915bbe2e892}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj\board">
-      <UniqueIdentifier>{dca7bc76-6bfd-47e8-b136-fe2cf963029c}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\buffered_data\game_obj\factory">
       <UniqueIdentifier>{65995f4d-91d0-4aad-aaf3-2260432487e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj\piece">
-      <UniqueIdentifier>{3d481703-f3c4-41a4-b0ea-af4422b539b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\camera">
-      <UniqueIdentifier>{bd691f0a-fa1a-4b17-a6a5-5044527d3085}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\buffered_data\texutre\factory">
+      <UniqueIdentifier>{8829a128-7481-47c4-b6e9-56ea79857d50}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -306,20 +252,8 @@
     <ClCompile Include="src\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameWindow.cpp">
-      <Filter>ソース ファイル\game_window</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KeyMap.cpp">
-      <Filter>ソース ファイル\key_map</Filter>
-    </ClCompile>
     <ClCompile Include="src\MovingPiece.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InputHandler.cpp">
-      <Filter>ソース ファイル\input_handler</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Piece.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>ソース ファイル\dx12\swap_chain</Filter>
@@ -341,9 +275,6 @@
     </ClCompile>
     <ClCompile Include="src\Pipeline.cpp">
       <Filter>ソース ファイル\dx12\pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Board.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
     </ClCompile>
     <ClCompile Include="src\Device.cpp">
       <Filter>ソース ファイル\dx12\factory</Filter>
@@ -480,20 +411,8 @@
     <ClCompile Include="src\StartMenu.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
-    <ClCompile Include="src\TextFormat.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PersProjMat.cpp">
-      <Filter>ソース ファイル\buffered_data\mat</Filter>
-    </ClCompile>
-    <ClCompile Include="src\NonePersProjMat.cpp">
-      <Filter>ソース ファイル\buffered_data\mat</Filter>
-    </ClCompile>
     <ClCompile Include="src\SelectingPiece.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UI.cpp">
-      <Filter>ソース ファイル\buffered_data\ui_obj</Filter>
     </ClCompile>
     <ClCompile Include="src\BoardVertIndicesFactory.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\factory</Filter>
@@ -507,14 +426,41 @@
     <ClCompile Include="src\VecCalc.cpp">
       <Filter>ソース ファイル\buffered_data\mat</Filter>
     </ClCompile>
-    <ClCompile Include="src\YellowWoodTexFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\texutre</Filter>
-    </ClCompile>
     <ClCompile Include="src\Texture.cpp">
       <Filter>ソース ファイル\buffered_data\texutre</Filter>
     </ClCompile>
+    <ClCompile Include="src\NonePersProjMat.cpp">
+      <Filter>ソース ファイル\buffered_data\mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PersProjMat.cpp">
+      <Filter>ソース ファイル\buffered_data\mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Piece.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj</Filter>
+    </ClCompile>
+    <ClCompile Include="src\YellowWoodTexFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\texutre\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextFormat.cpp">
+      <Filter>ソース ファイル\dx12\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KeyMap.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputHandler.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameWindow.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="src\Camera.cpp">
-      <Filter>ソース ファイル\buffered_data\camera</Filter>
+      <Filter>ソース ファイル\buffered_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI.cpp">
+      <Filter>ソース ファイル\buffered_data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -524,20 +470,11 @@
     <ClInclude Include="header\DX12.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
     </ClInclude>
-    <ClInclude Include="header\GameWindow.h">
-      <Filter>ヘッダー ファイル\game_window</Filter>
-    </ClInclude>
-    <ClInclude Include="header\KeyMap.h">
-      <Filter>ヘッダー ファイル\key_map</Filter>
-    </ClInclude>
     <ClInclude Include="header\ISceneState.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
     <ClInclude Include="header\MovingPiece.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
-    </ClInclude>
-    <ClInclude Include="header\InputHandler.h">
-      <Filter>ヘッダー ファイル\input_handler</Filter>
     </ClInclude>
     <ClInclude Include="header\Piece.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\piece</Filter>
@@ -565,9 +502,6 @@
     </ClInclude>
     <ClInclude Include="header\Board.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\board</Filter>
-    </ClInclude>
-    <ClInclude Include="header\IMouse.h">
-      <Filter>ヘッダー ファイル\mouse</Filter>
     </ClInclude>
     <ClInclude Include="header\IHeapDesc.h">
       <Filter>ヘッダー ファイル\DX12\heap\factory\heap_desc</Filter>
@@ -683,9 +617,6 @@
     <ClInclude Include="header\PShaderResourceStates.h">
       <Filter>ヘッダー ファイル\DX12\buff\factory\resource_state</Filter>
     </ClInclude>
-    <ClInclude Include="header\ICommand.h">
-      <Filter>ヘッダー ファイル\obj_command\piece</Filter>
-    </ClInclude>
     <ClInclude Include="header\DeviceContext.h">
       <Filter>ヘッダー ファイル\DX12\d3d11</Filter>
     </ClInclude>
@@ -776,9 +707,6 @@
     <ClInclude Include="header\VecCalc.h">
       <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
     </ClInclude>
-    <ClInclude Include="header\Camera.h">
-      <Filter>ヘッダー ファイル\buffered_data\camera</Filter>
-    </ClInclude>
     <ClInclude Include="header\Texture.h">
       <Filter>ヘッダー ファイル\buffered_data\texture</Filter>
     </ClInclude>
@@ -800,8 +728,20 @@
     <ClInclude Include="header\PieceVertIndicesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\factory</Filter>
     </ClInclude>
+    <ClInclude Include="header\GameWindow.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\KeyMap.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\InputHandler.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="header\UI.h">
-      <Filter>ヘッダー ファイル\buffered_data\ui_obj</Filter>
+      <Filter>ヘッダー ファイル\buffered_data</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Camera.h">
+      <Filter>ヘッダー ファイル\buffered_data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
