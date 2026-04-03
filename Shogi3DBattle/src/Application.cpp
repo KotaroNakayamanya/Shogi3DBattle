@@ -564,7 +564,7 @@ void Application::SetIsDrawMap(bool flag){_isDrawMap = flag;} // マップ描画
 bool Application::IsDrawMap()            {return _isDrawMap;} // マップ描画フラグを返す
 
 bool Application::IsDrawUINotEmpty(){return _uis.size() > 0;} // UIの空状況を返す
-void Application::PushUI(std::wstring text, D2D1_RECT_F rect, UIObj::UIType uiType)
+void Application::PushUI(std::wstring text, D2D1_RECT_F rect, UI::UIType uiType)
 {
     //UIObj ui = {L"aaa", {0, 0, 1280, 720}};
     //_uis.push_back(ui);
@@ -573,7 +573,7 @@ void Application::PushUI(std::wstring text, D2D1_RECT_F rect, UIObj::UIType uiTy
 //_uis.push_back(ui);
 }   // UIをプッシュする
 void Application::RemoveAllUI(){_uis.clear();}      // UIを全て削除する
-std::vector<UIObj>& Application::GetUIs(){return _uis;} // UIを返す
+std::vector<UI>& Application::GetUIs(){return _uis;} // UIを返す
 
 // すべての将棋オブジェクトを返す
 std::vector<GameObj*> Application::GetGameObjects()

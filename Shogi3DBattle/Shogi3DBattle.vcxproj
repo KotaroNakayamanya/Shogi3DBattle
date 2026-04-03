@@ -60,7 +60,7 @@
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\StartMenu.cpp" />
     <ClCompile Include="src\TextFormat.cpp" />
-    <ClCompile Include="src\UIObj.cpp" />
+    <ClCompile Include="src\UI.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyMap.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -140,7 +140,7 @@
     <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\StartMenu.h" />
     <ClInclude Include="header\ITexFactory.h" />
-    <ClInclude Include="header\UIObj.h" />
+    <ClInclude Include="header\UI.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />
     <ClInclude Include="header\GameWindow.h" />

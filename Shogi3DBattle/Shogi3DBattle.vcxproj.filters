@@ -262,24 +262,6 @@
     <Filter Include="ソース ファイル\buffered_data">
       <UniqueIdentifier>{d63670e8-482e-4889-851a-c810232a8a6b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_object">
-      <UniqueIdentifier>{3e13e98a-014b-4f54-b232-5915bbe2e892}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_object\shogi_obj">
-      <UniqueIdentifier>{1d831363-e1a4-4b1f-9d15-cf0fc9915b12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_object\shogi_obj\piece">
-      <UniqueIdentifier>{3d481703-f3c4-41a4-b0ea-af4422b539b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_object\shogi_obj\board">
-      <UniqueIdentifier>{dca7bc76-6bfd-47e8-b136-fe2cf963029c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_object\shogi_obj\factory">
-      <UniqueIdentifier>{65995f4d-91d0-4aad-aaf3-2260432487e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_object\ui_obj">
-      <UniqueIdentifier>{65e7c6ff-c5b2-475f-a1c4-c3d7217c4d09}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\buffered_data\mat">
       <UniqueIdentifier>{4b4b839d-9110-4bfa-8fe1-f40e1ff19b55}</UniqueIdentifier>
     </Filter>
@@ -294,6 +276,24 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\ui_obj">
       <UniqueIdentifier>{ebc9e406-b167-4c56-8680-5810b3868a77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\ui_obj">
+      <UniqueIdentifier>{65e7c6ff-c5b2-475f-a1c4-c3d7217c4d09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj">
+      <UniqueIdentifier>{3e13e98a-014b-4f54-b232-5915bbe2e892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\board">
+      <UniqueIdentifier>{dca7bc76-6bfd-47e8-b136-fe2cf963029c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\factory">
+      <UniqueIdentifier>{65995f4d-91d0-4aad-aaf3-2260432487e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\piece">
+      <UniqueIdentifier>{3d481703-f3c4-41a4-b0ea-af4422b539b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\camera">
+      <UniqueIdentifier>{bd691f0a-fa1a-4b17-a6a5-5044527d3085}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -319,7 +319,7 @@
       <Filter>ソース ファイル\input_handler</Filter>
     </ClCompile>
     <ClCompile Include="src\Piece.cpp">
-      <Filter>ソース ファイル\buffered_data\game_object\shogi_obj\piece</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>ソース ファイル\dx12\swap_chain</Filter>
@@ -343,7 +343,7 @@
       <Filter>ソース ファイル\dx12\pipeline</Filter>
     </ClCompile>
     <ClCompile Include="src\Board.cpp">
-      <Filter>ソース ファイル\buffered_data\game_object\shogi_obj\board</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
     </ClCompile>
     <ClCompile Include="src\Device.cpp">
       <Filter>ソース ファイル\dx12\factory</Filter>
@@ -463,10 +463,10 @@
       <Filter>ソース ファイル\dx12\d3d11\context</Filter>
     </ClCompile>
     <ClCompile Include="src\BoardFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\PieceFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\RenderTexBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
@@ -492,20 +492,17 @@
     <ClCompile Include="src\SelectingPiece.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
-    <ClCompile Include="src\UIObj.cpp">
-      <Filter>ソース ファイル\buffered_data\game_object\ui_obj</Filter>
+    <ClCompile Include="src\UI.cpp">
+      <Filter>ソース ファイル\buffered_data\ui_obj</Filter>
     </ClCompile>
     <ClCompile Include="src\BoardVertIndicesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\PieceVertIndicesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader.cpp">
       <Filter>ソース ファイル\dx12\shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Camera.cpp">
-      <Filter>ソース ファイル\buffered_data</Filter>
     </ClCompile>
     <ClCompile Include="src\VecCalc.cpp">
       <Filter>ソース ファイル\buffered_data\mat</Filter>
@@ -515,6 +512,9 @@
     </ClCompile>
     <ClCompile Include="src\Texture.cpp">
       <Filter>ソース ファイル\buffered_data\texutre</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>ソース ファイル\buffered_data\camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -800,7 +800,7 @@
     <ClInclude Include="header\PieceVertIndicesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\factory</Filter>
     </ClInclude>
-    <ClInclude Include="header\UIObj.h">
+    <ClInclude Include="header\UI.h">
       <Filter>ヘッダー ファイル\buffered_data\ui_obj</Filter>
     </ClInclude>
   </ItemGroup>

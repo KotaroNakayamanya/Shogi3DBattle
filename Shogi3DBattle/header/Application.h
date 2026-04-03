@@ -9,7 +9,7 @@
 #include"ITexFactory.h"
 
 #include"Camera.h"
-#include"UIObj.h"
+#include"UI.h"
 
 #include"BufferedData.h"
 
@@ -41,7 +41,7 @@ private:
 
 
     // 2Dオブジェクト
-    std::vector<UIObj> _uis; // UI
+    std::vector<UI> _uis; // UI
 
 
     
@@ -102,9 +102,9 @@ public:
     void SetIsDrawMap(bool flag); // マップ描画フラグをセット
     bool IsDrawMap();             // マップ描画フラグを返す
 
-    std::vector<UIObj>& GetUIs(); // UIを返す
+    std::vector<UI>& GetUIs(); // UIを返す
     bool IsDrawUINotEmpty(); // UIの空状況を返す
-    void PushUI(std::wstring text, D2D1_RECT_F rect, UIObj::UIType uiType);   // UIをプッシュする
+    void PushUI(std::wstring text, D2D1_RECT_F rect, UI::UIType uiType);   // UIをプッシュする
     void RemoveAllUI();      // UIを全て削除する
 
     void ProcessChangeWindowSize(); // 画面サイズ変更処理

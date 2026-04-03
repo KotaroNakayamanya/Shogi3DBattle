@@ -15,7 +15,7 @@ ISceneState* StartMenu::ExeSceneOperation(
     _mainCamera->RotationH(rotationAngle);
 
     // UI選択チェック
-    _selectingUI = UIObj::NONE;
+    _selectingUI = UI::NONE;
     for (auto& ui : Application::GetInstance().GetUIs())
     {
         auto rect = ui.GetRect();
@@ -45,7 +45,7 @@ ISceneState* StartMenu::ExeDecisionButton()
 
     switch (_selectingUI)
     {
-        case UIObj::NEW_START:
+        case UI::NEW_START:
         {
             auto& app = Application::GetInstance();
             newSceneState = new SelectingPiece();
@@ -57,7 +57,7 @@ ISceneState* StartMenu::ExeDecisionButton()
             break;
         }
 
-        case UIObj::EXIT:
+        case UI::EXIT:
             DestroyWindow(Application::GetInstance().GetGameWindow()->GetHWND());
             newSceneState = this;
             break;
@@ -67,7 +67,7 @@ ISceneState* StartMenu::ExeDecisionButton()
             break;
     }
 
-    //if (_selectingUI == UIObj::NEW_START)
+    //if (_selectingUI == UI::NEW_START)
     //{
     //    
     //    //auto& pieces = app.GetPieces();
@@ -147,19 +147,19 @@ StartMenu::StartMenu()
 
     top  = gameWindow->GetWindowHeight() / 2;
     bottom = top + uiHeight;
-    app.PushUI(L"はじめから対局", {left, top, right, bottom}, UIObj::NEW_START);
+    app.PushUI(L"はじめから対局", {left, top, right, bottom}, UI::NEW_START);
 
     top    += heightOffset;
     bottom += heightOffset;
-    app.PushUI(L"つづきから対局", {left, top, right, bottom}, UIObj::CONTINUE_START);
+    app.PushUI(L"つづきから対局", {left, top, right, bottom}, UI::CONTINUE_START);
 
     top    += heightOffset;
     bottom += heightOffset;
-    app.PushUI(L"オプション", {left, top, right, bottom}, UIObj::OPTION);
+    app.PushUI(L"オプション", {left, top, right, bottom}, UI::OPTION);
 
     top    += heightOffset;
     bottom += heightOffset;
-    app.PushUI(L"ゲーム終了", {left, top, right, bottom}, UIObj::EXIT);
+    app.PushUI(L"ゲーム終了", {left, top, right, bottom}, UI::EXIT);
 
 
 
