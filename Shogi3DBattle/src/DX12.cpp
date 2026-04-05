@@ -828,24 +828,22 @@ void DX12::PrepareRenderTargetToFlip()
 
 
 
-
-
-
 // フェンスによる同期制御
 void DX12::WaitProcessWithFence()
 {
     // GPU処理完了後のフェンスの値を設定
-    _cmdQueue->GetCmdQueue()->Signal(_fence->GetFence(), _fence->GetIncrementFenceVal());
-
-    while (_fence->GetFence()->GetCompletedValue() != _fence->GetFenceVal())
+    auto nextFenceVal = _fence->GetFenceVal() + 1;
+    _cmdQueue->GetCmdQueue()->Signal(_fence->GetFence(), nextFenceVal);
+    
+    // フェンス値が更新されるまで待機
+    while (_fence->GetFenceVal() != nextFenceVal)
     {
-        auto event = CreateEvent(nullptr, false, false, nullptr);
-        _fence->GetFence()->SetEventOnCompletion(_fence->GetFenceVal(), event);
+        HANDLE event = nullptr;
+        _fence->GetFence()->SetEventOnCompletion(nextFenceVal, event);
         WaitForSingleObject(event, INFINITE);
         CloseHandle(event);
     }
 }
-
 
 
 

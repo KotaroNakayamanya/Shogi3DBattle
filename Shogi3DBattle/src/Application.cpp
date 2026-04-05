@@ -1,6 +1,8 @@
 ﻿#include"Application.h"
 
 #include<array>
+#include<chrono>
+#include<thread>
 #include"BoardFactory.h"
 #include"BoardVertIndicesFactory.h"
 #include"PieceVertIndicesFactory.h"
@@ -317,8 +319,12 @@ void Application::Run()
     // ウインドウ表示
     _gameWindow->DisplayWindow();
 
+    auto framePerS = 30;
+    auto msPerFrame = std::chrono::milliseconds(1000 / framePerS);
+
     MSG msg = {};
     while (true) {
+        static auto start = std::chrono::high_resolution_clock::now();
 
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
@@ -343,6 +349,13 @@ void Application::Run()
             _inputHandler->RemoveMouseMove();
             // 描画等実行
             _dx12->ExeDX12();
+            auto end = std::chrono::high_resolution_clock::now();
+            
+            // フレーム同期処理
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+            auto needSleepTime = std::chrono::duration_cast<std::chrono::milliseconds>(msPerFrame - duration);
+            if(needSleepTime.count() > 0) std::this_thread::sleep_for(needSleepTime);
+            start = std::chrono::high_resolution_clock::now(); 
         }
 
         if (msg.message == WM_QUIT)
@@ -350,7 +363,6 @@ void Application::Run()
             break;
         }
 
-        
     }
 }
 

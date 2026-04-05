@@ -89,10 +89,18 @@ D3D12_COMMAND_QUEUE_DESC Device::GetCmdQueueDesc()
 // ƒtƒFƒ“ƒXì¬
 HRESULT Device::CreateFence(Fence* fence)
 {
-    return _device->CreateFence(
-        fence->_fenceVal,
+    ComPtr<ID3D12Fence> fenceCom;
+
+    HRESULT result;
+    result = _device->CreateFence(
+        0,
         D3D12_FENCE_FLAG_NONE,
-        IID_PPV_ARGS(fence->_fence.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(fenceCom.ReleaseAndGetAddressOf()));
+    if(FAILED(result)) return result;
+
+    fence->SetFence(fenceCom);
+
+    return S_OK;
 }
 
 

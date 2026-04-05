@@ -1,14 +1,13 @@
 #include"Fence.h"
 
-ID3D12Fence* Fence::GetFence(){return _fence.Get();} // フェンスを返す
-UINT Fence::GetFenceVal(){return _fenceVal;} // フェンス値を返す
+void         Fence::SetFence(ComPtr<ID3D12Fence> fence){_fence = fence;}      // フェンスセット
+ID3D12Fence* Fence::GetFence()                         {return _fence.Get();} // フェンスを返す
+
+UINT64 Fence::GetFenceVal(){return _fence->GetCompletedValue();} // フェンス値を返す
 
 // フェンス値をインクリメントして返す
-UINT Fence::GetIncrementFenceVal()
+unsigned int Fence::GetIncrementFenceVal()
 {
     _fenceVal++;
     return GetFenceVal();
 }
-
-Fence::Fence(){}
-Fence::~Fence(){}
