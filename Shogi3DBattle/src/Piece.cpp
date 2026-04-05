@@ -7,6 +7,3 @@ void Piece::Move(DirectX::XMFLOAT3 vec)
     worldMat *= DirectX::XMMatrixTranslation(vec.x, vec.y, vec.z);
     _worldMat->SetWorldMat(worldMat);
 }
-
-Piece::Piece(){}
-Piece::~Piece(){}

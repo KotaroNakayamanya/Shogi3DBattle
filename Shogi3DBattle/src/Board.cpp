@@ -1,18 +1,22 @@
 #include"Board.h"
 
-// 将棋盤を5×5に変更
-void Board::ChangeBoardTo55()
+// 将棋盤を変更
+void Board::ChangeBoard(GameObjType board)
 {
-    if(_gameObjType == GameObjType::BOARD_55) return;
+    // 将棋盤以外のタイプなどを引数にされていたら何もせずに処理終了
+    auto it = _boardSizeMap.find(board);
+    if(it == _boardSizeMap.end()) return;
 
-    float rate = 6.0f / 10.0f;
-    _worldMat->SetWorldMat(DirectX::XMMatrixScaling(rate, rate, rate));
-}
+    // サイズ変換のための倍率を取得する
+    float currentBoardSize = _boardSizeMap[_gameObjType];
+    float afterBoardSize   = _boardSizeMap[board];
+    float rate = afterBoardSize / currentBoardSize;
 
-// 将棋盤を9×9に変更
-void Board::ChangeBoardTo99()
-{
-    if(_gameObjType == GameObjType::BOARD_99) return;
-
-    _worldMat->SetWorldMat(DirectX::XMMatrixIdentity());
+    // ワールド行列変換
+    auto mat = _worldMat->GetMat();
+    mat *= DirectX::XMMatrixScaling(rate, rate, rate);
+    _worldMat->SetWorldMat(mat);
+    // 将棋盤タイプ変換
+    _gameObjType = board;
+    _vertices->SetMulDesignTexId(static_cast<unsigned char>(board));
 }

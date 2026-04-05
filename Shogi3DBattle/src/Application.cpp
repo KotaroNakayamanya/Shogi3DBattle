@@ -12,7 +12,25 @@
 
 #include"YellowWoodTexFactory.h"
 #include"FactoryMethod.h"
+
+#include"King.h"
+#include"Rook.h"
+#include"Bishop.h"
+#include"Gold.h"
+#include"Silver.h"
+#include"Knight.h"
+#include"Lance.h"
+#include"Pawn.h"
+
 #include"KingFactory.h"
+#include"RookFactory.h"
+#include"BishopFactory.h"
+#include"GoldFactory.h"
+#include"SilverFactory.h"
+#include"KnightFactory.h"
+#include"LanceFactory.h"
+#include"PawnFactory.h"
+
 
 // 初期処理
 bool Application::Init()
@@ -39,88 +57,65 @@ failed:
 // ゲームオブジェクト作成
 void Application::CreateGameObj()
 {
-    // オブジェクトごとのID格納用
-    UINT objId = 0;
-
-    // 将棋オブジェクト作成用関数
-//    std::function<void(GameObj*, GameObj::GameObjType)> createGameObjFunction =
-//        [this, &objId](GameObj* shogiObj, GameObj::GameObjType shogiObjType)
-//        {
-//            switch (shogiObjType)
-//            {
-//            case GameObj::BOARD_55:
-//            case GameObj::BOARD_99:
-//            {
-//                //_gameObjFactory.reset(new BoardFactory());
-//                _verticesFactory.reset(new BoardFactory());
-//                _board 
-//                break;
-//            }
-//            
-//            case GameObj::KING:
-//            case GameObj::ROOK:
-//            case GameObj::BISHOP:
-//            case GameObj::GOLD:
-//            case GameObj::SILVER:
-//            case GameObj::KNIGHT:
-//            case GameObj::LANCE:
-//            case GameObj::PAWN:
-//                _gameObjFactory.reset(new PieceFactory());
-//                _gameObjFactory->CreateGameObj(shogiObj, shogiObjType, objId++);
-//                break;
-//
-//            default:
-//                return;
-//            }
-//
-//            //_gameObjFactory->CreateGameObj(shogiObj, shogiObjType, objId++);
-//        };
-
     // 将棋盤作成
-    //createGameObjFunction(_board.get(), GameObj::BOARD_99);
     _gameObjFactory.reset(new BoardFactory());
     _board = FactoryMethod::GetDownCastUniquePtr<Board, IGameObjFactory>(_gameObjFactory.get());
+
+    // 将棋盤のサイズを変更
+    _board->ChangeBoard(GameObjType::BOARD_55);
 
     // 将棋盤インデックス作成
     _vertIndicesFactory.reset(new BoardVertIndicesFactory());
     _boardIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory<unsigned short>>(_vertIndicesFactory.get());
 
-    // 駒作成
-    UINT kingNum =  2;
-    UINT rookNum =  2;
-    UINT bishopNum = 2;
-    UINT goldNum = 4;
-    UINT silverNum = 4;
-    UINT knightNum = 4;
-    UINT lanceNum = 4;
-    UINT pawnNum = 18;
-
-    UINT pieceNum = kingNum
-                  + rookNum
-                  + bishopNum
-                  + goldNum
-                  + silverNum
-                  + knightNum
-                  + lanceNum
-                  + pawnNum;
-    _pieces.resize(pieceNum);
-    for(auto& piece : _pieces) piece = std::make_unique<Piece>();
-
     // 王作成
     _gameObjFactory.reset(new KingFactory());
-    for (int i = 0; i < pieceNum; i++)
-    {
-        _pieces[i] = FactoryMethod::GetDownCastUniquePtr<Piece, IGameObjFactory>(_gameObjFactory.get());
-    }    
+    unsigned int idx = 0;
+    unsigned int kingNum = 2;
+    for (unsigned int i = idx; i < idx + kingNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<King, IGameObjFactory>(_gameObjFactory.get()));
 
-//    for (UINT i = 0; i < kingNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::KING);
-//    for (UINT i = 0; i < rookNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::ROOK);
-//    for (UINT i = 0; i < bishopNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::BISHOP);
-//    for (UINT i = 0; i < goldNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::GOLD);
-//    for (UINT i = 0; i < silverNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::SILVER);
-//    for (UINT i = 0; i < knightNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::KNIGHT);
-//    for (UINT i = 0; i < lanceNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::LANCE);
-//    for (UINT i = 0; i < pawnNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::PAWN);
+    // 飛作成
+    _gameObjFactory.reset(new KingFactory());
+    idx += kingNum;
+    unsigned int rookNum = 2;
+    for (unsigned int i = idx; i < idx + rookNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Rook, IGameObjFactory>(_gameObjFactory.get()));
+
+    // 角作成
+    _gameObjFactory.reset(new KingFactory());
+    idx += rookNum;
+    unsigned int bishopNum = 2;
+    for (unsigned int i = idx; i < idx + bishopNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Bishop, IGameObjFactory>(_gameObjFactory.get()));
+
+    // 金作成
+    _gameObjFactory.reset(new KingFactory());
+    idx += bishopNum;
+    unsigned int goldNum = 4;
+    for (unsigned int i = idx; i < idx + goldNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Gold, IGameObjFactory>(_gameObjFactory.get()));
+
+    // 銀作成
+    _gameObjFactory.reset(new KingFactory());
+    idx += goldNum;
+    unsigned int silverNum = 4;
+    for (unsigned int i = idx; i < idx + silverNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Silver, IGameObjFactory>(_gameObjFactory.get()));
+
+    // 桂作成
+    _gameObjFactory.reset(new KingFactory());
+    idx += silverNum;
+    unsigned int knightNum = 4;
+    for (unsigned int i = idx; i < idx + knightNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Knight, IGameObjFactory>(_gameObjFactory.get()));
+
+    // 香作成
+    _gameObjFactory.reset(new KingFactory());
+    idx += knightNum;
+    unsigned int lanceNum = 4;
+    for (unsigned int i = idx; i < idx + lanceNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Lance, IGameObjFactory>(_gameObjFactory.get()));
+
+    // 歩作成
+    _gameObjFactory.reset(new KingFactory());
+    idx += lanceNum;
+    unsigned int pawnNum = 18;
+    for (unsigned int i = idx; i < idx + pawnNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Pawn, IGameObjFactory>(_gameObjFactory.get()));
+ 
 
     // 駒の頂点インデックス集合作成
     _vertIndicesFactory.reset(new PieceVertIndicesFactory());

@@ -1,11 +1,17 @@
 #pragma once
 
 #include"GameObj.h"
+#include<map>
 
 class Board : public GameObj
 {
 private:
+    std::map<GameObjType, float> _boardSizeMap =
+    {
+        {GameObjType::BOARD_55,  60.0f},
+        {GameObjType::BOARD_99, 100.0f}
+    };
+
 public:
-    void ChangeBoardTo55(); // «Šû”Õ‚ğ5~5‚É•ÏX
-    void ChangeBoardTo99(); // «Šû”Õ‚ğ9~9‚É•ÏX
+    void ChangeBoard(GameObjType board); // «Šû”Õ‚ğ•ÏX
 };

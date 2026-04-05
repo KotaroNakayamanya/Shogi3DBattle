@@ -247,6 +247,27 @@
     <Filter Include="ヘッダー ファイル\enum">
       <UniqueIdentifier>{187ebf6a-f365-4ddb-bbb8-30f499176d26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\lance">
+      <UniqueIdentifier>{7420c375-7245-49d5-a7aa-13f1ebe0593f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\rook">
+      <UniqueIdentifier>{a0967f03-f362-4f5e-8050-e9c9af4bd5eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\bishop">
+      <UniqueIdentifier>{468f7ba7-70a8-4bcc-b754-7b522a169a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\gold">
+      <UniqueIdentifier>{1c5883ae-c284-4075-9f4e-036f58b80716}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\silver">
+      <UniqueIdentifier>{ff727e56-eda9-4a4b-b536-49e02a2e3fef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\pawn">
+      <UniqueIdentifier>{34e6da64-f112-4f48-95ae-e937c7b1965a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\knight">
+      <UniqueIdentifier>{ce9cbb53-6afe-400f-b491-684d1fc0880a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -787,6 +808,72 @@
     </ClInclude>
     <ClInclude Include="header\BasicTexType.h">
       <Filter>ヘッダー ファイル\enum</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PawnFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\pawn</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PawnVerticesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\pawn</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BishopFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\bishop</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BishopVerticesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\bishop</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GoldFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\gold</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GoldVerticesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\gold</Filter>
+    </ClInclude>
+    <ClInclude Include="header\KnightFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\knight</Filter>
+    </ClInclude>
+    <ClInclude Include="header\KnightVerticesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\knight</Filter>
+    </ClInclude>
+    <ClInclude Include="header\LanceFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\lance</Filter>
+    </ClInclude>
+    <ClInclude Include="header\LanceVerticesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\lance</Filter>
+    </ClInclude>
+    <ClInclude Include="header\SilverFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\silver</Filter>
+    </ClInclude>
+    <ClInclude Include="header\SilverVerticesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\silver</Filter>
+    </ClInclude>
+    <ClInclude Include="header\RookFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\rook</Filter>
+    </ClInclude>
+    <ClInclude Include="header\RookVerticesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\rook</Filter>
+    </ClInclude>
+    <ClInclude Include="header\King.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Bishop.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Rook.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Gold.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Silver.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Knight.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Lance.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Pawn.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
