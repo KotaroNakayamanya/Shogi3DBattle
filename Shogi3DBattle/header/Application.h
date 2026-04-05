@@ -4,7 +4,6 @@
 #include"DX12.h"
 #include"InputHandler.h"
 #include"IGameObjFactory.h"
-#include"IVertIndicesFactory.h"
 #include"ISceneState.h"
 #include"IBufferedDataFactory.h"
 
@@ -12,6 +11,7 @@
 #include"UI.h"
 
 #include"BufferedData.h"
+#include"VertStruct.h"
 
 class Application
 {
@@ -31,11 +31,10 @@ private:
 
     // ファクトリー
     std::unique_ptr<IGameObjFactory>    _gameObjFactory;    // ゲームオブジェクトファクトリー
+    std::unique_ptr<IBufferedDataFactory<Vert>>  _verticesFactory;    // 頂点集合ファクトリー
     std::unique_ptr<IBufferedDataFactory<unsigned short>> _vertIndicesFactory; // インデックス集合ファクトリー
     std::unique_ptr<IBufferedDataFactory<Pixel>> _texFactory;    // テクスチャファクトリー
 
-    template<typename T1, typename T2>
-    std::unique_ptr<T1> GetDownCastUniquePtr(IBufferedDataFactory<T2>* bufferedDataFactory); 
 
     // テクスチャ
     std::unique_ptr<Texture> _woodTex; // 木材テクスチャ

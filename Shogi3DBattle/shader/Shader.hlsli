@@ -15,7 +15,7 @@ struct Output
 tbuffer tbuff : register(t0)
 {
     Texture2D<float4> basicTexs [1];
-    Texture2D<float4> designTexs[9];
+    Texture2D<float4> designTexs[10];
 }
 
 

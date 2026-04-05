@@ -1,59 +1,22 @@
-#include"PieceFactory.h"
-#include<array>
-#include<algorithm>
+#pragma once
+
+#include<memory>
+#include"BufferedData.h"
 #include"VecCalc.h"
+#include"Vertices.h"
+#include"GameObjIdManager.h"
+#include"BasicTexType.h"
 
-// 駒作成
-void PieceFactory::CreateGameObj(GameObj* gameObj, GameObj::GameObjType shogiObjType, unsigned char objId)
+class PieceFactoryMethod
 {
-    // 将棋オブジェクトIDセット
-    gameObj->SetObjId(objId);
+public:
+    // 駒の頂点集合ユニークポインタを返す
+    static std::unique_ptr<Vertices> GetPieceVerticesUniquePtr(float mmBottomWidth, float mmHeight); 
+};
 
-    // 使用する文字テクスチャのIDをセット
-    unsigned char texId = shogiObjType;
-    gameObj->SetTexId(texId);   
-
-    // 駒の種類ごとの大きさをミリメートルで格納
-    float mmBottomWidth;
-    float mmHeight;
-    switch (shogiObjType)
-    {
-    case GameObj::KING:
-        mmBottomWidth  = 285.0f;
-        mmHeight = 320.0f;
-        break;
-    
-    case GameObj::ROOK:
-    case GameObj::BISHOP:
-        mmBottomWidth  = 260.0f;
-        mmHeight = 300.0f;
-        break;
-
-    case GameObj::GOLD:
-    case GameObj::SILVER:
-        mmBottomWidth  = 250.0f;
-        mmHeight = 285.0f;
-        break;
-    
-    case GameObj::KNIGHT:
-        mmBottomWidth  = 235.0f;
-        mmHeight = 275.0f;
-        break;
-
-    case GameObj::LANCE:
-        mmBottomWidth  = 225.0f;
-        mmHeight = 275.0f;
-        break;
-
-    case GameObj::PAWN:
-        mmBottomWidth  = 225.0f;
-        mmHeight = 260.0f;
-        break;
-
-    default:
-        return;
-    }
-
+// 駒の頂点集合ユニークポインタを返す
+std::unique_ptr<Vertices> PieceFactoryMethod::GetPieceVerticesUniquePtr(float mmBottomWidth, float mmHeight)
+{
     // 10.0fで約400mm
     float mmPerFloat = 600.0f / 10.0f;
 
@@ -77,12 +40,10 @@ void PieceFactory::CreateGameObj(GameObj* gameObj, GameObj::GameObjType shogiObj
     // 表面
     float frontTopU = frontCenterU;
     float topV = 0.0f;
-
    
     float frontLeftCornerU  = frontCenterU - quarterCornerWidth;
     float frontRightCornerU = frontCenterU + quarterCornerWidth;
     float cornerV = (1.0f - cornerHeightRate) / 2;
-
     
     float frontLeftBottomU  = frontCenterU - quarterBottomWidth;
     float frontRightBottomU = frontCenterU + quarterBottomWidth;
@@ -102,20 +63,15 @@ void PieceFactory::CreateGameObj(GameObj* gameObj, GameObj::GameObjType shogiObj
     cornerWidth  /= 2;
     cornerHeight -= height;
 
-
-    // 側面の法線（右と上を正）を
-    DirectX::XMFLOAT2 normalizedVec;
-
     // 頂点上　→　頂点角右のベクトルを正規化する
     DirectX::XMFLOAT2 topToRightCornerVec;
     topToRightCornerVec.x = cornerWidth;
     topToRightCornerVec.y = cornerHeight - height;
-    normalizedVec = VecCalc::GetNormFloat(topToRightCornerVec);
+    DirectX::XMFLOAT2 normalizedVec = VecCalc::GetNormFloat(topToRightCornerVec);
 
     // 正規化したベクトルのxyを反対に格納し、どちらかの符号を逆にしたものは法線
     float cornerNormalX = -normalizedVec.y;
     float cornerNormalY =  normalizedVec.x;
-
 
     // 頂点角右　→　頂点底面右のベクトルを正規化する
     DirectX::XMFLOAT2 rightCornerToRightBottomVec;
@@ -127,11 +83,7 @@ void PieceFactory::CreateGameObj(GameObj* gameObj, GameObj::GameObjType shogiObj
     float normalX = -normalizedVec.y;
     float normalY =  normalizedVec.x;
 
-    
-
-    
-
-    std::vector<GameObj::Vert> vertices;
+    std::vector<Vert> vertices;
 
     vertices = // 頂点集合
     {
@@ -180,19 +132,10 @@ void PieceFactory::CreateGameObj(GameObj* gameObj, GameObj::GameObjType shogiObj
         {{           0,       height, -thickness}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}}, // 左上  
     };
 
-    for (auto& vertex : vertices)
-    {
-        vertex.objId = objId;
-        vertex.designTexId = texId;
-    }
+    std::unique_ptr<Vertices> uniquePtr = std::make_unique<Vertices>();
+    uniquePtr->SetDatas(vertices);
+    uniquePtr->SetGameObjId(GameObjIdManager::GetId());
+    uniquePtr->SetBasicTexId(static_cast<unsigned char>(BasicTexType::YELLOW_WOOD));
 
-    NaturalBufferedData<GameObj::Vert> vertData;
-    vertData.SetDatas(vertices);
-    gameObj->SetVertices(vertData);
-
-
-    // ワールド行列セット
-    WorldMat worldMatObj;
-    worldMatObj.SetWorldMat(DirectX::XMMatrixIdentity());
-    gameObj->SetWorldMat(worldMatObj);
+    return uniquePtr;
 }

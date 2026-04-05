@@ -107,14 +107,14 @@ StartMenu::StartMenu()
     // フォーカス位置セット
     float focusX, focusY;
     auto board = app.GetBoard();
-    switch (board->GetTexId())
+    switch (board->GetGameObjType())
     {
-        case GameObj::BOARD_55:
+        case GameObjType::BOARD_55:
             focusX = 30.0f;
             focusY = 30.0f;
             break;
 
-        case GameObj::BOARD_99:
+        case GameObjType::BOARD_99:
             focusX = 50.0f;
             focusY = 50.0f;
             break;

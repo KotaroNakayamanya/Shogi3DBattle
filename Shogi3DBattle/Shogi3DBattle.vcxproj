@@ -22,6 +22,7 @@
     <ClCompile Include="header\DefaultHeapProp.cpp" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\BoardVerticesFactory.cpp" />
     <ClCompile Include="src\BoardFactory.cpp" />
     <ClCompile Include="src\BoardVertIndicesFactory.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
@@ -53,6 +54,8 @@
     <ClCompile Include="src\GameWindow.cpp" />
     <ClCompile Include="src\HeapFactory.cpp" />
     <ClCompile Include="src\IdxBuffFactory.cpp" />
+    <ClCompile Include="src\KingFactory.cpp" />
+    <ClCompile Include="src\KingVerticesFactory.cpp" />
     <ClCompile Include="src\NonePersProjMat.cpp" />
     <ClCompile Include="src\PersProjMat.cpp" />
     <ClCompile Include="src\PieceVertIndicesFactory.cpp" />
@@ -66,7 +69,6 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MovingPiece.cpp" />
     <ClCompile Include="src\Piece.cpp" />
-    <ClCompile Include="src\PieceFactory.cpp" />
     <ClCompile Include="src\PShaderResourceStates.cpp" />
     <ClCompile Include="src\ReadResourceStates.cpp" />
     <ClCompile Include="src\Pipeline.cpp" />
@@ -87,8 +89,10 @@
     <ClCompile Include="src\UploadHeapProp.cpp" />
     <ClCompile Include="src\VecCalc.cpp" />
     <ClCompile Include="src\VertBuffFactory.cpp" />
+    <ClCompile Include="src\Vertices.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
     <ClCompile Include="src\WorldMat.cpp" />
+    <ClCompile Include="src\WorldMatFactory.cpp" />
     <ClCompile Include="src\WrappedBuff.cpp" />
     <ClCompile Include="src\DepthWriteResourceStates.cpp" />
     <ClCompile Include="src\YellowWoodTexFactory.cpp" />
@@ -96,6 +100,8 @@
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
     <ClInclude Include="header\Application.h" />
+    <ClInclude Include="header\BasicTexType.h" />
+    <ClInclude Include="header\BoardVerticesFactory.h" />
     <ClInclude Include="header\BoardFactory.h" />
     <ClInclude Include="header\BoardVertIndicesFactory.h" />
     <ClInclude Include="header\BufferedData.h" />
@@ -106,7 +112,10 @@
     <ClInclude Include="header\DefaultHeapProp.h" />
     <ClInclude Include="header\DSBuffFactory.h" />
     <ClInclude Include="header\DSResourceDesc.h" />
+    <ClInclude Include="header\FactoryMethod.h" />
     <ClInclude Include="header\GameObj.h" />
+    <ClInclude Include="header\GameObjIdManager.h" />
+    <ClInclude Include="header\GameObjType.h" />
     <ClInclude Include="header\IBuffFactory.h" />
     <ClInclude Include="header\CBVFactory.h" />
     <ClInclude Include="header\CmdAllocator.h" />
@@ -132,9 +141,12 @@
     <ClInclude Include="header\IDescOffset.h" />
     <ClInclude Include="header\IHeapDesc.h" />
     <ClInclude Include="header\IMat.h" />
+    <ClInclude Include="header\KingFactory.h" />
+    <ClInclude Include="header\KingVerticesFactory.h" />
     <ClInclude Include="header\NaturalBufferedData.h" />
     <ClInclude Include="header\NonePersProjMat.h" />
     <ClInclude Include="header\PersProjMat.h" />
+    <ClInclude Include="header\PieceFactoryMethod.h" />
     <ClInclude Include="header\PieceVertIndicesFactory.h" />
     <ClInclude Include="header\SelectingPiece.h" />
     <ClInclude Include="header\Shader.h" />
@@ -153,7 +165,6 @@
     <ClInclude Include="header\KeyMap.h" />
     <ClInclude Include="header\MovingPiece.h" />
     <ClInclude Include="header\Piece.h" />
-    <ClInclude Include="header\PieceFactory.h" />
     <ClInclude Include="header\PShaderResourceStates.h" />
     <ClInclude Include="header\ReadResourceStates.h" />
     <ClInclude Include="header\Pipeline.h" />
@@ -177,12 +188,14 @@
     <ClInclude Include="header\TextFormat.h" />
     <ClInclude Include="header\UploadHeapProp.h" />
     <ClInclude Include="header\VecCalc.h" />
+    <ClInclude Include="header\VertStruct.h" />
     <ClInclude Include="header\VertBuffFactory.h" />
-    <ClInclude Include="header\IVertIndicesFactory.h" />
+    <ClInclude Include="header\Vertices.h" />
     <ClInclude Include="header\View.h" />
     <ClInclude Include="header\IViewFactory.h" />
     <ClInclude Include="header\ViewMat.h" />
     <ClInclude Include="header\WorldMat.h" />
+    <ClInclude Include="header\WorldMatFactory.h" />
     <ClInclude Include="header\WrappedBuff.h" />
     <ClInclude Include="header\DepthWriteResourceStates.h" />
     <ClInclude Include="header\ClipZRange.h" />

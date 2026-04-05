@@ -5,5 +5,5 @@
 class PieceVertIndicesFactory : public IBufferedDataFactory<unsigned short>
 {
 public:
-    std::unique_ptr<BufferedData<unsigned short>> CreateBufferedData() override; // 駒のインデックス集合作成
+    std::unique_ptr<BufferedData<unsigned short>> CreateUniquePtr() override; // 駒のインデックス集合作成
 };

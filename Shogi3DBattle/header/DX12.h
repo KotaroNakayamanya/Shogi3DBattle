@@ -11,6 +11,8 @@
 
 #include"Board.h"
 
+#include"GameObjType.h"
+
 class DX12
 {
 private:
@@ -47,12 +49,12 @@ private:
 
     void CreateRenderTex(); // レンダーテクスチャ作成
     void CreatePieceTex(
-        GameObj::GameObjType shogiObjType,
+        GameObjType shogiObjType,
         std::wstring frontText,
         std::wstring backText); // 駒テクスチャ作成
 
-    void InitRenderTex(GameObj::GameObjType shogiObjType); // レンダーテクスチャ初期処理
-    void ExitRenderTex(GameObj::GameObjType shogiObjType); // レンダリング終了処理
+    void InitRenderTex(GameObjType shogiObjType); // レンダーテクスチャ初期処理
+    void ExitRenderTex(GameObjType shogiObjType); // レンダリング終了処理
 
     HRESULT CreateBuff(); // バッファ系作成
     HRESULT WriteToBuff(); // バッファに書き込み  

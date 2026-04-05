@@ -2,7 +2,6 @@
 
 #include<array>
 #include"BoardFactory.h"
-#include"PieceFactory.h"
 #include"BoardVertIndicesFactory.h"
 #include"PieceVertIndicesFactory.h"
 #include<functional>
@@ -12,6 +11,8 @@
 #include"NonePersProjMat.h"
 
 #include"YellowWoodTexFactory.h"
+#include"FactoryMethod.h"
+#include"KingFactory.h"
 
 // 初期処理
 bool Application::Init()
@@ -42,41 +43,47 @@ void Application::CreateGameObj()
     UINT objId = 0;
 
     // 将棋オブジェクト作成用関数
-    std::function<void(GameObj*, GameObj::GameObjType)> createGameObjFunction =
-        [this, &objId](GameObj* shogiObj, GameObj::GameObjType shogiObjType)
-        {
-            switch (shogiObjType)
-            {
-            case GameObj::BOARD_55:
-            case GameObj::BOARD_99:
-                _gameObjFactory.reset(new BoardFactory());
-                break;
-            
-            case GameObj::KING:
-            case GameObj::ROOK:
-            case GameObj::BISHOP:
-            case GameObj::GOLD:
-            case GameObj::SILVER:
-            case GameObj::KNIGHT:
-            case GameObj::LANCE:
-            case GameObj::PAWN:
-                _gameObjFactory.reset(new PieceFactory());
-                break;
-
-            default:
-                return;
-            }
-
-            _gameObjFactory->CreateGameObj(shogiObj, shogiObjType, objId++);
-        };
+//    std::function<void(GameObj*, GameObj::GameObjType)> createGameObjFunction =
+//        [this, &objId](GameObj* shogiObj, GameObj::GameObjType shogiObjType)
+//        {
+//            switch (shogiObjType)
+//            {
+//            case GameObj::BOARD_55:
+//            case GameObj::BOARD_99:
+//            {
+//                //_gameObjFactory.reset(new BoardFactory());
+//                _verticesFactory.reset(new BoardFactory());
+//                _board 
+//                break;
+//            }
+//            
+//            case GameObj::KING:
+//            case GameObj::ROOK:
+//            case GameObj::BISHOP:
+//            case GameObj::GOLD:
+//            case GameObj::SILVER:
+//            case GameObj::KNIGHT:
+//            case GameObj::LANCE:
+//            case GameObj::PAWN:
+//                _gameObjFactory.reset(new PieceFactory());
+//                _gameObjFactory->CreateGameObj(shogiObj, shogiObjType, objId++);
+//                break;
+//
+//            default:
+//                return;
+//            }
+//
+//            //_gameObjFactory->CreateGameObj(shogiObj, shogiObjType, objId++);
+//        };
 
     // 将棋盤作成
-    createGameObjFunction(_board.get(), GameObj::BOARD_55);
+    //createGameObjFunction(_board.get(), GameObj::BOARD_99);
+    _gameObjFactory.reset(new BoardFactory());
+    _board = FactoryMethod::GetDownCastUniquePtr<Board, IGameObjFactory>(_gameObjFactory.get());
+
     // 将棋盤インデックス作成
     _vertIndicesFactory.reset(new BoardVertIndicesFactory());
-    _boardIndices = GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, unsigned short>(_vertIndicesFactory.get());
-
-
+    _boardIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory<unsigned short>>(_vertIndicesFactory.get());
 
     // 駒作成
     UINT kingNum =  2;
@@ -96,22 +103,28 @@ void Application::CreateGameObj()
                   + knightNum
                   + lanceNum
                   + pawnNum;
-
     _pieces.resize(pieceNum);
     for(auto& piece : _pieces) piece = std::make_unique<Piece>();
 
-    for (UINT i = 0; i < kingNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::KING);
-    for (UINT i = 0; i < rookNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::ROOK);
-    for (UINT i = 0; i < bishopNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::BISHOP);
-    for (UINT i = 0; i < goldNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::GOLD);
-    for (UINT i = 0; i < silverNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::SILVER);
-    for (UINT i = 0; i < knightNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::KNIGHT);
-    for (UINT i = 0; i < lanceNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::LANCE);
-    for (UINT i = 0; i < pawnNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::PAWN);
+    // 王作成
+    _gameObjFactory.reset(new KingFactory());
+    for (int i = 0; i < pieceNum; i++)
+    {
+        _pieces[i] = FactoryMethod::GetDownCastUniquePtr<Piece, IGameObjFactory>(_gameObjFactory.get());
+    }    
+
+//    for (UINT i = 0; i < kingNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::KING);
+//    for (UINT i = 0; i < rookNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::ROOK);
+//    for (UINT i = 0; i < bishopNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::BISHOP);
+//    for (UINT i = 0; i < goldNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::GOLD);
+//    for (UINT i = 0; i < silverNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::SILVER);
+//    for (UINT i = 0; i < knightNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::KNIGHT);
+//    for (UINT i = 0; i < lanceNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::LANCE);
+//    for (UINT i = 0; i < pawnNum; i++) createGameObjFunction(_pieces[objId - 1].get(), GameObj::PAWN);
 
     // 駒の頂点インデックス集合作成
     _vertIndicesFactory.reset(new PieceVertIndicesFactory());
-    _pieceIndices = GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, unsigned short>(_vertIndicesFactory.get());
+    _pieceIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory<unsigned short>>(_vertIndicesFactory.get());
     
     // 駒の初期位置調整
     for (int i = 1; i < _pieces.size(); i++)
@@ -119,6 +132,8 @@ void Application::CreateGameObj()
         DirectX::XMFLOAT3 vec = {i*10.0f, 10.0f, 0.0f};
         _pieces[i]->Move(vec);
     }
+
+
 }
 
 
@@ -129,11 +144,11 @@ void Application::CreateTex()
 {
     //// 黄色木材テクスチャ作成
     _texFactory.reset(new YellowWoodTexFactory());
-    _woodTex = GetDownCastUniquePtr<Texture, Pixel>(_texFactory.get());
+    _woodTex = FactoryMethod::GetDownCastUniquePtr<Texture, IBufferedDataFactory<Pixel>>(_texFactory.get());
 
     // 将棋盤黒線テクスチャ作成用関数
-    std::function<void(Texture*, GameObj::GameObjType)> createBoardLineTex =
-        [this](Texture* tex, GameObj::GameObjType shogiObjType)
+    std::function<void(Texture*, GameObjType)> createBoardLineTex =
+        [this](Texture* tex, GameObjType shogiObjType)
         {
             std::vector<Pixel> boardLinePixels;
 
@@ -156,11 +171,11 @@ void Application::CreateTex()
 
             switch (shogiObjType)
             {
-                case GameObj::BOARD_55:
+                case GameObjType::BOARD_55:
                     squareNum = 5;
                     break;
 
-                case GameObj::BOARD_99:
+                case GameObjType::BOARD_99:
                     squareNum = 9;
                     break;
 
@@ -230,10 +245,10 @@ void Application::CreateTex()
     INT boardTexNum = 2;
     _boardLineTexs.resize(boardTexNum);
 
-    std::vector<GameObj::GameObjType> boardType =
+    std::vector<GameObjType> boardType =
     {
-        GameObj::BOARD_55,
-        GameObj::BOARD_99
+        GameObjType::BOARD_55,
+        GameObjType::BOARD_99
     };
     _boardLineTexs.resize(boardType.size());
     
@@ -300,19 +315,6 @@ void Application::InitSceneState()
 {
     _sceneState = std::make_unique<StartMenu>(); // スタート画面
 }
-
-// ダウンキャストしたユニークポインタを返す
-template<typename T1, typename T2>
-std::unique_ptr<T1> Application::GetDownCastUniquePtr(IBufferedDataFactory<T2>* bufferedDataFactory)
-{ 
-    auto tempUniquePtr = bufferedDataFactory->CreateBufferedData();
-    auto tempPtr = tempUniquePtr.get();
-    tempUniquePtr.release();
-    auto downCastPtr = static_cast<T1*>(tempPtr);
-    std::unique_ptr<T1> uniquePtr(downCastPtr);
-    return uniquePtr;
-}
-
 
 
 
@@ -584,8 +586,6 @@ Application::Application()
 
     _boardIndices = std::make_unique<NaturalBufferedData<unsigned short>>();
     _pieceIndices = std::make_unique<NaturalBufferedData<unsigned short>>();
-    //_boardIndices = std::make_unique<BufferedData<unsigned short>>();
-    //_pieceIndices = std::make_unique<BufferedData<unsigned short>>();
 
     _keyMap = std::make_unique<KeyMap>();
     _inputHandler = std::make_unique<InputHandler>();

@@ -2,7 +2,7 @@
 #include"NaturalBufferedData.h"
 
 // 駒のインデックス集合作成
-std::unique_ptr<BufferedData<unsigned short>> PieceVertIndicesFactory::CreateBufferedData()
+std::unique_ptr<BufferedData<unsigned short>> PieceVertIndicesFactory::CreateUniquePtr()
 {
     std::vector<unsigned short> vertIndices;
 

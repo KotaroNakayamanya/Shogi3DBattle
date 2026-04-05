@@ -199,23 +199,8 @@
     <Filter Include="ヘッダー ファイル\buffered_data\game_object">
       <UniqueIdentifier>{d881fad7-e34a-48b6-9fb2-44f03971fec5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\game_object\shogi_obj">
-      <UniqueIdentifier>{6376bcf5-0473-4c76-b5a4-46d9742c14d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\game_object\shogi_obj\board">
-      <UniqueIdentifier>{87a704ed-e82c-4da5-8b2a-c2805a1f4977}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\game_object\shogi_obj\piece">
-      <UniqueIdentifier>{2bd42877-1574-4e0f-a8f7-2818e3cb5618}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\game_object\shogi_obj\factory">
-      <UniqueIdentifier>{471b672a-ce78-45e0-914a-746235cc279d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\texture">
       <UniqueIdentifier>{44432d83-16dc-4546-9d63-92123a216c25}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\mat">
-      <UniqueIdentifier>{fc19dabf-7165-4134-b5f0-631b66fb8856}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\buffered_data">
       <UniqueIdentifier>{d63670e8-482e-4889-851a-c810232a8a6b}</UniqueIdentifier>
@@ -229,9 +214,6 @@
     <Filter Include="ヘッダー ファイル\buffered_data\texture\factory">
       <UniqueIdentifier>{83c8fac9-d219-4c53-82b0-85da80e3001a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\game_object\factory">
-      <UniqueIdentifier>{b51f4ee6-d02d-4c8c-920d-2bfe256db2fc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\buffered_data\game_obj">
       <UniqueIdentifier>{3e13e98a-014b-4f54-b232-5915bbe2e892}</UniqueIdentifier>
     </Filter>
@@ -240,6 +222,30 @@
     </Filter>
     <Filter Include="ソース ファイル\buffered_data\texutre\factory">
       <UniqueIdentifier>{8829a128-7481-47c4-b6e9-56ea79857d50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\board">
+      <UniqueIdentifier>{87a704ed-e82c-4da5-8b2a-c2805a1f4977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece">
+      <UniqueIdentifier>{2bd42877-1574-4e0f-a8f7-2818e3cb5618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\king">
+      <UniqueIdentifier>{a04da948-a9f9-4bc0-a02a-f1866b92e6a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\world_mat">
+      <UniqueIdentifier>{05ad00d5-9d8c-4ecf-9f1f-23d3f7b49617}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\camera">
+      <UniqueIdentifier>{fc19dabf-7165-4134-b5f0-631b66fb8856}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\camera\view_mat">
+      <UniqueIdentifier>{ba1bef95-f5b9-4850-9b00-aafc8bac17a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\camera\proj_mat">
+      <UniqueIdentifier>{2c192463-bddc-4f6c-8a23-c50ee6c71d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\enum">
+      <UniqueIdentifier>{187ebf6a-f365-4ddb-bbb8-30f499176d26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -396,9 +402,6 @@
     <ClCompile Include="src\BoardFactory.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\PieceFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\factory</Filter>
-    </ClCompile>
     <ClCompile Include="src\RenderTexBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
     </ClCompile>
@@ -462,6 +465,21 @@
     <ClCompile Include="src\UI.cpp">
       <Filter>ソース ファイル\buffered_data</Filter>
     </ClCompile>
+    <ClCompile Include="src\WorldMatFactory.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KingFactory.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KingVerticesFactory.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vertices.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoardVerticesFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -477,7 +495,7 @@
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
     <ClInclude Include="header\Piece.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\piece</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
     <ClInclude Include="header\SwapChain.h">
       <Filter>ヘッダー ファイル\DX12\swap_chain</Filter>
@@ -501,7 +519,7 @@
       <Filter>ヘッダー ファイル\DX12\root_signature</Filter>
     </ClInclude>
     <ClInclude Include="header\Board.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\board</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
     </ClInclude>
     <ClInclude Include="header\IHeapDesc.h">
       <Filter>ヘッダー ファイル\DX12\heap\factory\heap_desc</Filter>
@@ -659,41 +677,14 @@
     <ClInclude Include="header\TexBuffFactory.h">
       <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
     </ClInclude>
-    <ClInclude Include="header\IGameObjFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
-    </ClInclude>
-    <ClInclude Include="header\BoardFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PieceFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\shogi_obj\factory</Filter>
-    </ClInclude>
     <ClInclude Include="header\RenderTexBuffFactory.h">
       <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
-    </ClInclude>
-    <ClInclude Include="header\IMat.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ViewMat.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
-    </ClInclude>
-    <ClInclude Include="header\WorldMat.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
     </ClInclude>
     <ClInclude Include="header\StartMenu.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
-    <ClInclude Include="header\PersProjMat.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
-    </ClInclude>
-    <ClInclude Include="header\NonePersProjMat.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
-    </ClInclude>
     <ClInclude Include="header\SelectingPiece.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ClipZRange.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
     </ClInclude>
     <ClInclude Include="header\Shader.h">
       <Filter>ヘッダー ファイル\DX12\shader</Filter>
@@ -703,9 +694,6 @@
     </ClInclude>
     <ClInclude Include="header\BufferedData.h">
       <Filter>ヘッダー ファイル\buffered_data</Filter>
-    </ClInclude>
-    <ClInclude Include="header\VecCalc.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat</Filter>
     </ClInclude>
     <ClInclude Include="header\Texture.h">
       <Filter>ヘッダー ファイル\buffered_data\texture</Filter>
@@ -719,15 +707,6 @@
     <ClInclude Include="header\NaturalBufferedData.h">
       <Filter>ヘッダー ファイル\buffered_data</Filter>
     </ClInclude>
-    <ClInclude Include="header\IVertIndicesFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\factory</Filter>
-    </ClInclude>
-    <ClInclude Include="header\BoardVertIndicesFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\factory</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PieceVertIndicesFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\factory</Filter>
-    </ClInclude>
     <ClInclude Include="header\GameWindow.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -740,8 +719,74 @@
     <ClInclude Include="header\UI.h">
       <Filter>ヘッダー ファイル\buffered_data</Filter>
     </ClInclude>
-    <ClInclude Include="header\Camera.h">
+    <ClInclude Include="header\FactoryMethod.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\VertStruct.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Vertices.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BoardFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PieceFactoryMethod.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PieceVertIndicesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BoardVertIndicesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BoardVerticesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\KingFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\king</Filter>
+    </ClInclude>
+    <ClInclude Include="header\KingVerticesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\king</Filter>
+    </ClInclude>
+    <ClInclude Include="header\WorldMatFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\world_mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\WorldMat.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\world_mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ViewMat.h">
+      <Filter>ヘッダー ファイル\buffered_data\camera\view_mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\NonePersProjMat.h">
+      <Filter>ヘッダー ファイル\buffered_data\camera\proj_mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PersProjMat.h">
+      <Filter>ヘッダー ファイル\buffered_data\camera\proj_mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ClipZRange.h">
+      <Filter>ヘッダー ファイル\buffered_data\camera\proj_mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\VecCalc.h">
       <Filter>ヘッダー ファイル\buffered_data</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IMat.h">
+      <Filter>ヘッダー ファイル\buffered_data</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Camera.h">
+      <Filter>ヘッダー ファイル\buffered_data\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IGameObjFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GameObjIdManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GameObjType.h">
+      <Filter>ヘッダー ファイル\enum</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BasicTexType.h">
+      <Filter>ヘッダー ファイル\enum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
