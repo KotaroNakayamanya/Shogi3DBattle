@@ -1,16 +1,16 @@
-#include"KingFactory.h"
-#include"King.h"
-#include"KingVerticesFactory.h"
+#include"LanceFactory.h"
+#include"Lance.h"
+#include"LanceVerticesFactory.h"
 #include"WorldMatFactory.h"
 #include"FactoryMethod.h"
 
-// 王　作成
-std::unique_ptr<GameObj> KingFactory::CreateUniquePtr()
+//　香 　作成
+std::unique_ptr<GameObj> LanceFactory::CreateUniquePtr()
 {
-    std::unique_ptr<King> uniquePtr = std::make_unique<King>();
+    std::unique_ptr<Lance> uniquePtr = std::make_unique<Lance>();
 
     // 頂点集合作成
-    _verticesFactory.reset(new KingVerticesFactory());
+    _verticesFactory.reset(new LanceVerticesFactory());
     auto kingVerticesUniquePtr =
         FactoryMethod::GetDownCastUniquePtr<Vertices, IBufferedDataFactory<Vert>>(_verticesFactory.get());
     auto kingVerticesPtr = kingVerticesUniquePtr.get();

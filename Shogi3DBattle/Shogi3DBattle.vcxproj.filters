@@ -217,9 +217,6 @@
     <Filter Include="ソース ファイル\buffered_data\game_obj">
       <UniqueIdentifier>{3e13e98a-014b-4f54-b232-5915bbe2e892}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj\factory">
-      <UniqueIdentifier>{65995f4d-91d0-4aad-aaf3-2260432487e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\buffered_data\texutre\factory">
       <UniqueIdentifier>{8829a128-7481-47c4-b6e9-56ea79857d50}</UniqueIdentifier>
     </Filter>
@@ -267,6 +264,36 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\knight">
       <UniqueIdentifier>{ce9cbb53-6afe-400f-b491-684d1fc0880a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\factory">
+      <UniqueIdentifier>{65995f4d-91d0-4aad-aaf3-2260432487e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\piece">
+      <UniqueIdentifier>{1c0cbb52-b3ee-436c-825f-5a70272475d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\piece\king">
+      <UniqueIdentifier>{580cb755-7a96-412f-9f8a-c4aa110e7ee9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\piece\rook">
+      <UniqueIdentifier>{92214235-befb-478b-8d50-4bbb573e9e90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\piece\bishop">
+      <UniqueIdentifier>{5821aa70-b3da-40b3-b8af-44cd2717305c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\piece\gold">
+      <UniqueIdentifier>{60b9ac5b-9cb4-49b7-846d-1ced3a0b5f5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\piece\silver">
+      <UniqueIdentifier>{0cd18528-941e-4501-8a82-48a4bbfc6c3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\piece\knight">
+      <UniqueIdentifier>{9b7f3601-a487-4c07-a29a-aa3027adedbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\piece\lance">
+      <UniqueIdentifier>{e531ce12-431f-4b25-8ff4-4d2d129ff2ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\piece\pawn">
+      <UniqueIdentifier>{9848d09f-8e0c-4a08-b4d0-092f5fd5df2e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -421,7 +448,7 @@
       <Filter>ソース ファイル\dx12\d3d11\context</Filter>
     </ClCompile>
     <ClCompile Include="src\BoardFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\factory</Filter>
+      <Filter>ソース ファイル\buffered_data\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\RenderTexBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
@@ -439,10 +466,10 @@
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
     <ClCompile Include="src\BoardVertIndicesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\factory</Filter>
+      <Filter>ソース ファイル\buffered_data\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\PieceVertIndicesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\factory</Filter>
+      <Filter>ソース ファイル\buffered_data\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader.cpp">
       <Filter>ソース ファイル\dx12\shader</Filter>
@@ -458,12 +485,6 @@
     </ClCompile>
     <ClCompile Include="src\PersProjMat.cpp">
       <Filter>ソース ファイル\buffered_data\mat</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Board.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Piece.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj</Filter>
     </ClCompile>
     <ClCompile Include="src\YellowWoodTexFactory.cpp">
       <Filter>ソース ファイル\buffered_data\texutre\factory</Filter>
@@ -486,20 +507,68 @@
     <ClCompile Include="src\UI.cpp">
       <Filter>ソース ファイル\buffered_data</Filter>
     </ClCompile>
-    <ClCompile Include="src\WorldMatFactory.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KingFactory.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KingVerticesFactory.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Vertices.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\BoardVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\factory</Filter>
+      <Filter>ソース ファイル\buffered_data\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board.cpp">
+      <Filter>ソース ファイル\buffered_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Piece.cpp">
+      <Filter>ソース ファイル\buffered_data\piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WorldMatFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BishopVerticesFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\bishop</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GoldVerticesFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\gold</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KingFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\king</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KingVerticesFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\king</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KnightVerticesFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\knight</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LanceVerticesFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\lance</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PawnVerticesFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RookVerticesFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\rook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SilverVerticesFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\silver</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BishopFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\bishop</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GoldFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\gold</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KnightFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\knight</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LanceFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\lance</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PawnFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SilverFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\silver</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RookFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\piece\rook</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

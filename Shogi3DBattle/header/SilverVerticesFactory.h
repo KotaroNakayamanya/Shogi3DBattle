@@ -3,7 +3,7 @@
 #include"IBufferedDataFactory.h"
 #include"VertStruct.h"
 
-class KingVerticesFactory : public IBufferedDataFactory<Vert>
+class SilverVerticesFactory : public IBufferedDataFactory<Vert>
 {
 public:
     std::unique_ptr<BufferedData<Vert>> CreateUniquePtr() override; // ã‚Å@í∏ì_èWçáçÏê¨
