@@ -2,8 +2,7 @@
 #include"Application.h"
 #include"SelectingPiece.h"
 
-
-// ボタン押下処理
+// はじめからボタン押下処理
 std::unique_ptr<ISceneState> NewStartButton::ExePushButton()
 {
     // 駒選択シーンに遷移

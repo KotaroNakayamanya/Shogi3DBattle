@@ -109,10 +109,10 @@ public:
     bool IsDrawMap();             // マップ描画フラグを返す
 
     // ボタンUI
-    void PushButtonUI( // ボタンUIをプッシュする
+    template<typename T>
+    void CreateButtonUI( // ボタンUIをプッシュする
         D2D1_RECT_F              rect,
-        std::vector<TextAndRect> textAndRects,
-        ButtonUIType             buttonUIType);
+        std::vector<TextAndRect> textAndRects);
 
     std::vector<std::unique_ptr<IButtonUI>>& GetButtonUIs(); // ボタンUIを返す
 
@@ -124,3 +124,13 @@ public:
 
     ~Application() = default;
 };
+
+// ボタンUIプッシュ
+template<typename T>
+void Application::CreateButtonUI(
+    D2D1_RECT_F              rect,
+    std::vector<TextAndRect> textAndRects)
+{
+    _buttonUIFactory.reset(new T());
+    _buttonUIs.push_back(_buttonUIFactory->CreateButtonUI(rect, textAndRects));
+}

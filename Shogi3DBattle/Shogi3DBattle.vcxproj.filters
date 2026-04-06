@@ -154,9 +154,6 @@
     <Filter Include="ソース ファイル\dx12\shader\hlsl">
       <UniqueIdentifier>{162b5be9-6f57-4d9c-b2f7-57a516f119d4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\obj_command">
-      <UniqueIdentifier>{e29343ca-5ba6-4323-a4a5-e280dd4badbe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\DX12\command">
       <UniqueIdentifier>{b401d5ab-f915-4127-898e-9dd429f5bd44}</UniqueIdentifier>
     </Filter>
@@ -214,9 +211,6 @@
     <Filter Include="ヘッダー ファイル\buffered_data\texture\factory">
       <UniqueIdentifier>{83c8fac9-d219-4c53-82b0-85da80e3001a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj">
-      <UniqueIdentifier>{3e13e98a-014b-4f54-b232-5915bbe2e892}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\buffered_data\texutre\factory">
       <UniqueIdentifier>{8829a128-7481-47c4-b6e9-56ea79857d50}</UniqueIdentifier>
     </Filter>
@@ -268,32 +262,83 @@
     <Filter Include="ソース ファイル\buffered_data\factory">
       <UniqueIdentifier>{65995f4d-91d0-4aad-aaf3-2260432487e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\piece">
+    <Filter Include="ヘッダー ファイル\ui">
+      <UniqueIdentifier>{c487b223-c8ff-48c4-b8a0-0a2b62388934}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ui\button">
+      <UniqueIdentifier>{8ed41f94-a414-438f-b6fb-06e998e71498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ui">
+      <UniqueIdentifier>{66d45de3-0383-4c31-89e9-53972416c6f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ui\button">
+      <UniqueIdentifier>{539651f3-04a2-4a1c-9b39-563c1e0c1b6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ui\button\new_start">
+      <UniqueIdentifier>{9605972b-89e5-4544-a24f-baec8caa562e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ui\button\game_exit">
+      <UniqueIdentifier>{0f04bad6-957b-4b53-9540-5216b344a677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ui\button\continue_start">
+      <UniqueIdentifier>{7a05cbdf-4968-4283-9016-53a78fb93fac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ui\button\option">
+      <UniqueIdentifier>{29aba871-9855-4fb5-9341-a2eb2e295823}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ui\button\new_start">
+      <UniqueIdentifier>{ea8a263d-1766-43df-8d82-698f5e7be596}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ui\button\game_exit">
+      <UniqueIdentifier>{176968ef-a5a4-4f62-9d1e-76896cc84b46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ui\button\continue_start">
+      <UniqueIdentifier>{cb2fd223-55e0-4edf-ad7a-11f5a90ed517}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ui\button\option">
+      <UniqueIdentifier>{4aa3335e-8dbe-4c75-b742-d6f608217322}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ui\button\interface">
+      <UniqueIdentifier>{a03a5723-790a-49e5-80a6-245c1479bf97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ui\button\base">
+      <UniqueIdentifier>{9f238bb0-ca4a-4d25-8d66-214a79b68da4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\_base">
+      <UniqueIdentifier>{90600955-0578-4a1f-b5e6-7e2e3e60ccee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj">
+      <UniqueIdentifier>{8a322f67-4514-4b45-82be-17f81ba4278c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\piece">
       <UniqueIdentifier>{1c0cbb52-b3ee-436c-825f-5a70272475d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\piece\king">
+    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\king">
       <UniqueIdentifier>{580cb755-7a96-412f-9f8a-c4aa110e7ee9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\piece\rook">
+    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\rook">
       <UniqueIdentifier>{92214235-befb-478b-8d50-4bbb573e9e90}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\piece\bishop">
+    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\bishop">
       <UniqueIdentifier>{5821aa70-b3da-40b3-b8af-44cd2717305c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\piece\gold">
+    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\gold">
       <UniqueIdentifier>{60b9ac5b-9cb4-49b7-846d-1ced3a0b5f5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\piece\silver">
+    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\silver">
       <UniqueIdentifier>{0cd18528-941e-4501-8a82-48a4bbfc6c3c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\piece\knight">
+    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\knight">
       <UniqueIdentifier>{9b7f3601-a487-4c07-a29a-aa3027adedbb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\piece\lance">
+    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\lance">
       <UniqueIdentifier>{e531ce12-431f-4b25-8ff4-4d2d129ff2ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\piece\pawn">
+    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\pawn">
       <UniqueIdentifier>{9848d09f-8e0c-4a08-b4d0-092f5fd5df2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\board">
+      <UniqueIdentifier>{5c845247-4f3a-4a8a-ba96-6de3d19fe665}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -510,68 +555,86 @@
     <ClCompile Include="src\BoardVerticesFactory.cpp">
       <Filter>ソース ファイル\buffered_data\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\Board.cpp">
-      <Filter>ソース ファイル\buffered_data</Filter>
-    </ClCompile>
     <ClCompile Include="src\Piece.cpp">
-      <Filter>ソース ファイル\buffered_data\piece</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\WorldMatFactory.cpp">
       <Filter>ソース ファイル\buffered_data\mat</Filter>
     </ClCompile>
     <ClCompile Include="src\BishopVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\bishop</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\bishop</Filter>
     </ClCompile>
     <ClCompile Include="src\GoldVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\gold</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\gold</Filter>
     </ClCompile>
     <ClCompile Include="src\KingFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\king</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\king</Filter>
     </ClCompile>
     <ClCompile Include="src\KingVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\king</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\king</Filter>
     </ClCompile>
     <ClCompile Include="src\KnightVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\knight</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\knight</Filter>
     </ClCompile>
     <ClCompile Include="src\LanceVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\lance</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\lance</Filter>
     </ClCompile>
     <ClCompile Include="src\PawnVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\pawn</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\pawn</Filter>
     </ClCompile>
     <ClCompile Include="src\RookVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\rook</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\rook</Filter>
     </ClCompile>
     <ClCompile Include="src\SilverVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\silver</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\silver</Filter>
     </ClCompile>
     <ClCompile Include="src\BishopFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\bishop</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\bishop</Filter>
     </ClCompile>
     <ClCompile Include="src\GoldFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\gold</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\gold</Filter>
     </ClCompile>
     <ClCompile Include="src\KnightFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\knight</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\knight</Filter>
     </ClCompile>
     <ClCompile Include="src\LanceFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\lance</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\lance</Filter>
     </ClCompile>
     <ClCompile Include="src\PawnFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\pawn</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\pawn</Filter>
     </ClCompile>
     <ClCompile Include="src\SilverFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\silver</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\silver</Filter>
     </ClCompile>
     <ClCompile Include="src\RookFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\piece\rook</Filter>
-    </ClCompile>
-    <ClCompile Include="src\NewStartButton.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\rook</Filter>
     </ClCompile>
     <ClCompile Include="header\NewStartButtonFactory.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\ui\button\new_start</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NewStartButton.cpp">
+      <Filter>ソース ファイル\ui\button\new_start</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameExitButton.cpp">
+      <Filter>ソース ファイル\ui\button\game_exit</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ContinueStartButton.cpp">
+      <Filter>ソース ファイル\ui\button\continue_start</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OptionButton.cpp">
+      <Filter>ソース ファイル\ui\button\option</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameExitButtonFactory.cpp">
+      <Filter>ソース ファイル\ui\button\game_exit</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ContinueStartFactory.cpp">
+      <Filter>ソース ファイル\ui\button\continue_start</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OptionFactory.cpp">
+      <Filter>ソース ファイル\ui\button\option</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -586,9 +649,6 @@
     </ClInclude>
     <ClInclude Include="header\MovingPiece.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Piece.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
     <ClInclude Include="header\SwapChain.h">
       <Filter>ヘッダー ファイル\DX12\swap_chain</Filter>
@@ -821,12 +881,6 @@
     <ClInclude Include="header\BoardFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
     </ClInclude>
-    <ClInclude Include="header\PieceFactoryMethod.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PieceVertIndicesFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
-    </ClInclude>
     <ClInclude Include="header\BoardVertIndicesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
     </ClInclude>
@@ -920,53 +974,80 @@
     <ClInclude Include="header\RookVerticesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\rook</Filter>
     </ClInclude>
-    <ClInclude Include="header\King.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Bishop.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Rook.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Gold.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Silver.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Knight.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Lance.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Pawn.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ButtonUIType.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="header\UIType.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\NewStartButton.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\IButtonUI.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\IButtonUIFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\NewStartButtonFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ButtonUI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\TextAndRectStruct.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ButtonUIType.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\NewStartButton.h">
+      <Filter>ヘッダー ファイル\ui\button\new_start</Filter>
+    </ClInclude>
+    <ClInclude Include="header\NewStartButtonFactory.h">
+      <Filter>ヘッダー ファイル\ui\button\new_start</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ContinueStartButton.h">
+      <Filter>ヘッダー ファイル\ui\button\continue_start</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GameExitButton.h">
+      <Filter>ヘッダー ファイル\ui\button\game_exit</Filter>
+    </ClInclude>
+    <ClInclude Include="header\OptionButton.h">
+      <Filter>ヘッダー ファイル\ui\button\option</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ContinueStartButtonFactory.h">
+      <Filter>ヘッダー ファイル\ui\button\continue_start</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GameExitButtonFactory.h">
+      <Filter>ヘッダー ファイル\ui\button\game_exit</Filter>
+    </ClInclude>
+    <ClInclude Include="header\OptionButtonFactory.h">
+      <Filter>ヘッダー ファイル\ui\button\option</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IButtonUI.h">
+      <Filter>ヘッダー ファイル\ui\button\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IButtonUIFactory.h">
+      <Filter>ヘッダー ファイル\ui\button\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ButtonUI.h">
+      <Filter>ヘッダー ファイル\ui\button\base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\King.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\king</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Bishop.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\bishop</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Gold.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\gold</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Knight.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\knight</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Lance.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\lance</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Pawn.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\pawn</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Rook.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\rook</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Piece.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Silver.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\silver</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PieceFactoryMethod.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PieceVertIndicesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

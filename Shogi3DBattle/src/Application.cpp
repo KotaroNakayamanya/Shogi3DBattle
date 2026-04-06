@@ -540,24 +540,7 @@ bool Application::IsDrawMap()            {return _isDrawMap;} // マップ描画
 
 bool Application::IsDrawUINotEmpty(){return _buttonUIs.size() > 0;} // UIの空状況を返す
 
-// ボタンUIプッシュ
-void Application::PushButtonUI(
-    D2D1_RECT_F              rect,
-    std::vector<TextAndRect> textAndRects,
-    ButtonUIType             buttonUIType)
-{
-    switch (buttonUIType)
-    {
-        case ButtonUIType::NEW_START_BUTTON:
-            _buttonUIFactory.reset(new NewStartButtonFactory());
-            break;
 
-        default:
-            return;
-    }
-    
-    _buttonUIs.push_back(_buttonUIFactory->CreateButtonUI(rect, textAndRects));
-}
 
 void Application::RemoveAllUI(){_buttonUIs.clear();}      // UIを全て削除する
 std::vector<std::unique_ptr<IButtonUI>>& Application::GetButtonUIs(){return _buttonUIs;} // ボタンUIを返す

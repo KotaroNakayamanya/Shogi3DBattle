@@ -2,10 +2,10 @@
 
 #include"IButtonUIFactory.h"
 
-class NewStartButtonFactory : public IButtonUIFactory
+class OptionButtonFactory : public IButtonUIFactory
 {
 public:
-    std::unique_ptr<IButtonUI> CreateButtonUI( // はじめからボタン作成
+    std::unique_ptr<IButtonUI> CreateButtonUI( // オプションボタン作成
         D2D1_RECT_F              rect,
         std::vector<TextAndRect> textAndRects) override;
 };

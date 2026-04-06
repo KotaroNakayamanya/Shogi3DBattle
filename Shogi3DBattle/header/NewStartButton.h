@@ -5,5 +5,5 @@
 class NewStartButton : public ButtonUI
 {
 public:
-    std::unique_ptr<ISceneState> ExePushButton() override; // ボタン押下処理
+    std::unique_ptr<ISceneState> ExePushButton() override; // はじめからボタン押下処理
 };

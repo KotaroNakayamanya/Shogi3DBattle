@@ -29,6 +29,10 @@
     <ClCompile Include="src\BoardFactory.cpp" />
     <ClCompile Include="src\BoardVertIndicesFactory.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
+    <ClCompile Include="src\ContinueStartButton.cpp" />
+    <ClCompile Include="src\ContinueStartFactory.cpp" />
+    <ClCompile Include="src\GameExitButton.cpp" />
+    <ClCompile Include="src\GameExitButtonFactory.cpp" />
     <ClCompile Include="src\NewStartButton.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\ConstBuffFactory.cpp" />
@@ -67,6 +71,8 @@
     <ClCompile Include="src\LanceFactory.cpp" />
     <ClCompile Include="src\LanceVerticesFactory.cpp" />
     <ClCompile Include="src\NonePersProjMat.cpp" />
+    <ClCompile Include="src\OptionButton.cpp" />
+    <ClCompile Include="src\OptionFactory.cpp" />
     <ClCompile Include="src\PawnFactory.cpp" />
     <ClCompile Include="src\PawnVerticesFactory.cpp" />
     <ClCompile Include="src\PersProjMat.cpp" />
@@ -125,6 +131,10 @@
     <ClInclude Include="header\BufferedData.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
     <ClInclude Include="header\ButtonUI.h" />
+    <ClInclude Include="header\ContinueStartButton.h" />
+    <ClInclude Include="header\ContinueStartButtonFactory.h" />
+    <ClInclude Include="header\GameExitButton.h" />
+    <ClInclude Include="header\GameExitButtonFactory.h" />
     <ClInclude Include="header\IButtonUIFactory.h" />
     <ClInclude Include="header\NewStartButton.h" />
     <ClInclude Include="header\Camera.h" />
@@ -178,6 +188,8 @@
     <ClInclude Include="header\NaturalBufferedData.h" />
     <ClInclude Include="header\NewStartButtonFactory.h" />
     <ClInclude Include="header\NonePersProjMat.h" />
+    <ClInclude Include="header\OptionButton.h" />
+    <ClInclude Include="header\OptionButtonFactory.h" />
     <ClInclude Include="header\Pawn.h" />
     <ClInclude Include="header\PawnFactory.h" />
     <ClInclude Include="header\PawnVerticesFactory.h" />

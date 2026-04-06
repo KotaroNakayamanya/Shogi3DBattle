@@ -2,6 +2,11 @@
 #include"Application.h"
 #include"SelectingPiece.h"
 
+#include"NewStartButtonFactory.h"
+#include"ContinueStartButtonFactory.h"
+#include"OptionButtonFactory.h"
+#include"GameExitButtonFactory.h"
+
 // スタートメニューシーン動作
 std::unique_ptr<ISceneState> StartMenu::ExeSceneOperation(
     UCHAR inputMemory,
@@ -102,28 +107,41 @@ StartMenu::StartMenu()
     right = left + uiWidth;
     heightOffset = uiHeight + 3.0f;
 
-    std::vector<TextAndRect> textAndRects;
-    TextAndRect              textAndRect;
-    D2D1_RECT_F              rect;
+    D2D1_RECT_F              rect;         // ボタンUI範囲
+    std::vector<TextAndRect> textAndRects; // テキスト及びテキスト範囲動的配列
+    TextAndRect              textAndRect;  // テキスト及びテキスト範囲
 
     top  = gameWindow->GetWindowHeight() / 2;
     bottom = top + uiHeight;
     rect = {left, top, right, bottom};
     textAndRect.text = L"はじめから対局";
-    textAndRect.rect = rect;
+    textAndRect.rect = {left, top, right, bottom};
+    textAndRects.clear();
     textAndRects.push_back(textAndRect);
-    app.PushButtonUI(rect, textAndRects, ButtonUIType::NEW_START_BUTTON);
+    app.CreateButtonUI<NewStartButtonFactory>(rect, textAndRects);
 
-    top    += heightOffset;
-    bottom += heightOffset;
-    //app.PushButtonUI(L"つづきから対局", {left, top, right, bottom}, ButtonUIType::CONTINUE_START_BUTTON);
+    rect.top    += heightOffset;
+    rect.bottom += heightOffset;
+    textAndRect.text = L"つづきから対局";
+    textAndRect.rect = rect;
+    textAndRects.clear();
+    textAndRects.push_back(textAndRect);
+    app.CreateButtonUI<ContinueStartButtonFactory>(rect, textAndRects);
 
-    top    += heightOffset;
-    bottom += heightOffset;
-    //app.PushButtonUI(L"オプション", {left, top, right, bottom}, ButtonUIType::OPTION_BUTTON);
+    rect.top    += heightOffset;
+    rect.bottom += heightOffset;
+    textAndRect.text = L"オプション";
+    textAndRect.rect = rect;
+    textAndRects.clear();
+    textAndRects.push_back(textAndRect);
+    app.CreateButtonUI<OptionButtonFactory>(rect, textAndRects);
 
-    top    += heightOffset;
-    bottom += heightOffset;
-    //app.PushButtonUI(L"ゲーム終了", {left, top, right, bottom}, ButtonUIType::GAME_EXIT_BUTTON);
+    rect.top    += heightOffset;
+    rect.bottom += heightOffset;
+    textAndRect.text = L"ゲーム終了";
+    textAndRect.rect = rect;
+    textAndRects.clear();
+    textAndRects.push_back(textAndRect);
+    app.CreateButtonUI<GameExitButtonFactory>(rect, textAndRects);
 }
 StartMenu::~StartMenu(){}
