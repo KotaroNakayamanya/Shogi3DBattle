@@ -358,6 +358,8 @@ void DX12::CreateDrawArea()
 // Direct2D系作成
 HRESULT DX12::CreateD2D()
 {   
+    auto gameWindow = Application::GetInstance().GetGameWindow();
+
     // Direct3D11系作成
     if (FAILED(_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.get()))) goto failed;
     // Direct2Dデバイスコンテキスト作成
@@ -405,9 +407,11 @@ HRESULT DX12::CreateD2D()
 
 
     // 駒のテキストフォーマット作成
-    if(FAILED(_dWriteFactory->CreateTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed;
+    if(FAILED(_dWriteFactory->CreatePieceTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed;
     // UIテキストフォーマット作成
-    if(FAILED(_dWriteFactory->CreateUITextFormat(_uiTextFormat.get(), L"メイリオ", 50.0f))) goto failed;
+    float fontSize;
+    fontSize = gameWindow->GetWindowHeight() / 20;
+    if(FAILED(_dWriteFactory->CreateUITextFormat(_uiTextFormat.get(), L"メイリオ"))) goto failed;
 
     return S_OK;
 
@@ -790,24 +794,25 @@ void DX12::ExeD2D()
 {
     auto wrappedBackBuff = _wrappedBackBuffs[_currentBackBuffIdx].get();
     auto d2dRenderTarget = _d2dRenderTargets[_currentBackBuffIdx].get();
-    auto uis = Application::GetInstance().GetUIs();
+    auto& buttonUIs = Application::GetInstance().GetButtonUIs();
     StartD2D(wrappedBackBuff, d2dRenderTarget); // Direct2D開始
 
-    for (auto& ui : uis)
+    for (auto& buttonUI : buttonUIs)
     {
         // 四角形描画
         _d2dDeviceContext->DrawRectangle(
-            ui.GetRect(),
+            buttonUI->GetRect(),
             _uiBrush->GetBrush(),
             _blackBrush->GetBrush());
 
         // テキスト描画　選択されていたら赤色
-        auto brushColor = ui.IsSelected() ? _redBrush->GetBrush() : _blackBrush->GetBrush();
-        _d2dDeviceContext->DrawTextW(
-        ui.GetText(),
-        ui.GetRect(),
-        _uiTextFormat->GetTextFormat(),
-        brushColor);
+        auto brushColor = buttonUI->IsSelected() ? _redBrush->GetBrush() : _blackBrush->GetBrush();
+        for(auto& textAndRect : buttonUI->GetTextAndRects())
+            _d2dDeviceContext->DrawTextW(
+                textAndRect.text,
+                textAndRect.rect,
+                _uiTextFormat->GetTextFormat(),
+                brushColor);
     }
         
     EndD2D(wrappedBackBuff); // Direct2D終了

@@ -1,0 +1,15 @@
+#include"NewStartButtonFactory.h"
+#include"NewStartButton.h"
+
+// ÇÕÇ∂ÇﬂÇ©ÇÁÉ{É^ÉìUIçÏê¨
+std::unique_ptr<IButtonUI> NewStartButtonFactory::CreateButtonUI(
+    D2D1_RECT_F              rect,
+    std::vector<TextAndRect> textAndRects)
+{
+    auto newStartButton = std::make_unique<NewStartButton>();
+
+    newStartButton->SetRect(rect);
+    newStartButton->SetTextAndRects(textAndRects);
+
+    return newStartButton;
+}

@@ -1,4 +1,5 @@
 #include"DWriteFactory.h"
+#include"Application.h"
 
 //// テキストフォーマット作成
 //HRESULT DWriteFactory::CreateDWriteTextFormat(
@@ -15,8 +16,8 @@
 //        textFormatCom.ReleaseAndGetAddressOf());
 //}
 
-// テキストフォーマット作成
-HRESULT DWriteFactory::CreateTextFormat(
+// 駒用フォーマット作成
+HRESULT DWriteFactory::CreatePieceTextFormat(
     TextFormat* textFormat,
     std::wstring fontName)
 {
@@ -62,13 +63,14 @@ HRESULT DWriteFactory::CreateTextFormat(
 // UIテキストフォーマット作成
 HRESULT DWriteFactory::CreateUITextFormat(
     TextFormat* textFormat,
-    std::wstring fontName,
-    float fontSize)
+    std::wstring fontName)
 {
     ComPtr<IDWriteTextFormat> textFormatCom;
 
-    HRESULT result;
+    auto gameWindow = Application::GetInstance().GetGameWindow();
+    auto fontSize   = gameWindow->GetWindowHeight() / 20;
 
+    HRESULT result;
     result = _dWriteFactory->CreateTextFormat(
         fontName.c_str(),
         nullptr,
@@ -93,8 +95,3 @@ HRESULT DWriteFactory::CreateUITextFormat(
     textFormat->SetTextFormat(textFormatCom);
     result = S_OK;
 }
-
-
-
-DWriteFactory::DWriteFactory(){}
-DWriteFactory::~DWriteFactory(){}

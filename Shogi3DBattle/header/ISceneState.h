@@ -7,13 +7,12 @@ class ISceneState
 {
 public:
     // ÉVÅ[ÉììÆçÏ
-    virtual ISceneState* ExeSceneOperation(
+    virtual std::unique_ptr<ISceneState> ExeSceneOperation(
         UCHAR inputMemory,
         int cursorX,
         int cursorXMove,
         int cursorY,
         int cursorYMove) = 0;
 
-    ISceneState()  = default;
-    ~ISceneState(){}
+    virtual ~ISceneState() = default;
 };

@@ -14,8 +14,8 @@ private:
 
     bool _isMoved; // 駒が動いたかどうか確認
 
-    ISceneState* ExeDecisionButton(); // 決定ボタン処理
-    ISceneState* ExeCancelButton(); // キャンセルボタン処理
+    std::unique_ptr<ISceneState> ExeDecisionButton(); // 決定ボタン処理
+    std::unique_ptr<ISceneState> ExeCancelButton(); // キャンセルボタン処理
     void ExeMouseMove(int xMove, int yMove); // カーソル操作処理
 
     void MovePieceAndCamera(DirectX::XMFLOAT3 vec); // 駒とカメラを動かす
@@ -24,7 +24,7 @@ private:
 
 public:
     // 駒操作シーン動作
-    ISceneState* ExeSceneOperation(
+    std::unique_ptr<ISceneState> ExeSceneOperation(
         UCHAR inputMemory,
         int cursorX,
         int cursorXMove,

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="header\DefaultHeapProp.cpp" />
+    <ClCompile Include="header\NewStartButtonFactory.cpp" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\BishopFactory.cpp" />
@@ -28,6 +29,7 @@
     <ClCompile Include="src\BoardFactory.cpp" />
     <ClCompile Include="src\BoardVertIndicesFactory.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
+    <ClCompile Include="src\NewStartButton.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\ConstBuffFactory.cpp" />
     <ClCompile Include="src\Board.cpp" />
@@ -77,7 +79,6 @@
     <ClCompile Include="src\SilverVerticesFactory.cpp" />
     <ClCompile Include="src\StartMenu.cpp" />
     <ClCompile Include="src\TextFormat.cpp" />
-    <ClCompile Include="src\UI.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyMap.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -123,6 +124,9 @@
     <ClInclude Include="header\BoardVertIndicesFactory.h" />
     <ClInclude Include="header\BufferedData.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
+    <ClInclude Include="header\ButtonUI.h" />
+    <ClInclude Include="header\IButtonUIFactory.h" />
+    <ClInclude Include="header\NewStartButton.h" />
     <ClInclude Include="header\Camera.h" />
     <ClInclude Include="header\ConstBuffFactory.h" />
     <ClInclude Include="header\Board.h" />
@@ -156,6 +160,7 @@
     <ClInclude Include="header\Device11.h" />
     <ClInclude Include="header\DeviceContext.h" />
     <ClInclude Include="header\HeapFactory.h" />
+    <ClInclude Include="header\IButtonUI.h" />
     <ClInclude Include="header\IdxBuffFactory.h" />
     <ClInclude Include="header\IHeapProp.h" />
     <ClInclude Include="header\IDescOffset.h" />
@@ -171,6 +176,7 @@
     <ClInclude Include="header\LanceFactory.h" />
     <ClInclude Include="header\LanceVerticesFactory.h" />
     <ClInclude Include="header\NaturalBufferedData.h" />
+    <ClInclude Include="header\NewStartButtonFactory.h" />
     <ClInclude Include="header\NonePersProjMat.h" />
     <ClInclude Include="header\Pawn.h" />
     <ClInclude Include="header\PawnFactory.h" />
@@ -188,7 +194,7 @@
     <ClInclude Include="header\SilverVerticesFactory.h" />
     <ClInclude Include="header\StartMenu.h" />
     <ClInclude Include="header\IBufferedDataFactory.h" />
-    <ClInclude Include="header\UI.h" />
+    <ClInclude Include="header\TextAndRectStruct.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />
     <ClInclude Include="header\GameWindow.h" />
@@ -222,6 +228,7 @@
     <ClInclude Include="header\TexHeapProp.h" />
     <ClInclude Include="header\TexResourceDesc.h" />
     <ClInclude Include="header\TextFormat.h" />
+    <ClInclude Include="header\ButtonUIType.h" />
     <ClInclude Include="header\UIType.h" />
     <ClInclude Include="header\UploadHeapProp.h" />
     <ClInclude Include="header\VecCalc.h" />

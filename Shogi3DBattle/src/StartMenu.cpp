@@ -3,7 +3,7 @@
 #include"SelectingPiece.h"
 
 // スタートメニューシーン動作
-ISceneState* StartMenu::ExeSceneOperation(
+std::unique_ptr<ISceneState> StartMenu::ExeSceneOperation(
     UCHAR inputMemory,
     int cursorX,
     int cursorXMove,
@@ -14,23 +14,24 @@ ISceneState* StartMenu::ExeSceneOperation(
     static float rotationAngle = 0.005f;
     _mainCamera->RotationH(rotationAngle);
 
-    // UI選択チェック
-    _selectingUI = UIType::NONE;
-    for (auto& ui : Application::GetInstance().GetUIs())
+    // ボタンUI選択チェック
+    _selectingButtonUI = nullptr;
+    auto& buttonUIs = Application::GetInstance().GetButtonUIs();
+    for (auto& buttonUI : buttonUIs)
     {
-        auto rect = ui.GetRect();
+        auto rect = buttonUI->GetRect();
         bool isCursorInWidthRange  = rect.left <= cursorX && cursorX <= rect.right;
         bool isCursorInHeightRange = rect.top  <= cursorY && cursorY <= rect.bottom;
         bool isSelected = isCursorInWidthRange && isCursorInHeightRange;
 
-        ui.SetIsSelected(isSelected);
-        if(isSelected) _selectingUI = ui.GetUIType();
+        buttonUI->SetIsSelected(isSelected);
+        if(isSelected) _selectingButtonUI = buttonUI.get();
 
     }
 
-    ISceneState* newSceneState = nullptr;
+    std::unique_ptr<ISceneState> newSceneState = nullptr;
 
-    if(inputMemory & InputHandler::DECISION)  // 決定ボタン処理
+    if (inputMemory & InputHandler::DECISION)  // 決定ボタン処理
         newSceneState = ExeDecisionButton();
     if(inputMemory & InputHandler::CANCEL)    // キャンセルボタン処理
         newSceneState = ExeCancelButton();
@@ -39,63 +40,19 @@ ISceneState* StartMenu::ExeSceneOperation(
 }
 
 // 決定ボタン
-ISceneState* StartMenu::ExeDecisionButton()
+std::unique_ptr<ISceneState> StartMenu::ExeDecisionButton()
 {
-    ISceneState* newSceneState;
-
-    switch (_selectingUI)
-    {
-        case UIType::NEW_START:
-        {
-            auto& app = Application::GetInstance();
-            newSceneState = new SelectingPiece();
-            app.RemoveAllUI();
-
-            auto inputHandler = app.GetInputHandler();
-            inputHandler->RemoveLClick();
-
-            break;
-        }
-
-        case UIType::EXIT:
-            DestroyWindow(Application::GetInstance().GetGameWindow()->GetHWND());
-            newSceneState = this;
-            break;
-
-        default:
-            newSceneState = this;
-            break;
-    }
-
-    //if (_selectingUI == UI::NEW_START)
-    //{
-    //    
-    //    //auto& pieces = app.GetPieces();
-    //    
-    //    
-
-    //    
-
-    //    auto inputHandler = Application::GetInstance().GetInputHandler();
-    //    inputHandler->RemoveLClick();
-    //}
-    //else
-    //{
-    //    newSceneState = this;
-    //}
-    
-
-    
-
-    return newSceneState;
+    // ボタンUIが選択されていればボタン処理実行、選択されていなければ何もしない
+    return _selectingButtonUI ?
+        _selectingButtonUI->ExePushButton() : nullptr;
 }
 
 // キャンセルボタン処理
-ISceneState* StartMenu::ExeCancelButton()
+std::unique_ptr<ISceneState> StartMenu::ExeCancelButton()
 {
     auto gameWindow = Application::GetInstance().GetGameWindow();
     DestroyWindow(gameWindow->GetHWND());
-    return this;
+    return nullptr;
 }
 
 StartMenu::StartMenu()
@@ -145,27 +102,28 @@ StartMenu::StartMenu()
     right = left + uiWidth;
     heightOffset = uiHeight + 3.0f;
 
+    std::vector<TextAndRect> textAndRects;
+    TextAndRect              textAndRect;
+    D2D1_RECT_F              rect;
+
     top  = gameWindow->GetWindowHeight() / 2;
     bottom = top + uiHeight;
-    app.PushUI(L"はじめから対局", {left, top, right, bottom}, UIType::NEW_START);
+    rect = {left, top, right, bottom};
+    textAndRect.text = L"はじめから対局";
+    textAndRect.rect = rect;
+    textAndRects.push_back(textAndRect);
+    app.PushButtonUI(rect, textAndRects, ButtonUIType::NEW_START_BUTTON);
 
     top    += heightOffset;
     bottom += heightOffset;
-    app.PushUI(L"つづきから対局", {left, top, right, bottom}, UIType::CONTINUE_START);
+    //app.PushButtonUI(L"つづきから対局", {left, top, right, bottom}, ButtonUIType::CONTINUE_START_BUTTON);
 
     top    += heightOffset;
     bottom += heightOffset;
-    app.PushUI(L"オプション", {left, top, right, bottom}, UIType::OPTION);
+    //app.PushButtonUI(L"オプション", {left, top, right, bottom}, ButtonUIType::OPTION_BUTTON);
 
     top    += heightOffset;
     bottom += heightOffset;
-    app.PushUI(L"ゲーム終了", {left, top, right, bottom}, UIType::EXIT);
-
-
-
-    //text = L"aaaaa";
-    //rect = {0, 0, 1280, 720};
-
-
+    //app.PushButtonUI(L"ゲーム終了", {left, top, right, bottom}, ButtonUIType::GAME_EXIT_BUTTON);
 }
 StartMenu::~StartMenu(){}

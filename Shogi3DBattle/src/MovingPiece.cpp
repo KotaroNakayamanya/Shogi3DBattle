@@ -1,18 +1,17 @@
 #include"MovingPiece.h"
 #include"Application.h"
-//#include"StartMenu.h"
 #include"SelectingPiece.h"
 #include<cmath>
 
 // 駒操作シーン動作
-ISceneState* MovingPiece::ExeSceneOperation(
+std::unique_ptr<ISceneState> MovingPiece::ExeSceneOperation(
     UCHAR inputMemory,
     int cursorX,
     int cursorXMove,
     int cursorY,
     int cursorYMove)
 {
-    ISceneState* newSceneState = nullptr;
+    std::unique_ptr<ISceneState> newSceneState = nullptr;
 
     if(inputMemory & InputHandler::MOUSE_MOVE) // マウス操作処理
         ExeMouseMove(cursorXMove, cursorYMove);
@@ -66,15 +65,15 @@ ISceneState* MovingPiece::ExeSceneOperation(
 
 
 // 決定ボタン
-ISceneState* MovingPiece::ExeDecisionButton()
+std::unique_ptr<ISceneState> MovingPiece::ExeDecisionButton()
 {
-    return this;
+    return nullptr;
 }
 
 // キャンセルボタン処理
-ISceneState* MovingPiece::ExeCancelButton()
+std::unique_ptr<ISceneState> MovingPiece::ExeCancelButton()
 {
-    ISceneState* newSceneState;
+    std::unique_ptr<ISceneState> newSceneState;
     if (_isMoved) // 駒を動かしていたら駒を初期位置に戻し、カメラとフォーカスを平行移動する
     {
         // 元の位置に動かすまでのベクトルを取得
@@ -92,7 +91,7 @@ ISceneState* MovingPiece::ExeCancelButton()
 
         // 駒は動いてない状態に
         _isMoved = false;
-        newSceneState = this;
+        newSceneState = nullptr;
     }   
     else          // 駒を動かしていなければメニュー画面に戻す
     {
@@ -105,7 +104,7 @@ ISceneState* MovingPiece::ExeCancelButton()
         Application::GetInstance().SetIsDrawMap(false); 
         
         // シーンを駒選択シーンに変更
-        newSceneState = new SelectingPiece();
+        newSceneState = std::make_unique<SelectingPiece>();
     }
 
     auto inputHandler = Application::GetInstance().GetInputHandler();

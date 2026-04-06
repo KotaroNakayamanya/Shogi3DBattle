@@ -504,9 +504,6 @@
     <ClCompile Include="src\Camera.cpp">
       <Filter>ソース ファイル\buffered_data</Filter>
     </ClCompile>
-    <ClCompile Include="src\UI.cpp">
-      <Filter>ソース ファイル\buffered_data</Filter>
-    </ClCompile>
     <ClCompile Include="src\Vertices.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -569,6 +566,12 @@
     </ClCompile>
     <ClCompile Include="src\RookFactory.cpp">
       <Filter>ソース ファイル\buffered_data\piece\rook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NewStartButton.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="header\NewStartButtonFactory.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -806,9 +809,6 @@
     <ClInclude Include="header\InputHandler.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="header\UI.h">
-      <Filter>ヘッダー ファイル\buffered_data</Filter>
-    </ClInclude>
     <ClInclude Include="header\FactoryMethod.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -944,7 +944,28 @@
     <ClInclude Include="header\Pawn.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
+    <ClInclude Include="header\ButtonUIType.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="header\UIType.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\NewStartButton.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IButtonUI.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IButtonUIFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\NewStartButtonFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ButtonUI.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\TextAndRectStruct.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

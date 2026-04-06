@@ -17,16 +17,12 @@ private:
 
 public:
     // テキストフォーマット作成
-    HRESULT CreateTextFormat(
+    HRESULT CreatePieceTextFormat(
         TextFormat* textFormat,
         std::wstring fontName);
 
     // UIテキストフォーマット作成
     HRESULT CreateUITextFormat(
         TextFormat* textFormat,
-        std::wstring fontName,
-        float fontSize);
-
-    DWriteFactory();
-    ~DWriteFactory();
+        std::wstring fontName);
 };

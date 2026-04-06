@@ -8,10 +8,13 @@
 #include"IBufferedDataFactory.h"
 
 #include"Camera.h"
-#include"UI.h"
+#include"IButtonUI.h"
+#include"ButtonUIType.h"
 
 #include"BufferedData.h"
 #include"VertStruct.h"
+
+#include"IButtonUIFactory.h"
 
 class Application
 {
@@ -42,8 +45,9 @@ private:
     void CreateTex(); // テクスチャ作成
 
 
-    // 2Dオブジェクト
-    std::vector<UI> _uis; // UI
+    // UI 
+    std::vector<std::unique_ptr<IButtonUI>> _buttonUIs; // ボタンUI
+    std::unique_ptr<IButtonUIFactory> _buttonUIFactory; // ボタンUIファクトリー
 
 
     
@@ -65,7 +69,7 @@ private:
     void CreateCamera(); // カメラ作成
 
     // シーン更新チェック
-    void CheckUpdateScene(ISceneState* sceneState);
+    bool IsUpdatedScene(ISceneState* sceneState);
 
     bool _isDrawMap = false;
 
@@ -104,9 +108,16 @@ public:
     void SetIsDrawMap(bool flag); // マップ描画フラグをセット
     bool IsDrawMap();             // マップ描画フラグを返す
 
-    std::vector<UI>& GetUIs(); // UIを返す
+    // ボタンUI
+    void PushButtonUI( // ボタンUIをプッシュする
+        D2D1_RECT_F              rect,
+        std::vector<TextAndRect> textAndRects,
+        ButtonUIType             buttonUIType);
+
+    std::vector<std::unique_ptr<IButtonUI>>& GetButtonUIs(); // ボタンUIを返す
+
     bool IsDrawUINotEmpty(); // UIの空状況を返す
-    void PushUI(std::wstring text, D2D1_RECT_F rect, UIType uiType);   // UIをプッシュする
+
     void RemoveAllUI();      // UIを全て削除する
 
     void ProcessChangeWindowSize(); // 画面サイズ変更処理

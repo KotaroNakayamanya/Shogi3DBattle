@@ -33,6 +33,10 @@
 #include"LanceFactory.h"
 #include"PawnFactory.h"
 
+#include"NewStartButton.h"
+
+#include"NewStartButtonFactory.h"
+
 
 // 初期処理
 bool Application::Init()
@@ -319,7 +323,7 @@ void Application::Run()
     // ウインドウ表示
     _gameWindow->DisplayWindow();
 
-    auto framePerS = 30;
+    auto framePerS = 60;
     auto msPerFrame = std::chrono::milliseconds(1000 / framePerS);
 
     MSG msg = {};
@@ -337,14 +341,15 @@ void Application::Run()
             GetCursorPos(&cursorPos);
             ScreenToClient(_gameWindow->GetHWND(), &cursorPos);
             // シーン動作
-            ISceneState* newSceneState = _sceneState->ExeSceneOperation(
+            std::unique_ptr<ISceneState> newSceneState = _sceneState->ExeSceneOperation(
                 _inputHandler->GetInputMemory(),
                 cursorPos.x,
                 _inputHandler->GetCursorXMove(),
                 cursorPos.y,
                 _inputHandler->GetCursorYMove());
-            // シーン更新チェック
-            CheckUpdateScene(newSceneState);
+            // シーン更新処理
+            if (newSceneState) _sceneState.swap(newSceneState);
+
             // マウス移動操作を削除
             _inputHandler->RemoveMouseMove();
             // 描画等実行
@@ -366,15 +371,14 @@ void Application::Run()
     }
 }
 
-// シーン更新チェック
-void Application::CheckUpdateScene(ISceneState* sceneState)
-{
-    bool isNotNullPtr    = sceneState != nullptr;
-    bool isNotEqualScene = sceneState != _sceneState.get();
-
-    // シーンがnullではなく、現在以外のシーンであれば更新
-    if(isNotNullPtr && isNotEqualScene) _sceneState.reset(sceneState);
-}
+//// シーン更新チェック
+//bool Application::IsUpdatedScene(ISceneState* sceneState)
+//{
+//    bool isNotNullPtr    = sceneState != nullptr;           // 新しいシーンがnullptrではない
+//    bool isNotEqualScene = sceneState != _sceneState.get(); // 新しいシーンが現在のシーンと異なる
+//
+//    return isNotNullPtr && isNotEqualScene;
+//}
 
 // 終了処理
 void Application::Exit()
@@ -534,17 +538,29 @@ KeyMap* Application::GetKeyMap(){return _keyMap.get();} // 将棋盤頂点イン
 void Application::SetIsDrawMap(bool flag){_isDrawMap = flag;} // マップ描画フラグをセット
 bool Application::IsDrawMap()            {return _isDrawMap;} // マップ描画フラグを返す
 
-bool Application::IsDrawUINotEmpty(){return _uis.size() > 0;} // UIの空状況を返す
-void Application::PushUI(std::wstring text, D2D1_RECT_F rect, UIType uiType)
-{
-    //UIObj ui = {L"aaa", {0, 0, 1280, 720}};
-    //_uis.push_back(ui);
-    _uis.push_back({text, rect, uiType});
+bool Application::IsDrawUINotEmpty(){return _buttonUIs.size() > 0;} // UIの空状況を返す
 
-//_uis.push_back(ui);
-}   // UIをプッシュする
-void Application::RemoveAllUI(){_uis.clear();}      // UIを全て削除する
-std::vector<UI>& Application::GetUIs(){return _uis;} // UIを返す
+// ボタンUIプッシュ
+void Application::PushButtonUI(
+    D2D1_RECT_F              rect,
+    std::vector<TextAndRect> textAndRects,
+    ButtonUIType             buttonUIType)
+{
+    switch (buttonUIType)
+    {
+        case ButtonUIType::NEW_START_BUTTON:
+            _buttonUIFactory.reset(new NewStartButtonFactory());
+            break;
+
+        default:
+            return;
+    }
+    
+    _buttonUIs.push_back(_buttonUIFactory->CreateButtonUI(rect, textAndRects));
+}
+
+void Application::RemoveAllUI(){_buttonUIs.clear();}      // UIを全て削除する
+std::vector<std::unique_ptr<IButtonUI>>& Application::GetButtonUIs(){return _buttonUIs;} // ボタンUIを返す
 
 // すべての将棋オブジェクトを返す
 std::vector<GameObj*> Application::GetGameObjects()
