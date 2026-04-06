@@ -106,7 +106,7 @@ public:
 
     std::vector<UI>& GetUIs(); // UIを返す
     bool IsDrawUINotEmpty(); // UIの空状況を返す
-    void PushUI(std::wstring text, D2D1_RECT_F rect, UI::UIType uiType);   // UIをプッシュする
+    void PushUI(std::wstring text, D2D1_RECT_F rect, UIType uiType);   // UIをプッシュする
     void RemoveAllUI();      // UIを全て削除する
 
     void ProcessChangeWindowSize(); // 画面サイズ変更処理

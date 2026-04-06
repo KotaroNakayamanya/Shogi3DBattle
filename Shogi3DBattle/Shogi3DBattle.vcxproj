@@ -222,6 +222,7 @@
     <ClInclude Include="header\TexHeapProp.h" />
     <ClInclude Include="header\TexResourceDesc.h" />
     <ClInclude Include="header\TextFormat.h" />
+    <ClInclude Include="header\UIType.h" />
     <ClInclude Include="header\UploadHeapProp.h" />
     <ClInclude Include="header\VecCalc.h" />
     <ClInclude Include="header\VertStruct.h" />

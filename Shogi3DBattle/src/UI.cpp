@@ -1,7 +1,7 @@
 #include"UI.h"
 
-std::wstring  UI::GetText()  {return _text;}   // テキストを返す
-UI::UIType UI::GetUIType(){return _uiType;} // UIタイプを返す
+std::wstring UI::GetText()  {return _text;}   // テキストを返す
+UIType       UI::GetUIType(){return _uiType;} // UIタイプを返す
 
 void        UI::SetRect(D2D1_RECT_F rect){_rect = rect;}        // テキスト範囲セット
 D2D1_RECT_F UI::GetRect()                {return _rect;}        // テキスト範囲を返す

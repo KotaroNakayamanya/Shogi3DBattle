@@ -535,7 +535,7 @@ void Application::SetIsDrawMap(bool flag){_isDrawMap = flag;} // マップ描画
 bool Application::IsDrawMap()            {return _isDrawMap;} // マップ描画フラグを返す
 
 bool Application::IsDrawUINotEmpty(){return _uis.size() > 0;} // UIの空状況を返す
-void Application::PushUI(std::wstring text, D2D1_RECT_F rect, UI::UIType uiType)
+void Application::PushUI(std::wstring text, D2D1_RECT_F rect, UIType uiType)
 {
     //UIObj ui = {L"aaa", {0, 0, 1280, 720}};
     //_uis.push_back(ui);

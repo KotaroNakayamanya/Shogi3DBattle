@@ -2,13 +2,13 @@
 
 #include"ISceneState.h"
 #include"Camera.h"
-#include"UI.h"
+#include"UIType.h"
 
 class StartMenu : public ISceneState
 {
 public:
-    Camera* _mainCamera; // メインカメラ
-    UI::UIType _selectingUI; // 選択しているUI
+    Camera* _mainCamera;  // メインカメラ
+    UIType  _selectingUI; // 選択しているUI
 
     ISceneState* ExeDecisionButton(); // 決定ボタン処理
     ISceneState* ExeCancelButton(); // キャンセルボタン処理

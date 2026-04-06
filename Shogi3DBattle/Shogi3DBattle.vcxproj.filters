@@ -944,6 +944,9 @@
     <ClInclude Include="header\Pawn.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
+    <ClInclude Include="header\UIType.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\PixelShader.hlsl">

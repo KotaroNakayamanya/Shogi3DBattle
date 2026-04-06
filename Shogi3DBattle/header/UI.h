@@ -1,19 +1,11 @@
 #pragma once
 
+#include"UIType.h"
 #include<string>
 #include<d2d1_3.h>
 
 class UI
 {
-public:
-    enum UIType
-    {
-        NEW_START,      // はじめから
-        CONTINUE_START, // つづきから
-        OPTION,         // オプション
-        EXIT,           // アプリケーション終了
-        NONE            // (UI選択無し)
-    };
 private:
     const std::wstring _text;       // テキスト
     const UIType       _uiType;     // UIタイプ
