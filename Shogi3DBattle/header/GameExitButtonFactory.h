@@ -5,7 +5,7 @@
 class GameExitButtonFactory : public IButtonUIFactory
 {
 public:
-    std::unique_ptr<IButtonUI> CreateButtonUI( // つづきからボタン作成
+    std::unique_ptr<I_ButtonUI> CreateButtonUI( // つづきからボタン作成
         D2D1_RECT_F              rect,
         std::vector<TextAndRect> textAndRects) override;
 };

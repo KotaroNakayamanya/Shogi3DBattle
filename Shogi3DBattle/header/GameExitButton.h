@@ -5,5 +5,5 @@
 class GameExitButton : public ButtonUI
 {
 public:
-    std::unique_ptr<ISceneState> ExePushButton() override; // ゲーム終了ボタン押下処理
+    std::unique_ptr<I_SceneState> ExePushButton() override; // ゲーム終了ボタン押下処理
 };

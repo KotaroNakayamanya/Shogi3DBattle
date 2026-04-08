@@ -2,7 +2,7 @@
 #include"OptionButton.h"
 
 // オプションボタン作成
-std::unique_ptr<IButtonUI> OptionButtonFactory::CreateButtonUI(
+std::unique_ptr<I_ButtonUI> OptionButtonFactory::CreateButtonUI(
     D2D1_RECT_F              rect,
     std::vector<TextAndRect> textAndRects)
 {

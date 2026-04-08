@@ -4,7 +4,7 @@
 #include"IBufferedDataFactory.h"
 #include"VertStruct.h"
 
-class IGameObjFactory
+class I_GameObjFactory
 {
 protected:
     std::unique_ptr<IBufferedDataFactory<Vert>>              _verticesFactory; // 頂点集合ファクトリー
@@ -13,5 +13,5 @@ protected:
 public:
     virtual std::unique_ptr<GameObj> CreateUniquePtr() = 0; // ゲームオブジェクト作成
 
-    virtual ~IGameObjFactory() = default;
+    virtual ~I_GameObjFactory() = default;
 };

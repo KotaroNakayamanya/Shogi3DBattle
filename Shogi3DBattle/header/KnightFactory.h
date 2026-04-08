@@ -1,8 +1,8 @@
 #pragma once
 
-#include"IGameObjFactory.h"
+#include"I_GameObjFactory.h"
 
-class KnightFactory : public IGameObjFactory
+class KnightFactory : public I_GameObjFactory
 {
 public:
     std::unique_ptr<GameObj> CreateUniquePtr() override; // åjÅ@çÏê¨ 

@@ -22,7 +22,7 @@
 #include"Pipeline.h"
 
 #include"Board.h"
-#include"Piece.h"
+#include"I_Piece.h"
 
 class Device
 {

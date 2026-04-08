@@ -2,7 +2,7 @@
 #include"ContinueStartButton.h"
 
 // ‚Â‚Ã‚«‚©‚çƒ{ƒ^ƒ“ì¬
-std::unique_ptr<IButtonUI> ContinueStartButtonFactory::CreateButtonUI(
+std::unique_ptr<I_ButtonUI> ContinueStartButtonFactory::CreateButtonUI(
     D2D1_RECT_F              rect,
     std::vector<TextAndRect> textAndRects)
 {

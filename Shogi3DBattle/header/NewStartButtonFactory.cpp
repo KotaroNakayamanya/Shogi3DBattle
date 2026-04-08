@@ -2,7 +2,7 @@
 #include"NewStartButton.h"
 
 // ÇÕÇ∂ÇﬂÇ©ÇÁÉ{É^ÉìçÏê¨
-std::unique_ptr<IButtonUI> NewStartButtonFactory::CreateButtonUI(
+std::unique_ptr<I_ButtonUI> NewStartButtonFactory::CreateButtonUI(
     D2D1_RECT_F              rect,
     std::vector<TextAndRect> textAndRects)
 {

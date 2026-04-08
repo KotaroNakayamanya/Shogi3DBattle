@@ -5,5 +5,5 @@
 class ContinueStartButton : public ButtonUI
 {
 public:
-    std::unique_ptr<ISceneState> ExePushButton() override; // つづきからボタン押下処理
+    std::unique_ptr<I_SceneState> ExePushButton() override; // つづきからボタン押下処理
 };

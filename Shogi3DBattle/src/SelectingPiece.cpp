@@ -6,7 +6,7 @@
 #include"NonePersProjMat.h"
 
 // 駒選択シーン動作
-std::unique_ptr<ISceneState> SelectingPiece::ExeSceneOperation(
+std::unique_ptr<I_SceneState> SelectingPiece::ExeSceneOperation(
     UCHAR inputMemory,
     int cursorX,
     int cursorXMove,
@@ -22,11 +22,11 @@ std::unique_ptr<ISceneState> SelectingPiece::ExeSceneOperation(
 }
 
 // 決定ボタン
-std::unique_ptr<ISceneState> SelectingPiece::ExeDecisionButton()
+std::unique_ptr<I_SceneState> SelectingPiece::ExeDecisionButton()
 {
     auto& pieces = Application::GetInstance().GetPieces();
 
-    std::unique_ptr<ISceneState> newSceneState = std::make_unique<MovingPiece>(pieces[0].get()); // 駒操作シーンに遷移する
+    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<MovingPiece>(pieces[0].get()); // 駒操作シーンに遷移する
     ReversProjMat(); // メインカメラをパース付きに戻す
 
     auto inputHandler = Application::GetInstance().GetInputHandler();
@@ -36,9 +36,9 @@ std::unique_ptr<ISceneState> SelectingPiece::ExeDecisionButton()
 }
 
 // キャンセルボタン処理
-std::unique_ptr<ISceneState> SelectingPiece::ExeCancelButton()
+std::unique_ptr<I_SceneState> SelectingPiece::ExeCancelButton()
 {
-    std::unique_ptr<ISceneState> newSceneState = std::make_unique<StartMenu>(); // スタートメニューに遷移する
+    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<StartMenu>(); // スタートメニューに遷移する
     ReversProjMat(); // メインカメラをパース付きに戻す
 
     auto inputHandler = Application::GetInstance().GetInputHandler();

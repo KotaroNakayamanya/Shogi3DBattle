@@ -8,7 +8,7 @@
 #include"GameExitButtonFactory.h"
 
 // スタートメニューシーン動作
-std::unique_ptr<ISceneState> StartMenu::ExeSceneOperation(
+std::unique_ptr<I_SceneState> StartMenu::ExeSceneOperation(
     UCHAR inputMemory,
     int cursorX,
     int cursorXMove,
@@ -34,7 +34,7 @@ std::unique_ptr<ISceneState> StartMenu::ExeSceneOperation(
 
     }
 
-    std::unique_ptr<ISceneState> newSceneState = nullptr;
+    std::unique_ptr<I_SceneState> newSceneState = nullptr;
 
     if (inputMemory & InputHandler::DECISION)  // 決定ボタン処理
         newSceneState = ExeDecisionButton();
@@ -45,7 +45,7 @@ std::unique_ptr<ISceneState> StartMenu::ExeSceneOperation(
 }
 
 // 決定ボタン
-std::unique_ptr<ISceneState> StartMenu::ExeDecisionButton()
+std::unique_ptr<I_SceneState> StartMenu::ExeDecisionButton()
 {
     // ボタンUIが選択されていればボタン処理実行、選択されていなければ何もしない
     return _selectingButtonUI ?
@@ -53,7 +53,7 @@ std::unique_ptr<ISceneState> StartMenu::ExeDecisionButton()
 }
 
 // キャンセルボタン処理
-std::unique_ptr<ISceneState> StartMenu::ExeCancelButton()
+std::unique_ptr<I_SceneState> StartMenu::ExeCancelButton()
 {
     auto gameWindow = Application::GetInstance().GetGameWindow();
     DestroyWindow(gameWindow->GetHWND());

@@ -3,7 +3,7 @@
 #include"SelectingPiece.h"
 
 // はじめからボタン押下処理
-std::unique_ptr<ISceneState> NewStartButton::ExePushButton()
+std::unique_ptr<I_SceneState> NewStartButton::ExePushButton()
 {
     // 駒選択シーンに遷移
     auto newSceneState = std::make_unique<SelectingPiece>();

@@ -5,7 +5,7 @@
 class NewStartButtonFactory : public IButtonUIFactory
 {
 public:
-    std::unique_ptr<IButtonUI> CreateButtonUI( // はじめからボタン作成
+    std::unique_ptr<I_ButtonUI> CreateButtonUI( // はじめからボタン作成
         D2D1_RECT_F              rect,
         std::vector<TextAndRect> textAndRects) override;
 };

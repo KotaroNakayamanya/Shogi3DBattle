@@ -5,7 +5,7 @@
 class ContinueStartButtonFactory : public IButtonUIFactory
 {
 public:
-    std::unique_ptr<IButtonUI> CreateButtonUI( // つつきからボタン作成
+    std::unique_ptr<I_ButtonUI> CreateButtonUI( // つつきからボタン作成
         D2D1_RECT_F              rect,
         std::vector<TextAndRect> textAndRects) override;
 };

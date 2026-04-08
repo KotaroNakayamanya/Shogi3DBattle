@@ -4,14 +4,14 @@
 #include<cmath>
 
 // 駒操作シーン動作
-std::unique_ptr<ISceneState> MovingPiece::ExeSceneOperation(
+std::unique_ptr<I_SceneState> MovingPiece::ExeSceneOperation(
     UCHAR inputMemory,
     int cursorX,
     int cursorXMove,
     int cursorY,
     int cursorYMove)
 {
-    std::unique_ptr<ISceneState> newSceneState = nullptr;
+    std::unique_ptr<I_SceneState> newSceneState = nullptr;
 
     if(inputMemory & InputHandler::MOUSE_MOVE) // マウス操作処理
         ExeMouseMove(cursorXMove, cursorYMove);
@@ -65,19 +65,20 @@ std::unique_ptr<ISceneState> MovingPiece::ExeSceneOperation(
 
 
 // 決定ボタン
-std::unique_ptr<ISceneState> MovingPiece::ExeDecisionButton()
+std::unique_ptr<I_SceneState> MovingPiece::ExeDecisionButton()
 {
     return nullptr;
 }
 
 // キャンセルボタン処理
-std::unique_ptr<ISceneState> MovingPiece::ExeCancelButton()
+std::unique_ptr<I_SceneState> MovingPiece::ExeCancelButton()
 {
-    std::unique_ptr<ISceneState> newSceneState;
+    std::unique_ptr<I_SceneState> newSceneState;
     if (_isMoved) // 駒を動かしていたら駒を初期位置に戻し、カメラとフォーカスを平行移動する
     {
         // 元の位置に動かすまでのベクトルを取得
-        auto subtMat = _startWorldMat - _piece->GetWorldMat()->GetMat();
+        auto worldMat = _piece->GetWorldMat();
+        auto subtMat = _startWorldMat->GetMat() - worldMat->GetMat();
         auto subtFloat4x4 = VecCalc::GetFoloat4x4FromMat(subtMat);
         auto vecX = subtFloat4x4._41;
         auto vecY = subtFloat4x4._42;
@@ -85,7 +86,7 @@ std::unique_ptr<ISceneState> MovingPiece::ExeCancelButton()
         DirectX::XMFLOAT3 moveVec = {vecX, vecY, vecZ};
 
         // 駒のワールド行列を初期化、カメラを平行移動
-        _piece->GetWorldMat()->SetWorldMat(_startWorldMat);
+        _piece->SetWorldMat(_startWorldMat);
         _mainCamera->MoveCameraPos(moveVec);
         _mainCamera->MoveFocusPos (moveVec);
 
@@ -136,13 +137,13 @@ void MovingPiece::ExeMouseMove(int xMove, int yMove)
 
 
 
-MovingPiece::MovingPiece(Piece* piece)
+MovingPiece::MovingPiece(I_Piece* piece)
 {
     _piece = piece; // 操作対象の駒を取得
     _mainCamera = Application::GetInstance().GetMainCamera(); // メインカメラ取得
     
     auto worldMat = piece->GetWorldMat()->GetMat(); // 駒のワールド行列取得
-    _startWorldMat = worldMat; // ワールド行列初期値として取得しておく
+    _startWorldMat = piece->GetWorldMat(); // ワールド行列初期値として取得しておく
     
     
     // カメラのフォーカス位置を駒の位置を基準にセット

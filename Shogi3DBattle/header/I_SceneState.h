@@ -3,16 +3,16 @@
 #include"KeyMap.h"
 #include<memory>
 
-class ISceneState
+class I_SceneState
 {
 public:
     // ÉVÅ[ÉììÆçÏ
-    virtual std::unique_ptr<ISceneState> ExeSceneOperation(
+    virtual std::unique_ptr<I_SceneState> ExeSceneOperation(
         UCHAR inputMemory,
         int cursorX,
         int cursorXMove,
         int cursorY,
         int cursorYMove) = 0;
 
-    virtual ~ISceneState() = default;
+    virtual ~I_SceneState() = default;
 };

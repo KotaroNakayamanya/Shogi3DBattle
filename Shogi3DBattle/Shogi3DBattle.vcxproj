@@ -29,8 +29,9 @@
     <ClCompile Include="src\BoardFactory.cpp" />
     <ClCompile Include="src\BoardVertIndicesFactory.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
+    <ClCompile Include="src\B_Piece.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
-    <ClCompile Include="src\ContinueStartFactory.cpp" />
+    <ClCompile Include="src\ContinueStartButtonFactory.cpp" />
     <ClCompile Include="src\GameExitButton.cpp" />
     <ClCompile Include="src\GameExitButtonFactory.cpp" />
     <ClCompile Include="src\NewStartButton.cpp" />
@@ -72,7 +73,7 @@
     <ClCompile Include="src\LanceVerticesFactory.cpp" />
     <ClCompile Include="src\NonePersProjMat.cpp" />
     <ClCompile Include="src\OptionButton.cpp" />
-    <ClCompile Include="src\OptionFactory.cpp" />
+    <ClCompile Include="src\OptionButtonFactory.cpp" />
     <ClCompile Include="src\PawnFactory.cpp" />
     <ClCompile Include="src\PawnVerticesFactory.cpp" />
     <ClCompile Include="src\PersProjMat.cpp" />
@@ -89,7 +90,6 @@
     <ClCompile Include="src\KeyMap.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MovingPiece.cpp" />
-    <ClCompile Include="src\Piece.cpp" />
     <ClCompile Include="src\PShaderResourceStates.cpp" />
     <ClCompile Include="src\ReadResourceStates.cpp" />
     <ClCompile Include="src\Pipeline.cpp" />
@@ -136,6 +136,8 @@
     <ClInclude Include="header\GameExitButton.h" />
     <ClInclude Include="header\GameExitButtonFactory.h" />
     <ClInclude Include="header\IButtonUIFactory.h" />
+    <ClInclude Include="header\I_Piece.h" />
+    <ClInclude Include="header\M_PieceVerticesFactoryMethod.h" />
     <ClInclude Include="header\NewStartButton.h" />
     <ClInclude Include="header\Camera.h" />
     <ClInclude Include="header\ConstBuffFactory.h" />
@@ -170,7 +172,7 @@
     <ClInclude Include="header\Device11.h" />
     <ClInclude Include="header\DeviceContext.h" />
     <ClInclude Include="header\HeapFactory.h" />
-    <ClInclude Include="header\IButtonUI.h" />
+    <ClInclude Include="header\I_ButtonUI.h" />
     <ClInclude Include="header\IdxBuffFactory.h" />
     <ClInclude Include="header\IHeapProp.h" />
     <ClInclude Include="header\IDescOffset.h" />
@@ -218,7 +220,7 @@
     <ClInclude Include="header\InputLayout.h" />
     <ClInclude Include="header\KeyMap.h" />
     <ClInclude Include="header\MovingPiece.h" />
-    <ClInclude Include="header\Piece.h" />
+    <ClInclude Include="header\B_Piece.h" />
     <ClInclude Include="header\PShaderResourceStates.h" />
     <ClInclude Include="header\ReadResourceStates.h" />
     <ClInclude Include="header\Pipeline.h" />
@@ -227,12 +229,12 @@
     <ClInclude Include="header\RootSignature.h" />
     <ClInclude Include="header\Buff.h" />
     <ClInclude Include="header\Heap.h" />
-    <ClInclude Include="header\ISceneState.h" />
+    <ClInclude Include="header\I_SceneState.h" />
     <ClInclude Include="header\RTVFactory.h" />
     <ClInclude Include="header\RTVHeapDesc.h" />
     <ClInclude Include="header\RTVHeapFactory.h" />
     <ClInclude Include="header\RTVOffset.h" />
-    <ClInclude Include="header\IGameObjFactory.h" />
+    <ClInclude Include="header\I_GameObjFactory.h" />
     <ClInclude Include="header\SRVFactory.h" />
     <ClInclude Include="header\SwapChain.h" />
     <ClInclude Include="header\Texture.h" />

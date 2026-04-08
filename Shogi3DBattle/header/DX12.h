@@ -133,7 +133,7 @@ private:
 
 
     void Set3DCmd(); // 3Dコマンドセット
-    D3D12_VERTEX_BUFFER_VIEW GetVertBuffView(GameObj* gameObj); // 頂点バッファビュー
+    D3D12_VERTEX_BUFFER_VIEW GetVertBuffView(Vertices*); // 頂点バッファビュー
     D3D12_INDEX_BUFFER_VIEW  GetIdxBuffView (BufferedData<unsigned short>* bufferedData); // インデックスバッファビュー
 
 

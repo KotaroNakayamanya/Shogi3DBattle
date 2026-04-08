@@ -5,5 +5,5 @@
 class OptionButton : public ButtonUI
 {
 public:
-    std::unique_ptr<ISceneState> ExePushButton() override; // オプションボタン押下処理
+    std::unique_ptr<I_SceneState> ExePushButton() override; // オプションボタン押下処理
 };

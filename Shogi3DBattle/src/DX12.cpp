@@ -441,10 +441,12 @@ HRESULT DX12::WriteToBuff()
     // 頂点集合の書き込み位置をセット
     board->GetVertices()->SetStartDataIdx(idx);
     idx += board->GetVertices()->GetDatas().size();
+    Vertices* vertices;
     for (auto& piece : pieces)
     {
-        piece->GetVertices()->SetStartDataIdx(idx);
-        idx += piece->GetVertices()->GetDatas().size();
+        vertices = piece->GetVertices();
+        vertices->SetStartDataIdx(idx);
+        idx += vertices->GetDatas().size();
     }
     if(FAILED(_vertBuff->WriteToBuff<Vert>(board->GetVertices()))) goto failed; // 将棋盤頂点集合をバッファに書き込み
     for (auto& piece : pieces)
@@ -463,10 +465,12 @@ HRESULT DX12::WriteToBuff()
     idx = 0;
     board->GetWorldMat()->SetStartDataIdx(idx); // 将棋盤
     idx += board->GetWorldMat()->GetDatas().size();
+    WorldMat* worldMat;
     for (auto& piece : pieces)
     {
-        piece->GetWorldMat()->SetStartDataIdx(idx); // 駒
-        idx += piece->GetWorldMat()->GetDatas().size();
+        worldMat = piece->GetWorldMat();
+        worldMat->SetStartDataIdx(idx); // 駒
+        idx += worldMat->GetDatas().size();
     }
     mainCamera->SetStartDataIdx(idx);
     mapCamera ->SetStartDataIdx(idx);
@@ -649,14 +653,14 @@ void DX12::ExeD3D()
 
     // 将棋盤描画コマンドセット
     _cmdList->SetIdxBuffView(GetIdxBuffView(boardVertIndices));
-    _cmdList->SetVertBuffView(GetVertBuffView(board));
+    _cmdList->SetVertBuffView(GetVertBuffView(board->GetVertices()));
     _cmdList->SetDrawWithIdx(boardVertIndices);
 
     // 駒描画コマンドセット
     _cmdList->SetIdxBuffView(GetIdxBuffView(pieceVertIndices));
     for (UINT i = 0; i < pieces.size(); i++)
     {
-        _cmdList->SetVertBuffView(GetVertBuffView(pieces[i].get()));
+        _cmdList->SetVertBuffView(GetVertBuffView(pieces[i]->GetVertices()));
         _cmdList->SetDrawWithIdx(pieceVertIndices);
     }
 
@@ -696,14 +700,14 @@ void DX12::ExeD3D()
 
         // 将棋盤描画コマンドセット
         _cmdList->SetIdxBuffView(GetIdxBuffView(boardVertIndices));
-        _cmdList->SetVertBuffView(GetVertBuffView(board));
+        _cmdList->SetVertBuffView(GetVertBuffView(board->GetVertices()));
         _cmdList->SetDrawWithIdx(boardVertIndices);
 
         // 駒描画コマンドセット
         _cmdList->SetIdxBuffView(GetIdxBuffView(pieceVertIndices));
         for (UINT i = 0; i < pieces.size(); i++)
         {
-            _cmdList->SetVertBuffView(GetVertBuffView(pieces[i].get()));
+            _cmdList->SetVertBuffView(GetVertBuffView(pieces[i]->GetVertices()));
             _cmdList->SetDrawWithIdx(pieceVertIndices);
         }
 
@@ -741,19 +745,19 @@ void DX12::Set3DCmd()
 }
 
 // 頂点バッファビュー
-D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(GameObj* gameObj)
+D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(Vertices* vertices)
 {
     D3D12_VERTEX_BUFFER_VIEW view;
 
     auto buffAddress = _vertBuff->GetStartAddress();
-    buffAddress += sizeof(Vert) * gameObj->GetVertices()->GetStartDataIdx();
+    buffAddress += sizeof(Vert) * vertices->GetStartDataIdx();
 
     view.BufferLocation =  // 頂点バッファのスタート位置
         buffAddress;
     view.StrideInBytes =   // 頂点1つ分のサイズ
         sizeof(Vert);
     view.SizeInBytes = // 頂点全体のサイズ
-        sizeof(Vert) * gameObj->GetVertices()->GetDatas().size();
+        sizeof(Vert) * vertices->GetDatas().size();
 
     return view;
 }

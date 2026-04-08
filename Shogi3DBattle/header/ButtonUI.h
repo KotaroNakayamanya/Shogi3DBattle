@@ -1,8 +1,8 @@
 #pragma once
 
-#include"IButtonUI.h"
+#include"I_ButtonUI.h"
 
-class ButtonUI : public IButtonUI
+class ButtonUI : public I_ButtonUI
 {
 private:
     D2D1_RECT_F              _rect;         // UI範囲
@@ -10,7 +10,7 @@ private:
     bool                     _isSelected;   // ボタンUI選択状態
 
 public:
-    virtual std::unique_ptr<ISceneState> ExePushButton() = 0; // ボタン押下処理
+    virtual std::unique_ptr<I_SceneState> ExePushButton() = 0; // ボタン押下処理
 
     void        SetRect(D2D1_RECT_F rect) override {_rect = rect;} // UI範囲セット
     D2D1_RECT_F GetRect()                 override {return _rect;} // UI範囲を返す

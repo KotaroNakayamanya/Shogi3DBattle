@@ -3,12 +3,12 @@
 #include"GameWindow.h"
 #include"DX12.h"
 #include"InputHandler.h"
-#include"IGameObjFactory.h"
-#include"ISceneState.h"
+#include"I_GameObjFactory.h"
+#include"I_SceneState.h"
 #include"IBufferedDataFactory.h"
 
 #include"Camera.h"
-#include"IButtonUI.h"
+#include"I_ButtonUI.h"
 #include"ButtonUIType.h"
 
 #include"BufferedData.h"
@@ -27,13 +27,13 @@ private:
     std::unique_ptr<Board>                        _board;        // 将棋盤
     std::unique_ptr<NaturalBufferedData<unsigned short>> _boardIndices; // 将棋盤の頂点インデックス
 
-    std::vector<std::unique_ptr<Piece>>           _pieces;       // 駒
+    std::vector<std::unique_ptr<I_Piece>>           _pieces;       // 駒
     std::unique_ptr<NaturalBufferedData<unsigned short>> _pieceIndices; // 駒の頂点インデックス
 
     void CreateGameObj(); // 将棋オブジェクト作成
 
     // ファクトリー
-    std::unique_ptr<IGameObjFactory>    _gameObjFactory;    // ゲームオブジェクトファクトリー
+    std::unique_ptr<I_GameObjFactory>    _gameObjFactory;    // ゲームオブジェクトファクトリー
     std::unique_ptr<IBufferedDataFactory<Vert>>  _verticesFactory;    // 頂点集合ファクトリー
     std::unique_ptr<IBufferedDataFactory<unsigned short>> _vertIndicesFactory; // インデックス集合ファクトリー
     std::unique_ptr<IBufferedDataFactory<Pixel>> _texFactory;    // テクスチャファクトリー
@@ -46,13 +46,13 @@ private:
 
 
     // UI 
-    std::vector<std::unique_ptr<IButtonUI>> _buttonUIs; // ボタンUI
+    std::vector<std::unique_ptr<I_ButtonUI>> _buttonUIs; // ボタンUI
     std::unique_ptr<IButtonUIFactory> _buttonUIFactory; // ボタンUIファクトリー
 
 
     
 
-    std::unique_ptr<ISceneState>  _sceneState;   // シーンステート
+    std::unique_ptr<I_SceneState>  _sceneState;   // シーンステート
     std::unique_ptr<InputHandler> _inputHandler; // インプットハンドラ
     std::unique_ptr<KeyMap>       _keyMap;       // キーマップ
     void InitKeyMap(); // 操作ボタン初期処理
@@ -69,7 +69,7 @@ private:
     void CreateCamera(); // カメラ作成
 
     // シーン更新チェック
-    bool IsUpdatedScene(ISceneState* sceneState);
+    bool IsUpdatedScene(I_SceneState* sceneState);
 
     bool _isDrawMap = false;
 
@@ -90,7 +90,7 @@ public:
     GameWindow* GetGameWindow(); // ゲームウインドウオブジェクトを返す
 
     Board* GetBoard(); // 将棋盤を返す
-    std::vector<std::unique_ptr<Piece>>& GetPieces(); // 駒を返す
+    std::vector<std::unique_ptr<I_Piece>>& GetPieces(); // 駒を返す
     Texture* GetWoodTex(); // 木材テクスチャを返す
     std::vector<std::unique_ptr<Texture>>& GetBoardLineTexs(); // 将棋盤黒線テクスチャを返す
     NaturalBufferedData<unsigned short>* GetBoardVertIndices(); // 将棋盤頂点インデックスを返す
@@ -114,7 +114,7 @@ public:
         D2D1_RECT_F              rect,
         std::vector<TextAndRect> textAndRects);
 
-    std::vector<std::unique_ptr<IButtonUI>>& GetButtonUIs(); // ボタンUIを返す
+    std::vector<std::unique_ptr<I_ButtonUI>>& GetButtonUIs(); // ボタンUIを返す
 
     bool IsDrawUINotEmpty(); // UIの空状況を返す
 

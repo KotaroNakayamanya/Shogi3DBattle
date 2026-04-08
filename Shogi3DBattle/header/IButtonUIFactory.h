@@ -1,12 +1,12 @@
 #pragma once
 
-#include"IButtonUI.h"
+#include"I_ButtonUI.h"
 #include"TextAndRectStruct.h"
 
 class IButtonUIFactory
 {
 public:
-    virtual std::unique_ptr<IButtonUI> CreateButtonUI( // ボタンUI作成
+    virtual std::unique_ptr<I_ButtonUI> CreateButtonUI( // ボタンUI作成
         D2D1_RECT_F              rect,
         std::vector<TextAndRect> textAndRects) = 0;
 

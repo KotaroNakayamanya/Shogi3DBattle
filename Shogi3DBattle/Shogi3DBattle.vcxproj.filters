@@ -298,9 +298,6 @@
     <Filter Include="ヘッダー ファイル\ui\button\option">
       <UniqueIdentifier>{4aa3335e-8dbe-4c75-b742-d6f608217322}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\ui\button\interface">
-      <UniqueIdentifier>{a03a5723-790a-49e5-80a6-245c1479bf97}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\ui\button\base">
       <UniqueIdentifier>{9f238bb0-ca4a-4d25-8d66-214a79b68da4}</UniqueIdentifier>
     </Filter>
@@ -340,6 +337,33 @@
     <Filter Include="ソース ファイル\buffered_data\game_obj\board">
       <UniqueIdentifier>{5c845247-4f3a-4a8a-ba96-6de3d19fe665}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\_base">
+      <UniqueIdentifier>{59ee3fc8-be08-4595-a18c-9109dc80e1e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ui\button\_interface">
+      <UniqueIdentifier>{a03a5723-790a-49e5-80a6-245c1479bf97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\scene_state\moving_piece">
+      <UniqueIdentifier>{6cfcc789-dbde-470d-a805-3b18c7824998}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\scene_state\selecting_piece">
+      <UniqueIdentifier>{c138cbed-adba-4335-8287-913744c50212}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\scene_state\_interface">
+      <UniqueIdentifier>{806f2bc4-4673-4171-a410-4289fe693603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\scene_state\start_menu">
+      <UniqueIdentifier>{a2c81f27-3d2b-44c6-b525-b39020b6fa3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\scene_state\moving_piece">
+      <UniqueIdentifier>{a33ec51b-f118-4d07-b224-91f3fcc05bb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\scene_state\selecting_piece">
+      <UniqueIdentifier>{59c9ee6e-9637-4a14-bdf5-3d2e2c7053a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\scene_state\start_menu">
+      <UniqueIdentifier>{b784272d-be92-49f4-9977-4007f50e5b96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -350,9 +374,6 @@
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MovingPiece.cpp">
-      <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>ソース ファイル\dx12\swap_chain</Filter>
@@ -504,12 +525,6 @@
     <ClCompile Include="src\WorldMat.cpp">
       <Filter>ソース ファイル\buffered_data\mat</Filter>
     </ClCompile>
-    <ClCompile Include="src\StartMenu.cpp">
-      <Filter>ソース ファイル\scene_state</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SelectingPiece.cpp">
-      <Filter>ソース ファイル\scene_state</Filter>
-    </ClCompile>
     <ClCompile Include="src\BoardVertIndicesFactory.cpp">
       <Filter>ソース ファイル\buffered_data\factory</Filter>
     </ClCompile>
@@ -554,9 +569,6 @@
     </ClCompile>
     <ClCompile Include="src\BoardVerticesFactory.cpp">
       <Filter>ソース ファイル\buffered_data\factory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Piece.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\WorldMatFactory.cpp">
       <Filter>ソース ファイル\buffered_data\mat</Filter>
@@ -627,14 +639,26 @@
     <ClCompile Include="src\GameExitButtonFactory.cpp">
       <Filter>ソース ファイル\ui\button\game_exit</Filter>
     </ClCompile>
-    <ClCompile Include="src\ContinueStartFactory.cpp">
+    <ClCompile Include="src\ContinueStartButtonFactory.cpp">
       <Filter>ソース ファイル\ui\button\continue_start</Filter>
     </ClCompile>
-    <ClCompile Include="src\OptionFactory.cpp">
+    <ClCompile Include="src\OptionButtonFactory.cpp">
       <Filter>ソース ファイル\ui\button\option</Filter>
     </ClCompile>
     <ClCompile Include="src\Board.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
+    </ClCompile>
+    <ClCompile Include="src\B_Piece.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\_base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StartMenu.cpp">
+      <Filter>ソース ファイル\scene_state\start_menu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovingPiece.cpp">
+      <Filter>ソース ファイル\scene_state\moving_piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SelectingPiece.cpp">
+      <Filter>ソース ファイル\scene_state\selecting_piece</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -643,12 +667,6 @@
     </ClInclude>
     <ClInclude Include="header\DX12.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ISceneState.h">
-      <Filter>ヘッダー ファイル\scene_state</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MovingPiece.h">
-      <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
     <ClInclude Include="header\SwapChain.h">
       <Filter>ヘッダー ファイル\DX12\swap_chain</Filter>
@@ -833,12 +851,6 @@
     <ClInclude Include="header\RenderTexBuffFactory.h">
       <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
     </ClInclude>
-    <ClInclude Include="header\StartMenu.h">
-      <Filter>ヘッダー ファイル\scene_state</Filter>
-    </ClInclude>
-    <ClInclude Include="header\SelectingPiece.h">
-      <Filter>ヘッダー ファイル\scene_state</Filter>
-    </ClInclude>
     <ClInclude Include="header\Shader.h">
       <Filter>ヘッダー ファイル\DX12\shader</Filter>
     </ClInclude>
@@ -920,7 +932,7 @@
     <ClInclude Include="header\Camera.h">
       <Filter>ヘッダー ファイル\buffered_data\camera</Filter>
     </ClInclude>
-    <ClInclude Include="header\IGameObjFactory.h">
+    <ClInclude Include="header\I_GameObjFactory.h">
       <Filter>ヘッダー ファイル\buffered_data</Filter>
     </ClInclude>
     <ClInclude Include="header\GameObjIdManager.h">
@@ -1007,11 +1019,11 @@
     <ClInclude Include="header\OptionButtonFactory.h">
       <Filter>ヘッダー ファイル\ui\button\option</Filter>
     </ClInclude>
-    <ClInclude Include="header\IButtonUI.h">
-      <Filter>ヘッダー ファイル\ui\button\interface</Filter>
+    <ClInclude Include="header\I_ButtonUI.h">
+      <Filter>ヘッダー ファイル\ui\button\_interface</Filter>
     </ClInclude>
     <ClInclude Include="header\IButtonUIFactory.h">
-      <Filter>ヘッダー ファイル\ui\button\interface</Filter>
+      <Filter>ヘッダー ファイル\ui\button\_interface</Filter>
     </ClInclude>
     <ClInclude Include="header\ButtonUI.h">
       <Filter>ヘッダー ファイル\ui\button\base</Filter>
@@ -1037,17 +1049,35 @@
     <ClInclude Include="header\Rook.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\rook</Filter>
     </ClInclude>
-    <ClInclude Include="header\Piece.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
-    </ClInclude>
     <ClInclude Include="header\Silver.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\silver</Filter>
     </ClInclude>
     <ClInclude Include="header\PieceFactoryMethod.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
     </ClInclude>
-    <ClInclude Include="header\PieceVertIndicesFactory.h">
+    <ClInclude Include="header\I_Piece.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_SceneState.h">
+      <Filter>ヘッダー ファイル\scene_state\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\MovingPiece.h">
+      <Filter>ヘッダー ファイル\scene_state\moving_piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\SelectingPiece.h">
+      <Filter>ヘッダー ファイル\scene_state\selecting_piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\StartMenu.h">
+      <Filter>ヘッダー ファイル\scene_state\start_menu</Filter>
+    </ClInclude>
+    <ClInclude Include="header\M_PieceVerticesFactoryMethod.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_Piece.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PieceVertIndicesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
