@@ -3,7 +3,7 @@
 #include"GameObjType.h"
 
 // â§Å@í∏ì_èWçáçÏê¨
-std::unique_ptr<BufferedData<Vert>> KingVerticesFactory::CreateUniquePtr()
+std::unique_ptr<BufferedData> KingVerticesFactory::CreateUniquePtr()
 {
     float mmBottomWidth  = 285.0f;
     float mmHeight       = 320.0f;

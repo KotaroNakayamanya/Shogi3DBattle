@@ -3,8 +3,8 @@
 #include"IBufferedDataFactory.h"
 #include"VertStruct.h"
 
-class BishopVerticesFactory : public IBufferedDataFactory<Vert>
+class BishopVerticesFactory : public IBufferedDataFactory
 {
 public:
-    std::unique_ptr<BufferedData<Vert>> CreateUniquePtr() override; // 角　頂点集合作成
+    std::unique_ptr<BufferedData> CreateUniquePtr() override; // 角　頂点集合作成
 };

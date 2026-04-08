@@ -12,7 +12,7 @@ std::unique_ptr<I_GameObj> KnightFactory::CreateUniquePtr()
     // 頂点集合作成
     _verticesFactory.reset(new KnightVerticesFactory());
     auto kingVerticesUniquePtr =
-        FactoryMethod::GetDownCastUniquePtr<Vertices, IBufferedDataFactory<Vert>>(_verticesFactory.get());
+        FactoryMethod::GetDownCastUniquePtr<Vertices, IBufferedDataFactory>(_verticesFactory.get());
     auto kingVerticesPtr = kingVerticesUniquePtr.get();
     kingVerticesUniquePtr.release();
     uniquePtr->SetVertices(kingVerticesPtr);
@@ -20,7 +20,7 @@ std::unique_ptr<I_GameObj> KnightFactory::CreateUniquePtr()
     // ワールド行列作成
     _matFactory.reset(new WorldMatFactory());
     auto worldMatUniquePtr = 
-        FactoryMethod::GetDownCastUniquePtr<WorldMat, IBufferedDataFactory<DirectX::XMMATRIX>>(_matFactory.get());
+        FactoryMethod::GetDownCastUniquePtr<WorldMat, IBufferedDataFactory>(_matFactory.get());
     auto worldMatPtr = worldMatUniquePtr.get();
     worldMatUniquePtr.release();
     uniquePtr->SetWorldMat(worldMatPtr);

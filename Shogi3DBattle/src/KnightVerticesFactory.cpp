@@ -3,7 +3,7 @@
 #include"GameObjType.h"
 
 // åjÅ@í∏ì_èWçáçÏê¨
-std::unique_ptr<BufferedData<Vert>> KnightVerticesFactory::CreateUniquePtr()
+std::unique_ptr<BufferedData> KnightVerticesFactory::CreateUniquePtr()
 {
     float mmBottomWidth  = 235.0f;
     float mmHeight       = 275.0f;

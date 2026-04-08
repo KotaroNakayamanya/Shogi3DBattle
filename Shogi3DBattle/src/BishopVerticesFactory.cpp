@@ -3,7 +3,7 @@
 #include"GameObjType.h"
 
 // äpÅ@í∏ì_èWçáçÏê¨
-std::unique_ptr<BufferedData<Vert>> BishopVerticesFactory::CreateUniquePtr()
+std::unique_ptr<BufferedData> BishopVerticesFactory::CreateUniquePtr()
 {
     float mmBottomWidth  = 260.0f;
     float mmHeight       = 300.0f;

@@ -3,8 +3,8 @@
 #include"IBufferedDataFactory.h"
 #include"VertStruct.h"
 
-class GoldVerticesFactory : public IBufferedDataFactory<Vert>
+class GoldVerticesFactory : public IBufferedDataFactory
 {
 public:
-    std::unique_ptr<BufferedData<Vert>> CreateUniquePtr() override; // 金　頂点集合作成
+    std::unique_ptr<BufferedData> CreateUniquePtr() override; // 金　頂点集合作成
 };

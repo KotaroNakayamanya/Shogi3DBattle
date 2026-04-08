@@ -3,7 +3,7 @@
 #include"GameObjType.h"
 
 // ã‚Å@í∏ì_èWçáçÏê¨
-std::unique_ptr<BufferedData<Vert>> SilverVerticesFactory::CreateUniquePtr()
+std::unique_ptr<BufferedData> SilverVerticesFactory::CreateUniquePtr()
 {
     float mmBottomWidth  = 250.0f;
     float mmHeight       = 285.0f;

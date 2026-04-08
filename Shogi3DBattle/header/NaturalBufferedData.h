@@ -1,16 +1,36 @@
 #pragma once
 
 #include"BufferedData.h"
+#include<vector>
 
 template<typename T>
-class NaturalBufferedData : public BufferedData<T>
+class NaturalBufferedData : public BufferedData
 {
 protected:
     std::vector<T> _datas;        // バッファに書き込むデータ
 
 public:
     void           SetDatas(std::vector<T> datas)          {_datas = datas;}       // データ集合セット
-    std::vector<T> GetDatas()                     override {return _datas;}        // データ集合を返す
+
+    // バッファに書き込み
+    HRESULT WriteToBuff(Buff* buff) override
+    {
+        T* buffMap;
+
+        HRESULT result = buff->GetBuff()->Map(0, nullptr, (void**)&buffMap);
+        if (FAILED(result)) return result;
+
+        buffMap += _startDataIdx;
+
+        std::copy(_datas.begin(), _datas.end(), buffMap);
+
+        buff->GetBuff()->Unmap(0, nullptr);
+
+        return S_OK;
+    }
+
+
+    unsigned int GetSize() override {return _datas.size();};
 
     virtual ~NaturalBufferedData() = default;
 };

@@ -6,7 +6,7 @@
 
 
 // í∏ì_èWçáçÏê¨
-std::unique_ptr<BufferedData<Vert>> BoardVerticesFactory::CreateUniquePtr()
+std::unique_ptr<BufferedData> BoardVerticesFactory::CreateUniquePtr()
 {
     float size = 100.0f;
 

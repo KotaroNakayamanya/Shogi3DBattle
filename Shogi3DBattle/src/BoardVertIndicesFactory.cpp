@@ -2,7 +2,7 @@
 #include"NaturalBufferedData.h"
 
 // 将棋盤インデックス集合作成
-std::unique_ptr<BufferedData<unsigned short>> BoardVertIndicesFactory::CreateUniquePtr()
+std::unique_ptr<BufferedData> BoardVertIndicesFactory::CreateUniquePtr()
 {
     std::vector<unsigned short> vertIndices;
 
@@ -22,7 +22,7 @@ std::unique_ptr<BufferedData<unsigned short>> BoardVertIndicesFactory::CreateUni
     
     NaturalBufferedData<unsigned short>* vertIndicesPtr = new NaturalBufferedData<unsigned short>();
     vertIndicesPtr->SetDatas(vertIndices);
-    std::unique_ptr<BufferedData<unsigned short>> vertIndicesUniquePtr(vertIndicesPtr);
+    std::unique_ptr<BufferedData> vertIndicesUniquePtr(vertIndicesPtr);
 
     return vertIndicesUniquePtr;
 }

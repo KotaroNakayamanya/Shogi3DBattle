@@ -2,8 +2,8 @@
 
 #include"IBufferedDataFactory.h"
 
-class PieceVertIndicesFactory : public IBufferedDataFactory<unsigned short>
+class PieceVertIndicesFactory : public IBufferedDataFactory
 {
 public:
-    std::unique_ptr<BufferedData<unsigned short>> CreateUniquePtr() override; // 駒のインデックス集合作成
+    std::unique_ptr<BufferedData> CreateUniquePtr() override; // 駒のインデックス集合作成
 };

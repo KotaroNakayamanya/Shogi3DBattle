@@ -17,6 +17,8 @@
 #include"I_ButtonUIFactory.h"
 #include"KeyMap.h"
 
+#include"Texture.h"
+
 class Application
 {
 private:
@@ -35,9 +37,9 @@ private:
 
     // ファクトリー
     std::unique_ptr<I_GameObjFactory>    _gameObjFactory;    // ゲームオブジェクトファクトリー
-    std::unique_ptr<IBufferedDataFactory<Vert>>  _verticesFactory;    // 頂点集合ファクトリー
-    std::unique_ptr<IBufferedDataFactory<unsigned short>> _vertIndicesFactory; // インデックス集合ファクトリー
-    std::unique_ptr<IBufferedDataFactory<Pixel>> _texFactory;    // テクスチャファクトリー
+    std::unique_ptr<IBufferedDataFactory>  _verticesFactory;    // 頂点集合ファクトリー
+    std::unique_ptr<IBufferedDataFactory> _vertIndicesFactory; // インデックス集合ファクトリー
+    std::unique_ptr<IBufferedDataFactory> _texFactory;    // テクスチャファクトリー
 
 
     // テクスチャ
@@ -99,7 +101,7 @@ public:
     KeyMap* GetKeyMap(); // 将棋盤頂点インデックスを返す
 
     std::vector<I_GameObj*> GetGameObjects(); // すべての将棋オブジェクトを返す
-    std::vector<BufferedData<unsigned short>*> GetAllVertIndices(); // すべての頂点インデックスを返す
+    std::vector<BufferedData*> GetAllVertIndices(); // すべての頂点インデックスを返す
 
     InputHandler* GetInputHandler(); // インプットハンドラを返す
     

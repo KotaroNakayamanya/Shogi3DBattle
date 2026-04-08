@@ -5,15 +5,13 @@
 #include"I_Mat.h"
 #include<memory>
 
-class Camera : public BufferedData<DirectX::XMMATRIX>
+class Camera : public BufferedData
 {
 private:
     std::unique_ptr<ViewMat> _viewMat; // ビュー行列
     std::unique_ptr<I_Mat>    _projMat; // プロジェクション行列
 
 public:
-    std::vector<DirectX::XMMATRIX> GetDatas() override; // データ集合を返す
-
     DirectX::XMMATRIX GetViewProjMat(); // ビュープロジェクション行列を返す
 
     void RotationH(float x); // 水平方向に視点を回す
@@ -31,7 +29,11 @@ public:
     void MoveCameraPos(DirectX::XMFLOAT3 vec); // カメラ移動
 
     DirectX::XMFLOAT3 GetNormLookVec(); // 正規化された視線ベクトルを返す
+    
+    // バッファに書き込み
+    HRESULT WriteToBuff(Buff* buff) override;
 
+    unsigned int GetSize() override;
     
 
     

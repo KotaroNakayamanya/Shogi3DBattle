@@ -3,8 +3,8 @@
 #include"IBufferedDataFactory.h"
 #include"VertStruct.h"
 
-class KnightVerticesFactory : public IBufferedDataFactory<Vert>
+class KnightVerticesFactory : public IBufferedDataFactory
 {
 public:
-    std::unique_ptr<BufferedData<Vert>> CreateUniquePtr() override; // 桂　頂点集合作成
+    std::unique_ptr<BufferedData> CreateUniquePtr() override; // 桂　頂点集合作成
 };

@@ -96,9 +96,9 @@ void CmdList::SetIdxBuffView(D3D12_INDEX_BUFFER_VIEW idxBuffView)
 }
 
 // インデックス描画セット
-void CmdList::SetDrawWithIdx(BufferedData<unsigned short>* bufferedData)
+void CmdList::SetDrawWithIdx(BufferedData* bufferedData)
 {    
-    _cmdList->DrawIndexedInstanced(bufferedData->GetDatas().size(), 1, 0, 0, 0);
+    _cmdList->DrawIndexedInstanced(bufferedData->GetSize(), 1, 0, 0, 0);
 }
 
 // コマンドクローズ

@@ -1,9 +1,30 @@
 #include"Camera.h"
 #include<cmath>
 #include"VecCalc.h"
+#include<vector>
 
-std::vector<DirectX::XMMATRIX> Camera::GetDatas(){return{GetViewProjMat()};} // データ集合を返す
+// バッファに書き込み
+HRESULT Camera::WriteToBuff(Buff* buff)
+{
+    DirectX::XMMATRIX* buffMap;
 
+    HRESULT result = buff->GetBuff()->Map(0, nullptr, (void**)&buffMap);
+    if (FAILED(result)) return result;
+
+    buffMap += _startDataIdx;
+
+    std::vector<DirectX::XMMATRIX> datas = {GetViewProjMat()};
+
+    std::copy(datas.begin(), datas.end(), buffMap);
+
+    buff->GetBuff()->Unmap(0, nullptr);
+
+    return S_OK;
+}
+unsigned int Camera::GetSize()
+{
+    return 1;
+}
 
 // 水平方向に視点を回す
 void Camera::RotationH(float x)

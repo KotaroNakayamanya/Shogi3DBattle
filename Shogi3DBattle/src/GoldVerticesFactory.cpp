@@ -3,7 +3,7 @@
 #include"GameObjType.h"
 
 // ã‡Å@í∏ì_èWçáçÏê¨
-std::unique_ptr<BufferedData<Vert>> GoldVerticesFactory::CreateUniquePtr()
+std::unique_ptr<BufferedData> GoldVerticesFactory::CreateUniquePtr()
 {
     float mmBottomWidth  = 250.0f;
     float mmHeight       = 285.0f;

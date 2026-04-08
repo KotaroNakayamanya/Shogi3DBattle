@@ -3,8 +3,8 @@
 #include"IBufferedDataFactory.h"
 #include"VertStruct.h"
 
-class RookVerticesFactory : public IBufferedDataFactory<Vert>
+class RookVerticesFactory : public IBufferedDataFactory
 {
 public:
-    std::unique_ptr<BufferedData<Vert>> CreateUniquePtr() override; // 飛　頂点集合作成
+    std::unique_ptr<BufferedData> CreateUniquePtr() override; // 飛　頂点集合作成
 };

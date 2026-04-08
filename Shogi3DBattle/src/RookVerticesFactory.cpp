@@ -3,7 +3,7 @@
 #include"GameObjType.h"
 
 // îÚÅ@í∏ì_èWçáçÏê¨
-std::unique_ptr<BufferedData<Vert>> RookVerticesFactory::CreateUniquePtr()
+std::unique_ptr<BufferedData> RookVerticesFactory::CreateUniquePtr()
 {
     float mmBottomWidth  = 260.0f;
     float mmHeight       = 300.0f;

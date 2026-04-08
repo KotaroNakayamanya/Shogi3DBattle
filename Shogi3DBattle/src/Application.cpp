@@ -69,7 +69,7 @@ void Application::CreateGameObj()
 
     // 将棋盤インデックス作成
     _vertIndicesFactory.reset(new BoardVertIndicesFactory());
-    _boardIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory<unsigned short>>(_vertIndicesFactory.get());
+    _boardIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory>(_vertIndicesFactory.get());
 
     // 王作成
     _gameObjFactory.reset(new KingFactory());
@@ -122,7 +122,7 @@ void Application::CreateGameObj()
 
     // 駒の頂点インデックス集合作成
     _vertIndicesFactory.reset(new PieceVertIndicesFactory());
-    _pieceIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory<unsigned short>>(_vertIndicesFactory.get());
+    _pieceIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory>(_vertIndicesFactory.get());
     
     // 駒の初期位置調整
     for (int i = 1; i < _pieces.size(); i++)
@@ -142,7 +142,7 @@ void Application::CreateTex()
 {
     //// 黄色木材テクスチャ作成
     _texFactory.reset(new YellowWoodTexFactory());
-    _woodTex = FactoryMethod::GetDownCastUniquePtr<Texture, IBufferedDataFactory<Pixel>>(_texFactory.get());
+    _woodTex = FactoryMethod::GetDownCastUniquePtr<Texture, IBufferedDataFactory>(_texFactory.get());
 
     // 将棋盤黒線テクスチャ作成用関数
     std::function<void(Texture*, GameObjType)> createBoardLineTex =
@@ -237,7 +237,7 @@ void Application::CreateTex()
 
             tex->SetWidth (width);
             tex->SetHeight(height);
-            tex->SetDatas(boardLinePixels);
+            tex->SetPixels(boardLinePixels);
         };
 
     INT boardTexNum = 2;
@@ -559,9 +559,9 @@ std::vector<I_GameObj*> Application::GetGameObjects()
 }
 
 // すべての頂点インデックスを返す
-std::vector<BufferedData<unsigned short>*> Application::GetAllVertIndices()
+std::vector<BufferedData*> Application::GetAllVertIndices()
 {
-    std::vector<BufferedData<unsigned short>*> allVertIndices;
+    std::vector<BufferedData*> allVertIndices;
 
     // 将棋盤を格納
     allVertIndices.push_back(_boardIndices.get());

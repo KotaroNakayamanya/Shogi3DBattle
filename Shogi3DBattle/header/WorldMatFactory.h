@@ -3,8 +3,8 @@
 #include"IBufferedDataFactory.h"
 #include<DirectXMath.h>
 
-class WorldMatFactory : public IBufferedDataFactory<DirectX::XMMATRIX>
+class WorldMatFactory : public IBufferedDataFactory
 {
 public:
-    std::unique_ptr<BufferedData<DirectX::XMMATRIX>> CreateUniquePtr() override; // ワールド行列作成
+    std::unique_ptr<BufferedData> CreateUniquePtr() override; // ワールド行列作成
 };
