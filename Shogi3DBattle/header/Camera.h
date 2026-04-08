@@ -2,14 +2,14 @@
 
 #include"BufferedData.h"
 #include"ViewMat.h"
-#include"IMat.h"
+#include"I_Mat.h"
 #include<memory>
 
 class Camera : public BufferedData<DirectX::XMMATRIX>
 {
 private:
     std::unique_ptr<ViewMat> _viewMat; // ビュー行列
-    std::unique_ptr<IMat>    _projMat; // プロジェクション行列
+    std::unique_ptr<I_Mat>    _projMat; // プロジェクション行列
 
 public:
     std::vector<DirectX::XMMATRIX> GetDatas() override; // データ集合を返す
@@ -39,6 +39,6 @@ public:
 
     void SetViewMat(ViewMat* viewMat); // ビュー行列セット
     ViewMat* GetViewMat();             // ビュー行列を返す
-    void SetProjMat(IMat* projMat);    // プロジェクション行列セット
-    IMat* GetProjMat();                // プロジェクション行列を返す
+    void SetProjMat(I_Mat* projMat);    // プロジェクション行列セット
+    I_Mat* GetProjMat();                // プロジェクション行列を返す
 };

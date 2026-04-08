@@ -5,7 +5,7 @@
 #include"FactoryMethod.h"
 
 // ã‚Å@çÏê¨
-std::unique_ptr<GameObj> SilverFactory::CreateUniquePtr()
+std::unique_ptr<I_GameObj> SilverFactory::CreateUniquePtr()
 {
     std::unique_ptr<Silver> uniquePtr = std::make_unique<Silver>();
 

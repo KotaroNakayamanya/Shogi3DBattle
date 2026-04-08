@@ -130,12 +130,13 @@
     <ClInclude Include="header\BoardVertIndicesFactory.h" />
     <ClInclude Include="header\BufferedData.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
-    <ClInclude Include="header\ButtonUI.h" />
+    <ClInclude Include="header\B_ButtonUI.h" />
     <ClInclude Include="header\ContinueStartButton.h" />
     <ClInclude Include="header\ContinueStartButtonFactory.h" />
     <ClInclude Include="header\GameExitButton.h" />
     <ClInclude Include="header\GameExitButtonFactory.h" />
-    <ClInclude Include="header\IButtonUIFactory.h" />
+    <ClInclude Include="header\I_ButtonUIFactory.h" />
+    <ClInclude Include="header\I_GameObj.h" />
     <ClInclude Include="header\I_Piece.h" />
     <ClInclude Include="header\M_PieceVerticesFactoryMethod.h" />
     <ClInclude Include="header\NewStartButton.h" />
@@ -146,7 +147,7 @@
     <ClInclude Include="header\DSBuffFactory.h" />
     <ClInclude Include="header\DSResourceDesc.h" />
     <ClInclude Include="header\FactoryMethod.h" />
-    <ClInclude Include="header\GameObj.h" />
+    <ClInclude Include="header\B_GameObj.h" />
     <ClInclude Include="header\GameObjIdManager.h" />
     <ClInclude Include="header\GameObjType.h" />
     <ClInclude Include="header\Gold.h" />
@@ -177,7 +178,7 @@
     <ClInclude Include="header\IHeapProp.h" />
     <ClInclude Include="header\IDescOffset.h" />
     <ClInclude Include="header\IHeapDesc.h" />
-    <ClInclude Include="header\IMat.h" />
+    <ClInclude Include="header\I_Mat.h" />
     <ClInclude Include="header\King.h" />
     <ClInclude Include="header\KingFactory.h" />
     <ClInclude Include="header\KingVerticesFactory.h" />

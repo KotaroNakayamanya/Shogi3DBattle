@@ -2,7 +2,7 @@
 
 #include"I_ButtonUI.h"
 
-class ButtonUI : public I_ButtonUI
+class B_ButtonUI : public I_ButtonUI
 {
 private:
     D2D1_RECT_F              _rect;         // UI範囲
@@ -19,5 +19,5 @@ public:
     void SetIsSelected(bool select) override {_isSelected = select;} // 選択状態セット
     bool IsSelected   ()            override {return _isSelected;  } // 選択状態を返す
 
-    ButtonUI() : _isSelected(false){}
+    B_ButtonUI() : _isSelected(false){}
 };

@@ -2,7 +2,6 @@
 
 #include<d3d12.h>
 #include<wrl.h>
-#include"GameObj.h"
 #include"Texture.h"
 #include<type_traits>
 

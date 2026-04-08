@@ -1,8 +1,8 @@
 #pragma once
 
-#include"IButtonUIFactory.h"
+#include"I_ButtonUIFactory.h"
 
-class GameExitButtonFactory : public IButtonUIFactory
+class GameExitButtonFactory : public I_ButtonUIFactory
 {
 public:
     std::unique_ptr<I_ButtonUI> CreateButtonUI( // ‚Â‚Ã‚«‚©‚çƒ{ƒ^ƒ“ì¬

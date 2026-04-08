@@ -1,8 +1,8 @@
 #pragma once
 
-#include"IButtonUIFactory.h"
+#include"I_ButtonUIFactory.h"
 
-class NewStartButtonFactory : public IButtonUIFactory
+class NewStartButtonFactory : public I_ButtonUIFactory
 {
 public:
     std::unique_ptr<I_ButtonUI> CreateButtonUI( // ÇÕÇ∂ÇﬂÇ©ÇÁÉ{É^ÉìçÏê¨

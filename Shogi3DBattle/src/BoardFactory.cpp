@@ -86,7 +86,7 @@
 //}
 
 // «Šû”Õì¬
-std::unique_ptr<GameObj> BoardFactory::CreateUniquePtr()
+std::unique_ptr<I_GameObj> BoardFactory::CreateUniquePtr()
 {   
     std::unique_ptr<Board> uniquePtr = std::make_unique<Board>();
 

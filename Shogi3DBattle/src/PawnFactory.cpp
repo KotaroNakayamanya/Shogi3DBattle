@@ -5,7 +5,7 @@
 #include"FactoryMethod.h"
 
 // ï‡Å@çÏê¨
-std::unique_ptr<GameObj> PawnFactory::CreateUniquePtr()
+std::unique_ptr<I_GameObj> PawnFactory::CreateUniquePtr()
 {
     std::unique_ptr<Pawn> uniquePtr = std::make_unique<Pawn>();
 

@@ -5,5 +5,5 @@
 class SilverFactory : public I_GameObjFactory
 {
 public:
-    std::unique_ptr<GameObj> CreateUniquePtr() override; // ‹â@ì¬ 
+    std::unique_ptr<I_GameObj> CreateUniquePtr() override; // ‹â@ì¬ 
 };

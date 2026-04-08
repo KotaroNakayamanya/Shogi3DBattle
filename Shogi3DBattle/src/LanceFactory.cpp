@@ -5,7 +5,7 @@
 #include"FactoryMethod.h"
 
 //Å@çÅ Å@çÏê¨
-std::unique_ptr<GameObj> LanceFactory::CreateUniquePtr()
+std::unique_ptr<I_GameObj> LanceFactory::CreateUniquePtr()
 {
     std::unique_ptr<Lance> uniquePtr = std::make_unique<Lance>();
 

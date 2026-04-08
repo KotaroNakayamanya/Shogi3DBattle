@@ -1,9 +1,9 @@
 #pragma once
 
-#include"IMat.h"
+#include"I_Mat.h"
 #include"BufferedData.h"
 
-class WorldMat : public IMat, public BufferedData<DirectX::XMMATRIX>
+class WorldMat : public I_Mat, public BufferedData<DirectX::XMMATRIX>
 {
 protected:
     DirectX::XMMATRIX _worldMat;

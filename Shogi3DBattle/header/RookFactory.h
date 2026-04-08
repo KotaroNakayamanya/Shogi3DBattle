@@ -5,5 +5,5 @@
 class RookFactory : public I_GameObjFactory
 {
 public:
-    std::unique_ptr<GameObj> CreateUniquePtr() override; // ”ò@ì¬ 
+    std::unique_ptr<I_GameObj> CreateUniquePtr() override; // ”ò@ì¬ 
 };

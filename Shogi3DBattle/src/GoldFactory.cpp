@@ -5,7 +5,7 @@
 #include"FactoryMethod.h"
 
 // ã‡Å@çÏê¨
-std::unique_ptr<GameObj> GoldFactory::CreateUniquePtr()
+std::unique_ptr<I_GameObj> GoldFactory::CreateUniquePtr()
 {
     std::unique_ptr<Gold> uniquePtr = std::make_unique<Gold>();
 

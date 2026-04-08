@@ -14,7 +14,7 @@
 #include"BufferedData.h"
 #include"VertStruct.h"
 
-#include"IButtonUIFactory.h"
+#include"I_ButtonUIFactory.h"
 
 class Application
 {
@@ -47,7 +47,7 @@ private:
 
     // UI 
     std::vector<std::unique_ptr<I_ButtonUI>> _buttonUIs; // ボタンUI
-    std::unique_ptr<IButtonUIFactory> _buttonUIFactory; // ボタンUIファクトリー
+    std::unique_ptr<I_ButtonUIFactory> _buttonUIFactory; // ボタンUIファクトリー
 
 
     
@@ -97,7 +97,7 @@ public:
     NaturalBufferedData<unsigned short>* GetPieceVertIndices(); // 駒の頂点インデックスを返す
     KeyMap* GetKeyMap(); // 将棋盤頂点インデックスを返す
 
-    std::vector<GameObj*> GetGameObjects(); // すべての将棋オブジェクトを返す
+    std::vector<I_GameObj*> GetGameObjects(); // すべての将棋オブジェクトを返す
     std::vector<BufferedData<unsigned short>*> GetAllVertIndices(); // すべての頂点インデックスを返す
 
     InputHandler* GetInputHandler(); // インプットハンドラを返す

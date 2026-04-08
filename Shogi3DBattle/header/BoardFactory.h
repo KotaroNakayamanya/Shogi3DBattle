@@ -5,5 +5,5 @@
 class BoardFactory : public I_GameObjFactory
 {
 public:
-    std::unique_ptr<GameObj> CreateUniquePtr() override; // «Šû”Õì¬
+    std::unique_ptr<I_GameObj> CreateUniquePtr() override; // «Šû”Õì¬
 };

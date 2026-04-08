@@ -546,9 +546,9 @@ void Application::RemoveAllUI(){_buttonUIs.clear();}      // UIを全て削除�
 std::vector<std::unique_ptr<I_ButtonUI>>& Application::GetButtonUIs(){return _buttonUIs;} // ボタンUIを返す
 
 // すべての将棋オブジェクトを返す
-std::vector<GameObj*> Application::GetGameObjects()
+std::vector<I_GameObj*> Application::GetGameObjects()
 {
-    std::vector<GameObj*> shogiObjects;
+    std::vector<I_GameObj*> shogiObjects;
 
     // 将棋盤を格納
     shogiObjects.push_back(_board.get());

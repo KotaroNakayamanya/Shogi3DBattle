@@ -5,7 +5,7 @@
 #include"FactoryMethod.h"
 
 // â§Å@çÏê¨
-std::unique_ptr<GameObj> KingFactory::CreateUniquePtr()
+std::unique_ptr<I_GameObj> KingFactory::CreateUniquePtr()
 {
     std::unique_ptr<King> uniquePtr = std::make_unique<King>();
 

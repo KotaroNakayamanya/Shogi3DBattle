@@ -1,9 +1,9 @@
 #pragma once
 
-#include"GameObj.h"
+#include"B_GameObj.h"
 #include<map>
 
-class Board : public GameObj
+class Board : public B_GameObj
 {
 private:
     std::map<GameObjType, float> _boardSizeMap =

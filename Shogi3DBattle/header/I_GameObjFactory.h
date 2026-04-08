@@ -1,6 +1,6 @@
 #pragma once
 
-#include"GameObj.h"
+#include"I_GameObj.h"
 #include"IBufferedDataFactory.h"
 #include"VertStruct.h"
 
@@ -11,7 +11,7 @@ protected:
     std::unique_ptr<IBufferedDataFactory<DirectX::XMMATRIX>> _matFactory;      // 行列ファクトリー
 
 public:
-    virtual std::unique_ptr<GameObj> CreateUniquePtr() = 0; // ゲームオブジェクト作成
+    virtual std::unique_ptr<I_GameObj> CreateUniquePtr() = 0; // ゲームオブジェクト作成
 
     virtual ~I_GameObjFactory() = default;
 };

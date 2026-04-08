@@ -5,7 +5,7 @@
 #include"FactoryMethod.h"
 
 // îÚÅ@çÏê¨
-std::unique_ptr<GameObj> RookFactory::CreateUniquePtr()
+std::unique_ptr<I_GameObj> RookFactory::CreateUniquePtr()
 {
     std::unique_ptr<Rook> uniquePtr = std::make_unique<Rook>();
 

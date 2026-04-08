@@ -1,9 +1,9 @@
 #pragma once
 
-#include"IMat.h"
+#include"I_Mat.h"
 #include<VecCalc.h>
 
-class ViewMat : public IMat
+class ViewMat : public I_Mat
 {
 private:
     DirectX::XMFLOAT3 _eye;   // Ž‹“_ˆÊ’u

@@ -298,9 +298,6 @@
     <Filter Include="ヘッダー ファイル\ui\button\option">
       <UniqueIdentifier>{4aa3335e-8dbe-4c75-b742-d6f608217322}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\ui\button\base">
-      <UniqueIdentifier>{9f238bb0-ca4a-4d25-8d66-214a79b68da4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\_base">
       <UniqueIdentifier>{90600955-0578-4a1f-b5e6-7e2e3e60ccee}</UniqueIdentifier>
     </Filter>
@@ -363,6 +360,18 @@
     </Filter>
     <Filter Include="ソース ファイル\scene_state\start_menu">
       <UniqueIdentifier>{b784272d-be92-49f4-9977-4007f50e5b96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ui\button\_base">
+      <UniqueIdentifier>{9f238bb0-ca4a-4d25-8d66-214a79b68da4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\_interface">
+      <UniqueIdentifier>{fa672261-cd72-4029-b681-0838adb68cdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\_interface">
+      <UniqueIdentifier>{df9d3383-36bb-427a-bba8-3dc0cd4c5758}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\_interface">
+      <UniqueIdentifier>{a9405f13-efc5-4986-af33-366286cc618f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -854,7 +863,7 @@
     <ClInclude Include="header\Shader.h">
       <Filter>ヘッダー ファイル\DX12\shader</Filter>
     </ClInclude>
-    <ClInclude Include="header\GameObj.h">
+    <ClInclude Include="header\B_GameObj.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
     </ClInclude>
     <ClInclude Include="header\BufferedData.h">
@@ -926,14 +935,8 @@
     <ClInclude Include="header\VecCalc.h">
       <Filter>ヘッダー ファイル\buffered_data</Filter>
     </ClInclude>
-    <ClInclude Include="header\IMat.h">
-      <Filter>ヘッダー ファイル\buffered_data</Filter>
-    </ClInclude>
     <ClInclude Include="header\Camera.h">
       <Filter>ヘッダー ファイル\buffered_data\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_GameObjFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data</Filter>
     </ClInclude>
     <ClInclude Include="header\GameObjIdManager.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -986,13 +989,7 @@
     <ClInclude Include="header\RookVerticesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\rook</Filter>
     </ClInclude>
-    <ClInclude Include="header\UIType.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="header\TextAndRectStruct.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ButtonUIType.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\NewStartButton.h">
@@ -1022,11 +1019,11 @@
     <ClInclude Include="header\I_ButtonUI.h">
       <Filter>ヘッダー ファイル\ui\button\_interface</Filter>
     </ClInclude>
-    <ClInclude Include="header\IButtonUIFactory.h">
+    <ClInclude Include="header\I_ButtonUIFactory.h">
       <Filter>ヘッダー ファイル\ui\button\_interface</Filter>
     </ClInclude>
-    <ClInclude Include="header\ButtonUI.h">
-      <Filter>ヘッダー ファイル\ui\button\base</Filter>
+    <ClInclude Include="header\B_ButtonUI.h">
+      <Filter>ヘッダー ファイル\ui\button\_base</Filter>
     </ClInclude>
     <ClInclude Include="header\King.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\king</Filter>
@@ -1055,9 +1052,6 @@
     <ClInclude Include="header\PieceFactoryMethod.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_Piece.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="header\I_SceneState.h">
       <Filter>ヘッダー ファイル\scene_state\_interface</Filter>
     </ClInclude>
@@ -1078,6 +1072,24 @@
     </ClInclude>
     <ClInclude Include="header\PieceVertIndicesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_Piece.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ButtonUIType.h">
+      <Filter>ヘッダー ファイル\enum</Filter>
+    </ClInclude>
+    <ClInclude Include="header\UIType.h">
+      <Filter>ヘッダー ファイル\enum</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_Mat.h">
+      <Filter>ヘッダー ファイル\buffered_data\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_GameObj.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_GameObjFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\_interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

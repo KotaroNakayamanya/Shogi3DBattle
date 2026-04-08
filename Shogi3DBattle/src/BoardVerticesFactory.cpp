@@ -1,8 +1,8 @@
 #include"BoardVerticesFactory.h"
 #include"Vertices.h"
-#include"GameObj.h"
 #include"GameObjIdManager.h"
 #include"BasicTexType.h"
+#include"GameObjType.h"
 
 
 // í∏ì_èWçáçÏê¨

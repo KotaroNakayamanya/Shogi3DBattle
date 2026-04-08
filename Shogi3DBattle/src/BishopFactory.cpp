@@ -5,7 +5,7 @@
 #include"FactoryMethod.h"
 
 // äpÅ@çÏê¨
-std::unique_ptr<GameObj> BishopFactory::CreateUniquePtr()
+std::unique_ptr<I_GameObj> BishopFactory::CreateUniquePtr()
 {
     std::unique_ptr<Bishop> uniquePtr = std::make_unique<Bishop>();
 

@@ -2,10 +2,10 @@
 
 #include<DirectXMath.h>
 
-class IMat
+class I_Mat
 {
 public:
     virtual DirectX::XMMATRIX GetMat() = 0; // s—ñ‚ğ•Ô‚·
 
-    virtual ~IMat() = default;
+    virtual ~I_Mat() = default;
 };
