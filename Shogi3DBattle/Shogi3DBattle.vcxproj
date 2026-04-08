@@ -154,7 +154,7 @@
     <ClInclude Include="header\Gold.h" />
     <ClInclude Include="header\GoldFactory.h" />
     <ClInclude Include="header\GoldVerticesFactory.h" />
-    <ClInclude Include="header\IBuffFactory.h" />
+    <ClInclude Include="header\I_BuffFactory.h" />
     <ClInclude Include="header\CBVFactory.h" />
     <ClInclude Include="header\CmdAllocator.h" />
     <ClInclude Include="header\CmdList.h" />

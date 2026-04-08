@@ -106,20 +106,8 @@
     <Filter Include="ヘッダー ファイル\DX12\view\factory">
       <UniqueIdentifier>{918caae6-4a55-418d-862b-5b920331f49c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\buff\factory">
-      <UniqueIdentifier>{bf31cb85-51ea-4d3f-8dd9-8e1a1c6b1ea8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\buff\factory\resource_desc">
-      <UniqueIdentifier>{fa569c7a-9aeb-4eb6-9224-780c05ea1ea0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\buff\factory\heap_prop">
-      <UniqueIdentifier>{646c20fd-2ea2-4354-a49f-99efedff7216}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\dx12\buff\factory">
       <UniqueIdentifier>{50efd447-8f5e-4158-a620-ffaeed66e307}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\buff\factory\resource_state">
-      <UniqueIdentifier>{48aa6ffb-4979-4501-a111-2acca5c5e380}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\dx12\buff\factory\resource_states">
       <UniqueIdentifier>{e88a18d9-57bf-4711-8f26-aaab4ef62077}</UniqueIdentifier>
@@ -393,6 +381,36 @@
     </Filter>
     <Filter Include="ソース ファイル\buffered_data\mat\proj_mat">
       <UniqueIdentifier>{5e0daef6-804b-4fa8-a58c-b6afd8f4cb2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\vertices">
+      <UniqueIdentifier>{89e3d9a5-10c8-48bc-b007-85749376a950}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\constant">
+      <UniqueIdentifier>{ad632c63-847a-4401-aa3e-b2deb0b6dee3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\vert_indices">
+      <UniqueIdentifier>{675c0106-7da6-474f-a7ed-dc467eaf4adb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\texture">
+      <UniqueIdentifier>{14953aae-5fa3-4ce9-9700-85a84c53194c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\depth_stencil">
+      <UniqueIdentifier>{def5f952-0dc6-47bc-b215-5904b2875e34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\_interface">
+      <UniqueIdentifier>{8c8c2d96-9f6c-40aa-9433-8c5f2913d5ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\_other">
+      <UniqueIdentifier>{bf31cb85-51ea-4d3f-8dd9-8e1a1c6b1ea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\_other\resource_desc">
+      <UniqueIdentifier>{fa569c7a-9aeb-4eb6-9224-780c05ea1ea0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\_other\heap_prop">
+      <UniqueIdentifier>{646c20fd-2ea2-4354-a49f-99efedff7216}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\DX12\buff\_other\resource_state">
+      <UniqueIdentifier>{48aa6ffb-4979-4501-a111-2acca5c5e380}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -783,55 +801,40 @@
       <Filter>ヘッダー ファイル\DX12\view\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\IHeapProp.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory\heap_prop</Filter>
+      <Filter>ヘッダー ファイル\DX12\buff\_other\heap_prop</Filter>
     </ClInclude>
     <ClInclude Include="header\IResourceDesc.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_desc</Filter>
-    </ClInclude>
-    <ClInclude Include="header\IBuffFactory.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
+      <Filter>ヘッダー ファイル\DX12\buff\_other\resource_desc</Filter>
     </ClInclude>
     <ClInclude Include="header\IResourceStates.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_state</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ConstBuffFactory.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
+      <Filter>ヘッダー ファイル\DX12\buff\_other\resource_state</Filter>
     </ClInclude>
     <ClInclude Include="header\UploadHeapProp.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory\heap_prop</Filter>
+      <Filter>ヘッダー ファイル\DX12\buff\_other\heap_prop</Filter>
     </ClInclude>
     <ClInclude Include="header\BuffResourceDesc.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_desc</Filter>
+      <Filter>ヘッダー ファイル\DX12\buff\_other\resource_desc</Filter>
     </ClInclude>
     <ClInclude Include="header\ReadResourceStates.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_state</Filter>
-    </ClInclude>
-    <ClInclude Include="header\IdxBuffFactory.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
-    </ClInclude>
-    <ClInclude Include="header\VertBuffFactory.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
+      <Filter>ヘッダー ファイル\DX12\buff\_other\resource_state</Filter>
     </ClInclude>
     <ClInclude Include="header\DefaultHeapProp.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory\heap_prop</Filter>
+      <Filter>ヘッダー ファイル\DX12\buff\_other\heap_prop</Filter>
     </ClInclude>
     <ClInclude Include="header\DSResourceDesc.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_desc</Filter>
-    </ClInclude>
-    <ClInclude Include="header\DSBuffFactory.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
+      <Filter>ヘッダー ファイル\DX12\buff\_other\resource_desc</Filter>
     </ClInclude>
     <ClInclude Include="header\DepthWriteResourceStates.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_state</Filter>
+      <Filter>ヘッダー ファイル\DX12\buff\_other\resource_state</Filter>
     </ClInclude>
     <ClInclude Include="header\TexHeapProp.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory\heap_prop</Filter>
+      <Filter>ヘッダー ファイル\DX12\buff\_other\heap_prop</Filter>
     </ClInclude>
     <ClInclude Include="header\TexResourceDesc.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_desc</Filter>
+      <Filter>ヘッダー ファイル\DX12\buff\_other\resource_desc</Filter>
     </ClInclude>
     <ClInclude Include="header\PShaderResourceStates.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory\resource_state</Filter>
+      <Filter>ヘッダー ファイル\DX12\buff\_other\resource_state</Filter>
     </ClInclude>
     <ClInclude Include="header\DeviceContext.h">
       <Filter>ヘッダー ファイル\DX12\d3d11</Filter>
@@ -871,12 +874,6 @@
     </ClInclude>
     <ClInclude Include="header\ResourceBarrier.h">
       <Filter>ヘッダー ファイル\DX12\resource_barrier</Filter>
-    </ClInclude>
-    <ClInclude Include="header\TexBuffFactory.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
-    </ClInclude>
-    <ClInclude Include="header\RenderTexBuffFactory.h">
-      <Filter>ヘッダー ファイル\DX12\buff\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\Shader.h">
       <Filter>ヘッダー ファイル\DX12\shader</Filter>
@@ -1114,6 +1111,27 @@
     </ClInclude>
     <ClInclude Include="header\BuffType.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DSBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\depth_stencil</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ConstBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\constant</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IdxBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\vert_indices</Filter>
+    </ClInclude>
+    <ClInclude Include="header\VertBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\vertices</Filter>
+    </ClInclude>
+    <ClInclude Include="header\TexBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="header\RenderTexBuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_BuffFactory.h">
+      <Filter>ヘッダー ファイル\DX12\buff\_interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

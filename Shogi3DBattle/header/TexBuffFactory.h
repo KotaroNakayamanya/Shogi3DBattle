@@ -1,8 +1,8 @@
 #pragma once
 
-#include"IBuffFactory.h"
+#include"I_BuffFactory.h"
 
-class TexBuffFactory : public IBuffFactory
+class TexBuffFactory : public I_BuffFactory
 {
 public:
     // テクスチャバッファ作成

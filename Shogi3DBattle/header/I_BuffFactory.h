@@ -6,7 +6,7 @@
 #include"IResourceDesc.h"
 #include"IResourceStates.h"
 
-class IBuffFactory
+class I_BuffFactory
 {
 protected:
     std::unique_ptr<IHeapProp>       _heapProp;      // ヒーププロパティ
@@ -17,5 +17,5 @@ public:
     // バッファ作成
     virtual HRESULT CreateBuff(Buff* buff, UINT widht, UINT height, ID3D12Device* device) = 0;
 
-    virtual ~IBuffFactory() = default;
+    virtual ~I_BuffFactory() = default;
 };

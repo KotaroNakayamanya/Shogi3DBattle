@@ -1,8 +1,8 @@
 #pragma once
 
-#include"IBuffFactory.h"
+#include"I_BuffFactory.h"
 
-class VertBuffFactory : public IBuffFactory
+class VertBuffFactory : public I_BuffFactory
 {
 public:
     // 頂点バッファ作成

@@ -1,8 +1,8 @@
 #pragma once
 
-#include"IBuffFactory.h"
+#include"I_BuffFactory.h"
 
-class DSBuffFactory : public IBuffFactory
+class DSBuffFactory : public I_BuffFactory
 {
 public:
     // デプスステンシルバッファ作成

@@ -2,7 +2,7 @@
 
 #include"HeapFactory.h"
 #include"IViewFactory.h"
-#include"IBuffFactory.h"
+#include"I_BuffFactory.h"
 
 #include"Device11.h"
 #include"DeviceContext.h"
@@ -34,7 +34,7 @@ class Device
 private:
     ComPtr<ID3D12Device> _device; // Direct3Dデバイス
 
-    std::unique_ptr<IBuffFactory> _buffFactory; // バッファファクトリー 
+    std::unique_ptr<I_BuffFactory> _buffFactory; // バッファファクトリー 
     std::unique_ptr<HeapFactory>  _heapFactory; // ヒープファクトリー
     std::unique_ptr<IViewFactory> _viewFactory; // ビューファクトリー
 
