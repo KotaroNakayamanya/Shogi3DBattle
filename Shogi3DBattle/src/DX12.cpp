@@ -178,7 +178,7 @@ HRESULT DX12::CreateBuff()
     UINT widthSize, heightSize;
     widthSize  = backBuffDesc.Width;
     heightSize = backBuffDesc.Height;
-    if (FAILED(_device->CreateBuff(_dsBuff.get(), widthSize, heightSize, Buff::DEPTH_STENCIL))) goto failed;
+    if (FAILED(_device->CreateBuff(_dsBuff.get(), widthSize, heightSize, BuffType::DEPTH_STENCIL))) goto failed;
 
     // コンスタントバッファ作成
     UINT worldMatNum, viewProjNum, totalMatNum;
@@ -187,24 +187,24 @@ HRESULT DX12::CreateBuff()
     totalMatNum = worldMatNum + viewProjNum;
     widthSize  = (sizeof(DirectX::XMMATRIX)*totalMatNum + 0xff) & ~0xff; // 256アラインメント
     heightSize = 1;
-    if (FAILED(_device->CreateBuff(_constBuff.get(), widthSize, heightSize, Buff::CONSTANT))) goto failed;
+    if (FAILED(_device->CreateBuff(_constBuff.get(), widthSize, heightSize, BuffType::CONSTANT))) goto failed;
 
     // 頂点バッファ作成
     widthSize = 0;
     for(auto& shogiObj : shogiObjects) widthSize += sizeof(Vert) * shogiObj->GetVertices()->GetDatas().size();
     heightSize = 1;
-    if (FAILED(_device->CreateBuff(_vertBuff.get(), widthSize, heightSize, Buff::VERTEX))) goto failed;
+    if (FAILED(_device->CreateBuff(_vertBuff.get(), widthSize, heightSize, BuffType::VERTEX))) goto failed;
 
     // 頂点インデックスバッファ作成
     widthSize = 0;
     for(auto& vertIndices : allVertIndices) {widthSize += sizeof(unsigned short) * vertIndices->GetDatas().size();}
     heightSize = 1;
-    if (FAILED(_device->CreateBuff(_idxBuff.get(), widthSize, heightSize, Buff::INDEX))) goto failed;
+    if (FAILED(_device->CreateBuff(_idxBuff.get(), widthSize, heightSize, BuffType::INDEX))) goto failed;
 
     // 木材テクスチャバッファ作成
     widthSize  = woodTex->GetWidth();
     heightSize = woodTex->GetHeight();
-    if (FAILED(_device->CreateBuff(_woodTexBuff.get(), widthSize, heightSize, Buff::TEXTURE))) goto failed;
+    if (FAILED(_device->CreateBuff(_woodTexBuff.get(), widthSize, heightSize, BuffType::TEXTURE))) goto failed;
 
     // 将棋オブジェクト種類ごとのテクスチャバッファ作成
     unsigned int gameObjTexNum;
@@ -220,11 +220,11 @@ HRESULT DX12::CreateBuff()
         shogiObjType = static_cast<GameObjType>(i);
         auto it = std::find(boardType.begin(), boardType.end(), shogiObjType);
 
-        Buff::BuffType buffType;
+        BuffType buffType;
         if(it != boardType.end()) // 将棋盤用のテクスチャであれば前準備で用意したテクスチャを使用する
-            buffType = Buff::TEXTURE;
+            buffType = BuffType::TEXTURE;
         else                      // それ以外は駒のテクスチャで、レンダリングして作成する
-            buffType = Buff::RENDER_TEX;
+            buffType = BuffType::RENDER_TEX;
 
         if (FAILED(_device->CreateBuff(_shogiObjTexBuffs[i].get(), widthSize, heightSize, buffType))) goto failed;
     }

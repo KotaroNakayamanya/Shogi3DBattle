@@ -1,8 +1,8 @@
 #pragma once
 
-#include<memory>
+#include"I_SceneState.h"
 
-class I_SceneState
+class B_SceneState : public I_SceneState
 {
 public:
     // ƒV[ƒ““®ìˆ—
@@ -12,6 +12,4 @@ public:
         int cursorXMove,
         int cursorY,
         int cursorYMove) = 0;
-
-    virtual ~I_SceneState() = default;
 };

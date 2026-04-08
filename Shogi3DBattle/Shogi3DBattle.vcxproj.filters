@@ -223,17 +223,8 @@
     <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\king">
       <UniqueIdentifier>{a04da948-a9f9-4bc0-a02a-f1866b92e6a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\game_object\world_mat">
-      <UniqueIdentifier>{05ad00d5-9d8c-4ecf-9f1f-23d3f7b49617}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\camera">
       <UniqueIdentifier>{fc19dabf-7165-4134-b5f0-631b66fb8856}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\camera\view_mat">
-      <UniqueIdentifier>{ba1bef95-f5b9-4850-9b00-aafc8bac17a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\camera\proj_mat">
-      <UniqueIdentifier>{2c192463-bddc-4f6c-8a23-c50ee6c71d2d}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\enum">
       <UniqueIdentifier>{187ebf6a-f365-4ddb-bbb8-30f499176d26}</UniqueIdentifier>
@@ -372,6 +363,36 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\game_object\_interface">
       <UniqueIdentifier>{a9405f13-efc5-4986-af33-366286cc618f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\scene_state\_base">
+      <UniqueIdentifier>{6ae5a5f9-a4d2-41af-9347-fe42a49ba990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\_base">
+      <UniqueIdentifier>{b727fb10-2e28-4201-b348-0f7679a2addd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\mat">
+      <UniqueIdentifier>{d881529b-ebb5-420a-9539-dc96e1036147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\mat\proj_mat">
+      <UniqueIdentifier>{2c192463-bddc-4f6c-8a23-c50ee6c71d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\mat\proj_mat\_base">
+      <UniqueIdentifier>{56a39714-becc-4ac1-9740-1a95cd2a048b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\mat\view_mat">
+      <UniqueIdentifier>{ba1bef95-f5b9-4850-9b00-aafc8bac17a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\mat\world_mat">
+      <UniqueIdentifier>{05ad00d5-9d8c-4ecf-9f1f-23d3f7b49617}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\mat\world_mat">
+      <UniqueIdentifier>{cb78c514-65a0-4c75-ae18-a15f6a3dce73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\mat\view_mat">
+      <UniqueIdentifier>{ecc46d7e-26f1-4801-a9bb-3cee2d7e8c05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\mat\proj_mat">
+      <UniqueIdentifier>{5e0daef6-804b-4fa8-a58c-b6afd8f4cb2d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -528,12 +549,6 @@
     <ClCompile Include="src\RenderTexBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\ViewMat.cpp">
-      <Filter>ソース ファイル\buffered_data\mat</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WorldMat.cpp">
-      <Filter>ソース ファイル\buffered_data\mat</Filter>
-    </ClCompile>
     <ClCompile Include="src\BoardVertIndicesFactory.cpp">
       <Filter>ソース ファイル\buffered_data\factory</Filter>
     </ClCompile>
@@ -548,12 +563,6 @@
     </ClCompile>
     <ClCompile Include="src\Texture.cpp">
       <Filter>ソース ファイル\buffered_data\texutre</Filter>
-    </ClCompile>
-    <ClCompile Include="src\NonePersProjMat.cpp">
-      <Filter>ソース ファイル\buffered_data\mat</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PersProjMat.cpp">
-      <Filter>ソース ファイル\buffered_data\mat</Filter>
     </ClCompile>
     <ClCompile Include="src\YellowWoodTexFactory.cpp">
       <Filter>ソース ファイル\buffered_data\texutre\factory</Filter>
@@ -578,9 +587,6 @@
     </ClCompile>
     <ClCompile Include="src\BoardVerticesFactory.cpp">
       <Filter>ソース ファイル\buffered_data\factory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WorldMatFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\mat</Filter>
     </ClCompile>
     <ClCompile Include="src\BishopVerticesFactory.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\piece\bishop</Filter>
@@ -657,9 +663,6 @@
     <ClCompile Include="src\Board.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
     </ClCompile>
-    <ClCompile Include="src\B_Piece.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\_base</Filter>
-    </ClCompile>
     <ClCompile Include="src\StartMenu.cpp">
       <Filter>ソース ファイル\scene_state\start_menu</Filter>
     </ClCompile>
@@ -668,6 +671,21 @@
     </ClCompile>
     <ClCompile Include="src\SelectingPiece.cpp">
       <Filter>ソース ファイル\scene_state\selecting_piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WorldMat.cpp">
+      <Filter>ソース ファイル\buffered_data\mat\world_mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WorldMatFactory.cpp">
+      <Filter>ソース ファイル\buffered_data\mat\world_mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ViewMat.cpp">
+      <Filter>ソース ファイル\buffered_data\mat\view_mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NonePersProjMat.cpp">
+      <Filter>ソース ファイル\buffered_data\mat\proj_mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PersProjMat.cpp">
+      <Filter>ソース ファイル\buffered_data\mat\proj_mat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -915,22 +933,19 @@
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\king</Filter>
     </ClInclude>
     <ClInclude Include="header\WorldMatFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\world_mat</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\mat\world_mat</Filter>
     </ClInclude>
     <ClInclude Include="header\WorldMat.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\world_mat</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\mat\world_mat</Filter>
     </ClInclude>
     <ClInclude Include="header\ViewMat.h">
-      <Filter>ヘッダー ファイル\buffered_data\camera\view_mat</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\mat\view_mat</Filter>
     </ClInclude>
     <ClInclude Include="header\NonePersProjMat.h">
-      <Filter>ヘッダー ファイル\buffered_data\camera\proj_mat</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\mat\proj_mat</Filter>
     </ClInclude>
     <ClInclude Include="header\PersProjMat.h">
-      <Filter>ヘッダー ファイル\buffered_data\camera\proj_mat</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ClipZRange.h">
-      <Filter>ヘッダー ファイル\buffered_data\camera\proj_mat</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\mat\proj_mat</Filter>
     </ClInclude>
     <ClInclude Include="header\VecCalc.h">
       <Filter>ヘッダー ファイル\buffered_data</Filter>
@@ -1090,6 +1105,15 @@
     </ClInclude>
     <ClInclude Include="header\I_GameObjFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_SceneState.h">
+      <Filter>ヘッダー ファイル\scene_state\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_ClipZRange.h">
+      <Filter>ヘッダー ファイル\buffered_data\mat\proj_mat\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BuffType.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,10 +1,10 @@
 #pragma once
 
-#include"I_SceneState.h"
+#include"B_SceneState.h"
 #include"Camera.h"
 #include"I_ButtonUI.h"
 
-class StartMenu : public I_SceneState
+class StartMenu : public B_SceneState
 {
 public:
     Camera*    _mainCamera;  // メインカメラ
@@ -16,7 +16,7 @@ public:
 public:
     // スタートメニューシーン動作
     std::unique_ptr<I_SceneState> ExeSceneOperation(
-        UCHAR inputMemory,
+        unsigned char inputMemory,
         int cursorX,
         int cursorXMove,
         int cursorY,

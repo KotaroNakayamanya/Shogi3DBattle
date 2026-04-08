@@ -1,10 +1,10 @@
 #pragma once
 
-#include"I_SceneState.h"
+#include"B_SceneState.h"
 #include"Camera.h"
 #include"PersProjMat.h"
 
-class SelectingPiece : public I_SceneState
+class SelectingPiece : public B_SceneState
 {
 private:
     Camera*     _mainCamera;       // メインカメラ
@@ -18,7 +18,7 @@ private:
 public:
     // 駒選択シーン動作
     std::unique_ptr<I_SceneState> ExeSceneOperation(
-        UCHAR inputMemory,
+        unsigned char inputMemory,
         int cursorX,
         int cursorXMove,
         int cursorY,

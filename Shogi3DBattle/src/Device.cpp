@@ -107,31 +107,31 @@ HRESULT Device::CreateFence(Fence* fence)
 
 
 // バッファ作成
-HRESULT Device::CreateBuff(Buff* buff, UINT width, UINT height, Buff::BuffType buffType)
+HRESULT Device::CreateBuff(Buff* buff, UINT width, UINT height, BuffType buffType)
 {
     switch (buffType)
     {
-    case Buff::DEPTH_STENCIL:
+    case BuffType::DEPTH_STENCIL:
         _buffFactory.reset(new DSBuffFactory());
         break;
 
-    case Buff::VERTEX:
+    case BuffType::VERTEX:
         _buffFactory.reset(new VertBuffFactory());
         break;
 
-    case Buff::INDEX:
+    case BuffType::INDEX:
         _buffFactory.reset(new IdxBuffFactory());
         break;
 
-    case Buff::CONSTANT:
+    case BuffType::CONSTANT:
         _buffFactory.reset(new ConstBuffFactory());
          break;
 
-    case Buff::TEXTURE:
+    case BuffType::TEXTURE:
         _buffFactory.reset(new TexBuffFactory());
         break;
 
-    case Buff::RENDER_TEX:
+    case BuffType::RENDER_TEX:
         _buffFactory.reset(new RenderTexBuffFactory());
         break;
 

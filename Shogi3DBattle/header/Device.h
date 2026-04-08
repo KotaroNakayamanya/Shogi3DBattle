@@ -24,6 +24,8 @@
 #include"Board.h"
 #include"I_Piece.h"
 
+#include"BuffType.h"
+
 class Device
 {
     template<typename T>
@@ -74,7 +76,7 @@ public:
 
     HRESULT CreateFence(Fence* fence); // フェンス作成
     
-    HRESULT CreateBuff(Buff* buff, UINT width, UINT height, Buff::BuffType buffType);                        // バッファ作成
+    HRESULT CreateBuff(Buff* buff, UINT width, UINT height, BuffType buffType);                        // バッファ作成
     HRESULT CreateHeap   (Heap* heap, UINT descNum, Heap::HeapType heapType);                                // ヒープ作成
     HRESULT CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum, Heap::HeapType heapType); // ヒープ作成（CSU）
     void CreateView   (Heap* heap,       UINT i, Buff* buff, View::ViewType viewType);                       // ビュー作成

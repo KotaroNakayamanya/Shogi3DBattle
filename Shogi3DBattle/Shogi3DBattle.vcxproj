@@ -29,7 +29,6 @@
     <ClCompile Include="src\BoardFactory.cpp" />
     <ClCompile Include="src\BoardVertIndicesFactory.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
-    <ClCompile Include="src\B_Piece.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
     <ClCompile Include="src\ContinueStartButtonFactory.cpp" />
     <ClCompile Include="src\GameExitButton.cpp" />
@@ -130,7 +129,9 @@
     <ClInclude Include="header\BoardVertIndicesFactory.h" />
     <ClInclude Include="header\BufferedData.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
+    <ClInclude Include="header\BuffType.h" />
     <ClInclude Include="header\B_ButtonUI.h" />
+    <ClInclude Include="header\B_SceneState.h" />
     <ClInclude Include="header\ContinueStartButton.h" />
     <ClInclude Include="header\ContinueStartButtonFactory.h" />
     <ClInclude Include="header\GameExitButton.h" />
@@ -257,7 +258,7 @@
     <ClInclude Include="header\WorldMatFactory.h" />
     <ClInclude Include="header\WrappedBuff.h" />
     <ClInclude Include="header\DepthWriteResourceStates.h" />
-    <ClInclude Include="header\ClipZRange.h" />
+    <ClInclude Include="header\B_ClipZRange.h" />
     <ClInclude Include="header\YellowWoodTexFactory.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,10 +1,10 @@
 #pragma once
 
-#include"I_SceneState.h"
+#include"B_SceneState.h"
 #include"I_Piece.h"
 #include"Camera.h"
 
-class MovingPiece : public I_SceneState
+class MovingPiece : public B_SceneState
 {
 private:
     I_Piece* _piece;     // ‘€ì‚µ‚Ä‚¢‚é‹î
@@ -25,7 +25,7 @@ private:
 public:
     // ‹î‘€ìƒV[ƒ““®ì
     std::unique_ptr<I_SceneState> ExeSceneOperation(
-        UCHAR inputMemory,
+        unsigned char inputMemory,
         int cursorX,
         int cursorXMove,
         int cursorY,

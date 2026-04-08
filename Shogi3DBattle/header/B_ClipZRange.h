@@ -1,6 +1,6 @@
 #pragma once
 
-class ClipZRange
+class B_ClipZRange
 {
 protected:
     float _nearZ; // クリッピング手前側距離

@@ -10,17 +10,6 @@ class Buff
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-public:
-    enum BuffType
-    {
-        DEPTH_STENCIL, // デプスステンシルバッファ
-        VERTEX, // 頂点バッファ
-        INDEX,  // インデックスバッファ
-        CONSTANT, // コンスタントバッファ
-        TEXTURE, // テクスチャバッファ
-        RENDER_TEX // レンダーテクスチャバッファ
-    };
-
 protected:
     ComPtr<ID3D12Resource> _buff; // バッファ
 

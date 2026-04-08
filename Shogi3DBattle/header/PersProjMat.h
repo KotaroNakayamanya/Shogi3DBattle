@@ -1,9 +1,9 @@
 #pragma once
 
 #include"I_Mat.h"
-#include"ClipZRange.h"
+#include"B_ClipZRange.h"
 
-class PersProjMat : public I_Mat, public ClipZRange
+class PersProjMat : public I_Mat, public B_ClipZRange
 {
 private:
     float _fov; // Ž‹–ìŠp

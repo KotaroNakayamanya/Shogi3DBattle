@@ -15,6 +15,7 @@
 #include"VertStruct.h"
 
 #include"I_ButtonUIFactory.h"
+#include"KeyMap.h"
 
 class Application
 {
