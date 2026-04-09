@@ -6,5 +6,5 @@
 class PawnVerticesFactory : public IBufferedDataFactory
 {
 public:
-    std::unique_ptr<BufferedData> CreateUniquePtr() override; // 王　頂点集合作成
+    std::unique_ptr<I_BufferedData> CreateUniquePtr() override; // 王　頂点集合作成
 };

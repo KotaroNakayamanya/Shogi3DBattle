@@ -1,11 +1,11 @@
 #pragma once
 
-#include"BufferedData.h"
+#include"B_BufferedData.h"
 #include"ViewMat.h"
 #include"I_Mat.h"
 #include<memory>
 
-class Camera : public BufferedData
+class Camera : public B_BufferedData
 {
 private:
     std::unique_ptr<ViewMat> _viewMat; // ƒrƒ…[s—ñ

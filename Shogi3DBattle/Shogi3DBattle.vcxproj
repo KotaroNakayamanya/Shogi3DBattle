@@ -127,9 +127,10 @@
     <ClInclude Include="header\BoardVerticesFactory.h" />
     <ClInclude Include="header\BoardFactory.h" />
     <ClInclude Include="header\BoardVertIndicesFactory.h" />
-    <ClInclude Include="header\BufferedData.h" />
+    <ClInclude Include="header\I_BufferedData.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
     <ClInclude Include="header\BuffType.h" />
+    <ClInclude Include="header\B_BufferedData.h" />
     <ClInclude Include="header\B_ButtonUI.h" />
     <ClInclude Include="header\B_SceneState.h" />
     <ClInclude Include="header\ContinueStartButton.h" />
@@ -189,7 +190,7 @@
     <ClInclude Include="header\Lance.h" />
     <ClInclude Include="header\LanceFactory.h" />
     <ClInclude Include="header\LanceVerticesFactory.h" />
-    <ClInclude Include="header\NaturalBufferedData.h" />
+    <ClInclude Include="header\B_NaturalBufferedData.h" />
     <ClInclude Include="header\NewStartButtonFactory.h" />
     <ClInclude Include="header\NonePersProjMat.h" />
     <ClInclude Include="header\OptionButton.h" />

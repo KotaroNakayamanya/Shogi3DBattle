@@ -2,7 +2,7 @@
 
 #include<d3d12.h>
 #include<wrl.h>
-#include"BufferedData.h"
+#include"I_BufferedData.h"
 #include"CmdAllocator.h"
 
 class CmdList
@@ -41,7 +41,7 @@ public:
     void SetVertBuffView(D3D12_VERTEX_BUFFER_VIEW vertBuffView); // 頂点バッファビューセット
     void SetIdxBuffView(D3D12_INDEX_BUFFER_VIEW idxBuffView);    // インデックスバッファビューセット
 
-    void SetDrawWithIdx(BufferedData* bufferedData); // インデックス描画セット
+    void SetDrawWithIdx(I_BufferedData* bufferedData); // インデックス描画セット
 
     void Close(); // コマンドクローズ
 

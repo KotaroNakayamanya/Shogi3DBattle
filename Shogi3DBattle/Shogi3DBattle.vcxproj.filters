@@ -881,19 +881,16 @@
     <ClInclude Include="header\B_GameObj.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
     </ClInclude>
-    <ClInclude Include="header\BufferedData.h">
+    <ClInclude Include="header\I_BufferedData.h">
       <Filter>ヘッダー ファイル\buffered_data</Filter>
     </ClInclude>
     <ClInclude Include="header\Texture.h">
       <Filter>ヘッダー ファイル\buffered_data\texture</Filter>
     </ClInclude>
-    <ClInclude Include="header\IBufferedDataFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\texture\factory</Filter>
-    </ClInclude>
     <ClInclude Include="header\YellowWoodTexFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\texture\factory</Filter>
     </ClInclude>
-    <ClInclude Include="header\NaturalBufferedData.h">
+    <ClInclude Include="header\B_NaturalBufferedData.h">
       <Filter>ヘッダー ファイル\buffered_data</Filter>
     </ClInclude>
     <ClInclude Include="header\GameWindow.h">
@@ -1132,6 +1129,12 @@
     </ClInclude>
     <ClInclude Include="header\I_BuffFactory.h">
       <Filter>ヘッダー ファイル\DX12\buff\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_BufferedData.h">
+      <Filter>ヘッダー ファイル\buffered_data</Filter>
+    </ClInclude>
+    <ClInclude Include="header\IBufferedDataFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\_interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

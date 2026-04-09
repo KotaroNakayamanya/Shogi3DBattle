@@ -6,5 +6,5 @@
 class BoardVerticesFactory : public IBufferedDataFactory
 {
 public:
-    std::unique_ptr<BufferedData> CreateUniquePtr() override; // 頂点集合作成
+    std::unique_ptr<I_BufferedData> CreateUniquePtr() override; // 頂点集合作成
 };

@@ -673,12 +673,9 @@ void DX12::ExeD3D()
     }
 
     // 定数バッファに書き込み
-    //if(FAILED(_constBuff->WriteToBuff(board->GetWorldMat()))) return; // 将棋盤書き込み
     if(FAILED(board->GetWorldMat()->WriteToBuff(_constBuff.get()))) return; // 将棋盤書き込み
     for(auto& piece : pieces)
-        //if(FAILED(_constBuff->WriteToBuff(piece->GetWorldMat()))) return; // 駒書き込み
         if(FAILED(piece->GetWorldMat()->WriteToBuff(_constBuff.get()))) return; // 駒書き込み
-    //if(FAILED(_constBuff->WriteToBuff(mainCamera))) return; // メインカメラ書き込み
     if(FAILED(mainCamera->WriteToBuff(_constBuff.get()))) return; // メインカメラ書き込み
     
 
@@ -775,7 +772,7 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(Vertices* vertices)
 }
 
 // インデックスバッファビュー
-D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(BufferedData* bufferedData)
+D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(I_BufferedData* bufferedData)
 {
     D3D12_INDEX_BUFFER_VIEW view;
 

@@ -6,5 +6,5 @@
 class WorldMatFactory : public IBufferedDataFactory
 {
 public:
-    std::unique_ptr<BufferedData> CreateUniquePtr() override; // ワールド行列作成
+    std::unique_ptr<I_BufferedData> CreateUniquePtr() override; // ワールド行列作成
 };

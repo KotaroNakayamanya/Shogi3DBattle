@@ -1,7 +1,6 @@
 #pragma once
 
 #include<memory>
-#include"BufferedData.h"
 #include"VecCalc.h"
 #include"Vertices.h"
 #include"GameObjIdManager.h"

@@ -3,7 +3,7 @@
 #include"GameObjType.h"
 
 // @’¸“_W‡ì¬
-std::unique_ptr<BufferedData> LanceVerticesFactory::CreateUniquePtr()
+std::unique_ptr<I_BufferedData> LanceVerticesFactory::CreateUniquePtr()
 {
     float mmBottomWidth  = 225.0f;
     float mmHeight       = 280.0f;

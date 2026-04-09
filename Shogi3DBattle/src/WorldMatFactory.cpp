@@ -3,7 +3,7 @@
 #include"FactoryMethod.h"
 
 // ƒ[ƒ‹ƒhs—ñì¬
-std::unique_ptr<BufferedData> WorldMatFactory::CreateUniquePtr()
+std::unique_ptr<I_BufferedData> WorldMatFactory::CreateUniquePtr()
 {
     DirectX::XMMATRIX worldMat;
     worldMat = DirectX::XMMatrixIdentity();

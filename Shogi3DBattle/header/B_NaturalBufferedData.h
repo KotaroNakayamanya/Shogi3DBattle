@@ -1,17 +1,15 @@
 #pragma once
 
-#include"BufferedData.h"
+#include"B_BufferedData.h"
 #include<vector>
 
 template<typename T>
-class NaturalBufferedData : public BufferedData
+class B_NaturalBufferedData : public B_BufferedData
 {
 protected:
     std::vector<T> _datas;        // バッファに書き込むデータ
 
 public:
-    void           SetDatas(std::vector<T> datas)          {_datas = datas;}       // データ集合セット
-
     // バッファに書き込み
     HRESULT WriteToBuff(Buff* buff) override
     {
@@ -29,8 +27,6 @@ public:
         return S_OK;
     }
 
-
-    unsigned int GetSize() override {return _datas.size();};
-
-    virtual ~NaturalBufferedData() = default;
+    unsigned int GetSize () override           {return _datas.size();};
+    void         SetDatas(std::vector<T> datas){_datas = datas;}       // データ集合セット
 };

@@ -11,7 +11,7 @@
 #include"I_ButtonUI.h"
 #include"ButtonUIType.h"
 
-#include"BufferedData.h"
+#include"I_BufferedData.h"
 #include"VertStruct.h"
 
 #include"I_ButtonUIFactory.h"
@@ -28,10 +28,10 @@ private:
 
     // 将棋オブジェクト
     std::unique_ptr<Board>                        _board;        // 将棋盤
-    std::unique_ptr<NaturalBufferedData<unsigned short>> _boardIndices; // 将棋盤の頂点インデックス
+    std::unique_ptr<I_BufferedData> _boardIndices; // 将棋盤の頂点インデックス
 
     std::vector<std::unique_ptr<I_Piece>>           _pieces;       // 駒
-    std::unique_ptr<NaturalBufferedData<unsigned short>> _pieceIndices; // 駒の頂点インデックス
+    std::unique_ptr<I_BufferedData> _pieceIndices; // 駒の頂点インデックス
 
     void CreateGameObj(); // 将棋オブジェクト作成
 
@@ -96,12 +96,12 @@ public:
     std::vector<std::unique_ptr<I_Piece>>& GetPieces(); // 駒を返す
     Texture* GetWoodTex(); // 木材テクスチャを返す
     std::vector<std::unique_ptr<Texture>>& GetBoardLineTexs(); // 将棋盤黒線テクスチャを返す
-    NaturalBufferedData<unsigned short>* GetBoardVertIndices(); // 将棋盤頂点インデックスを返す
-    NaturalBufferedData<unsigned short>* GetPieceVertIndices(); // 駒の頂点インデックスを返す
+    I_BufferedData* GetBoardVertIndices(); // 将棋盤頂点インデックスを返す
+    I_BufferedData* GetPieceVertIndices(); // 駒の頂点インデックスを返す
     KeyMap* GetKeyMap(); // 将棋盤頂点インデックスを返す
 
     std::vector<I_GameObj*> GetGameObjects(); // すべての将棋オブジェクトを返す
-    std::vector<BufferedData*> GetAllVertIndices(); // すべての頂点インデックスを返す
+    std::vector<I_BufferedData*> GetAllVertIndices(); // すべての頂点インデックスを返す
 
     InputHandler* GetInputHandler(); // インプットハンドラを返す
     

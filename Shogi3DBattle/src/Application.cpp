@@ -69,8 +69,8 @@ void Application::CreateGameObj()
 
     // 将棋盤インデックス作成
     _vertIndicesFactory.reset(new BoardVertIndicesFactory());
-    _boardIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory>(_vertIndicesFactory.get());
-
+    //_boardIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory>(_vertIndicesFactory.get());
+    _boardIndices = _vertIndicesFactory->CreateUniquePtr();
     // 王作成
     _gameObjFactory.reset(new KingFactory());
     unsigned int idx = 0;
@@ -122,8 +122,8 @@ void Application::CreateGameObj()
 
     // 駒の頂点インデックス集合作成
     _vertIndicesFactory.reset(new PieceVertIndicesFactory());
-    _pieceIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory>(_vertIndicesFactory.get());
-    
+    //_pieceIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory>(_vertIndicesFactory.get());
+    _pieceIndices =  _vertIndicesFactory->CreateUniquePtr();
     // 駒の初期位置調整
     for (int i = 1; i < _pieces.size(); i++)
     {
@@ -529,8 +529,8 @@ Camera* Application::GetMapCamera() {return _mapCamera.get();}  // マップカ�
 
 Texture* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
 std::vector<std::unique_ptr<Texture>>& Application::GetBoardLineTexs(){return _boardLineTexs;}
-NaturalBufferedData<unsigned short>* Application::GetBoardVertIndices(){return _boardIndices.get();} // 駒の頂点インデックスを返す
-NaturalBufferedData<unsigned short>* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
+I_BufferedData* Application::GetBoardVertIndices(){return _boardIndices.get();} // 駒の頂点インデックスを返す
+I_BufferedData* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
 Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す
 std::vector<std::unique_ptr<I_Piece>>& Application::GetPieces(){return _pieces;} // 駒を返す
 KeyMap* Application::GetKeyMap(){return _keyMap.get();} // 将棋盤頂点インデックスを返す
@@ -559,9 +559,9 @@ std::vector<I_GameObj*> Application::GetGameObjects()
 }
 
 // すべての頂点インデックスを返す
-std::vector<BufferedData*> Application::GetAllVertIndices()
+std::vector<I_BufferedData*> Application::GetAllVertIndices()
 {
-    std::vector<BufferedData*> allVertIndices;
+    std::vector<I_BufferedData*> allVertIndices;
 
     // 将棋盤を格納
     allVertIndices.push_back(_boardIndices.get());
@@ -586,9 +586,6 @@ Application::Application()
     _gameWindow = std::make_unique<GameWindow>();
     _board = std::make_unique<Board>();
     _dx12 = std::make_unique<DX12>();
-
-    _boardIndices = std::make_unique<NaturalBufferedData<unsigned short>>();
-    _pieceIndices = std::make_unique<NaturalBufferedData<unsigned short>>();
 
     _keyMap = std::make_unique<KeyMap>();
     _inputHandler = std::make_unique<InputHandler>();

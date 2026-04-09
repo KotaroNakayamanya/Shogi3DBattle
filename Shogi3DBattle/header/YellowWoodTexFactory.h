@@ -6,5 +6,5 @@
 class YellowWoodTexFactory : public IBufferedDataFactory
 {
 public:
-    std::unique_ptr<BufferedData> CreateUniquePtr() override; // 黄色木材テクスチャ作成
+    std::unique_ptr<I_BufferedData> CreateUniquePtr() override; // 黄色木材テクスチャ作成
 };

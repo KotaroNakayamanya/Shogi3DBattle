@@ -1,6 +1,6 @@
 #pragma once
 
-#include"BufferedData.h"
+#include"B_BufferedData.h"
 #include<d3d12.h>
 #include<vector>
 
@@ -9,7 +9,7 @@ struct Pixel
     unsigned char r, g, b, a;
 };
 
-class Texture : public BufferedData
+class Texture : public B_BufferedData
 {
 private:
     std::vector<Pixel> _pixels;

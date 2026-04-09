@@ -1,9 +1,9 @@
 #pragma once
 
-#include"NaturalBufferedData.h"
+#include"B_NaturalBufferedData.h"
 #include"VertStruct.h"
 
-class Vertices : public NaturalBufferedData<Vert>
+class Vertices : public B_NaturalBufferedData<Vert>
 {
 public:
     void SetGameObjId     (unsigned char id); // ゲームオブジェクトIDセット

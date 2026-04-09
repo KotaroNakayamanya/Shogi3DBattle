@@ -3,7 +3,7 @@
 #include"GameObjType.h"
 
 // ï‡Å@í∏ì_èWçáçÏê¨
-std::unique_ptr<BufferedData> PawnVerticesFactory::CreateUniquePtr()
+std::unique_ptr<I_BufferedData> PawnVerticesFactory::CreateUniquePtr()
 {
     float mmBottomWidth  = 215.0f;
     float mmHeight       = 260.0f;
