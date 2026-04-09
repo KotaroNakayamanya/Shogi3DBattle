@@ -10,7 +10,7 @@ private:
     I_Piece* _piece;     // 操作している駒
     Camera* _mainCamera; // メインカメラ
 
-    I_WorldMat* _startWorldMat; // 初期ワールド行列
+    WorldMat* _startWorldMat; // 初期ワールド行列
 
     bool _isMoved; // 駒が動いたかどうか確認
 

@@ -146,9 +146,7 @@
     <ClInclude Include="header\I_ButtonUIFactory.h" />
     <ClInclude Include="header\I_Piece.h" />
     <ClInclude Include="header\I_PieceFactory.h" />
-    <ClInclude Include="header\I_Vertices.h" />
     <ClInclude Include="header\I_VerticesFactory.h" />
-    <ClInclude Include="header\I_WorldMat.h" />
     <ClInclude Include="header\I_WorldMatFactory.h" />
     <ClInclude Include="header\NewStartButton.h" />
     <ClInclude Include="header\Camera.h" />

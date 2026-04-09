@@ -1,12 +1,12 @@
 #pragma once
 
-#include"I_WorldMat.h"
+#include"WorldMat.h"
 #include<memory>
 
 class I_WorldMatFactory
 {
 public:
-    virtual std::unique_ptr<I_WorldMat> CreateWorldMat() = 0; // ワールド行列作成
+    virtual std::unique_ptr<WorldMat> CreateWorldMat() = 0; // ワールド行列作成
 
     virtual ~I_WorldMatFactory() = default;
 };

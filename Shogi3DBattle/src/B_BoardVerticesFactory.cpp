@@ -1,5 +1,4 @@
 #include"B_BoardVerticesFactory.h"
-#include"Vertices.h"
 #include<vector>
 #include"VertStruct.h"
 #include"GameObjIdManager.h"

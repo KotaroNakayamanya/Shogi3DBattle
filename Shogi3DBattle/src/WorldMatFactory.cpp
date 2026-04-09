@@ -2,7 +2,7 @@
 #include"WorldMat.h"
 
 // ƒ[ƒ‹ƒhs—ñì¬
-std::unique_ptr<I_WorldMat> WorldMatFactory::CreateWorldMat()
+std::unique_ptr<WorldMat> WorldMatFactory::CreateWorldMat()
 {
     DirectX::XMMATRIX worldMat;
     worldMat = DirectX::XMMatrixIdentity();

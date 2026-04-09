@@ -10,7 +10,6 @@
 #include"ViewMat.h"
 
 #include"GameObjType.h"
-#include"I_Vertices.h"
 
 class DX12
 {

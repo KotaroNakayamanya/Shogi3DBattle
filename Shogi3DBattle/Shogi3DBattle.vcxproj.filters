@@ -1097,9 +1097,6 @@
     <ClInclude Include="header\I_BufferedDataFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\_interface</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_Vertices.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
-    </ClInclude>
     <ClInclude Include="header\I_VerticesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
     </ClInclude>
@@ -1110,9 +1107,6 @@
       <Filter>ヘッダー ファイル\buffered_data\_interface</Filter>
     </ClInclude>
     <ClInclude Include="header\I_Mat.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat\_interface</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_WorldMat.h">
       <Filter>ヘッダー ファイル\buffered_data\mat\_interface</Filter>
     </ClInclude>
     <ClInclude Include="header\Board9x9.h">

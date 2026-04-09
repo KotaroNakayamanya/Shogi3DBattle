@@ -5,5 +5,5 @@
 class WorldMatFactory : public I_WorldMatFactory
 {
 public:
-    std::unique_ptr<I_WorldMat> CreateWorldMat() override; // ワールド行列作成
+    std::unique_ptr<WorldMat> CreateWorldMat() override; // ワールド行列作成
 };

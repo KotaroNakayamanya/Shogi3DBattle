@@ -2,7 +2,6 @@
 #include"VecCalc.h"
 #include<vector>
 #include"VertStruct.h"
-#include"Vertices.h"
 #include"GameObjIdManager.h"
 #include"BasicTexType.h"
 
