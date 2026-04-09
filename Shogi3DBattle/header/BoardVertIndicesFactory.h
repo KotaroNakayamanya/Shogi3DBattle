@@ -1,9 +1,8 @@
 #pragma once
 
-#include"IBufferedDataFactory.h"
+#include"I_BufferedDataFactory.h"
 
-class BoardVertIndicesFactory : public IBufferedDataFactory
+class BoardVertIndicesFactory : public I_BufferedDataFactory
 {
-public:
     std::unique_ptr<I_BufferedData> CreateUniquePtr() override; // 将棋盤インデックス集合作成
 };

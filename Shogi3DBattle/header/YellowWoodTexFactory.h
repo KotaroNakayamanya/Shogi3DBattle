@@ -1,9 +1,8 @@
 #pragma once
 
-#include"IBufferedDataFactory.h"
-#include"Texture.h"
+#include"I_BufferedDataFactory.h"
 
-class YellowWoodTexFactory : public IBufferedDataFactory
+class YellowWoodTexFactory : public I_BufferedDataFactory
 {
 public:
     std::unique_ptr<I_BufferedData> CreateUniquePtr() override; // 黄色木材テクスチャ作成

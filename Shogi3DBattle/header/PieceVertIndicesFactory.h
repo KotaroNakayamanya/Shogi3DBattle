@@ -1,8 +1,8 @@
 #pragma once
 
-#include"IBufferedDataFactory.h"
+#include"I_BufferedDataFactory.h"
 
-class PieceVertIndicesFactory : public IBufferedDataFactory
+class PieceVertIndicesFactory : public I_BufferedDataFactory
 {
 public:
     std::unique_ptr<I_BufferedData> CreateUniquePtr() override; // 駒のインデックス集合作成

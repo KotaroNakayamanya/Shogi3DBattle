@@ -3,10 +3,10 @@
 #include"I_BufferedData.h"
 #include<memory>
 
-class IBufferedDataFactory
+class I_BufferedDataFactory
 {
 public:
     virtual std::unique_ptr<I_BufferedData> CreateUniquePtr() = 0; // バッファ書き込み用データ作成
 
-    virtual ~IBufferedDataFactory() = default;
+    virtual ~I_BufferedDataFactory() = default;
 };

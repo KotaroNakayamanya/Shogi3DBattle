@@ -412,6 +412,21 @@
     <Filter Include="ヘッダー ファイル\DX12\buff\_other\resource_state">
       <UniqueIdentifier>{48aa6ffb-4979-4501-a111-2acca5c5e380}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\mat\_interface">
+      <UniqueIdentifier>{94b686c5-65b1-45be-aab4-39361622abec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\_base">
+      <UniqueIdentifier>{33bdfe45-47d9-4f18-a160-89edc3e30347}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\board\9x9">
+      <UniqueIdentifier>{db39f776-b29b-43ab-9591-bcf12427013a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\board\_interface">
+      <UniqueIdentifier>{494dc9cc-0734-41b9-8b65-640480c8f9e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\board\_base">
+      <UniqueIdentifier>{bbb5aced-4304-4436-9cab-4f6d5f802d4d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -881,20 +896,11 @@
     <ClInclude Include="header\Shader.h">
       <Filter>ヘッダー ファイル\DX12\shader</Filter>
     </ClInclude>
-    <ClInclude Include="header\B_GameObj.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_BufferedData.h">
-      <Filter>ヘッダー ファイル\buffered_data</Filter>
-    </ClInclude>
     <ClInclude Include="header\Texture.h">
       <Filter>ヘッダー ファイル\buffered_data\texture</Filter>
     </ClInclude>
     <ClInclude Include="header\YellowWoodTexFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\texture\factory</Filter>
-    </ClInclude>
-    <ClInclude Include="header\B_NaturalBufferedData.h">
-      <Filter>ヘッダー ファイル\buffered_data</Filter>
     </ClInclude>
     <ClInclude Include="header\GameWindow.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -915,9 +921,6 @@
       <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
     </ClInclude>
     <ClInclude Include="header\BoardVertIndicesFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Board9x9VerticesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
     </ClInclude>
     <ClInclude Include="header\KingFactory.h">
@@ -1058,9 +1061,6 @@
     <ClInclude Include="header\Silver.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\silver</Filter>
     </ClInclude>
-    <ClInclude Include="header\PieceFactoryMethod.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
-    </ClInclude>
     <ClInclude Include="header\I_SceneState.h">
       <Filter>ヘッダー ファイル\scene_state\_interface</Filter>
     </ClInclude>
@@ -1072,9 +1072,6 @@
     </ClInclude>
     <ClInclude Include="header\StartMenu.h">
       <Filter>ヘッダー ファイル\scene_state\start_menu</Filter>
-    </ClInclude>
-    <ClInclude Include="header\M_PieceVerticesFactoryMethod.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
     </ClInclude>
     <ClInclude Include="header\B_Piece.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
@@ -1091,13 +1088,7 @@
     <ClInclude Include="header\UIType.h">
       <Filter>ヘッダー ファイル\enum</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_Mat.h">
-      <Filter>ヘッダー ファイル\buffered_data\_interface</Filter>
-    </ClInclude>
     <ClInclude Include="header\I_GameObj.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\_interface</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_GameObjFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\_interface</Filter>
     </ClInclude>
     <ClInclude Include="header\B_SceneState.h">
@@ -1130,59 +1121,74 @@
     <ClInclude Include="header\I_BuffFactory.h">
       <Filter>ヘッダー ファイル\DX12\buff\_interface</Filter>
     </ClInclude>
-    <ClInclude Include="header\B_BufferedData.h">
-      <Filter>ヘッダー ファイル\buffered_data</Filter>
-    </ClInclude>
-    <ClInclude Include="header\IBufferedDataFactory.h">
+    <ClInclude Include="header\I_BufferedDataFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\_interface</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_Board.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_BoardFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
-    </ClInclude>
-    <ClInclude Include="header\B_Board.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
-    </ClInclude>
-    <ClInclude Include="header\B_GameObjFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\B_BoardFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Board9x9Factory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Board9x9.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_Vertices.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_VerticesFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="header\I_WorldMatFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data</Filter>
     </ClInclude>
     <ClInclude Include="header\B_VerticesFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
     </ClInclude>
-    <ClInclude Include="header\B_BoardVerticesFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="header\I_Vertices.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_WorldMatFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="header\I_VerticesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_BufferedData.h">
+      <Filter>ヘッダー ファイル\buffered_data\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_NaturalBufferedData.h">
+      <Filter>ヘッダー ファイル\buffered_data\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_BufferedData.h">
+      <Filter>ヘッダー ファイル\buffered_data\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_Mat.h">
+      <Filter>ヘッダー ファイル\buffered_data\mat\_interface</Filter>
     </ClInclude>
     <ClInclude Include="header\I_WorldMat.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat\world_mat</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\mat\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Board9x9.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board\9x9</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Board9x9VerticesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board\9x9</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Board9x9Factory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board\9x9</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_GameObj.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_Board.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_BoardFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_BoardFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_BoardVerticesFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_Board.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_GameObjFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\_base</Filter>
     </ClInclude>
     <ClInclude Include="header\I_PieceFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
     <ClInclude Include="header\B_PieceFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
     </ClInclude>
     <ClInclude Include="header\B_PieceVerticesFactory.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

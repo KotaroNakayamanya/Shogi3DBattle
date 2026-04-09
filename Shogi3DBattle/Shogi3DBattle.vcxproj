@@ -157,7 +157,6 @@
     <ClInclude Include="header\I_VerticesFactory.h" />
     <ClInclude Include="header\I_WorldMat.h" />
     <ClInclude Include="header\I_WorldMatFactory.h" />
-    <ClInclude Include="header\M_PieceVerticesFactoryMethod.h" />
     <ClInclude Include="header\NewStartButton.h" />
     <ClInclude Include="header\Camera.h" />
     <ClInclude Include="header\ConstBuffFactory.h" />
@@ -215,7 +214,6 @@
     <ClInclude Include="header\PawnFactory.h" />
     <ClInclude Include="header\PawnVerticesFactory.h" />
     <ClInclude Include="header\PersProjMat.h" />
-    <ClInclude Include="header\PieceFactoryMethod.h" />
     <ClInclude Include="header\PieceVertIndicesFactory.h" />
     <ClInclude Include="header\Rook.h" />
     <ClInclude Include="header\RookFactory.h" />
@@ -226,7 +224,7 @@
     <ClInclude Include="header\SilverFactory.h" />
     <ClInclude Include="header\SilverVerticesFactory.h" />
     <ClInclude Include="header\StartMenu.h" />
-    <ClInclude Include="header\IBufferedDataFactory.h" />
+    <ClInclude Include="header\I_BufferedDataFactory.h" />
     <ClInclude Include="header\TextAndRectStruct.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />
@@ -253,7 +251,6 @@
     <ClInclude Include="header\RTVHeapDesc.h" />
     <ClInclude Include="header\RTVHeapFactory.h" />
     <ClInclude Include="header\RTVOffset.h" />
-    <ClInclude Include="header\I_GameObjFactory.h" />
     <ClInclude Include="header\SRVFactory.h" />
     <ClInclude Include="header\SwapChain.h" />
     <ClInclude Include="header\Texture.h" />

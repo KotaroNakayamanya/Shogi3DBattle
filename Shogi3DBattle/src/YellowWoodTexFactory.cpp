@@ -1,4 +1,5 @@
 #include"YellowWoodTexFactory.h"
+#include"Texture.h"
 
 // 黄色木材テクスチャ作成
 std::unique_ptr<I_BufferedData> YellowWoodTexFactory::CreateUniquePtr()

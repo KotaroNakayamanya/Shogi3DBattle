@@ -146,7 +146,7 @@ void Application::CreateTex()
 {
     //// 黄色木材テクスチャ作成
     _texFactory.reset(new YellowWoodTexFactory());
-    _woodTex = FactoryMethod::GetDownCastUniquePtr<Texture, IBufferedDataFactory>(_texFactory.get());
+    _woodTex = _texFactory->CreateUniquePtr();
 
     // 将棋盤黒線テクスチャ作成用関数
     std::function<void(Texture*, GameObjType)> createBoardLineTex =
@@ -531,7 +531,7 @@ InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // イ
 Camera* Application::GetMainCamera(){return _mainCamera.get();} // メインカメラを返す
 Camera* Application::GetMapCamera() {return _mapCamera.get();}  // マップカメラを返す
 
-Texture* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
+I_BufferedData* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
 std::vector<std::unique_ptr<Texture>>& Application::GetBoardLineTexs(){return _boardLineTexs;}
 I_BufferedData* Application::GetBoardVertIndices(){return _boardIndices.get();} // 駒の頂点インデックスを返す
 I_BufferedData* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す

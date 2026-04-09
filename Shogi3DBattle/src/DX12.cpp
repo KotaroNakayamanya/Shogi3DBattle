@@ -205,8 +205,8 @@ HRESULT DX12::CreateBuff()
     if (FAILED(_device->CreateBuff(_idxBuff.get(), widthSize, heightSize, BuffType::INDEX))) goto failed;
 
     // 木材テクスチャバッファ作成
-    widthSize  = woodTex->GetWidth();
-    heightSize = woodTex->GetHeight();
+    widthSize  = static_cast<Texture*>(woodTex)->GetWidth();
+    heightSize = static_cast<Texture*>(woodTex)->GetHeight();
     if (FAILED(_device->CreateBuff(_woodTexBuff.get(), widthSize, heightSize, BuffType::TEXTURE))) goto failed;
 
     // 将棋オブジェクト種類ごとのテクスチャバッファ作成
