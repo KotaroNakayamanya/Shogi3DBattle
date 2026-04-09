@@ -1,20 +1,22 @@
 #pragma once
 
-#include"I_Mat.h"
+#include"I_WorldMat.h"
 #include"B_BufferedData.h"
 
-class WorldMat : public I_Mat, public B_BufferedData
+class WorldMat : public I_WorldMat, public B_BufferedData
 {
 protected:
     DirectX::XMMATRIX _worldMat;
     
 public:
+    // I_WorldMat, I_Mat
     DirectX::XMMATRIX GetMat() override; // ワールド行列を返す
+
+    // I_WorldMat
+    void SetMat(DirectX::XMMATRIX worldMat) override; // ワールド行列セット
     
-    // バッファに書き込み
-    HRESULT WriteToBuff(Buff* buff) override;
+    // B_BufferedData
+    HRESULT WriteToBuff(Buff* buff) override; // バッファに書き込み
+    unsigned int GetSize() override; // サイズ取得
 
-    unsigned int GetSize() override;
-
-    void SetWorldMat(DirectX::XMMATRIX worldMat); // ワールド行列セット
 };

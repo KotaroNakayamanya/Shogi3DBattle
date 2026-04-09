@@ -3,13 +3,10 @@
 #include"GameObjType.h"
 
 // ”ò@’¸“_W‡ì¬
-std::unique_ptr<I_BufferedData> RookVerticesFactory::CreateUniquePtr()
+std::unique_ptr<I_Vertices> RookVerticesFactory::CreateVertices()
 {
     float mmBottomWidth  = 260.0f;
     float mmHeight       = 300.0f;
 
-    auto uniquePtr = PieceFactoryMethod::GetPieceVerticesUniquePtr(mmBottomWidth, mmHeight);
-    uniquePtr->SetMulDesignTexId(static_cast<unsigned char>(GameObjType::ROOK));
-
-    return uniquePtr;
+    return CreatePieceVertices(mmBottomWidth, mmHeight);
 }

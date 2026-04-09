@@ -16,8 +16,11 @@
 
 #include"I_ButtonUIFactory.h"
 #include"KeyMap.h"
+#include"I_BoardFactory.h"
+#include"I_PieceFactory.h"
 
 #include"Texture.h"
+#include"I_Board.h"
 
 class Application
 {
@@ -27,7 +30,7 @@ private:
 
 
     // 将棋オブジェクト
-    std::unique_ptr<Board>                        _board;        // 将棋盤
+    std::unique_ptr<I_Board>                        _board;        // 将棋盤
     std::unique_ptr<I_BufferedData> _boardIndices; // 将棋盤の頂点インデックス
 
     std::vector<std::unique_ptr<I_Piece>>           _pieces;       // 駒
@@ -36,7 +39,9 @@ private:
     void CreateGameObj(); // 将棋オブジェクト作成
 
     // ファクトリー
-    std::unique_ptr<I_GameObjFactory>    _gameObjFactory;    // ゲームオブジェクトファクトリー
+    //std::unique_ptr<I_GameObjFactory>    _gameObjFactory;    // ゲームオブジェクトファクトリー
+    std::unique_ptr<I_BoardFactory>    _boardFactory;    // 将棋盤ファァクトリー
+    std::unique_ptr<I_PieceFactory>    _pieceFactory;    // 駒ファァクトリー
     std::unique_ptr<IBufferedDataFactory>  _verticesFactory;    // 頂点集合ファクトリー
     std::unique_ptr<IBufferedDataFactory> _vertIndicesFactory; // インデックス集合ファクトリー
     std::unique_ptr<IBufferedDataFactory> _texFactory;    // テクスチャファクトリー
@@ -92,7 +97,7 @@ public:
 
     GameWindow* GetGameWindow(); // ゲームウインドウオブジェクトを返す
 
-    Board* GetBoard(); // 将棋盤を返す
+    I_Board* GetBoard(); // 将棋盤を返す
     std::vector<std::unique_ptr<I_Piece>>& GetPieces(); // 駒を返す
     Texture* GetWoodTex(); // 木材テクスチャを返す
     std::vector<std::unique_ptr<Texture>>& GetBoardLineTexs(); // 将棋盤黒線テクスチャを返す

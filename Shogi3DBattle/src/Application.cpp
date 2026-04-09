@@ -3,7 +3,6 @@
 #include<array>
 #include<chrono>
 #include<thread>
-#include"BoardFactory.h"
 #include"BoardVertIndicesFactory.h"
 #include"PieceVertIndicesFactory.h"
 #include<functional>
@@ -37,6 +36,9 @@
 
 #include"NewStartButtonFactory.h"
 
+#include"B_Board.h"
+#include"Board9x9Factory.h"
+
 
 // 初期処理
 bool Application::Init()
@@ -64,66 +66,68 @@ failed:
 void Application::CreateGameObj()
 {
     // 将棋盤作成
-    _gameObjFactory.reset(new BoardFactory());
-    _board = FactoryMethod::GetDownCastUniquePtr<Board, I_GameObjFactory>(_gameObjFactory.get()); 
+    _boardFactory.reset(new Board9x9Factory());
+    _board = _boardFactory->CreateBoard();
+
+    auto nya = _board->GetGameObjType();
 
     // 将棋盤インデックス作成
     _vertIndicesFactory.reset(new BoardVertIndicesFactory());
-    //_boardIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory>(_vertIndicesFactory.get());
     _boardIndices = _vertIndicesFactory->CreateUniquePtr();
+
     // 王作成
-    _gameObjFactory.reset(new KingFactory());
+    _pieceFactory.reset(new KingFactory());
     unsigned int idx = 0;
     unsigned int kingNum = 2;
-    for (unsigned int i = idx; i < idx + kingNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<King, I_GameObjFactory>(_gameObjFactory.get()));
+    for (unsigned int i = idx; i < idx + kingNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
 
     // 飛作成
-    _gameObjFactory.reset(new RookFactory());
+    _pieceFactory.reset(new RookFactory());
     idx += kingNum;
     unsigned int rookNum = 2;
-    for (unsigned int i = idx; i < idx + rookNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Rook, I_GameObjFactory>(_gameObjFactory.get()));
+    for (unsigned int i = idx; i < idx + rookNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
 
     // 角作成
-    _gameObjFactory.reset(new BishopFactory());
+    _pieceFactory.reset(new BishopFactory());
     idx += rookNum;
     unsigned int bishopNum = 2;
-    for (unsigned int i = idx; i < idx + bishopNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Bishop, I_GameObjFactory>(_gameObjFactory.get()));
+    for (unsigned int i = idx; i < idx + bishopNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
 
     // 金作成
-    _gameObjFactory.reset(new GoldFactory());
+    _pieceFactory.reset(new GoldFactory());
     idx += bishopNum;
     unsigned int goldNum = 4;
-    for (unsigned int i = idx; i < idx + goldNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Gold, I_GameObjFactory>(_gameObjFactory.get()));
-
+    for (unsigned int i = idx; i < idx + goldNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
+ 
     // 銀作成
-    _gameObjFactory.reset(new SilverFactory());
+    _pieceFactory.reset(new SilverFactory());
     idx += goldNum;
     unsigned int silverNum = 4;
-    for (unsigned int i = idx; i < idx + silverNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Silver, I_GameObjFactory>(_gameObjFactory.get()));
-
+    for (unsigned int i = idx; i < idx + silverNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
+ 
     // 桂作成
-    _gameObjFactory.reset(new KnightFactory());
+    _pieceFactory.reset(new KnightFactory());
     idx += silverNum;
     unsigned int knightNum = 4;
-    for (unsigned int i = idx; i < idx + knightNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Knight, I_GameObjFactory>(_gameObjFactory.get()));
-
+    for (unsigned int i = idx; i < idx + knightNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
+ 
     // 香作成
-    _gameObjFactory.reset(new LanceFactory());
+    _pieceFactory.reset(new LanceFactory());
     idx += knightNum;
     unsigned int lanceNum = 4;
-    for (unsigned int i = idx; i < idx + lanceNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Lance, I_GameObjFactory>(_gameObjFactory.get()));
-
+    for (unsigned int i = idx; i < idx + lanceNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
+ 
     // 歩作成
-    _gameObjFactory.reset(new PawnFactory());
+    _pieceFactory.reset(new PawnFactory());
     idx += lanceNum;
     unsigned int pawnNum = 18;
-    for (unsigned int i = idx; i < idx + pawnNum; i++) _pieces.push_back(FactoryMethod::GetDownCastUniquePtr<Pawn, I_GameObjFactory>(_gameObjFactory.get()));
- 
+    for (unsigned int i = idx; i < idx + pawnNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
+  
 
     // 駒の頂点インデックス集合作成
     _vertIndicesFactory.reset(new PieceVertIndicesFactory());
-    //_pieceIndices = FactoryMethod::GetDownCastUniquePtr<NaturalBufferedData<unsigned short>, IBufferedDataFactory>(_vertIndicesFactory.get());
     _pieceIndices =  _vertIndicesFactory->CreateUniquePtr();
+
     // 駒の初期位置調整
     for (int i = 1; i < _pieces.size(); i++)
     {
@@ -531,7 +535,7 @@ Texture* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチ
 std::vector<std::unique_ptr<Texture>>& Application::GetBoardLineTexs(){return _boardLineTexs;}
 I_BufferedData* Application::GetBoardVertIndices(){return _boardIndices.get();} // 駒の頂点インデックスを返す
 I_BufferedData* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
-Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す
+I_Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す
 std::vector<std::unique_ptr<I_Piece>>& Application::GetPieces(){return _pieces;} // 駒を返す
 KeyMap* Application::GetKeyMap(){return _keyMap.get();} // 将棋盤頂点インデックスを返す
 
@@ -551,7 +555,7 @@ std::vector<I_GameObj*> Application::GetGameObjects()
     std::vector<I_GameObj*> shogiObjects;
 
     // 将棋盤を格納
-    shogiObjects.push_back(_board.get());
+    shogiObjects.push_back(static_cast<B_Board*>(_board.get()));
     // 駒を格納
     for(auto& piece : _pieces) shogiObjects.push_back(static_cast<B_Piece*>(piece.get()));
 
@@ -584,7 +588,6 @@ Application& Application::GetInstance()
 Application::Application()
 {
     _gameWindow = std::make_unique<GameWindow>();
-    _board = std::make_unique<Board>();
     _dx12 = std::make_unique<DX12>();
 
     _keyMap = std::make_unique<KeyMap>();

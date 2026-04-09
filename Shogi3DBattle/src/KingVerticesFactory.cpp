@@ -3,13 +3,10 @@
 #include"GameObjType.h"
 
 // â§Å@í∏ì_èWçáçÏê¨
-std::unique_ptr<I_BufferedData> KingVerticesFactory::CreateUniquePtr()
+std::unique_ptr<I_Vertices> KingVerticesFactory::CreateVertices()
 {
     float mmBottomWidth  = 285.0f;
     float mmHeight       = 320.0f;
 
-    auto uniquePtr = PieceFactoryMethod::GetPieceVerticesUniquePtr(mmBottomWidth, mmHeight);
-    uniquePtr->SetMulDesignTexId(static_cast<unsigned char>(GameObjType::KING));
-
-    return uniquePtr;
+    return CreatePieceVertices(mmBottomWidth, mmHeight);
 }

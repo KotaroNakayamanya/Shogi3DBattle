@@ -1,10 +1,9 @@
 #pragma once
 
-#include"IBufferedDataFactory.h"
-#include"VertStruct.h"
+#include"B_PieceVerticesFactory.h"
 
-class SilverVerticesFactory : public IBufferedDataFactory
+class SilverVerticesFactory : public B_PieceVerticesFactory
 {
 public:
-    std::unique_ptr<I_BufferedData> CreateUniquePtr() override; // 銀　頂点集合作成
+    std::unique_ptr<I_Vertices> CreateVertices() override; // 銀　頂点集合作成
 };

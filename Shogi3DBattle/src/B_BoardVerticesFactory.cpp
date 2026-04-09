@@ -1,15 +1,14 @@
-#include"BoardVerticesFactory.h"
+#include"B_BoardVerticesFactory.h"
 #include"Vertices.h"
+#include<vector>
+#include"VertStruct.h"
 #include"GameObjIdManager.h"
 #include"BasicTexType.h"
 #include"GameObjType.h"
 
-
-// 頂点集合作成
-std::unique_ptr<I_BufferedData> BoardVerticesFactory::CreateUniquePtr()
+// 指定されたサイズの将棋盤頂点集合作成
+std::unique_ptr<I_Vertices> B_BoardVerticesFactory::CreateBoardVertices(float size)
 {
-    float size = 100.0f;
-
     float thickness = size * 0.8f;
 
     std::vector<Vert> vertices;
@@ -52,7 +51,6 @@ std::unique_ptr<I_BufferedData> BoardVerticesFactory::CreateUniquePtr()
     uniquePtr->SetDatas(vertices);
     uniquePtr->SetGameObjId(GameObjIdManager::GetId());
     uniquePtr->SetBasicTexId    (static_cast<unsigned char>(BasicTexType::YELLOW_WOOD));
-    uniquePtr->SetMulDesignTexId(static_cast<unsigned char>(GameObjType ::BOARD_99));
 
     return uniquePtr;
 }

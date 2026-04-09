@@ -561,9 +561,6 @@
     <ClCompile Include="src\DeviceContext.cpp">
       <Filter>ソース ファイル\dx12\d3d11\context</Filter>
     </ClCompile>
-    <ClCompile Include="src\BoardFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\factory</Filter>
-    </ClCompile>
     <ClCompile Include="src\RenderTexBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
     </ClCompile>
@@ -603,7 +600,7 @@
     <ClCompile Include="src\Vertices.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\BoardVerticesFactory.cpp">
+    <ClCompile Include="src\Board9x9VerticesFactory.cpp">
       <Filter>ソース ファイル\buffered_data\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\BishopVerticesFactory.cpp">
@@ -678,9 +675,6 @@
     <ClCompile Include="src\OptionButtonFactory.cpp">
       <Filter>ソース ファイル\ui\button\option</Filter>
     </ClCompile>
-    <ClCompile Include="src\Board.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
-    </ClCompile>
     <ClCompile Include="src\StartMenu.cpp">
       <Filter>ソース ファイル\scene_state\start_menu</Filter>
     </ClCompile>
@@ -704,6 +698,18 @@
     </ClCompile>
     <ClCompile Include="src\PersProjMat.cpp">
       <Filter>ソース ファイル\buffered_data\mat\proj_mat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board9x9Factory.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board9x9.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\B_BoardVerticesFactory.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\B_PieceVerticesFactory.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -733,9 +739,6 @@
     </ClInclude>
     <ClInclude Include="header\RootSignature.h">
       <Filter>ヘッダー ファイル\DX12\root_signature</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Board.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
     </ClInclude>
     <ClInclude Include="header\IHeapDesc.h">
       <Filter>ヘッダー ファイル\DX12\heap\factory\heap_desc</Filter>
@@ -911,13 +914,10 @@
     <ClInclude Include="header\Vertices.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
     </ClInclude>
-    <ClInclude Include="header\BoardFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
-    </ClInclude>
     <ClInclude Include="header\BoardVertIndicesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
     </ClInclude>
-    <ClInclude Include="header\BoardVerticesFactory.h">
+    <ClInclude Include="header\Board9x9VerticesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
     </ClInclude>
     <ClInclude Include="header\KingFactory.h">
@@ -1135,6 +1135,54 @@
     </ClInclude>
     <ClInclude Include="header\IBufferedDataFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_Board.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_BoardFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_Board.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_GameObjFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_BoardFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Board9x9Factory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Board9x9.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_Vertices.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_VerticesFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_VerticesFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_BoardVerticesFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_WorldMatFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_WorldMat.h">
+      <Filter>ヘッダー ファイル\buffered_data\mat\world_mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_PieceFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_PieceFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\B_PieceVerticesFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

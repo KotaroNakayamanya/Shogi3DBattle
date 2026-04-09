@@ -4,6 +4,8 @@
 #include<algorithm>
 #include<cassert>
 #include"VertStruct.h"
+#include"Vertices.h"
+#include"WorldMat.h"
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dwrite.lib")
@@ -192,7 +194,7 @@ HRESULT DX12::CreateBuff()
     // 頂点バッファ作成
     widthSize = 0;
     //for(auto& shogiObj : shogiObjects) widthSize += sizeof(Vert) * shogiObj->GetVertices()->GetDatas().size();
-    for(auto& shogiObj : shogiObjects) widthSize += sizeof(Vert) * shogiObj->GetVertices()->GetSize();
+    for(auto& shogiObj : shogiObjects) widthSize += sizeof(Vert) * static_cast<Vertices*>(shogiObj->GetVertices())->GetSize();
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_vertBuff.get(), widthSize, heightSize, BuffType::VERTEX))) goto failed;
 
@@ -440,20 +442,20 @@ HRESULT DX12::WriteToBuff()
 
 
     // 頂点集合の書き込み位置をセット
-    board->GetVertices()->SetStartDataIdx(idx);
-    idx += board->GetVertices()->GetSize();
+    static_cast<Vertices*>(board->GetVertices())->SetStartDataIdx(idx);
+    idx += static_cast<Vertices*>(board->GetVertices())->GetSize();
     Vertices* vertices;
     for (auto& piece : pieces)
     {
-        vertices = piece->GetVertices();
+        vertices = static_cast<Vertices*>(piece->GetVertices());
         vertices->SetStartDataIdx(idx);
         idx += vertices->GetSize();
     }
     //if(FAILED(_vertBuff->WriteToBuff<Vert>(board->GetVertices()))) goto failed; // 将棋盤頂点集合をバッファに書き込み
-    if(FAILED(board->GetVertices()->WriteToBuff(_vertBuff.get()))) goto failed; // 将棋盤頂点集合をバッファに書き込み
+    if(FAILED(static_cast<Vertices*>(board->GetVertices())->WriteToBuff(_vertBuff.get()))) goto failed; // 将棋盤頂点集合をバッファに書き込み
     for (auto& piece : pieces)
         //if(FAILED(_vertBuff->WriteToBuff<Vert>(piece->GetVertices()))) goto failed; // 駒の頂点集合をバッファに書き込み
-        if(FAILED(piece->GetVertices()->WriteToBuff(_vertBuff.get()))) goto failed; // 駒の頂点集合をバッファに書き込み
+        if(FAILED(static_cast<Vertices*>(piece->GetVertices())->WriteToBuff(_vertBuff.get()))) goto failed; // 駒の頂点集合をバッファに書き込み
 
 
     // インデックス集合の書き込み位置をセット
@@ -468,12 +470,12 @@ HRESULT DX12::WriteToBuff()
 
     // 定数データの書き込み位置をセット（後に書き込む）
     idx = 0;
-    board->GetWorldMat()->SetStartDataIdx(idx); // 将棋盤
-    idx += board->GetWorldMat()->GetSize();
+    static_cast<WorldMat*>(board->GetWorldMat())->SetStartDataIdx(idx); // 将棋盤
+    idx += 1;
     WorldMat* worldMat;
     for (auto& piece : pieces)
     {
-        worldMat = piece->GetWorldMat();
+        worldMat = static_cast<WorldMat*>(piece->GetWorldMat());
         worldMat->SetStartDataIdx(idx); // 駒
         idx += worldMat->GetSize();
     }
@@ -661,21 +663,21 @@ void DX12::ExeD3D()
 
     // 将棋盤描画コマンドセット
     _cmdList->SetIdxBuffView(GetIdxBuffView(boardVertIndices));
-    _cmdList->SetVertBuffView(GetVertBuffView(board->GetVertices()));
+    _cmdList->SetVertBuffView(GetVertBuffView(static_cast<Vertices*>(board->GetVertices())));
     _cmdList->SetDrawWithIdx(boardVertIndices);
 
     // 駒描画コマンドセット
     _cmdList->SetIdxBuffView(GetIdxBuffView(pieceVertIndices));
     for (UINT i = 0; i < pieces.size(); i++)
     {
-        _cmdList->SetVertBuffView(GetVertBuffView(pieces[i]->GetVertices()));
+        _cmdList->SetVertBuffView(GetVertBuffView(static_cast<Vertices*>(pieces[i]->GetVertices())));
         _cmdList->SetDrawWithIdx(pieceVertIndices);
     }
 
     // 定数バッファに書き込み
-    if(FAILED(board->GetWorldMat()->WriteToBuff(_constBuff.get()))) return; // 将棋盤書き込み
+    if(FAILED(static_cast<WorldMat*>(board->GetWorldMat())->WriteToBuff(_constBuff.get()))) return; // 将棋盤書き込み
     for(auto& piece : pieces)
-        if(FAILED(piece->GetWorldMat()->WriteToBuff(_constBuff.get()))) return; // 駒書き込み
+        if(FAILED(static_cast<WorldMat*>(piece->GetWorldMat())->WriteToBuff(_constBuff.get()))) return; // 駒書き込み
     if(FAILED(mainCamera->WriteToBuff(_constBuff.get()))) return; // メインカメラ書き込み
     
 
@@ -708,14 +710,14 @@ void DX12::ExeD3D()
 
         // 将棋盤描画コマンドセット
         _cmdList->SetIdxBuffView(GetIdxBuffView(boardVertIndices));
-        _cmdList->SetVertBuffView(GetVertBuffView(board->GetVertices()));
+        _cmdList->SetVertBuffView(GetVertBuffView(static_cast<Vertices*>(board->GetVertices())));
         _cmdList->SetDrawWithIdx(boardVertIndices);
 
         // 駒描画コマンドセット
         _cmdList->SetIdxBuffView(GetIdxBuffView(pieceVertIndices));
         for (UINT i = 0; i < pieces.size(); i++)
         {
-            _cmdList->SetVertBuffView(GetVertBuffView(pieces[i]->GetVertices()));
+            _cmdList->SetVertBuffView(GetVertBuffView(static_cast<Vertices*>(pieces[i]->GetVertices())));
             _cmdList->SetDrawWithIdx(pieceVertIndices);
         }
 
@@ -754,7 +756,7 @@ void DX12::Set3DCmd()
 }
 
 // 頂点バッファビュー
-D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(Vertices* vertices)
+D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(I_BufferedData* vertices)
 {
     D3D12_VERTEX_BUFFER_VIEW view;
 

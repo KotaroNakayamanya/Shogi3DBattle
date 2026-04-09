@@ -3,13 +3,10 @@
 #include"GameObjType.h"
 
 // åjÅ@í∏ì_èWçáçÏê¨
-std::unique_ptr<I_BufferedData> KnightVerticesFactory::CreateUniquePtr()
+std::unique_ptr<I_Vertices> KnightVerticesFactory::CreateVertices()
 {
     float mmBottomWidth  = 235.0f;
     float mmHeight       = 275.0f;
-
-    auto uniquePtr = PieceFactoryMethod::GetPieceVerticesUniquePtr(mmBottomWidth, mmHeight);
-    uniquePtr->SetMulDesignTexId(static_cast<unsigned char>(GameObjType::KNIGHT));
-
-    return uniquePtr;
+ 
+    return CreatePieceVertices(mmBottomWidth, mmHeight);
 }

@@ -9,7 +9,19 @@ std::unique_ptr<I_BufferedData> WorldMatFactory::CreateUniquePtr()
     worldMat = DirectX::XMMatrixIdentity();
 
     std::unique_ptr<WorldMat> uniquePtr = std::make_unique<WorldMat>();
-    uniquePtr->SetWorldMat(worldMat);
+    uniquePtr->SetMat(worldMat);
+
+    return uniquePtr;
+}
+
+// ƒ[ƒ‹ƒhs—ñì¬
+std::unique_ptr<I_WorldMat> WorldMatFactory::CreateWorldMat()
+{
+    DirectX::XMMATRIX worldMat;
+    worldMat = DirectX::XMMatrixIdentity();
+
+    std::unique_ptr<WorldMat> uniquePtr = std::make_unique<WorldMat>();
+    uniquePtr->SetMat(worldMat);
 
     return uniquePtr;
 }

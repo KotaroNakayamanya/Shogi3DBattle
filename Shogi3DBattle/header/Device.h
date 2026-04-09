@@ -21,9 +21,6 @@
 #include"InputLayout.h"
 #include"Pipeline.h"
 
-#include"Board.h"
-#include"I_Piece.h"
-
 #include"BuffType.h"
 
 class Device

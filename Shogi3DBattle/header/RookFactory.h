@@ -1,9 +1,9 @@
 #pragma once
 
-#include"I_GameObjFactory.h"
+#include"B_PieceFactory.h"
 
-class RookFactory : public I_GameObjFactory
+class RookFactory : public B_PieceFactory
 {
 public:
-    std::unique_ptr<I_GameObj> CreateUniquePtr() override; // ”ò@ì¬ 
+    std::unique_ptr<I_Piece> CreatePiece() override; // ”ò@ì¬ 
 };

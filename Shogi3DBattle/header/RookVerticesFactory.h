@@ -1,10 +1,9 @@
 #pragma once
 
-#include"IBufferedDataFactory.h"
-#include"VertStruct.h"
+#include"B_PieceVerticesFactory.h"
 
-class RookVerticesFactory : public IBufferedDataFactory
+class RookVerticesFactory : public B_PieceVerticesFactory
 {
 public:
-    std::unique_ptr<I_BufferedData> CreateUniquePtr() override; // 飛　頂点集合作成
+    std::unique_ptr<I_Vertices> CreateVertices() override; // 飛　頂点集合作成
 };

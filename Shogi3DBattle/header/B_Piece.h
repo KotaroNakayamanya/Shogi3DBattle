@@ -11,11 +11,11 @@ public:
     {
         auto worldMat = _worldMat->GetMat();
         worldMat *= DirectX::XMMatrixTranslation(vec.x, vec.y, vec.z);
-        _worldMat->SetWorldMat(worldMat);
+        _worldMat->SetMat(worldMat);
     }
 
-    Vertices* GetVertices() override {return _vertices.get();} // 頂点集合を返す
+    I_Vertices* GetVertices() override {return _vertices.get();} // 頂点集合を返す
 
-    void      SetWorldMat(WorldMat* mat) override {_worldMat.reset(mat);} // ワールド行列セット
-    WorldMat* GetWorldMat()              override {return _worldMat.get();}// ワールド行列を返す
+    void      SetWorldMat(I_WorldMat* mat) override {_worldMat.reset(mat);} // ワールド行列セット
+    I_WorldMat* GetWorldMat()              override {return _worldMat.get();}// ワールド行列を返す
 };

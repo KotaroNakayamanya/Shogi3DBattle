@@ -3,13 +3,10 @@
 #include"GameObjType.h"
 
 // ï‡Å@í∏ì_èWçáçÏê¨
-std::unique_ptr<I_BufferedData> PawnVerticesFactory::CreateUniquePtr()
+std::unique_ptr<I_Vertices> PawnVerticesFactory::CreateVertices()
 {
     float mmBottomWidth  = 215.0f;
     float mmHeight       = 260.0f;
 
-    auto uniquePtr = PieceFactoryMethod::GetPieceVerticesUniquePtr(mmBottomWidth, mmHeight);
-    uniquePtr->SetMulDesignTexId(static_cast<unsigned char>(GameObjType::PAWN));
-
-    return uniquePtr;
+    return CreatePieceVertices(mmBottomWidth, mmHeight);
 }

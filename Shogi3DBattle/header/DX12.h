@@ -9,9 +9,8 @@
 #include"ResourceBarrier.h"
 #include"ViewMat.h"
 
-#include"Board.h"
-
 #include"GameObjType.h"
+#include"I_Vertices.h"
 
 class DX12
 {
@@ -133,7 +132,7 @@ private:
 
 
     void Set3DCmd(); // 3Dコマンドセット
-    D3D12_VERTEX_BUFFER_VIEW GetVertBuffView(Vertices*); // 頂点バッファビュー
+    D3D12_VERTEX_BUFFER_VIEW GetVertBuffView(I_BufferedData* vertices); // 頂点バッファビュー
     D3D12_INDEX_BUFFER_VIEW  GetIdxBuffView (I_BufferedData* bufferedData); // インデックスバッファビュー
 
 

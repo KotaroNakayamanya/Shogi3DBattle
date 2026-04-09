@@ -2,25 +2,22 @@
 #include"Knight.h"
 #include"KnightVerticesFactory.h"
 #include"WorldMatFactory.h"
-#include"FactoryMethod.h"
 
 // 桂　作成
-std::unique_ptr<I_GameObj> KnightFactory::CreateUniquePtr()
+std::unique_ptr<I_Piece> KnightFactory::CreatePiece()
 {
     std::unique_ptr<Knight> uniquePtr = std::make_unique<Knight>();
 
     // 頂点集合作成
     _verticesFactory.reset(new KnightVerticesFactory());
-    auto kingVerticesUniquePtr =
-        FactoryMethod::GetDownCastUniquePtr<Vertices, IBufferedDataFactory>(_verticesFactory.get());
+    auto kingVerticesUniquePtr = _verticesFactory->CreateVertices();
     auto kingVerticesPtr = kingVerticesUniquePtr.get();
     kingVerticesUniquePtr.release();
     uniquePtr->SetVertices(kingVerticesPtr);
 
     // ワールド行列作成
-    _matFactory.reset(new WorldMatFactory());
-    auto worldMatUniquePtr = 
-        FactoryMethod::GetDownCastUniquePtr<WorldMat, IBufferedDataFactory>(_matFactory.get());
+    _worldMatFactory.reset(new WorldMatFactory());
+    auto worldMatUniquePtr = _worldMatFactory->CreateWorldMat();
     auto worldMatPtr = worldMatUniquePtr.get();
     worldMatUniquePtr.release();
     uniquePtr->SetWorldMat(worldMatPtr);
