@@ -1,10 +1,10 @@
 #pragma once
 
-#include"B_SceneState.h"
+#include"I_SceneState.h"
 #include"I_Piece.h"
 #include"Camera.h"
 
-class MovingPiece : public B_SceneState
+class MovingPiece : public I_SceneState
 {
 private:
     I_Piece* _piece;     // ‘€ì‚µ‚Ä‚¢‚é‹î

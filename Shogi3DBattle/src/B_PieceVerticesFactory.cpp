@@ -7,7 +7,7 @@
 #include"BasicTexType.h"
 
 // 指定されたサイズの駒の頂点集合作成
-std::unique_ptr<I_Vertices> B_PieceVerticesFactory::CreatePieceVertices(float mmBottomWidth, float mmHeight)
+std::unique_ptr<Vertices> B_PieceVerticesFactory::CreatePieceVertices(float mmBottomWidth, float mmHeight)
 {
     // 10.0fで450mm
     float mmPerFloat = 400.0f / 10.0f;

@@ -1,5 +1,5 @@
 #include"BoardVertIndicesFactory.h"
-#include"B_NaturalBufferedData.h"
+#include"VertIndices.h"
 
 // 将棋盤インデックス集合作成
 std::unique_ptr<I_BufferedData> BoardVertIndicesFactory::CreateUniquePtr()
@@ -20,9 +20,8 @@ std::unique_ptr<I_BufferedData> BoardVertIndicesFactory::CreateUniquePtr()
         vertIndices.push_back(0 + offset);
     }
     
-    B_NaturalBufferedData<unsigned short>* vertIndicesPtr = new B_NaturalBufferedData<unsigned short>();
-    vertIndicesPtr->SetDatas(vertIndices);
-    std::unique_ptr<I_BufferedData> vertIndicesUniquePtr(vertIndicesPtr);
-
-    return vertIndicesUniquePtr;
+    std::unique_ptr<VertIndices> uniquePtr = std::make_unique<VertIndices>();
+    uniquePtr->SetDatas(vertIndices);
+    return uniquePtr;
+    
 }

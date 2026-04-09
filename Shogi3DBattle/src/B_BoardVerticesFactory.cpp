@@ -7,7 +7,7 @@
 #include"GameObjType.h"
 
 // 指定されたサイズの将棋盤頂点集合作成
-std::unique_ptr<I_Vertices> B_BoardVerticesFactory::CreateBoardVertices(float size)
+std::unique_ptr<Vertices> B_BoardVerticesFactory::CreateBoardVertices(float size)
 {
     float thickness = size * 0.8f;
 

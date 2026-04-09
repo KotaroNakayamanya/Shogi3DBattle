@@ -1,9 +1,10 @@
 #pragma once
 
+#include"I_VerticesFactory.h"
 #include"B_BoardVerticesFactory.h"
 
-class Board9x9VerticesFactory : public B_BoardVerticesFactory
+class Board9x9VerticesFactory : public I_VerticesFactory, public B_BoardVerticesFactory
 {
 public:
-    std::unique_ptr<I_Vertices> CreateVertices() override; // 9x9将棋盤頂点集合作成
+    std::unique_ptr<Vertices> CreateVertices() override; // 9x9将棋盤頂点集合作成
 };

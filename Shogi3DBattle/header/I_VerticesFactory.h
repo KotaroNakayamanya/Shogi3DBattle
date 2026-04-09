@@ -1,12 +1,12 @@
 #pragma once
 
-#include"I_Vertices.h"
+#include"Vertices.h"
 #include<memory>
 
 class I_VerticesFactory
 {
 public:
-    virtual std::unique_ptr<I_Vertices> CreateVertices() = 0; // 頂点集合作成
+    virtual std::unique_ptr<Vertices> CreateVertices() = 0; // 頂点集合作成
 
     virtual ~I_VerticesFactory() = default;
 };

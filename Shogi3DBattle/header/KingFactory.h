@@ -1,8 +1,8 @@
 #pragma once
 
-#include"B_PieceFactory.h"
+#include"I_PieceFactory.h"
 
-class KingFactory : public B_PieceFactory
+class KingFactory : public I_PieceFactory
 {
 public:
     std::unique_ptr<I_Piece> CreatePiece() override; // â§Å@çÏê¨ 

@@ -1,9 +1,10 @@
 #pragma once
 
+#include"I_VerticesFactory.h"
 #include"B_PieceVerticesFactory.h"
 
-class GoldVerticesFactory : public B_PieceVerticesFactory
+class GoldVerticesFactory : public I_VerticesFactory, public B_PieceVerticesFactory
 {
 public:
-    std::unique_ptr<I_Vertices> CreateVertices() override; // 金　頂点集合作成
+    std::unique_ptr<Vertices> CreateVertices() override; // 金　頂点集合作成
 };

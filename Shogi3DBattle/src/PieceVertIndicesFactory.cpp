@@ -1,6 +1,5 @@
 #include"PieceVertIndicesFactory.h"
-#include"B_NaturalBufferedData.h"
-#include<vector>
+#include"VertIndices.h"
 
 // 駒のインデックス集合作成
 std::unique_ptr<I_BufferedData> PieceVertIndicesFactory::CreateUniquePtr()
@@ -37,9 +36,8 @@ std::unique_ptr<I_BufferedData> PieceVertIndicesFactory::CreateUniquePtr()
         vertIndices.push_back(0 + offset + 4*i);
     }
     
-    B_NaturalBufferedData<unsigned short>* vertIndicesPtr = new B_NaturalBufferedData<unsigned short>();
-    vertIndicesPtr->SetDatas(vertIndices);
-    std::unique_ptr<I_BufferedData> uniquePtr(vertIndicesPtr);
+    std::unique_ptr<VertIndices> uniquePtr = std::make_unique<VertIndices>();
+    uniquePtr->SetDatas(vertIndices);
 
     return uniquePtr;
 }

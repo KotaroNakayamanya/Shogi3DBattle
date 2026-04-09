@@ -1,10 +1,10 @@
 #pragma once
 
-#include"B_SceneState.h"
+#include"I_SceneState.h"
 #include"Camera.h"
 #include"I_ButtonUI.h"
 
-class StartMenu : public B_SceneState
+class StartMenu : public I_SceneState
 {
 public:
     Camera*    _mainCamera;  // ƒƒCƒ“ƒJƒƒ‰

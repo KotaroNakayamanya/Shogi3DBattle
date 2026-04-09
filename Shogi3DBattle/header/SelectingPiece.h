@@ -1,10 +1,10 @@
 #pragma once
 
-#include"B_SceneState.h"
+#include"I_SceneState.h"
 #include"Camera.h"
 #include"PersProjMat.h"
 
-class SelectingPiece : public B_SceneState
+class SelectingPiece : public I_SceneState
 {
 private:
     Camera*     _mainCamera;       // ƒƒCƒ“ƒJƒƒ‰

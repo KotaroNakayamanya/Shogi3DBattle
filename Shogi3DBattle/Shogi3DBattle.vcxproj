@@ -31,7 +31,6 @@
     <ClCompile Include="src\BoardVertIndicesFactory.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
     <ClCompile Include="src\B_BoardVerticesFactory.cpp" />
-    <ClCompile Include="src\B_BufferedData.cpp" />
     <ClCompile Include="src\B_PieceVerticesFactory.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
     <ClCompile Include="src\ContinueStartButtonFactory.cpp" />
@@ -131,20 +130,15 @@
     <ClInclude Include="header\Board9x9Factory.h" />
     <ClInclude Include="header\Board9x9VerticesFactory.h" />
     <ClInclude Include="header\BoardVertIndicesFactory.h" />
-    <ClInclude Include="header\B_BoardFactory.h" />
     <ClInclude Include="header\B_BoardVerticesFactory.h" />
     <ClInclude Include="header\B_GameObjFactory.h" />
-    <ClInclude Include="header\B_PieceFactory.h" />
     <ClInclude Include="header\B_PieceVerticesFactory.h" />
-    <ClInclude Include="header\B_VerticesFactory.h" />
     <ClInclude Include="header\I_Board.h" />
     <ClInclude Include="header\I_BoardFactory.h" />
     <ClInclude Include="header\I_BufferedData.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
     <ClInclude Include="header\BuffType.h" />
-    <ClInclude Include="header\B_BufferedData.h" />
     <ClInclude Include="header\B_ButtonUI.h" />
-    <ClInclude Include="header\B_SceneState.h" />
     <ClInclude Include="header\ContinueStartButton.h" />
     <ClInclude Include="header\ContinueStartButtonFactory.h" />
     <ClInclude Include="header\GameExitButton.h" />
@@ -203,7 +197,7 @@
     <ClInclude Include="header\Lance.h" />
     <ClInclude Include="header\LanceFactory.h" />
     <ClInclude Include="header\LanceVerticesFactory.h" />
-    <ClInclude Include="header\B_NaturalBufferedData.h" />
+    <ClInclude Include="header\I_NaturalBufferedData.h" />
     <ClInclude Include="header\NewStartButtonFactory.h" />
     <ClInclude Include="header\NonePersProjMat.h" />
     <ClInclude Include="header\OptionButton.h" />
@@ -260,6 +254,7 @@
     <ClInclude Include="header\UIType.h" />
     <ClInclude Include="header\UploadHeapProp.h" />
     <ClInclude Include="header\VecCalc.h" />
+    <ClInclude Include="header\VertIndices.h" />
     <ClInclude Include="header\VertStruct.h" />
     <ClInclude Include="header\VertBuffFactory.h" />
     <ClInclude Include="header\Vertices.h" />
