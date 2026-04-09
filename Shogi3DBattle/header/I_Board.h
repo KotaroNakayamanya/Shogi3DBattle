@@ -1,8 +1,8 @@
 #pragma once
 
-#include"I_GameObj.h"
+#include"B_GameObj.h"
 
-class I_Board : public I_GameObj
+class I_Board : public B_GameObj
 {
 public:
     virtual ~I_Board() = default;

@@ -12,7 +12,6 @@
 #include"NonePersProjMat.h"
 
 #include"YellowWoodTexFactory.h"
-#include"FactoryMethod.h"
 
 #include"King.h"
 #include"Rook.h"
@@ -36,7 +35,6 @@
 
 #include"NewStartButtonFactory.h"
 
-#include"B_Board.h"
 #include"Board9x9Factory.h"
 
 
@@ -550,14 +548,14 @@ void Application::RemoveAllUI(){_buttonUIs.clear();}      // UIを全て削除�
 std::vector<std::unique_ptr<I_ButtonUI>>& Application::GetButtonUIs(){return _buttonUIs;} // ボタンUIを返す
 
 // すべての将棋オブジェクトを返す
-std::vector<I_GameObj*> Application::GetGameObjects()
+std::vector<B_GameObj*> Application::GetGameObjects()
 {
-    std::vector<I_GameObj*> shogiObjects;
+    std::vector<B_GameObj*> shogiObjects;
 
     // 将棋盤を格納
-    shogiObjects.push_back(static_cast<B_Board*>(_board.get()));
+    shogiObjects.push_back(_board.get());
     // 駒を格納
-    for(auto& piece : _pieces) shogiObjects.push_back(static_cast<B_Piece*>(piece.get()));
+    for(auto& piece : _pieces) shogiObjects.push_back(piece.get());
 
     return shogiObjects;
 }

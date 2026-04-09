@@ -1,8 +1,8 @@
 #include"WorldMat.h"
 #include<vector>
 
-void              WorldMat::SetMat(DirectX::XMMATRIX worldMat){_worldMat = worldMat;} // ワールド行列セット
-DirectX::XMMATRIX WorldMat::GetMat()                          {return _worldMat;}     // ワールド行列を返す
+void              WorldMat::SetMat(DirectX::XMMATRIX mat){_mat = mat;}  // ワールド行列セット
+DirectX::XMMATRIX WorldMat::GetMat()                     {return _mat;} // ワールド行列を返す
 
 // バッファに書き込み
 HRESULT WorldMat::WriteToBuff(Buff* buff)

@@ -11,7 +11,7 @@ std::unique_ptr<I_Board> Board9x9Factory::CreateBoard()
     // 9x9«Šû”Õ’¸“_W‡ì¬
     _verticesFactory.reset(new Board9x9VerticesFactory());
     auto verticesUniquePtr = _verticesFactory->CreateVertices();
-    verticesUniquePtr->SetMulDesignTexId(static_cast<unsigned char>(GameObjType ::BOARD_99));
+    verticesUniquePtr->SetMulDesignTexId(static_cast<unsigned char>(GameObjType::BOARD_99));
     auto verticesPtr = verticesUniquePtr.get();
     verticesUniquePtr.release();
     uniquePtr->SetVertices(verticesPtr);

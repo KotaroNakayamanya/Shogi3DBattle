@@ -1,8 +1,8 @@
 #pragma once
 
-#include"B_Piece.h"
+#include"I_Piece.h"
 
-class Silver : public B_Piece
+class Silver : public I_Piece
 {
 
 };

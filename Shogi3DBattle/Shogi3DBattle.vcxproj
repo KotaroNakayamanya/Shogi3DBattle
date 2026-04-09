@@ -31,6 +31,7 @@
     <ClCompile Include="src\BoardVertIndicesFactory.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
     <ClCompile Include="src\B_BoardVerticesFactory.cpp" />
+    <ClCompile Include="src\B_BufferedData.cpp" />
     <ClCompile Include="src\B_PieceVerticesFactory.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
     <ClCompile Include="src\ContinueStartButtonFactory.cpp" />
@@ -130,7 +131,6 @@
     <ClInclude Include="header\Board9x9Factory.h" />
     <ClInclude Include="header\Board9x9VerticesFactory.h" />
     <ClInclude Include="header\BoardVertIndicesFactory.h" />
-    <ClInclude Include="header\B_Board.h" />
     <ClInclude Include="header\B_BoardFactory.h" />
     <ClInclude Include="header\B_BoardVerticesFactory.h" />
     <ClInclude Include="header\B_GameObjFactory.h" />
@@ -150,7 +150,6 @@
     <ClInclude Include="header\GameExitButton.h" />
     <ClInclude Include="header\GameExitButtonFactory.h" />
     <ClInclude Include="header\I_ButtonUIFactory.h" />
-    <ClInclude Include="header\I_GameObj.h" />
     <ClInclude Include="header\I_Piece.h" />
     <ClInclude Include="header\I_PieceFactory.h" />
     <ClInclude Include="header\I_Vertices.h" />
@@ -163,7 +162,6 @@
     <ClInclude Include="header\DefaultHeapProp.h" />
     <ClInclude Include="header\DSBuffFactory.h" />
     <ClInclude Include="header\DSResourceDesc.h" />
-    <ClInclude Include="header\FactoryMethod.h" />
     <ClInclude Include="header\B_GameObj.h" />
     <ClInclude Include="header\GameObjIdManager.h" />
     <ClInclude Include="header\GameObjType.h" />

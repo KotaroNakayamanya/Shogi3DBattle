@@ -1,8 +1,8 @@
 #pragma once
 
-#include"B_Board.h"
+#include"I_Board.h"
 
-class Board9x9 : public B_Board
+class Board9x9 : public I_Board
 {
 
 };

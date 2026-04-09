@@ -196,9 +196,6 @@
     <Filter Include="ソース ファイル\buffered_data\texutre">
       <UniqueIdentifier>{3cdc27ce-8990-4015-94e0-2c5d42ddb6af}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\texture\factory">
-      <UniqueIdentifier>{83c8fac9-d219-4c53-82b0-85da80e3001a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\buffered_data\texutre\factory">
       <UniqueIdentifier>{8829a128-7481-47c4-b6e9-56ea79857d50}</UniqueIdentifier>
     </Filter>
@@ -207,9 +204,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece">
       <UniqueIdentifier>{2bd42877-1574-4e0f-a8f7-2818e3cb5618}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\king">
-      <UniqueIdentifier>{a04da948-a9f9-4bc0-a02a-f1866b92e6a1}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\camera">
       <UniqueIdentifier>{fc19dabf-7165-4134-b5f0-631b66fb8856}</UniqueIdentifier>
@@ -426,6 +420,15 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\game_object\board\_base">
       <UniqueIdentifier>{bbb5aced-4304-4436-9cab-4f6d5f802d4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\struct">
+      <UniqueIdentifier>{37f6971d-de17-4f98-9c51-124cd5c2cd21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\texture\yellow_wood">
+      <UniqueIdentifier>{3f258fa0-2f1f-4f59-8389-0ec3b8c5d03d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\king">
+      <UniqueIdentifier>{a04da948-a9f9-4bc0-a02a-f1866b92e6a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -726,6 +729,9 @@
     <ClCompile Include="src\B_PieceVerticesFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\B_BufferedData.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -899,9 +905,6 @@
     <ClInclude Include="header\Texture.h">
       <Filter>ヘッダー ファイル\buffered_data\texture</Filter>
     </ClInclude>
-    <ClInclude Include="header\YellowWoodTexFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\texture\factory</Filter>
-    </ClInclude>
     <ClInclude Include="header\GameWindow.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -909,12 +912,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\InputHandler.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\FactoryMethod.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\VertStruct.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\Vertices.h">
@@ -949,9 +946,6 @@
     </ClInclude>
     <ClInclude Include="header\Camera.h">
       <Filter>ヘッダー ファイル\buffered_data\camera</Filter>
-    </ClInclude>
-    <ClInclude Include="header\GameObjIdManager.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\GameObjType.h">
       <Filter>ヘッダー ファイル\enum</Filter>
@@ -1000,9 +994,6 @@
     </ClInclude>
     <ClInclude Include="header\RookVerticesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\rook</Filter>
-    </ClInclude>
-    <ClInclude Include="header\TextAndRectStruct.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\NewStartButton.h">
       <Filter>ヘッダー ファイル\ui\button\new_start</Filter>
@@ -1088,17 +1079,11 @@
     <ClInclude Include="header\UIType.h">
       <Filter>ヘッダー ファイル\enum</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_GameObj.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\_interface</Filter>
-    </ClInclude>
     <ClInclude Include="header\B_SceneState.h">
       <Filter>ヘッダー ファイル\scene_state\_base</Filter>
     </ClInclude>
     <ClInclude Include="header\B_ClipZRange.h">
       <Filter>ヘッダー ファイル\buffered_data\mat\proj_mat\_base</Filter>
-    </ClInclude>
-    <ClInclude Include="header\BuffType.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\DSBuffFactory.h">
       <Filter>ヘッダー ファイル\DX12\buff\depth_stencil</Filter>
@@ -1123,9 +1108,6 @@
     </ClInclude>
     <ClInclude Include="header\I_BufferedDataFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\_interface</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_WorldMatFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data</Filter>
     </ClInclude>
     <ClInclude Include="header\B_VerticesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
@@ -1175,9 +1157,6 @@
     <ClInclude Include="header\B_BoardVerticesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\board\_base</Filter>
     </ClInclude>
-    <ClInclude Include="header\B_Board.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\board\_base</Filter>
-    </ClInclude>
     <ClInclude Include="header\B_GameObjFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\_base</Filter>
     </ClInclude>
@@ -1189,6 +1168,24 @@
     </ClInclude>
     <ClInclude Include="header\B_PieceVerticesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BuffType.h">
+      <Filter>ヘッダー ファイル\enum</Filter>
+    </ClInclude>
+    <ClInclude Include="header\TextAndRectStruct.h">
+      <Filter>ヘッダー ファイル\struct</Filter>
+    </ClInclude>
+    <ClInclude Include="header\VertStruct.h">
+      <Filter>ヘッダー ファイル\struct</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GameObjIdManager.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
+    </ClInclude>
+    <ClInclude Include="header\YellowWoodTexFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\texture\yellow_wood</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_WorldMatFactory.h">
+      <Filter>ヘッダー ファイル\buffered_data\mat\_interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
