@@ -6,10 +6,5 @@ std::unique_ptr<I_ButtonUI> NewStartButtonFactory::CreateButtonUI(
     D2D1_RECT_F              rect,
     std::vector<TextAndRect> textAndRects)
 {
-    auto newStartButton = std::make_unique<NewStartButton>();
-
-    newStartButton->SetRect(rect);
-    newStartButton->SetTextAndRects(textAndRects);
-
-    return newStartButton;
+    return std::make_unique<NewStartButton>(rect, textAndRects);
 }

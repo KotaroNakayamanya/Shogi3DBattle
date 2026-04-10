@@ -114,33 +114,33 @@ StartMenu::StartMenu()
     top  = gameWindow->GetWindowHeight() / 2;
     bottom = top + uiHeight;
     rect = {left, top, right, bottom};
+    textAndRects.clear();
     textAndRect.text = L"はじめから対局";
     textAndRect.rect = {left, top, right, bottom};
-    textAndRects.clear();
     textAndRects.push_back(textAndRect);
     app.CreateButtonUI<NewStartButtonFactory>(rect, textAndRects);
 
     rect.top    += heightOffset;
     rect.bottom += heightOffset;
+    textAndRects.clear();
     textAndRect.text = L"つづきから対局";
     textAndRect.rect = rect;
-    textAndRects.clear();
     textAndRects.push_back(textAndRect);
     app.CreateButtonUI<ContinueStartButtonFactory>(rect, textAndRects);
 
     rect.top    += heightOffset;
     rect.bottom += heightOffset;
+    textAndRects.clear();
     textAndRect.text = L"オプション";
     textAndRect.rect = rect;
-    textAndRects.clear();
     textAndRects.push_back(textAndRect);
     app.CreateButtonUI<OptionButtonFactory>(rect, textAndRects);
 
     rect.top    += heightOffset;
     rect.bottom += heightOffset;
+    textAndRects.clear();
     textAndRect.text = L"ゲーム終了";
     textAndRect.rect = rect;
-    textAndRects.clear();
     textAndRects.push_back(textAndRect);
     app.CreateButtonUI<GameExitButtonFactory>(rect, textAndRects);
 }

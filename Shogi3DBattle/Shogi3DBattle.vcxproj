@@ -102,6 +102,7 @@
     <ClCompile Include="src\TexBuffFactory.cpp" />
     <ClCompile Include="src\TexHeapProp.cpp" />
     <ClCompile Include="src\TexResourceDesc.cpp" />
+    <ClCompile Include="src\UI.cpp" />
     <ClCompile Include="src\UploadHeapProp.cpp" />
     <ClCompile Include="src\VecCalc.cpp" />
     <ClCompile Include="src\VertBuffFactory.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="header\TexResourceDesc.h" />
     <ClInclude Include="header\TextFormat.h" />
     <ClInclude Include="header\ButtonUIType.h" />
+    <ClInclude Include="header\UI.h" />
     <ClInclude Include="header\UIType.h" />
     <ClInclude Include="header\UploadHeapProp.h" />
     <ClInclude Include="header\VecCalc.h" />

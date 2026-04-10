@@ -9,3 +9,6 @@ std::unique_ptr<I_SceneState> GameExitButton::ExePushButton()
 
     return nullptr;
 }
+
+GameExitButton::GameExitButton(D2D1_RECT_F rect, std::vector<TextAndRect> textAndRects)
+    : I_ButtonUI(rect, textAndRects){}

@@ -18,3 +18,6 @@ std::unique_ptr<I_SceneState> NewStartButton::ExePushButton()
 
     return newSceneState;
 }
+
+NewStartButton::NewStartButton(D2D1_RECT_F rect, std::vector<TextAndRect> textAndRects)
+    : I_ButtonUI(rect, textAndRects){}

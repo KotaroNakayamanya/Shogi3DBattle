@@ -247,30 +247,6 @@
     <Filter Include="ソース ファイル\buffered_data\game_obj\piece">
       <UniqueIdentifier>{1c0cbb52-b3ee-436c-825f-5a70272475d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\king">
-      <UniqueIdentifier>{580cb755-7a96-412f-9f8a-c4aa110e7ee9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\rook">
-      <UniqueIdentifier>{92214235-befb-478b-8d50-4bbb573e9e90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\bishop">
-      <UniqueIdentifier>{5821aa70-b3da-40b3-b8af-44cd2717305c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\gold">
-      <UniqueIdentifier>{60b9ac5b-9cb4-49b7-846d-1ced3a0b5f5b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\silver">
-      <UniqueIdentifier>{0cd18528-941e-4501-8a82-48a4bbfc6c3c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\knight">
-      <UniqueIdentifier>{9b7f3601-a487-4c07-a29a-aa3027adedbb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\lance">
-      <UniqueIdentifier>{e531ce12-431f-4b25-8ff4-4d2d129ff2ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\pawn">
-      <UniqueIdentifier>{9848d09f-8e0c-4a08-b4d0-092f5fd5df2e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\buffered_data\game_obj\board">
       <UniqueIdentifier>{5c845247-4f3a-4a8a-ba96-6de3d19fe665}</UniqueIdentifier>
     </Filter>
@@ -367,9 +343,6 @@
     <Filter Include="ヘッダー ファイル\struct">
       <UniqueIdentifier>{37f6971d-de17-4f98-9c51-124cd5c2cd21}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\game_obj\board\9x9">
-      <UniqueIdentifier>{18bdf1ba-d2f2-41e0-ad70-695488cb93ec}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\game_object\_interface">
       <UniqueIdentifier>{33bdfe45-47d9-4f18-a160-89edc3e30347}</UniqueIdentifier>
     </Filter>
@@ -381,6 +354,9 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\game_object\yellow_wood">
       <UniqueIdentifier>{3f258fa0-2f1f-4f59-8389-0ec3b8c5d03d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\texture">
+      <UniqueIdentifier>{4d1ed946-1c4e-4a10-b348-8f13f5b82e56}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -606,59 +582,62 @@
     <ClCompile Include="src\Vertices.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj</Filter>
     </ClCompile>
-    <ClCompile Include="src\Bishop.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\bishop</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Gold.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\gold</Filter>
-    </ClCompile>
-    <ClCompile Include="src\King.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\king</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Knight.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\knight</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Lance.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\lance</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Pawn.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\pawn</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rook.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\rook</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Silver.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\silver</Filter>
-    </ClCompile>
-    <ClCompile Include="src\I_Piece.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Board9x9.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\board\9x9</Filter>
-    </ClCompile>
-    <ClCompile Include="src\I_Board.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PieceVertIndices.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BoardVertIndices.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WoodTexture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Board5x5Texture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Board9x9Texture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BoardTexture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\I_ButtonUI.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bishop.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gold.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\King.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Knight.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Lance.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pawn.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rook.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Silver.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WoodTexture.cpp">
+      <Filter>ソース ファイル\buffered_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_Piece.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_Board.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board9x9.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board5x5Texture.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoardTexture.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board9x9Texture.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoardVertIndices.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PieceVertIndices.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI.cpp">
+      <Filter>ソース ファイル\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1018,6 +997,9 @@
     </ClInclude>
     <ClInclude Include="header\I_ButtonUI.h">
       <Filter>ヘッダー ファイル\ui\button\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\UI.h">
+      <Filter>ヘッダー ファイル\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
