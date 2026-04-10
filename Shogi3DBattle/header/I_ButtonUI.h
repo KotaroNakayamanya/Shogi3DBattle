@@ -8,8 +8,10 @@
 class I_ButtonUI : public UI
 {
 private:
-    std::vector<TextAndRect> _textAndRects; // テキスト及び描画範囲
     bool                     _isSelected;   // ボタンUI選択状態
+
+protected:
+    std::vector<TextAndRect> _textAndRects; // テキスト及び描画範囲
 
 public:
     virtual std::unique_ptr<I_SceneState> ExePushButton() = 0; // ボタン押下処理

@@ -4,7 +4,7 @@
 
 class UI
 {
-private:
+protected:
     D2D1_RECT_F _rect;         // UI”ÍˆÍ
 
 public:

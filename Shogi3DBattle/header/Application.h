@@ -109,7 +109,13 @@ public:
     template<typename T>
     void CreateButtonUI( // ボタンUIをプッシュする
         D2D1_RECT_F              rect,
-        std::vector<TextAndRect> textAndRects);
+        std::vector<TextAndRect> textAndRects = std::vector<TextAndRect>());
+
+    // ボタンUI作成
+    void PushButtonUI(
+        ButtonUIType             buttonUIType,
+        D2D1_RECT_F              rect,
+        std::vector<TextAndRect> textAndRects = std::vector<TextAndRect>());
 
     std::vector<std::unique_ptr<I_ButtonUI>>& GetButtonUIs(); // ボタンUIを返す
 

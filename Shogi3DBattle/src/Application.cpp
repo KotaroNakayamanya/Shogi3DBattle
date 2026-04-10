@@ -21,6 +21,9 @@
 
 
 #include"NewStartButton.h"
+#include"ContinueStartButton.h"
+#include"OptionButton.h"
+#include"GameExitButton.h"
 
 #include"NewStartButtonFactory.h"
 
@@ -392,6 +395,35 @@ std::vector<NaturalBufferedData<unsigned short>*> Application::GetAllVertIndices
 
     return allVertIndices;
 }
+// ボタンUI作成
+void Application::PushButtonUI(
+    ButtonUIType             buttonUIType,
+    D2D1_RECT_F              rect,
+    std::vector<TextAndRect> textAndRects)
+{
+    switch (buttonUIType)
+    {
+        case ButtonUIType::NEW_START_BUTTON: // はじめから
+            _buttonUIs.push_back(std::make_unique<NewStartButton>(rect, textAndRects));
+            break;
+
+        case ButtonUIType::CONTINUE_START_BUTTON: // つづきから
+            _buttonUIs.push_back(std::make_unique<ContinueStartButton>(rect, textAndRects));
+            break;
+
+        case ButtonUIType::OPTION_BUTTON: // オプション
+            _buttonUIs.push_back(std::make_unique<OptionButton>(rect, textAndRects));
+            break;
+
+        case ButtonUIType::GAME_EXIT_BUTTON: // ゲーム終了
+            _buttonUIs.push_back(std::make_unique<GameExitButton>(rect, textAndRects));
+            break;
+
+        default:
+            return;
+  }
+}
+
 
 
 

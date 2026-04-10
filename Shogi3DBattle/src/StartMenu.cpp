@@ -108,40 +108,27 @@ StartMenu::StartMenu()
     heightOffset = uiHeight + 3.0f;
 
     D2D1_RECT_F              rect;         // ボタンUI範囲
-    std::vector<TextAndRect> textAndRects; // テキスト及びテキスト範囲動的配列
     TextAndRect              textAndRect;  // テキスト及びテキスト範囲
 
+    // はじめからボタン
     top  = gameWindow->GetWindowHeight() / 2;
     bottom = top + uiHeight;
     rect = {left, top, right, bottom};
-    textAndRects.clear();
-    textAndRect.text = L"はじめから対局";
-    textAndRect.rect = {left, top, right, bottom};
-    textAndRects.push_back(textAndRect);
-    app.CreateButtonUI<NewStartButtonFactory>(rect, textAndRects);
+    app.PushButtonUI(ButtonUIType::NEW_START_BUTTON, rect);
 
+    // つづきからボタン
     rect.top    += heightOffset;
     rect.bottom += heightOffset;
-    textAndRects.clear();
-    textAndRect.text = L"つづきから対局";
-    textAndRect.rect = rect;
-    textAndRects.push_back(textAndRect);
-    app.CreateButtonUI<ContinueStartButtonFactory>(rect, textAndRects);
+    app.PushButtonUI(ButtonUIType::CONTINUE_START_BUTTON, rect);
 
+    // オプションボタン
     rect.top    += heightOffset;
     rect.bottom += heightOffset;
-    textAndRects.clear();
-    textAndRect.text = L"オプション";
-    textAndRect.rect = rect;
-    textAndRects.push_back(textAndRect);
-    app.CreateButtonUI<OptionButtonFactory>(rect, textAndRects);
+    app.PushButtonUI(ButtonUIType::OPTION_BUTTON, rect);
 
+    // ゲーム終了ボタン
     rect.top    += heightOffset;
     rect.bottom += heightOffset;
-    textAndRects.clear();
-    textAndRect.text = L"ゲーム終了";
-    textAndRect.rect = rect;
-    textAndRects.push_back(textAndRect);
-    app.CreateButtonUI<GameExitButtonFactory>(rect, textAndRects);
+    app.PushButtonUI(ButtonUIType::GAME_EXIT_BUTTON, rect);
 }
 StartMenu::~StartMenu(){}
