@@ -173,6 +173,7 @@
     <ClInclude Include="header\Pawn.h" />
     <ClInclude Include="header\PersProjMat.h" />
     <ClInclude Include="header\PieceVertIndices.h" />
+    <ClInclude Include="header\PixelStruct.h" />
     <ClInclude Include="header\Rook.h" />
     <ClInclude Include="header\SelectingPiece.h" />
     <ClInclude Include="header\Shader.h" />

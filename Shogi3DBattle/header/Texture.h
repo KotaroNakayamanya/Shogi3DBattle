@@ -1,17 +1,13 @@
 #pragma once
 
 #include"I_BufferedData.h"
+#include"PixelStruct.h"
 #include<d3d12.h>
 #include<vector>
 
-struct Pixel
-{
-    unsigned char r, g, b, a;
-};
-
 class Texture : public I_BufferedData
 {
-private:
+protected:
     std::vector<Pixel> _pixels;
     UINT _width;  // 横サイズ
     UINT _height; // 縦サイズ

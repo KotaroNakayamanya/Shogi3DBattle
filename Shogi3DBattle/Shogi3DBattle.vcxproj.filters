@@ -1004,6 +1004,9 @@
     <ClInclude Include="header\BoardVertIndices.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="header\PixelStruct.h">
+      <Filter>ヘッダー ファイル\struct</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\PixelShader.hlsl">
