@@ -10,6 +10,8 @@
 #include"ViewMat.h"
 
 #include"GameObjType.h"
+#include"NaturalBufferedData.h"
+#include"VertStruct.h"
 
 class DX12
 {
@@ -131,8 +133,8 @@ private:
 
 
     void Set3DCmd(); // 3Dコマンドセット
-    D3D12_VERTEX_BUFFER_VIEW GetVertBuffView(I_BufferedData* vertices); // 頂点バッファビュー
-    D3D12_INDEX_BUFFER_VIEW  GetIdxBuffView (I_BufferedData* bufferedData); // インデックスバッファビュー
+    D3D12_VERTEX_BUFFER_VIEW GetVertBuffView(NaturalBufferedData<Vert>* vertices); // 頂点バッファビュー
+    D3D12_INDEX_BUFFER_VIEW  GetIdxBuffView (NaturalBufferedData<unsigned short>* vertIndices); // インデックスバッファビュー
 
 
     void ExeCmd(); // コマンド実行

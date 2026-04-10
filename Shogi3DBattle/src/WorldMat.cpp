@@ -23,11 +23,6 @@ HRESULT WorldMat::WriteToBuff(Buff* buff)
     return S_OK;
 }
 
-unsigned int WorldMat::GetSize()
-{
-    return 1;
-}
-
 WorldMat::WorldMat()
 {
     _mat = DirectX::XMMatrixIdentity();

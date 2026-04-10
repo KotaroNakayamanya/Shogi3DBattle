@@ -14,5 +14,4 @@ public:
     void  SetWidth (float width);  // 横サイズセット
     float GetWidth();              // 横サイズを返す
     void  SetHeight(float height); // 縦サイズ比セット
-    float GetHeight();             // 縦サイズを返す
 };

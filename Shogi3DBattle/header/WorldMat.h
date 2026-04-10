@@ -14,7 +14,5 @@ public:
     
     HRESULT WriteToBuff(Buff* buff) override; // バッファに書き込み
 
-    unsigned int GetSize() override; // サイズ取得
-
     WorldMat();
 };

@@ -9,4 +9,3 @@ DirectX::XMMATRIX NonePersProjMat::GetMat()
 void  NonePersProjMat::SetWidth (float width) {_width  = width;}  // 横サイズセット
 float NonePersProjMat::GetWidth()             {return _width;}    // 横サイズを返す
 void  NonePersProjMat::SetHeight(float height){_height = height;} // 縦サイズ比セット
-float NonePersProjMat::GetHeight()            {return _height;}   // 縦サイズを返す

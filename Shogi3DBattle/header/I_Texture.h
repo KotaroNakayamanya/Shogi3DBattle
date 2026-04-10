@@ -17,7 +17,6 @@ public:
     std::vector<Pixel> GetPixels();
     // バッファに書き込む
     HRESULT WriteToBuff(Buff* buff) override;
-    unsigned int GetSize() override;
 
     void SetWidth(UINT width);   // 横サイズセット
     UINT GetWidth();             // 横サイズを返す

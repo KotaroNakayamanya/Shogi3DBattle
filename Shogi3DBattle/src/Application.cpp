@@ -202,15 +202,6 @@ void Application::Run()
     }
 }
 
-//// シーン更新チェック
-//bool Application::IsUpdatedScene(ISceneState* sceneState)
-//{
-//    bool isNotNullPtr    = sceneState != nullptr;           // 新しいシーンがnullptrではない
-//    bool isNotEqualScene = sceneState != _sceneState.get(); // 新しいシーンが現在のシーンと異なる
-//
-//    return isNotNullPtr && isNotEqualScene;
-//}
-
 // 終了処理
 void Application::Exit()
 {
@@ -360,8 +351,8 @@ Camera* Application::GetMapCamera() {return _mapCamera.get();}  // マップカ�
 
 I_Texture* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
 std::vector<std::unique_ptr<I_Texture>>& Application::GetBoardLineTexs(){return _boardLineTexs;}
-I_BufferedData* Application::GetBoardVertIndices(){return _boardIndices.get();} // 駒の頂点インデックスを返す
-I_BufferedData* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
+NaturalBufferedData<unsigned short>* Application::GetBoardVertIndices(){return _boardIndices.get();} // 駒の頂点インデックスを返す
+NaturalBufferedData<unsigned short>* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
 I_Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す
 std::vector<std::unique_ptr<I_Piece>>& Application::GetPieces(){return _pieces;} // 駒を返す
 KeyMap* Application::GetKeyMap(){return _keyMap.get();} // 将棋盤頂点インデックスを返す
@@ -390,9 +381,9 @@ std::vector<I_GameObj*> Application::GetGameObjects()
 }
 
 // すべての頂点インデックスを返す
-std::vector<I_BufferedData*> Application::GetAllVertIndices()
+std::vector<NaturalBufferedData<unsigned short>*> Application::GetAllVertIndices()
 {
-    std::vector<I_BufferedData*> allVertIndices;
+    std::vector<NaturalBufferedData<unsigned short>*> allVertIndices;
 
     // 将棋盤を格納
     allVertIndices.push_back(_boardIndices.get());

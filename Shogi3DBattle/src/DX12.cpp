@@ -194,13 +194,13 @@ HRESULT DX12::CreateBuff()
     // 頂点バッファ作成
     widthSize = 0;
     //for(auto& shogiObj : shogiObjects) widthSize += sizeof(Vert) * shogiObj->GetVertices()->GetDatas().size();
-    for(auto& shogiObj : shogiObjects) widthSize += sizeof(Vert) * static_cast<Vertices*>(shogiObj->GetVertices())->GetSize();
+    for(auto& shogiObj : shogiObjects) widthSize += sizeof(Vert) * static_cast<Vertices*>(shogiObj->GetVertices())->GetDatas().size();
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_vertBuff.get(), widthSize, heightSize, BuffType::VERTEX))) goto failed;
 
     // 頂点インデックスバッファ作成
     widthSize = 0;
-    for(auto& vertIndices : allVertIndices) {widthSize += sizeof(unsigned short) * vertIndices->GetSize();}
+    for(auto& vertIndices : allVertIndices) {widthSize += sizeof(unsigned short) * vertIndices->GetDatas().size();}
     heightSize = 1;
     if (FAILED(_device->CreateBuff(_idxBuff.get(), widthSize, heightSize, BuffType::INDEX))) goto failed;
 
@@ -443,13 +443,13 @@ HRESULT DX12::WriteToBuff()
 
     // 頂点集合の書き込み位置をセット
     static_cast<Vertices*>(board->GetVertices())->SetStartDataIdx(idx);
-    idx += static_cast<Vertices*>(board->GetVertices())->GetSize();
+    idx += static_cast<Vertices*>(board->GetVertices())->GetDatas().size();
     Vertices* vertices;
     for (auto& piece : pieces)
     {
         vertices = static_cast<Vertices*>(piece->GetVertices());
         vertices->SetStartDataIdx(idx);
-        idx += vertices->GetSize();
+        idx += vertices->GetDatas().size();
     }
     //if(FAILED(_vertBuff->WriteToBuff<Vert>(board->GetVertices()))) goto failed; // 将棋盤頂点集合をバッファに書き込み
     if(FAILED(static_cast<Vertices*>(board->GetVertices())->WriteToBuff(_vertBuff.get()))) goto failed; // 将棋盤頂点集合をバッファに書き込み
@@ -461,7 +461,7 @@ HRESULT DX12::WriteToBuff()
     // インデックス集合の書き込み位置をセット
     idx = 0;
     boardVertIndices->SetStartDataIdx(idx);
-    idx += boardVertIndices->GetSize();
+    idx += boardVertIndices->GetDatas().size();
     pieceVertIndices->SetStartDataIdx(idx);
     //if (FAILED(_idxBuff->WriteToBuff<unsigned short>(boardVertIndices))) goto failed; // 将棋盤インデックス集合をバッファに書き込み
     //if (FAILED(_idxBuff->WriteToBuff<unsigned short>(pieceVertIndices))) goto failed; // 駒のインデックス集合をバッファに書き込み
@@ -477,7 +477,7 @@ HRESULT DX12::WriteToBuff()
     {
         worldMat = static_cast<WorldMat*>(piece->GetWorldMat());
         worldMat->SetStartDataIdx(idx); // 駒
-        idx += worldMat->GetSize();
+        idx += 1;
     }
     mainCamera->SetStartDataIdx(idx);
     mapCamera ->SetStartDataIdx(idx);
@@ -756,7 +756,7 @@ void DX12::Set3DCmd()
 }
 
 // 頂点バッファビュー
-D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(I_BufferedData* vertices)
+D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(NaturalBufferedData<Vert>* vertices)
 {
     D3D12_VERTEX_BUFFER_VIEW view;
 
@@ -768,25 +768,25 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(I_BufferedData* vertices)
     view.StrideInBytes =   // 頂点1つ分のサイズ
         sizeof(Vert);
     view.SizeInBytes = // 頂点全体のサイズ
-        sizeof(Vert) * vertices->GetSize();
+        sizeof(Vert) * vertices->GetDatas().size();
 
     return view;
 }
 
 // インデックスバッファビュー
-D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(I_BufferedData* bufferedData)
+D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(NaturalBufferedData<unsigned short>* vertIndices)
 {
     D3D12_INDEX_BUFFER_VIEW view;
 
     auto startBuffAddress = _idxBuff->GetStartAddress();
-    startBuffAddress += sizeof(unsigned short) * bufferedData->GetStartDataIdx();
+    startBuffAddress += sizeof(unsigned short) * vertIndices->GetStartDataIdx();
 
     view.BufferLocation = // インデックスバッファのスタート位置
         startBuffAddress;
     view.Format =         // フォーマット unsigned short
         DXGI_FORMAT_R16_UINT;
     view.SizeInBytes =    // インデックス全体のサイズ
-        sizeof(unsigned short) * bufferedData->GetSize();
+        sizeof(unsigned short) * vertIndices->GetDatas().size();
 
     return view;
 }

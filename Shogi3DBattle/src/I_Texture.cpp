@@ -13,12 +13,6 @@ HRESULT I_Texture::WriteToBuff(Buff* buff)
         0);
 }
 
-unsigned int I_Texture::GetSize()
-{
-    return 1;
-}
-
-
 void I_Texture::SetWidth (UINT width) {_width  = width;}  // 横サイズセット
 UINT I_Texture::GetWidth ()           {return _width;}    // 横サイズを返す
 void I_Texture::SetHeight(UINT height){_height = height;} // 縦サイズセット

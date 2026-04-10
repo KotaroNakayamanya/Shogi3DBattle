@@ -68,11 +68,12 @@ SelectingPiece::SelectingPiece()
     auto mainPersProjMat = static_cast<PersProjMat*>(_mainCamera->GetProjMat());
     _oldPersProjMat = *mainPersProjMat;
     
-    // メインカメラのカメラ設定をマップカメラの設定にする
+    // メインカメラをマップカメラを基準にしたカメラにする
+    // ビュー行列
     _mainCamera->SetCameraPos  (mapCamera->GetCameraPos());
     _mainCamera->SetFocusPos   (mapCamera->GetFocusPos());
     _mainCamera->SetCameraUpVec(mapCamera->GetCameraUpVec());
-    // メインカメラをマップカメラのカメラを基準にパースのついていないカメラにする
+    // プロジェクション行列
     auto mapNonePersProjMat = static_cast<NonePersProjMat*>(mapCamera->GetProjMat());
     NonePersProjMat* nonePersProjMat = new NonePersProjMat();
     *nonePersProjMat = *mapNonePersProjMat;

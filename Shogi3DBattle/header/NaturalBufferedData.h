@@ -27,7 +27,6 @@ public:
         return S_OK;
     }
 
-    unsigned int GetSize() override {return static_cast<unsigned int>(_datas.size()); }
-
-    void SetDatas(std::vector<T> datas){_datas = datas;} // データ集合セット
+    void           SetDatas(std::vector<T> datas){_datas = datas;} // データ集合セット
+    std::vector<T> GetDatas()                    {return _datas;}  // データ集合を返す   
 };
