@@ -14,12 +14,14 @@ private:
 public:
     virtual std::unique_ptr<I_SceneState> ExePushButton() = 0; // ボタン押下処理
 
-    void        SetRect(D2D1_RECT_F rect){_rect = rect;} // UI範囲セット
-    D2D1_RECT_F GetRect()                {return _rect;} // UI範囲を返す
-    void                     SetTextAndRects(std::vector<TextAndRect> tr){_textAndRects = tr;}   // テキスト及び描画範囲セット
-    std::vector<TextAndRect> GetTextAndRects()                           {return _textAndRects;} // テキスト及び描画範囲を返す
-    void SetIsSelected(bool select){_isSelected = select;} // 選択状態セット
-    bool IsSelected   ()           {return _isSelected;  } // 選択状態を返す
+    void        SetRect(D2D1_RECT_F rect); // UI範囲セット
+    D2D1_RECT_F GetRect();                 // UI範囲を返す
+
+    void                     SetTextAndRects(std::vector<TextAndRect> tr); // テキスト及び描画範囲セット
+    std::vector<TextAndRect> GetTextAndRects();                            // テキスト及び描画範囲を返す
+
+    void SetIsSelected(bool select); // 選択状態セット
+    bool IsSelected();               // 選択状態を返す
 
     I_ButtonUI() : _isSelected(false){}
     virtual ~I_ButtonUI() = default;

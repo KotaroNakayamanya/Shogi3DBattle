@@ -36,6 +36,7 @@
     <ClCompile Include="src\GameExitButtonFactory.cpp" />
     <ClCompile Include="src\Gold.cpp" />
     <ClCompile Include="src\I_Board.cpp" />
+    <ClCompile Include="src\I_ButtonUI.cpp" />
     <ClCompile Include="src\I_Piece.cpp" />
     <ClCompile Include="src\King.cpp" />
     <ClCompile Include="src\Knight.cpp" />
