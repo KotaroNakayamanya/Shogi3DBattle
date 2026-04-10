@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="header\DefaultHeapProp.cpp" />
-    <ClCompile Include="header\NewStartButtonFactory.cpp" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Bishop.cpp" />
@@ -31,9 +30,7 @@
     <ClCompile Include="src\BoardVertIndices.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
-    <ClCompile Include="src\ContinueStartButtonFactory.cpp" />
     <ClCompile Include="src\GameExitButton.cpp" />
-    <ClCompile Include="src\GameExitButtonFactory.cpp" />
     <ClCompile Include="src\Gold.cpp" />
     <ClCompile Include="src\I_Board.cpp" />
     <ClCompile Include="src\I_ButtonUI.cpp" />
@@ -71,7 +68,6 @@
     <ClCompile Include="src\IdxBuffFactory.cpp" />
     <ClCompile Include="src\NonePersProjMat.cpp" />
     <ClCompile Include="src\OptionButton.cpp" />
-    <ClCompile Include="src\OptionButtonFactory.cpp" />
     <ClCompile Include="src\Pawn.cpp" />
     <ClCompile Include="src\PersProjMat.cpp" />
     <ClCompile Include="src\PieceVertIndices.cpp" />
@@ -129,10 +125,7 @@
     <ClInclude Include="header\BuffResourceDesc.h" />
     <ClInclude Include="header\BuffType.h" />
     <ClInclude Include="header\ContinueStartButton.h" />
-    <ClInclude Include="header\ContinueStartButtonFactory.h" />
     <ClInclude Include="header\GameExitButton.h" />
-    <ClInclude Include="header\GameExitButtonFactory.h" />
-    <ClInclude Include="header\I_ButtonUIFactory.h" />
     <ClInclude Include="header\I_Piece.h" />
     <ClInclude Include="header\I_ProjMat.h" />
     <ClInclude Include="header\NewStartButton.h" />
@@ -174,10 +167,8 @@
     <ClInclude Include="header\Knight.h" />
     <ClInclude Include="header\Lance.h" />
     <ClInclude Include="header\NaturalBufferedData.h" />
-    <ClInclude Include="header\NewStartButtonFactory.h" />
     <ClInclude Include="header\NonePersProjMat.h" />
     <ClInclude Include="header\OptionButton.h" />
-    <ClInclude Include="header\OptionButtonFactory.h" />
     <ClInclude Include="header\Pawn.h" />
     <ClInclude Include="header\PersProjMat.h" />
     <ClInclude Include="header\PieceVertIndices.h" />

@@ -25,8 +25,6 @@
 #include"OptionButton.h"
 #include"GameExitButton.h"
 
-#include"NewStartButtonFactory.h"
-
 #include"Board9x9.h"
 
 #include"PieceVertIndices.h"

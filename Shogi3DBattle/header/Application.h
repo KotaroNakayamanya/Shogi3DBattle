@@ -12,7 +12,6 @@
 #include"I_BufferedData.h"
 #include"VertStruct.h"
 
-#include"I_ButtonUIFactory.h"
 #include"KeyMap.h"
 
 #include"I_Texture.h"
@@ -46,7 +45,6 @@ private:
 
     // UI 
     std::vector<std::unique_ptr<I_ButtonUI>> _buttonUIs; // ボタンUI
-    std::unique_ptr<I_ButtonUIFactory> _buttonUIFactory; // ボタンUIファクトリー
 
 
     
@@ -105,12 +103,6 @@ public:
     void SetIsDrawMap(bool flag); // マップ描画フラグをセット
     bool IsDrawMap();             // マップ描画フラグを返す
 
-    // ボタンUI
-    template<typename T>
-    void CreateButtonUI( // ボタンUIをプッシュする
-        D2D1_RECT_F              rect,
-        std::vector<TextAndRect> textAndRects = std::vector<TextAndRect>());
-
     // ボタンUI作成
     void PushButtonUI(
         ButtonUIType             buttonUIType,
@@ -127,13 +119,3 @@ public:
 
     ~Application() = default;
 };
-
-// ボタンUIプッシュ
-template<typename T>
-void Application::CreateButtonUI(
-    D2D1_RECT_F              rect,
-    std::vector<TextAndRect> textAndRects)
-{
-    _buttonUIFactory.reset(new T());
-    _buttonUIs.push_back(_buttonUIFactory->CreateButtonUI(rect, textAndRects));
-}

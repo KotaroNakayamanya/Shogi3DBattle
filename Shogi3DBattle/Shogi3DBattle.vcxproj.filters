@@ -16,9 +16,6 @@
     <Filter Include="ヘッダー ファイル\DX12">
       <UniqueIdentifier>{0e035323-ee1f-4428-9320-4d22a40c736c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\csu">
-      <UniqueIdentifier>{8e35ec3d-b74e-4de4-8151-9baa1815ee54}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\dx12">
       <UniqueIdentifier>{57166d13-f0c8-4ec6-b25f-be519ec0030e}</UniqueIdentifier>
     </Filter>
@@ -31,14 +28,8 @@
     <Filter Include="ソース ファイル\scene_state">
       <UniqueIdentifier>{147c356d-309b-43f8-ae42-31545dbfb11d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\csu\const">
-      <UniqueIdentifier>{1f71074d-b8ae-44d3-871f-5d2af0338ab6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\dx12\csu\const">
       <UniqueIdentifier>{1973c1c3-8565-48ec-8cc1-d6b5fc9d0e0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\csu\texture">
-      <UniqueIdentifier>{2810b551-7fdf-4756-9e44-0e08deb89350}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\dx12\csu\texture">
       <UniqueIdentifier>{b1b639c0-1558-47a8-a1db-05be639f2be1}</UniqueIdentifier>
@@ -217,30 +208,6 @@
     <Filter Include="ソース ファイル\ui\button">
       <UniqueIdentifier>{539651f3-04a2-4a1c-9b39-563c1e0c1b6b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\ui\button\new_start">
-      <UniqueIdentifier>{9605972b-89e5-4544-a24f-baec8caa562e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\ui\button\game_exit">
-      <UniqueIdentifier>{0f04bad6-957b-4b53-9540-5216b344a677}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\ui\button\continue_start">
-      <UniqueIdentifier>{7a05cbdf-4968-4283-9016-53a78fb93fac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\ui\button\option">
-      <UniqueIdentifier>{29aba871-9855-4fb5-9341-a2eb2e295823}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\ui\button\new_start">
-      <UniqueIdentifier>{ea8a263d-1766-43df-8d82-698f5e7be596}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\ui\button\game_exit">
-      <UniqueIdentifier>{176968ef-a5a4-4f62-9d1e-76896cc84b46}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\ui\button\continue_start">
-      <UniqueIdentifier>{cb2fd223-55e0-4edf-ad7a-11f5a90ed517}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\ui\button\option">
-      <UniqueIdentifier>{4aa3335e-8dbe-4c75-b742-d6f608217322}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\buffered_data\game_obj">
       <UniqueIdentifier>{8a322f67-4514-4b45-82be-17f81ba4278c}</UniqueIdentifier>
     </Filter>
@@ -249,33 +216,6 @@
     </Filter>
     <Filter Include="ソース ファイル\buffered_data\game_obj\board">
       <UniqueIdentifier>{5c845247-4f3a-4a8a-ba96-6de3d19fe665}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\ui\button\_interface">
-      <UniqueIdentifier>{a03a5723-790a-49e5-80a6-245c1479bf97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\scene_state\moving_piece">
-      <UniqueIdentifier>{6cfcc789-dbde-470d-a805-3b18c7824998}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\scene_state\selecting_piece">
-      <UniqueIdentifier>{c138cbed-adba-4335-8287-913744c50212}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\scene_state\_interface">
-      <UniqueIdentifier>{806f2bc4-4673-4171-a410-4289fe693603}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\scene_state\start_menu">
-      <UniqueIdentifier>{a2c81f27-3d2b-44c6-b525-b39020b6fa3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\scene_state\moving_piece">
-      <UniqueIdentifier>{a33ec51b-f118-4d07-b224-91f3fcc05bb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\scene_state\selecting_piece">
-      <UniqueIdentifier>{59c9ee6e-9637-4a14-bdf5-3d2e2c7053a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\scene_state\start_menu">
-      <UniqueIdentifier>{b784272d-be92-49f4-9977-4007f50e5b96}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\ui\button\_base">
-      <UniqueIdentifier>{9f238bb0-ca4a-4d25-8d66-214a79b68da4}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\_interface">
       <UniqueIdentifier>{df9d3383-36bb-427a-bba8-3dc0cd4c5758}</UniqueIdentifier>
@@ -534,39 +474,6 @@
     <ClCompile Include="src\Camera.cpp">
       <Filter>ソース ファイル\buffered_data</Filter>
     </ClCompile>
-    <ClCompile Include="header\NewStartButtonFactory.cpp">
-      <Filter>ソース ファイル\ui\button\new_start</Filter>
-    </ClCompile>
-    <ClCompile Include="src\NewStartButton.cpp">
-      <Filter>ソース ファイル\ui\button\new_start</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameExitButton.cpp">
-      <Filter>ソース ファイル\ui\button\game_exit</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ContinueStartButton.cpp">
-      <Filter>ソース ファイル\ui\button\continue_start</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OptionButton.cpp">
-      <Filter>ソース ファイル\ui\button\option</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameExitButtonFactory.cpp">
-      <Filter>ソース ファイル\ui\button\game_exit</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ContinueStartButtonFactory.cpp">
-      <Filter>ソース ファイル\ui\button\continue_start</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OptionButtonFactory.cpp">
-      <Filter>ソース ファイル\ui\button\option</Filter>
-    </ClCompile>
-    <ClCompile Include="src\StartMenu.cpp">
-      <Filter>ソース ファイル\scene_state\start_menu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MovingPiece.cpp">
-      <Filter>ソース ファイル\scene_state\moving_piece</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SelectingPiece.cpp">
-      <Filter>ソース ファイル\scene_state\selecting_piece</Filter>
-    </ClCompile>
     <ClCompile Include="src\WorldMat.cpp">
       <Filter>ソース ファイル\buffered_data\mat\world_mat</Filter>
     </ClCompile>
@@ -638,6 +545,27 @@
     </ClCompile>
     <ClCompile Include="src\UI.cpp">
       <Filter>ソース ファイル\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovingPiece.cpp">
+      <Filter>ソース ファイル\scene_state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SelectingPiece.cpp">
+      <Filter>ソース ファイル\scene_state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StartMenu.cpp">
+      <Filter>ソース ファイル\scene_state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ContinueStartButton.cpp">
+      <Filter>ソース ファイル\ui\button</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameExitButton.cpp">
+      <Filter>ソース ファイル\ui\button</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NewStartButton.cpp">
+      <Filter>ソース ファイル\ui\button</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OptionButton.cpp">
+      <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -845,45 +773,6 @@
     <ClInclude Include="header\BasicTexType.h">
       <Filter>ヘッダー ファイル\enum</Filter>
     </ClInclude>
-    <ClInclude Include="header\NewStartButton.h">
-      <Filter>ヘッダー ファイル\ui\button\new_start</Filter>
-    </ClInclude>
-    <ClInclude Include="header\NewStartButtonFactory.h">
-      <Filter>ヘッダー ファイル\ui\button\new_start</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ContinueStartButton.h">
-      <Filter>ヘッダー ファイル\ui\button\continue_start</Filter>
-    </ClInclude>
-    <ClInclude Include="header\GameExitButton.h">
-      <Filter>ヘッダー ファイル\ui\button\game_exit</Filter>
-    </ClInclude>
-    <ClInclude Include="header\OptionButton.h">
-      <Filter>ヘッダー ファイル\ui\button\option</Filter>
-    </ClInclude>
-    <ClInclude Include="header\ContinueStartButtonFactory.h">
-      <Filter>ヘッダー ファイル\ui\button\continue_start</Filter>
-    </ClInclude>
-    <ClInclude Include="header\GameExitButtonFactory.h">
-      <Filter>ヘッダー ファイル\ui\button\game_exit</Filter>
-    </ClInclude>
-    <ClInclude Include="header\OptionButtonFactory.h">
-      <Filter>ヘッダー ファイル\ui\button\option</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_ButtonUIFactory.h">
-      <Filter>ヘッダー ファイル\ui\button\_interface</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_SceneState.h">
-      <Filter>ヘッダー ファイル\scene_state\_interface</Filter>
-    </ClInclude>
-    <ClInclude Include="header\MovingPiece.h">
-      <Filter>ヘッダー ファイル\scene_state\moving_piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\SelectingPiece.h">
-      <Filter>ヘッダー ファイル\scene_state\selecting_piece</Filter>
-    </ClInclude>
-    <ClInclude Include="header\StartMenu.h">
-      <Filter>ヘッダー ファイル\scene_state\start_menu</Filter>
-    </ClInclude>
     <ClInclude Include="header\ButtonUIType.h">
       <Filter>ヘッダー ファイル\enum</Filter>
     </ClInclude>
@@ -995,11 +884,35 @@
     <ClInclude Include="header\I_ProjMat.h">
       <Filter>ヘッダー ファイル\buffered_data\mat\proj_mat</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_ButtonUI.h">
-      <Filter>ヘッダー ファイル\ui\button\_interface</Filter>
-    </ClInclude>
     <ClInclude Include="header\UI.h">
       <Filter>ヘッダー ファイル\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ContinueStartButton.h">
+      <Filter>ヘッダー ファイル\ui\button</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_ButtonUI.h">
+      <Filter>ヘッダー ファイル\ui\button</Filter>
+    </ClInclude>
+    <ClInclude Include="header\NewStartButton.h">
+      <Filter>ヘッダー ファイル\ui\button</Filter>
+    </ClInclude>
+    <ClInclude Include="header\OptionButton.h">
+      <Filter>ヘッダー ファイル\ui\button</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GameExitButton.h">
+      <Filter>ヘッダー ファイル\ui\button</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_SceneState.h">
+      <Filter>ヘッダー ファイル\scene_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\MovingPiece.h">
+      <Filter>ヘッダー ファイル\scene_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\SelectingPiece.h">
+      <Filter>ヘッダー ファイル\scene_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\StartMenu.h">
+      <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

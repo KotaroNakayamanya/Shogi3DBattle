@@ -2,11 +2,6 @@
 #include"Application.h"
 #include"SelectingPiece.h"
 
-#include"NewStartButtonFactory.h"
-#include"ContinueStartButtonFactory.h"
-#include"OptionButtonFactory.h"
-#include"GameExitButtonFactory.h"
-
 // スタートメニューシーン動作
 std::unique_ptr<I_SceneState> StartMenu::ExeSceneOperation(
     UCHAR inputMemory,
