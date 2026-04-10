@@ -1,8 +1,8 @@
 #pragma once
 
-#include"B_ButtonUI.h"
+#include"I_ButtonUI.h"
 
-class OptionButton : public B_ButtonUI
+class OptionButton : public I_ButtonUI
 {
 public:
     std::unique_ptr<I_SceneState> ExePushButton() override; // オプションボタン押下処理

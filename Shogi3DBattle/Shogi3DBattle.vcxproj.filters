@@ -887,14 +887,8 @@
     <ClInclude Include="header\OptionButtonFactory.h">
       <Filter>ヘッダー ファイル\ui\button\option</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_ButtonUI.h">
-      <Filter>ヘッダー ファイル\ui\button\_interface</Filter>
-    </ClInclude>
     <ClInclude Include="header\I_ButtonUIFactory.h">
       <Filter>ヘッダー ファイル\ui\button\_interface</Filter>
-    </ClInclude>
-    <ClInclude Include="header\B_ButtonUI.h">
-      <Filter>ヘッダー ファイル\ui\button\_base</Filter>
     </ClInclude>
     <ClInclude Include="header\I_SceneState.h">
       <Filter>ヘッダー ファイル\scene_state\_interface</Filter>
@@ -1018,6 +1012,9 @@
     </ClInclude>
     <ClInclude Include="header\I_ProjMat.h">
       <Filter>ヘッダー ファイル\buffered_data\mat\proj_mat</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_ButtonUI.h">
+      <Filter>ヘッダー ファイル\ui\button\_interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

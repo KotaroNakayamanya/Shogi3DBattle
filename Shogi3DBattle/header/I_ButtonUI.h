@@ -1,20 +1,26 @@
 #pragma once
 
+#include"TextAndRectStruct.h"
 #include"I_SceneState.h"
 #include<vector>
-#include"TextAndRectStruct.h"
 
 class I_ButtonUI
 {
+private:
+    D2D1_RECT_F              _rect;         // UI範囲
+    std::vector<TextAndRect> _textAndRects; // テキスト及び描画範囲
+    bool                     _isSelected;   // ボタンUI選択状態
+
 public:
     virtual std::unique_ptr<I_SceneState> ExePushButton() = 0; // ボタン押下処理
 
-    virtual void        SetRect(D2D1_RECT_F rect) = 0; // UI範囲セット
-    virtual D2D1_RECT_F GetRect()                 = 0; // UI範囲を返す
-    virtual void                      SetTextAndRects(std::vector<TextAndRect> tr) = 0; // テキスト及び描画範囲セット
-    virtual std::vector<TextAndRect>  GetTextAndRects()                            = 0; // テキスト及び描画範囲を返す
-    virtual void SetIsSelected(bool select) = 0; // 選択状態セット
-    virtual bool IsSelected   ()            = 0; // 選択状態を返す
+    void        SetRect(D2D1_RECT_F rect){_rect = rect;} // UI範囲セット
+    D2D1_RECT_F GetRect()                {return _rect;} // UI範囲を返す
+    void                     SetTextAndRects(std::vector<TextAndRect> tr){_textAndRects = tr;}   // テキスト及び描画範囲セット
+    std::vector<TextAndRect> GetTextAndRects()                           {return _textAndRects;} // テキスト及び描画範囲を返す
+    void SetIsSelected(bool select){_isSelected = select;} // 選択状態セット
+    bool IsSelected   ()           {return _isSelected;  } // 選択状態を返す
 
+    I_ButtonUI() : _isSelected(false){}
     virtual ~I_ButtonUI() = default;
 };

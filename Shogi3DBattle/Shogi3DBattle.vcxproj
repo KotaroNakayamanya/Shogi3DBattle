@@ -121,11 +121,11 @@
     <ClInclude Include="header\Board9x9Texture.h" />
     <ClInclude Include="header\BoardTexture.h" />
     <ClInclude Include="header\BoardVertIndices.h" />
+    <ClInclude Include="header\I_ButtonUI.h" />
     <ClInclude Include="header\I_Board.h" />
     <ClInclude Include="header\I_BufferedData.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
     <ClInclude Include="header\BuffType.h" />
-    <ClInclude Include="header\B_ButtonUI.h" />
     <ClInclude Include="header\ContinueStartButton.h" />
     <ClInclude Include="header\ContinueStartButtonFactory.h" />
     <ClInclude Include="header\GameExitButton.h" />
@@ -163,7 +163,6 @@
     <ClInclude Include="header\Device11.h" />
     <ClInclude Include="header\DeviceContext.h" />
     <ClInclude Include="header\HeapFactory.h" />
-    <ClInclude Include="header\I_ButtonUI.h" />
     <ClInclude Include="header\IdxBuffFactory.h" />
     <ClInclude Include="header\IHeapProp.h" />
     <ClInclude Include="header\IDescOffset.h" />

@@ -1,8 +1,8 @@
 #pragma once
 
-#include"B_ButtonUI.h"
+#include"I_ButtonUI.h"
 
-class ContinueStartButton : public B_ButtonUI
+class ContinueStartButton : public I_ButtonUI
 {
 public:
     std::unique_ptr<I_SceneState> ExePushButton() override; // ‚Â‚Ã‚«‚©‚çƒ{ƒ^ƒ“‰Ÿ‰ºˆ—
