@@ -6,5 +6,5 @@ Gold::Gold()
 
     float mmBottomWidth  = 250.0f;
     float mmHeight       = 285.0f;
-    SetPieceVertices(mmBottomWidth, mmHeight);
+    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
 }

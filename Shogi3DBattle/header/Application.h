@@ -15,10 +15,9 @@
 
 #include"I_ButtonUIFactory.h"
 #include"KeyMap.h"
-#include"I_BoardFactory.h"
-#include"I_PieceFactory.h"
 
 #include"Texture.h"
+#include"I_Piece.h"
 #include"I_Board.h"
 
 class Application
@@ -38,12 +37,7 @@ private:
     void CreateGameObj(); // 将棋オブジェクト作成
 
     // ファクトリー
-    //std::unique_ptr<I_GameObjFactory>    _gameObjFactory;    // ゲームオブジェクトファクトリー
-    std::unique_ptr<I_BoardFactory>    _boardFactory;    // 将棋盤ファァクトリー
-    std::unique_ptr<I_PieceFactory>    _pieceFactory;    // 駒ファァクトリー
-    std::unique_ptr<I_BufferedDataFactory>  _verticesFactory;    // 頂点集合ファクトリー
-    std::unique_ptr<I_BufferedDataFactory> _vertIndicesFactory; // インデックス集合ファクトリー
-    std::unique_ptr<I_BufferedDataFactory> _texFactory;    // テクスチャファクトリー
+    std::unique_ptr<I_BufferedDataFactory>  _bufferedDataFactory;    // 頂点集合ファクトリー
 
 
     // テクスチャ

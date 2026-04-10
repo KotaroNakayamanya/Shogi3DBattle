@@ -3,8 +3,6 @@
 #include<array>
 #include<chrono>
 #include<thread>
-#include"BoardVertIndicesFactory.h"
-#include"PieceVertIndicesFactory.h"
 #include<functional>
 #include"StartMenu.h"
 
@@ -22,20 +20,15 @@
 #include"Lance.h"
 #include"Pawn.h"
 
-#include"KingFactory.h"
-#include"RookFactory.h"
-#include"BishopFactory.h"
-#include"GoldFactory.h"
-#include"SilverFactory.h"
-#include"KnightFactory.h"
-#include"LanceFactory.h"
-#include"PawnFactory.h"
 
 #include"NewStartButton.h"
 
 #include"NewStartButtonFactory.h"
 
-#include"Board9x9Factory.h"
+#include"Board9x9.h"
+
+#include"PieceVertIndices.h"
+#include"BoardVertIndices.h"
 
 
 // 初期処理
@@ -49,6 +42,14 @@ bool Application::Init()
 
     if(_gameWindow->InitGameWindow() == false) goto failed;      // ゲームウインドウ初期処理
     if(_dx12->InitDX12(_gameWindow.get()) == false) goto failed; // DirectX12初期処理
+
+    // 駒の初期位置調整
+    for (int i = 1; i < _pieces.size(); i++)
+    {
+        DirectX::XMFLOAT3 vec = {i*10.0f, 10.0f, 0.0f};
+        _pieces[i]->Move(vec);
+    }
+
 
     return true;
 
@@ -64,76 +65,28 @@ failed:
 void Application::CreateGameObj()
 {
     // 将棋盤作成
-    _boardFactory.reset(new Board9x9Factory());
-    _board = _boardFactory->CreateBoard();
-
+    _board = std::make_unique<Board9x9>();
     // 将棋盤インデックス作成
-    _vertIndicesFactory.reset(new BoardVertIndicesFactory());
-    _boardIndices = _vertIndicesFactory->CreateUniquePtr();
+    _boardIndices = std::make_unique<BoardVertIndices>();
 
     // 王作成
-    _pieceFactory.reset(new KingFactory());
-    unsigned int idx = 0;
-    unsigned int kingNum = 2;
-    for (unsigned int i = idx; i < idx + kingNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
-
+    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<King>());
     // 飛作成
-    _pieceFactory.reset(new RookFactory());
-    idx += kingNum;
-    unsigned int rookNum = 2;
-    for (unsigned int i = idx; i < idx + rookNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
-
+    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<Rook>());
     // 角作成
-    _pieceFactory.reset(new BishopFactory());
-    idx += rookNum;
-    unsigned int bishopNum = 2;
-    for (unsigned int i = idx; i < idx + bishopNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
-
+    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<Bishop>());
     // 金作成
-    _pieceFactory.reset(new GoldFactory());
-    idx += bishopNum;
-    unsigned int goldNum = 4;
-    for (unsigned int i = idx; i < idx + goldNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
- 
+    for (int i = 0; i < 4; i++) _pieces.push_back(std::make_unique<Gold>());
     // 銀作成
-    _pieceFactory.reset(new SilverFactory());
-    idx += goldNum;
-    unsigned int silverNum = 4;
-    for (unsigned int i = idx; i < idx + silverNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
- 
+    for (int i = 0; i < 4; i++) _pieces.push_back(std::make_unique<Silver>());
     // 桂作成
-    _pieceFactory.reset(new KnightFactory());
-    idx += silverNum;
-    unsigned int knightNum = 4;
-    for (unsigned int i = idx; i < idx + knightNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
- 
+    for (int i = 0; i < 4; i++) _pieces.push_back(std::make_unique<Knight>());
     // 香作成
-    _pieceFactory.reset(new LanceFactory());
-    idx += knightNum;
-    unsigned int lanceNum = 4;
-    for (unsigned int i = idx; i < idx + lanceNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
- 
+    for (int i = 0; i < 4; i++) _pieces.push_back(std::make_unique<Lance>());
     // 歩作成
-    _pieceFactory.reset(new PawnFactory());
-    idx += lanceNum;
-    unsigned int pawnNum = 18;
-    for (unsigned int i = idx; i < idx + pawnNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
-
-    auto nya = _pieces[2]->GetGameObjType();
-  
-
+    for (int i = 0; i < 18; i++) _pieces.push_back(std::make_unique<Pawn>());
     // 駒の頂点インデックス集合作成
-    _vertIndicesFactory.reset(new PieceVertIndicesFactory());
-    _pieceIndices =  _vertIndicesFactory->CreateUniquePtr();
-
-    // 駒の初期位置調整
-    for (int i = 1; i < _pieces.size(); i++)
-    {
-        DirectX::XMFLOAT3 vec = {i*10.0f, 10.0f, 0.0f};
-        _pieces[i]->Move(vec);
-    }
-
-
+    _pieceIndices = std::make_unique<PieceVertIndices>();
 }
 
 
@@ -143,8 +96,8 @@ void Application::CreateGameObj()
 void Application::CreateTex()
 {
     //// 黄色木材テクスチャ作成
-    _texFactory.reset(new YellowWoodTexFactory());
-    _woodTex = _texFactory->CreateUniquePtr();
+    _bufferedDataFactory.reset(new YellowWoodTexFactory());
+    _woodTex = _bufferedDataFactory->CreateUniquePtr();
 
     // 将棋盤黒線テクスチャ作成用関数
     std::function<void(Texture*, GameObjType)> createBoardLineTex =

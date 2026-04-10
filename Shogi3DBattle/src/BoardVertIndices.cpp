@@ -1,9 +1,8 @@
-#include"BoardVertIndicesFactory.h"
-#include"VertIndices.h"
+#include"BoardVertIndices.h"
 
-// 将棋盤インデックス集合作成
-std::unique_ptr<I_BufferedData> BoardVertIndicesFactory::CreateUniquePtr()
+BoardVertIndices::BoardVertIndices()
 {
+    // 将棋盤のインデックス集合作成
     std::vector<unsigned short> vertIndices;
 
     // (0 1 2) (2 3 0)を５面で作れる
@@ -19,9 +18,6 @@ std::unique_ptr<I_BufferedData> BoardVertIndicesFactory::CreateUniquePtr()
         vertIndices.push_back(3 + offset);
         vertIndices.push_back(0 + offset);
     }
-    
-    std::unique_ptr<VertIndices> uniquePtr = std::make_unique<VertIndices>();
-    uniquePtr->SetDatas(vertIndices);
-    return uniquePtr;
-    
+
+    _datas = vertIndices;
 }

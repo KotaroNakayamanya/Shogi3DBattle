@@ -6,5 +6,5 @@ Pawn::Pawn()
 
     float mmBottomWidth  = 215.0f;
     float mmHeight       = 260.0f;
-    SetPieceVertices(mmBottomWidth, mmHeight);
+    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
 }

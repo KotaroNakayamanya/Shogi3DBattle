@@ -6,5 +6,5 @@ King::King()
 
     float mmBottomWidth  = 285.0f;
     float mmHeight       = 320.0f;
-    SetPieceVertices(mmBottomWidth, mmHeight);
+    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
 }

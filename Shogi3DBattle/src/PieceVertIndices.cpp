@@ -1,9 +1,8 @@
-#include"PieceVertIndicesFactory.h"
-#include"VertIndices.h"
+#include"PieceVertIndices.h"
 
-// 駒のインデックス集合作成
-std::unique_ptr<I_BufferedData> PieceVertIndicesFactory::CreateUniquePtr()
+PieceVertIndices::PieceVertIndices()
 {
+    // 駒のインデックス集合作成
     std::vector<unsigned short> vertIndices;
 
     // 表面と裏面は(0 1 2), (2 3 0), (3 4 0)で作れる
@@ -35,9 +34,6 @@ std::unique_ptr<I_BufferedData> PieceVertIndicesFactory::CreateUniquePtr()
         vertIndices.push_back(3 + offset + 4*i);
         vertIndices.push_back(0 + offset + 4*i);
     }
-    
-    std::unique_ptr<VertIndices> uniquePtr = std::make_unique<VertIndices>();
-    uniquePtr->SetDatas(vertIndices);
 
-    return uniquePtr;
+    _datas = vertIndices;
 }

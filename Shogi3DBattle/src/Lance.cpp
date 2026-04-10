@@ -6,5 +6,5 @@ Lance::Lance()
 
     float mmBottomWidth  = 225.0f;
     float mmHeight       = 280.0f;
-    SetPieceVertices(mmBottomWidth, mmHeight);
+    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
 }

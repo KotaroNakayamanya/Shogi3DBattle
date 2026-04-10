@@ -6,7 +6,7 @@
 class I_Piece : public I_GameObj
 {
 protected:
-    void SetPieceVertices(float mmBottomWidth, float mmHeight); // 駒の頂点集合作成
+    std::unique_ptr<Vertices> CreatePieceVertices(float mmBottomWidth, float mmHeight); // 指定されたサイズの駒の頂点集合作成
 
 public:
     void Move(DirectX::XMFLOAT3 vec); // 移動

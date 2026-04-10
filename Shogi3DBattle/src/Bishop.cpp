@@ -6,5 +6,5 @@ Bishop::Bishop()
 
     float mmBottomWidth  = 260.0f;
     float mmHeight       = 300.0f;
-    SetPieceVertices(mmBottomWidth, mmHeight);
+    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
 }

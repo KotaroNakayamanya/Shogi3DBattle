@@ -6,5 +6,5 @@ Knight::Knight()
 
     float mmBottomWidth  = 235.0f;
     float mmHeight       = 275.0f;
-    SetPieceVertices(mmBottomWidth, mmHeight);
+    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
 }
