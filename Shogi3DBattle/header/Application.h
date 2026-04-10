@@ -4,7 +4,6 @@
 #include"DX12.h"
 #include"InputHandler.h"
 #include"I_SceneState.h"
-#include"I_BufferedDataFactory.h"
 
 #include"Camera.h"
 #include"I_ButtonUI.h"
@@ -16,7 +15,7 @@
 #include"I_ButtonUIFactory.h"
 #include"KeyMap.h"
 
-#include"Texture.h"
+#include"I_Texture.h"
 #include"I_Piece.h"
 #include"I_Board.h"
 
@@ -36,13 +35,10 @@ private:
 
     void CreateGameObj(); // 将棋オブジェクト作成
 
-    // ファクトリー
-    std::unique_ptr<I_BufferedDataFactory>  _bufferedDataFactory;    // 頂点集合ファクトリー
-
 
     // テクスチャ
-    std::unique_ptr<I_BufferedData> _woodTex; // 木材テクスチャ
-    std::vector<std::unique_ptr<Texture>> _boardLineTexs; // 将棋盤黒線テクスチャ
+    std::unique_ptr<I_Texture> _woodTex; // 木材テクスチャ
+    std::vector<std::unique_ptr<I_Texture>> _boardLineTexs; // 将棋盤黒線テクスチャ
     void CreateTex(); // テクスチャ作成
 
 
@@ -92,8 +88,8 @@ public:
 
     I_Board* GetBoard(); // 将棋盤を返す
     std::vector<std::unique_ptr<I_Piece>>& GetPieces(); // 駒を返す
-    I_BufferedData* GetWoodTex(); // 木材テクスチャを返す
-    std::vector<std::unique_ptr<Texture>>& GetBoardLineTexs(); // 将棋盤黒線テクスチャを返す
+    I_Texture* GetWoodTex(); // 木材テクスチャを返す
+    std::vector<std::unique_ptr<I_Texture>>& GetBoardLineTexs(); // 将棋盤黒線テクスチャを返す
     I_BufferedData* GetBoardVertIndices(); // 将棋盤頂点インデックスを返す
     I_BufferedData* GetPieceVertIndices(); // 駒の頂点インデックスを返す
     KeyMap* GetKeyMap(); // 将棋盤頂点インデックスを返す

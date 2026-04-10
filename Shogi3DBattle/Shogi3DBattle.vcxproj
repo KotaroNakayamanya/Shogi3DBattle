@@ -24,7 +24,10 @@
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Bishop.cpp" />
+    <ClCompile Include="src\Board5x5Texture.cpp" />
     <ClCompile Include="src\Board9x9.cpp" />
+    <ClCompile Include="src\Board9x9Texture.cpp" />
+    <ClCompile Include="src\BoardTexture.cpp" />
     <ClCompile Include="src\BoardVertIndices.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
@@ -94,7 +97,7 @@
     <ClCompile Include="src\RTVOffset.cpp" />
     <ClCompile Include="src\SRVFactory.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\I_Texture.cpp" />
     <ClCompile Include="src\TexBuffFactory.cpp" />
     <ClCompile Include="src\TexHeapProp.cpp" />
     <ClCompile Include="src\TexResourceDesc.cpp" />
@@ -103,17 +106,20 @@
     <ClCompile Include="src\VertBuffFactory.cpp" />
     <ClCompile Include="src\Vertices.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
+    <ClCompile Include="src\WoodTexture.cpp" />
     <ClCompile Include="src\WorldMat.cpp" />
     <ClCompile Include="src\WrappedBuff.cpp" />
     <ClCompile Include="src\DepthWriteResourceStates.cpp" />
-    <ClCompile Include="src\YellowWoodTexFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
     <ClInclude Include="header\Application.h" />
     <ClInclude Include="header\BasicTexType.h" />
     <ClInclude Include="header\Bishop.h" />
+    <ClInclude Include="header\Board5x5Texture.h" />
     <ClInclude Include="header\Board9x9.h" />
+    <ClInclude Include="header\Board9x9Texture.h" />
+    <ClInclude Include="header\BoardTexture.h" />
     <ClInclude Include="header\BoardVertIndices.h" />
     <ClInclude Include="header\I_Board.h" />
     <ClInclude Include="header\I_BufferedData.h" />
@@ -165,7 +171,7 @@
     <ClInclude Include="header\King.h" />
     <ClInclude Include="header\Knight.h" />
     <ClInclude Include="header\Lance.h" />
-    <ClInclude Include="header\I_NaturalBufferedData.h" />
+    <ClInclude Include="header\NaturalBufferedData.h" />
     <ClInclude Include="header\NewStartButtonFactory.h" />
     <ClInclude Include="header\NonePersProjMat.h" />
     <ClInclude Include="header\OptionButton.h" />
@@ -179,7 +185,6 @@
     <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\Silver.h" />
     <ClInclude Include="header\StartMenu.h" />
-    <ClInclude Include="header\I_BufferedDataFactory.h" />
     <ClInclude Include="header\TextAndRectStruct.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />
@@ -207,7 +212,7 @@
     <ClInclude Include="header\RTVOffset.h" />
     <ClInclude Include="header\SRVFactory.h" />
     <ClInclude Include="header\SwapChain.h" />
-    <ClInclude Include="header\Texture.h" />
+    <ClInclude Include="header\I_Texture.h" />
     <ClInclude Include="header\TexBuffFactory.h" />
     <ClInclude Include="header\TexHeapProp.h" />
     <ClInclude Include="header\TexResourceDesc.h" />
@@ -222,11 +227,11 @@
     <ClInclude Include="header\View.h" />
     <ClInclude Include="header\IViewFactory.h" />
     <ClInclude Include="header\ViewMat.h" />
+    <ClInclude Include="header\WoodTexture.h" />
     <ClInclude Include="header\WorldMat.h" />
     <ClInclude Include="header\WrappedBuff.h" />
     <ClInclude Include="header\DepthWriteResourceStates.h" />
     <ClInclude Include="header\B_ClipZRange.h" />
-    <ClInclude Include="header\YellowWoodTexFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\PixelShader.hlsl">

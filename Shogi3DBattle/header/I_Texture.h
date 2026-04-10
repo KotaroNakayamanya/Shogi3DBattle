@@ -5,7 +5,7 @@
 #include<d3d12.h>
 #include<vector>
 
-class Texture : public I_BufferedData
+class I_Texture : public I_BufferedData
 {
 protected:
     std::vector<Pixel> _pixels;
@@ -19,9 +19,10 @@ public:
     HRESULT WriteToBuff(Buff* buff) override;
     unsigned int GetSize() override;
 
-
     void SetWidth(UINT width);   // 横サイズセット
     UINT GetWidth();             // 横サイズを返す
     void SetHeight(UINT height); // 縦サイズセット
     UINT GetHeight();            // 縦サイズを返す
+
+    virtual ~I_Texture() = default;
 };

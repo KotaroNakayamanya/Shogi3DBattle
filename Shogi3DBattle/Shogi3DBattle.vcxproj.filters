@@ -543,11 +543,8 @@
     <ClCompile Include="src\VecCalc.cpp">
       <Filter>ソース ファイル\buffered_data\mat</Filter>
     </ClCompile>
-    <ClCompile Include="src\Texture.cpp">
+    <ClCompile Include="src\I_Texture.cpp">
       <Filter>ソース ファイル\texutre</Filter>
-    </ClCompile>
-    <ClCompile Include="src\YellowWoodTexFactory.cpp">
-      <Filter>ソース ファイル\texutre\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\TextFormat.cpp">
       <Filter>ソース ファイル\dx12\d3d11</Filter>
@@ -649,6 +646,18 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\BoardVertIndices.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WoodTexture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board5x5Texture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board9x9Texture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoardTexture.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -932,10 +941,7 @@
     <ClInclude Include="header\I_BuffFactory.h">
       <Filter>ヘッダー ファイル\DX12\buff\_interface</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_BufferedDataFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\_interface</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_NaturalBufferedData.h">
+    <ClInclude Include="header\NaturalBufferedData.h">
       <Filter>ヘッダー ファイル\buffered_data\_base</Filter>
     </ClInclude>
     <ClInclude Include="header\I_BufferedData.h">
@@ -959,13 +965,10 @@
     <ClInclude Include="header\GameObjIdManager.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
     </ClInclude>
-    <ClInclude Include="header\YellowWoodTexFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\texture\yellow_wood</Filter>
-    </ClInclude>
     <ClInclude Include="header\Bishop.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
-    <ClInclude Include="header\Texture.h">
+    <ClInclude Include="header\I_Texture.h">
       <Filter>ヘッダー ファイル\buffered_data\texture</Filter>
     </ClInclude>
     <ClInclude Include="header\Gold.h">
@@ -1006,6 +1009,18 @@
     </ClInclude>
     <ClInclude Include="header\PixelStruct.h">
       <Filter>ヘッダー ファイル\struct</Filter>
+    </ClInclude>
+    <ClInclude Include="header\WoodTexture.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BoardTexture.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Board9x9Texture.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Board5x5Texture.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,8 @@
 #pragma once
 
-#include"I_NaturalBufferedData.h"
+#include"NaturalBufferedData.h"
 
-class BoardVertIndices : public I_NaturalBufferedData<unsigned short>
+class BoardVertIndices : public NaturalBufferedData<unsigned short>
 {
 public:
     BoardVertIndices();

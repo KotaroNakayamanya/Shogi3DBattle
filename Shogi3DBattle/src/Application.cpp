@@ -9,7 +9,6 @@
 #include"PersProjMat.h"
 #include"NonePersProjMat.h"
 
-#include"YellowWoodTexFactory.h"
 
 #include"King.h"
 #include"Rook.h"
@@ -29,6 +28,10 @@
 
 #include"PieceVertIndices.h"
 #include"BoardVertIndices.h"
+#include"WoodTexture.h"
+
+#include"Board9x9Texture.h"
+#include"Board5x5Texture.h"
 
 
 // 初期処理
@@ -64,158 +67,31 @@ failed:
 // ゲームオブジェクト作成
 void Application::CreateGameObj()
 {
-    // 将棋盤作成
-    _board = std::make_unique<Board9x9>();
-    // 将棋盤インデックス作成
-    _boardIndices = std::make_unique<BoardVertIndices>();
+    // 将棋盤作成 
+    _board = std::make_unique<Board9x9>();               // 9x9将棋盤作成 
+    _boardIndices = std::make_unique<BoardVertIndices>();// 将棋盤インデックス作成
 
-    // 王作成
-    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<King>());
-    // 飛作成
-    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<Rook>());
-    // 角作成
-    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<Bishop>());
-    // 金作成
-    for (int i = 0; i < 4; i++) _pieces.push_back(std::make_unique<Gold>());
-    // 銀作成
-    for (int i = 0; i < 4; i++) _pieces.push_back(std::make_unique<Silver>());
-    // 桂作成
-    for (int i = 0; i < 4; i++) _pieces.push_back(std::make_unique<Knight>());
-    // 香作成
-    for (int i = 0; i < 4; i++) _pieces.push_back(std::make_unique<Lance>());
-    // 歩作成
-    for (int i = 0; i < 18; i++) _pieces.push_back(std::make_unique<Pawn>());
-    // 駒の頂点インデックス集合作成
-    _pieceIndices = std::make_unique<PieceVertIndices>();
+    // 駒作成 
+    for (int i = 0; i < 2; i++)  _pieces.push_back(std::make_unique<King>());   // 王作成
+    for (int i = 0; i < 2; i++)  _pieces.push_back(std::make_unique<Rook>());   // 飛作成
+    for (int i = 0; i < 2; i++)  _pieces.push_back(std::make_unique<Bishop>()); // 角作成
+    for (int i = 0; i < 4; i++)  _pieces.push_back(std::make_unique<Gold>());   // 金作成
+    for (int i = 0; i < 4; i++)  _pieces.push_back(std::make_unique<Silver>()); // 銀作成
+    for (int i = 0; i < 4; i++)  _pieces.push_back(std::make_unique<Knight>()); // 桂作成
+    for (int i = 0; i < 4; i++)  _pieces.push_back(std::make_unique<Lance>());  // 香作成
+    for (int i = 0; i < 18; i++) _pieces.push_back(std::make_unique<Pawn>());   // 歩作成 
+    _pieceIndices = std::make_unique<PieceVertIndices>();                       // 駒の頂点インデックス集合作成
 }
-
-
-
 
 // テクスチャ作成
 void Application::CreateTex()
 {
-    //// 黄色木材テクスチャ作成
-    _bufferedDataFactory.reset(new YellowWoodTexFactory());
-    _woodTex = _bufferedDataFactory->CreateUniquePtr();
+    // 黄色木材テクスチャ作成
+    _woodTex = std::make_unique<WoodTexture>();
 
-    // 将棋盤黒線テクスチャ作成用関数
-    std::function<void(Texture*, GameObjType)> createBoardLineTex =
-        [this](Texture* tex, GameObjType shogiObjType)
-        {
-            std::vector<Pixel> boardLinePixels;
-
-            UINT lineSize = 256;
-            UINT width  = lineSize;
-            UINT height = lineSize;
-
-            boardLinePixels.resize(width * height);
-
-            // 白色でクリア
-            for (auto& pixel : boardLinePixels)
-            {
-                pixel.r = 255;
-                pixel.g = 255;
-                pixel.b = 255;
-                pixel.a = 255;
-            }
-
-            UINT squareNum; // マス数
-
-            switch (shogiObjType)
-            {
-                case GameObjType::BOARD_55:
-                    squareNum = 5;
-                    break;
-
-                case GameObjType::BOARD_99:
-                    squareNum = 9;
-                    break;
-
-                default:
-                    return;
-            }
-
-            float squareLength = static_cast<float>(lineSize) / (squareNum + 1);
-            float halfSquareLength = squareLength / 2; // マスの半分のサイズ
-
-            UINT drawLowerLimit  = halfSquareLength *  1 + 0.5;
-            UINT drawUpperLimit  = halfSquareLength * (1 + squareNum * 2) + 0.5;
-
-    
-            // 黒線を描画する対象座標(x, y)に黒色を格納する
-            UINT x = 0;
-            UINT y = 0;
-            UINT lineNum = squareNum + 1; // 横縦それぞれの線の本数
-            for (auto& pixel : boardLinePixels)
-            {
-                // xy座標が横縦それぞれの線の上にあれば黒色を格納
-                for (UINT i = 0; i < lineNum; i++)
-                {
-                    // 黒線対象の座標を取得(xとyのどちらにも使える)
-                    UINT BlackLinePos = halfSquareLength * (1 + i * 2) + 0.5;
-
-                    // x座標が黒線の直線上の値であるかチェック
-                    bool isXOnBlackLine = x == BlackLinePos;
-                    // y座標が線を描画する範囲にあるかチェック
-                    bool isYDrawRange = drawLowerLimit <= y && y <= drawUpperLimit;
-                    // 縦方向の線分上にあれば黒色
-                    if (isXOnBlackLine && isYDrawRange)
-                    {
-                        pixel.r = 0;
-                        pixel.g = 0;
-                        pixel.b = 0;
-                    }
-
-            
-                    // y座標が黒線の直線上の値であるかチェック
-                    bool isYOnBlackLine = y == BlackLinePos;
-                    // x座標が線を描画する範囲にあるかチェック
-                    bool isXDrawRange = drawLowerLimit <= x && x <= drawUpperLimit;
-                    // 横方向の線分上にあれば黒色
-                    if (isYOnBlackLine && isXDrawRange)
-                    {
-                        pixel.r = 0;
-                        pixel.g = 0;
-                        pixel.b = 0;
-                    }
-                }
-
-                // xとyの次の座標を取得
-                x++;            // xを足す
-                if (x >= width) // xが端を超えたらyを足してxを0に戻す
-                {
-                    y++;
-                    x = 0;
-                }
-            }
-
-            tex->SetWidth (width);
-            tex->SetHeight(height);
-            tex->SetPixels(boardLinePixels);
-        };
-
-    INT boardTexNum = 2;
-    _boardLineTexs.resize(boardTexNum);
-
-    std::vector<GameObjType> boardType =
-    {
-        GameObjType::BOARD_55,
-        GameObjType::BOARD_99
-    };
-    _boardLineTexs.resize(boardType.size());
-    
-    
-    for(UINT i = 0; i < _boardLineTexs.size(); i++)
-    {
-        auto& boardLineTex = _boardLineTexs[i];
-        auto& type         = boardType[i];
-
-        boardLineTex = std::make_unique<Texture>();
-        createBoardLineTex(boardLineTex.get(), type);
-    }
-
-    
+    // 将棋盤乗算テクスチャ作成
+    _boardLineTexs.push_back(std::make_unique<Board5x5Texture>());
+    _boardLineTexs.push_back(std::make_unique<Board9x9Texture>());
 }
 
 // カメラ作成
@@ -482,8 +358,8 @@ InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // イ
 Camera* Application::GetMainCamera(){return _mainCamera.get();} // メインカメラを返す
 Camera* Application::GetMapCamera() {return _mapCamera.get();}  // マップカメラを返す
 
-I_BufferedData* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
-std::vector<std::unique_ptr<Texture>>& Application::GetBoardLineTexs(){return _boardLineTexs;}
+I_Texture* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
+std::vector<std::unique_ptr<I_Texture>>& Application::GetBoardLineTexs(){return _boardLineTexs;}
 I_BufferedData* Application::GetBoardVertIndices(){return _boardIndices.get();} // 駒の頂点インデックスを返す
 I_BufferedData* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
 I_Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す

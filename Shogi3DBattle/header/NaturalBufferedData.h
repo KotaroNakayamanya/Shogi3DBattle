@@ -4,7 +4,7 @@
 #include<vector>
 
 template<typename T>
-class I_NaturalBufferedData : public I_BufferedData
+class NaturalBufferedData : public I_BufferedData
 {
 protected:
     std::vector<T> _datas;        // バッファに書き込むデータ

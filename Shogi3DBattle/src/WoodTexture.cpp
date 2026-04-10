@@ -1,11 +1,7 @@
-#include"YellowWoodTexFactory.h"
-#include"Texture.h"
+#include"WoodTexture.h"
 
-// 黄色木材テクスチャ作成
-std::unique_ptr<I_BufferedData> YellowWoodTexFactory::CreateUniquePtr()
+WoodTexture::WoodTexture()
 {
-    std::unique_ptr<Texture> tex = std::make_unique<Texture>();
-
     unsigned int lineSize = 256;
     unsigned int width  = lineSize;
     unsigned int height = lineSize;
@@ -44,10 +40,7 @@ std::unique_ptr<I_BufferedData> YellowWoodTexFactory::CreateUniquePtr()
             x = 0;
         }
     }
-
-    tex->SetWidth (width);
-    tex->SetHeight(height);
-    tex->SetPixels(pixels);
-
-    return tex;    
+    _pixels = pixels;
+    _width  = width;
+    _height = height;
 }
