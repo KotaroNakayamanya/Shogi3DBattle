@@ -27,3 +27,8 @@ unsigned int WorldMat::GetSize()
 {
     return 1;
 }
+
+WorldMat::WorldMat()
+{
+    _mat = DirectX::XMMatrixIdentity();
+}

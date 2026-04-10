@@ -16,4 +16,5 @@ public:
 
     unsigned int GetSize() override; // ƒTƒCƒYæ“¾
 
+    WorldMat();
 };

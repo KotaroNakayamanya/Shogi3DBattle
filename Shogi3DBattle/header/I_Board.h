@@ -1,9 +1,11 @@
 #pragma once
 
-#include"B_GameObj.h"
+#include"I_GameObj.h"
 
-class I_Board : public B_GameObj
+class I_Board : public I_GameObj
 {
+private:
+    
 public:
     virtual ~I_Board() = default;
 };

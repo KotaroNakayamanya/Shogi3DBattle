@@ -4,5 +4,6 @@
 
 class King : public I_Piece
 {
-
+public:
+    King();
 };

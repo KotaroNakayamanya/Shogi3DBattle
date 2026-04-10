@@ -4,5 +4,6 @@
 
 class Bishop : public I_Piece
 {
-
+public:
+    Bishop();
 };

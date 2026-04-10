@@ -1,7 +1,6 @@
 #include"Board9x9Factory.h"
 #include"Board9x9.h"
 #include"Board9x9VerticesFactory.h"
-#include"WorldMatFactory.h"
 
 // 9x9«Šû”Õì¬
 std::unique_ptr<I_Board> Board9x9Factory::CreateBoard()
@@ -15,15 +14,6 @@ std::unique_ptr<I_Board> Board9x9Factory::CreateBoard()
     auto verticesPtr = verticesUniquePtr.get();
     verticesUniquePtr.release();
     uniquePtr->SetVertices(verticesPtr);
-
-    // ƒ[ƒ‹ƒhs—ñì¬
-    _worldMatFactory.reset(new WorldMatFactory());
-    auto worldMatUniquePtr = _worldMatFactory->CreateWorldMat();
-    auto worldMatPtr = worldMatUniquePtr.get();
-    worldMatUniquePtr.release();
-    uniquePtr->SetWorldMat(worldMatPtr);
-
-    uniquePtr->SetGameObjType(GameObjType::BOARD_99);
 
     return uniquePtr;
 }

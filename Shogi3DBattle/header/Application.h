@@ -104,7 +104,7 @@ public:
     I_BufferedData* GetPieceVertIndices(); // 駒の頂点インデックスを返す
     KeyMap* GetKeyMap(); // 将棋盤頂点インデックスを返す
 
-    std::vector<B_GameObj*> GetGameObjects(); // すべての将棋オブジェクトを返す
+    std::vector<I_GameObj*> GetGameObjects(); // すべての将棋オブジェクトを返す
     std::vector<I_BufferedData*> GetAllVertIndices(); // すべての頂点インデックスを返す
 
     InputHandler* GetInputHandler(); // インプットハンドラを返す

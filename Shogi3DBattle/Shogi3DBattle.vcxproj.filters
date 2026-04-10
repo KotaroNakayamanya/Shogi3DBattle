@@ -612,32 +612,8 @@
     <ClCompile Include="src\Board9x9VerticesFactory.cpp">
       <Filter>ソース ファイル\buffered_data\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\BishopVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\bishop</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GoldVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\gold</Filter>
-    </ClCompile>
     <ClCompile Include="src\KingFactory.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\piece\king</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KingVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\king</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KnightVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\knight</Filter>
-    </ClCompile>
-    <ClCompile Include="src\LanceVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\lance</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PawnVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\pawn</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RookVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\rook</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SilverVerticesFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece\silver</Filter>
     </ClCompile>
     <ClCompile Include="src\BishopFactory.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\piece\bishop</Filter>
@@ -696,9 +672,6 @@
     <ClCompile Include="src\WorldMat.cpp">
       <Filter>ソース ファイル\buffered_data\mat\world_mat</Filter>
     </ClCompile>
-    <ClCompile Include="src\WorldMatFactory.cpp">
-      <Filter>ソース ファイル\buffered_data\mat\world_mat</Filter>
-    </ClCompile>
     <ClCompile Include="src\ViewMat.cpp">
       <Filter>ソース ファイル\buffered_data\mat\view_mat</Filter>
     </ClCompile>
@@ -717,11 +690,38 @@
     <ClCompile Include="src\Vertices.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj</Filter>
     </ClCompile>
-    <ClCompile Include="src\Board9x9Factory.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj</Filter>
-    </ClCompile>
     <ClCompile Include="src\Board9x9.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bishop.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\bishop</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gold.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\gold</Filter>
+    </ClCompile>
+    <ClCompile Include="src\King.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\king</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Knight.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\knight</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Lance.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\lance</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pawn.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rook.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\rook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Silver.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\silver</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board9x9Factory.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_Piece.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -914,12 +914,6 @@
     <ClInclude Include="header\KingFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\king</Filter>
     </ClInclude>
-    <ClInclude Include="header\KingVerticesFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\king</Filter>
-    </ClInclude>
-    <ClInclude Include="header\WorldMatFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat\world_mat</Filter>
-    </ClInclude>
     <ClInclude Include="header\WorldMat.h">
       <Filter>ヘッダー ファイル\buffered_data\mat\world_mat</Filter>
     </ClInclude>
@@ -947,43 +941,22 @@
     <ClInclude Include="header\PawnFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\pawn</Filter>
     </ClInclude>
-    <ClInclude Include="header\PawnVerticesFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\pawn</Filter>
-    </ClInclude>
     <ClInclude Include="header\BishopFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\bishop</Filter>
-    </ClInclude>
-    <ClInclude Include="header\BishopVerticesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\bishop</Filter>
     </ClInclude>
     <ClInclude Include="header\GoldFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\gold</Filter>
     </ClInclude>
-    <ClInclude Include="header\GoldVerticesFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\gold</Filter>
-    </ClInclude>
     <ClInclude Include="header\KnightFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\knight</Filter>
-    </ClInclude>
-    <ClInclude Include="header\KnightVerticesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\knight</Filter>
     </ClInclude>
     <ClInclude Include="header\LanceFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\lance</Filter>
     </ClInclude>
-    <ClInclude Include="header\LanceVerticesFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\lance</Filter>
-    </ClInclude>
     <ClInclude Include="header\SilverFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\silver</Filter>
     </ClInclude>
-    <ClInclude Include="header\SilverVerticesFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\silver</Filter>
-    </ClInclude>
     <ClInclude Include="header\RookFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\rook</Filter>
-    </ClInclude>
-    <ClInclude Include="header\RookVerticesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\rook</Filter>
     </ClInclude>
     <ClInclude Include="header\NewStartButton.h">
@@ -1055,9 +1028,6 @@
     <ClInclude Include="header\StartMenu.h">
       <Filter>ヘッダー ファイル\scene_state\start_menu</Filter>
     </ClInclude>
-    <ClInclude Include="header\B_Piece.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_base</Filter>
-    </ClInclude>
     <ClInclude Include="header\PieceVertIndicesFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
@@ -1118,7 +1088,7 @@
     <ClInclude Include="header\Board9x9Factory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\board\9x9</Filter>
     </ClInclude>
-    <ClInclude Include="header\B_GameObj.h">
+    <ClInclude Include="header\I_GameObj.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\_base</Filter>
     </ClInclude>
     <ClInclude Include="header\I_Board.h">
@@ -1150,9 +1120,6 @@
     </ClInclude>
     <ClInclude Include="header\YellowWoodTexFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\texture\yellow_wood</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_WorldMatFactory.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat\_interface</Filter>
     </ClInclude>
     <ClInclude Include="header\I_PieceFactory.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_interface</Filter>

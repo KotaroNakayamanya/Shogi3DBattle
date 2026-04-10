@@ -4,5 +4,6 @@
 
 class Lance : public I_Piece
 {
-
+public:
+    Lance();
 };

@@ -4,5 +4,6 @@
 
 class Knight : public I_Piece
 {
-
+public:
+    Knight();
 };

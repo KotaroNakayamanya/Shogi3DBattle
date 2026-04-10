@@ -4,5 +4,6 @@
 
 class Silver : public I_Piece
 {
-
+public:
+    Silver();
 };

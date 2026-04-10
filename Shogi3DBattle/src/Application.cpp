@@ -67,8 +67,6 @@ void Application::CreateGameObj()
     _boardFactory.reset(new Board9x9Factory());
     _board = _boardFactory->CreateBoard();
 
-    auto nya = _board->GetGameObjType();
-
     // 将棋盤インデックス作成
     _vertIndicesFactory.reset(new BoardVertIndicesFactory());
     _boardIndices = _vertIndicesFactory->CreateUniquePtr();
@@ -120,6 +118,8 @@ void Application::CreateGameObj()
     idx += lanceNum;
     unsigned int pawnNum = 18;
     for (unsigned int i = idx; i < idx + pawnNum; i++) _pieces.push_back(_pieceFactory->CreatePiece());
+
+    auto nya = _pieces[2]->GetGameObjType();
   
 
     // 駒の頂点インデックス集合作成
@@ -548,9 +548,9 @@ void Application::RemoveAllUI(){_buttonUIs.clear();}      // UIを全て削除�
 std::vector<std::unique_ptr<I_ButtonUI>>& Application::GetButtonUIs(){return _buttonUIs;} // ボタンUIを返す
 
 // すべての将棋オブジェクトを返す
-std::vector<B_GameObj*> Application::GetGameObjects()
+std::vector<I_GameObj*> Application::GetGameObjects()
 {
-    std::vector<B_GameObj*> shogiObjects;
+    std::vector<I_GameObj*> shogiObjects;
 
     // 将棋盤を格納
     shogiObjects.push_back(_board.get());

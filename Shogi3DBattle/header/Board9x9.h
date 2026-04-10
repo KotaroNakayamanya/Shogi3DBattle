@@ -4,5 +4,6 @@
 
 class Board9x9 : public I_Board
 {
-
+public:
+    Board9x9();
 };

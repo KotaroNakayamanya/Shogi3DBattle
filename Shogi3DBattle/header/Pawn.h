@@ -4,5 +4,6 @@
 
 class Pawn : public I_Piece
 {
-
+public:
+    Pawn();
 };

@@ -1,20 +1,29 @@
 #pragma once
 
-#include"I_Vertices.h"
-#include"I_WorldMat.h"
+#include<memory>
+#include"Vertices.h"
+#include"WorldMat.h"
 #include"GameObjType.h"
 
 class I_GameObj
 {
+protected:
+    std::unique_ptr<Vertices> _vertices;    // 頂点集合
+    std::unique_ptr<WorldMat> _worldMat;    // ワールド行列
+    GameObjType               _gameObjType; // ゲームオブジェクトタイプ
+    
 public:
-    virtual void        SetVertices(I_Vertices* vertices) = 0; // 頂点集合セット
-    virtual I_Vertices* GetVertices()                     = 0; // 頂点集合を返す
+    void      SetVertices(Vertices* vertices){_vertices.reset(vertices);} // 頂点集合セット
+    Vertices* GetVertices()                    {return _vertices.get();}    // 頂点集合を返す
 
-    virtual void        SetWorldMat(I_WorldMat* worldMat) = 0; // ワールド行列セット
-    virtual I_WorldMat* GetWorldMat()                     = 0; // ワールド行列セット 
+    void      SetWorldMat(WorldMat* worldMat){_worldMat.reset(worldMat);} // ワールド行列セット
+    WorldMat* GetWorldMat()                    {return _worldMat.get();}    // ワールド行列セット 
 
-    virtual void        SetGameObjType(GameObjType type)  = 0; // ゲームオブジェクトタイプセット
-    virtual GameObjType GetGameObjType()                  = 0; // ゲームオブジェクトタイプを返す
+    void        SetGameObjType(GameObjType type) {_gameObjType = type;} // ゲームオブジェクトタイプセット
+    GameObjType GetGameObjType()                 {return _gameObjType;} // ゲームオブジェクトタイプを返す
 
-    virtual ~I_GameObj() = default;
+    I_GameObj()
+    {
+        _worldMat = std::make_unique<WorldMat>();
+    }
 };
