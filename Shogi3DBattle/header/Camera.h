@@ -2,14 +2,14 @@
 
 #include"I_BufferedData.h"
 #include"ViewMat.h"
-#include"I_Mat.h"
+#include"I_ProjMat.h"
 #include<memory>
 
 class Camera : public I_BufferedData
 {
 private:
-    std::unique_ptr<ViewMat> _viewMat; // ビュー行列
-    std::unique_ptr<I_Mat>    _projMat; // プロジェクション行列
+    std::unique_ptr<ViewMat>   _viewMat; // ビュー行列
+    std::unique_ptr<I_ProjMat> _projMat; // プロジェクション行列
 
 public:
     DirectX::XMMATRIX GetViewProjMat(); // ビュープロジェクション行列を返す
@@ -32,15 +32,10 @@ public:
     
     // バッファに書き込み
     HRESULT WriteToBuff(Buff* buff) override;
-
     unsigned int GetSize() override;
     
-
-    
-
-
     void SetViewMat(ViewMat* viewMat); // ビュー行列セット
     ViewMat* GetViewMat();             // ビュー行列を返す
-    void SetProjMat(I_Mat* projMat);    // プロジェクション行列セット
+    void SetProjMat(I_ProjMat* projMat);    // プロジェクション行列セット
     I_Mat* GetProjMat();                // プロジェクション行列を返す
 };
