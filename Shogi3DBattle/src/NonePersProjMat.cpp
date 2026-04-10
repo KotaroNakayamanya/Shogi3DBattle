@@ -10,6 +10,3 @@ void  NonePersProjMat::SetWidth (float width) {_width  = width;}  // ‰¡ƒTƒCƒYƒZƒ
 float NonePersProjMat::GetWidth()             {return _width;}    // ‰¡ƒTƒCƒY‚ğ•Ô‚·
 void  NonePersProjMat::SetHeight(float height){_height = height;} // cƒTƒCƒY”äƒZƒbƒg
 float NonePersProjMat::GetHeight()            {return _height;}   // cƒTƒCƒY‚ğ•Ô‚·
-
-NonePersProjMat::NonePersProjMat(){}
-NonePersProjMat::~NonePersProjMat(){}

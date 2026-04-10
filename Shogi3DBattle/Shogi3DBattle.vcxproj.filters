@@ -184,9 +184,6 @@
     <Filter Include="ヘッダー ファイル\buffered_data\game_object">
       <UniqueIdentifier>{d881fad7-e34a-48b6-9fb2-44f03971fec5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\texture">
-      <UniqueIdentifier>{44432d83-16dc-4546-9d63-92123a216c25}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\buffered_data">
       <UniqueIdentifier>{d63670e8-482e-4889-851a-c810232a8a6b}</UniqueIdentifier>
     </Filter>
@@ -370,9 +367,6 @@
     <Filter Include="ヘッダー ファイル\struct">
       <UniqueIdentifier>{37f6971d-de17-4f98-9c51-124cd5c2cd21}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\texture\yellow_wood">
-      <UniqueIdentifier>{3f258fa0-2f1f-4f59-8389-0ec3b8c5d03d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\buffered_data\game_obj\board\9x9">
       <UniqueIdentifier>{18bdf1ba-d2f2-41e0-ad70-695488cb93ec}</UniqueIdentifier>
     </Filter>
@@ -384,6 +378,9 @@
     </Filter>
     <Filter Include="ソース ファイル\texutre\factory">
       <UniqueIdentifier>{8829a128-7481-47c4-b6e9-56ea79857d50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\yellow_wood">
+      <UniqueIdentifier>{3f258fa0-2f1f-4f59-8389-0ec3b8c5d03d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -917,9 +914,6 @@
     <ClInclude Include="header\UIType.h">
       <Filter>ヘッダー ファイル\enum</Filter>
     </ClInclude>
-    <ClInclude Include="header\B_ClipZRange.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat\proj_mat\_base</Filter>
-    </ClInclude>
     <ClInclude Include="header\DSBuffFactory.h">
       <Filter>ヘッダー ファイル\DX12\buff\depth_stencil</Filter>
     </ClInclude>
@@ -968,9 +962,6 @@
     <ClInclude Include="header\Bishop.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_Texture.h">
-      <Filter>ヘッダー ファイル\buffered_data\texture</Filter>
-    </ClInclude>
     <ClInclude Include="header\Gold.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
@@ -1004,23 +995,29 @@
     <ClInclude Include="header\PieceVertIndices.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
-    <ClInclude Include="header\BoardVertIndices.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="header\PixelStruct.h">
       <Filter>ヘッダー ファイル\struct</Filter>
     </ClInclude>
     <ClInclude Include="header\WoodTexture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\BoardTexture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Board9x9Texture.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
     </ClInclude>
     <ClInclude Include="header\Board5x5Texture.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Board9x9Texture.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BoardTexture.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BoardVertIndices.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_Texture.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_ProjMat.h">
+      <Filter>ヘッダー ファイル\buffered_data\mat\proj_mat</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -132,6 +132,7 @@
     <ClInclude Include="header\GameExitButtonFactory.h" />
     <ClInclude Include="header\I_ButtonUIFactory.h" />
     <ClInclude Include="header\I_Piece.h" />
+    <ClInclude Include="header\I_ProjMat.h" />
     <ClInclude Include="header\NewStartButton.h" />
     <ClInclude Include="header\Camera.h" />
     <ClInclude Include="header\ConstBuffFactory.h" />
@@ -231,7 +232,6 @@
     <ClInclude Include="header\WorldMat.h" />
     <ClInclude Include="header\WrappedBuff.h" />
     <ClInclude Include="header\DepthWriteResourceStates.h" />
-    <ClInclude Include="header\B_ClipZRange.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\PixelShader.hlsl">

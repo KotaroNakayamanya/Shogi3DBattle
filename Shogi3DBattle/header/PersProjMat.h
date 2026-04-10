@@ -1,9 +1,8 @@
 #pragma once
 
-#include"I_Mat.h"
-#include"B_ClipZRange.h"
+#include"I_ProjMat.h"
 
-class PersProjMat : public I_Mat, public B_ClipZRange
+class PersProjMat : public I_ProjMat
 {
 private:
     float _fov; // 視野角
@@ -14,7 +13,4 @@ public:
 
     void SetFOV  (float fov);   // 視野角セット
     void SetAR   (float ar);    // アスペクト比セット
-
-    PersProjMat();
-    ~PersProjMat();
 };

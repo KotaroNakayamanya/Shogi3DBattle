@@ -1,9 +1,8 @@
 #pragma once
 
-#include"I_Mat.h"
-#include"B_ClipZRange.h"
+#include"I_ProjMat.h"
 
-class NonePersProjMat : public I_Mat, public B_ClipZRange
+class NonePersProjMat : public I_ProjMat
 {
 private:
     float _width;  // 横サイズ
@@ -16,7 +15,4 @@ public:
     float GetWidth();              // 横サイズを返す
     void  SetHeight(float height); // 縦サイズ比セット
     float GetHeight();             // 縦サイズを返す
-
-    NonePersProjMat();
-    ~NonePersProjMat();
 };
