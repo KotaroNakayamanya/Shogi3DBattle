@@ -4,11 +4,11 @@
 #include<chrono>
 #include<thread>
 #include<functional>
-#include"StartMenu.h"
+
+#include"Title.h"
 
 #include"PersProjMat.h"
 #include"NonePersProjMat.h"
-
 
 #include"King.h"
 #include"Rook.h"
@@ -23,7 +23,7 @@
 #include"NewStartButton.h"
 #include"ContinueStartButton.h"
 #include"OptionButton.h"
-#include"GameExitButton.h"
+#include"ExitGameButton.h"
 
 #include"Board9x9.h"
 
@@ -143,7 +143,7 @@ void Application::InitKeyMap()
 // シーンステート初期処理
 void Application::InitSceneState()
 {
-    _sceneState = std::make_unique<StartMenu>(); // スタート画面
+    _sceneState = std::make_unique<Title>(); // スタート画面
 }
 
 
@@ -176,8 +176,8 @@ void Application::Run()
             std::unique_ptr<I_SceneState> newSceneState = _sceneState->ExeSceneOperation(
                 _inputHandler->GetInputMemory(),
                 cursorPos.x,
-                _inputHandler->GetCursorXMove(),
                 cursorPos.y,
+                _inputHandler->GetCursorXMove(),
                 _inputHandler->GetCursorYMove());
             // シーン更新処理
             if (newSceneState) _sceneState.swap(newSceneState);
@@ -413,8 +413,8 @@ void Application::PushButtonUI(
             _buttonUIs.push_back(std::make_unique<OptionButton>(rect, textAndRects));
             break;
 
-        case ButtonUIType::GAME_EXIT_BUTTON: // ゲーム終了
-            _buttonUIs.push_back(std::make_unique<GameExitButton>(rect, textAndRects));
+        case ButtonUIType::EXIT_GAME_BUTTON: // ゲーム終了
+            _buttonUIs.push_back(std::make_unique<ExitGameButton>(rect, textAndRects));
             break;
 
         default:

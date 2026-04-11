@@ -7,6 +7,7 @@ class NewStartButton : public I_ButtonUI
 public:
     std::unique_ptr<I_SceneState> ExePushButton() override; // ‚Í‚¶‚ß‚©‚çƒ{ƒ^ƒ“‰Ÿ‰ºˆ—
 
-    NewStartButton(D2D1_RECT_F rect);
-    NewStartButton(D2D1_RECT_F rect, std::vector<TextAndRect> textAndRects); 
+    NewStartButton(
+        D2D1_RECT_F              rect,
+        std::vector<TextAndRect> textAndRects = std::vector<TextAndRect>()); 
 };

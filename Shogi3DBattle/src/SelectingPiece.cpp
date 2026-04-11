@@ -1,7 +1,7 @@
 #include"SelectingPiece.h"
 #include"Application.h"
 #include"MovingPiece.h"
-#include"StartMenu.h"
+#include"Title.h"
 #include"PersProjMat.h"
 #include"NonePersProjMat.h"
 
@@ -9,8 +9,8 @@
 std::unique_ptr<I_SceneState> SelectingPiece::ExeSceneOperation(
     UCHAR inputMemory,
     int cursorX,
-    int cursorXMove,
     int cursorY,
+    int cursorXMove,
     int cursorYMove)
 {
     if(inputMemory & InputHandler::DECISION)
@@ -38,7 +38,7 @@ std::unique_ptr<I_SceneState> SelectingPiece::ExeDecisionButton()
 // キャンセルボタン処理
 std::unique_ptr<I_SceneState> SelectingPiece::ExeCancelButton()
 {
-    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<StartMenu>(); // スタートメニューに遷移する
+    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<Title>(); // スタートメニューに遷移する
     ReversProjMat(); // メインカメラをパース付きに戻す
 
     auto inputHandler = Application::GetInstance().GetInputHandler();

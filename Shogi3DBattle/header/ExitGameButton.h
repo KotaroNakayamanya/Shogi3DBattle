@@ -2,12 +2,12 @@
 
 #include"I_ButtonUI.h"
 
-class ContinueStartButton : public I_ButtonUI
+class ExitGameButton : public I_ButtonUI
 {
 public:
-    std::unique_ptr<I_SceneState> ExePushButton() override; // つづきからボタン押下処理
+    std::unique_ptr<I_SceneState> ExePushButton() override; // ゲーム終了ボタン押下処理
 
-    ContinueStartButton(
+    ExitGameButton(
         D2D1_RECT_F              rect,
         std::vector<TextAndRect> textAndRects = std::vector<TextAndRect>()); 
 };

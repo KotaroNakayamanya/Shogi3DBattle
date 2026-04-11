@@ -1,7 +1,7 @@
 #pragma once
 
 #include"I_BufferedData.h"
-#include"PixelStruct.h"
+#include"Pixel.h"
 #include<d3d12.h>
 #include<vector>
 

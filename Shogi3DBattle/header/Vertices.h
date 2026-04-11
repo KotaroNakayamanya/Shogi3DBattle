@@ -1,7 +1,7 @@
 #pragma once
 
 #include"NaturalBufferedData.h"
-#include"VertStruct.h"
+#include"Vert.h"
 
 class Vertices : public NaturalBufferedData<Vert>
 {

@@ -7,8 +7,8 @@
 std::unique_ptr<I_SceneState> MovingPiece::ExeSceneOperation(
     UCHAR inputMemory,
     int cursorX,
-    int cursorXMove,
     int cursorY,
+    int cursorXMove,
     int cursorYMove)
 {
     std::unique_ptr<I_SceneState> newSceneState = nullptr;

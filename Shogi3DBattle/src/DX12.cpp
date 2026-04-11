@@ -3,7 +3,6 @@
 #include"Application.h"
 #include<algorithm>
 #include<cassert>
-#include"VertStruct.h"
 #include"Vertices.h"
 #include"WorldMat.h"
 

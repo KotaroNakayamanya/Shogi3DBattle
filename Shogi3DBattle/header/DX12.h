@@ -11,7 +11,8 @@
 
 #include"GameObjType.h"
 #include"NaturalBufferedData.h"
-#include"VertStruct.h"
+
+#include"Vert.h"
 
 class DX12
 {

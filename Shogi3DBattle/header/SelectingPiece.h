@@ -20,8 +20,8 @@ public:
     std::unique_ptr<I_SceneState> ExeSceneOperation(
         unsigned char inputMemory,
         int cursorX,
-        int cursorXMove,
         int cursorY,
+        int cursorXMove,
         int cursorYMove) override;
 
     SelectingPiece();

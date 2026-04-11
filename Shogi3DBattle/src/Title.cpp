@@ -1,0 +1,122 @@
+#include"Title.h"
+#include"Application.h"
+#include"SelectingPiece.h"
+
+// ボタンUIセット
+void Title::SetButtonUI()
+{
+    auto& app = Application::GetInstance();
+
+    auto gameWindow = app.GetGameWindow();
+    auto windowWidth  = gameWindow->GetWindowWidth();
+    auto windowHeight = gameWindow->GetWindowHeight();
+
+    auto uiWidth  = windowWidth  / 3; // UIの横の長さ
+    auto uiHeight = windowHeight / 9; // UIの縦の長さ
+    
+    
+    float left = (windowWidth - uiWidth) / 2; // UI左位置　中央揃えのため調整
+    float top  = windowHeight / 2;            // UI上位置　真ん中
+    float right = left + uiWidth;             // UI右位置　UI左位置に横の長さを足す
+    float bottom = top + uiHeight;            // UI下位置　UI上位置に縦の長さを足す
+
+    float heightOffset = uiHeight + 3.0f; // ボタンUIを追加するごとに縦にずらす数値
+
+    D2D1_RECT_F rect; // ボタンUI範囲
+
+    // はじめからボタン
+    rect = {left, top, right, bottom};
+    app.PushButtonUI(ButtonUIType::NEW_START_BUTTON, rect);
+
+    // つづきからボタン
+    rect.top    += heightOffset;
+    rect.bottom += heightOffset;
+    app.PushButtonUI(ButtonUIType::CONTINUE_START_BUTTON, rect);
+
+    // オプションボタン
+    rect.top    += heightOffset;
+    rect.bottom += heightOffset;
+    app.PushButtonUI(ButtonUIType::OPTION_BUTTON, rect);
+
+    // ゲーム終了ボタン
+    rect.top    += heightOffset;
+    rect.bottom += heightOffset;
+    app.PushButtonUI(ButtonUIType::EXIT_GAME_BUTTON, rect);
+}
+
+// タイトル画面シーン動作
+std::unique_ptr<I_SceneState> Title::ExeSelectingButtonSceneOperation(
+    unsigned char inputMemory,
+    int cursorX,
+    int cursorY,
+    int cursorXMove,
+    int cursorYMove)
+{
+    // 将棋盤回転
+    static float rotationAngle = 0.005f;
+    _mainCamera->RotationH(rotationAngle);
+
+    std::unique_ptr<I_SceneState> newSceneState = nullptr;
+
+    if (inputMemory & InputHandler::DECISION)  // 決定ボタン処理
+        newSceneState = ExeDecisionButton();
+    if(inputMemory & InputHandler::CANCEL)    // キャンセルボタン処理
+        newSceneState = ExeCancelButton();
+
+    return newSceneState;
+}
+
+// 決定ボタン
+std::unique_ptr<I_SceneState> Title::ExeDecisionButton()
+{
+    // ボタンUIが選択されていればボタン処理実行、選択されていなければ何もしない
+    return _selectingButton ?
+        _selectingButton->ExePushButton() : nullptr;
+}
+
+// キャンセルボタン処理
+std::unique_ptr<I_SceneState> Title::ExeCancelButton()
+{
+    auto gameWindow = Application::GetInstance().GetGameWindow();
+    DestroyWindow(gameWindow->GetHWND());
+    return nullptr;
+}
+
+Title::Title()
+{
+    auto& app = Application::GetInstance();
+
+    // メインカメラ調整
+    _mainCamera = app.GetMainCamera();
+    // フォーカス位置セット
+    float focusX, focusY;
+    auto board = app.GetBoard();
+    switch (board->GetGameObjType())
+    {
+        case GameObjType::BOARD_55:
+            focusX = 30.0f;
+            focusY = 30.0f;
+            break;
+
+        case GameObjType::BOARD_99:
+            focusX = 50.0f;
+            focusY = 50.0f;
+            break;
+
+        default:
+            break;
+    }
+    float focusZ =  0.0f;
+    DirectX::XMFLOAT3 focusPos = {focusX, focusY, focusZ};
+    _mainCamera->SetFocusPos(focusPos);
+    // カメラ位置セット
+    float cameraX = focusX - 50.0f;
+    float cameraY = focusY - 50.0f;
+    float cameraZ = focusZ - 50.0f;
+    DirectX::XMFLOAT3 cameraPos = {cameraX, cameraY, cameraZ};
+    _mainCamera->SetCameraPos(cameraPos);
+    // カメラ上側ベクトルセット
+    DirectX::XMFLOAT3 cameraUpVec = {0.0f, 0.0f, -1.0f};
+    _mainCamera->SetCameraUpVec(cameraUpVec);
+
+    }

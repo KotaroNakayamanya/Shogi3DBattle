@@ -193,9 +193,6 @@
     <Filter Include="ヘッダー ファイル\enum">
       <UniqueIdentifier>{187ebf6a-f365-4ddb-bbb8-30f499176d26}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\buffered_data\factory">
-      <UniqueIdentifier>{65995f4d-91d0-4aad-aaf3-2260432487e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\ui">
       <UniqueIdentifier>{c487b223-c8ff-48c4-b8a0-0a2b62388934}</UniqueIdentifier>
     </Filter>
@@ -489,9 +486,6 @@
     <ClCompile Include="src\Vertices.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj</Filter>
     </ClCompile>
-    <ClCompile Include="src\I_ButtonUI.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Bishop.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
     </ClCompile>
@@ -552,13 +546,13 @@
     <ClCompile Include="src\SelectingPiece.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
-    <ClCompile Include="src\StartMenu.cpp">
+    <ClCompile Include="src\Title.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
     <ClCompile Include="src\ContinueStartButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameExitButton.cpp">
+    <ClCompile Include="src\ExitGameButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
     <ClCompile Include="src\NewStartButton.cpp">
@@ -566,6 +560,15 @@
     </ClCompile>
     <ClCompile Include="src\OptionButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_ButtonUI.cpp">
+      <Filter>ソース ファイル\ui\button</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CancelButton.cpp">
+      <Filter>ソース ファイル\ui\button</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_SelectingButtonScene.cpp">
+      <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -815,10 +818,10 @@
     <ClInclude Include="header\BuffType.h">
       <Filter>ヘッダー ファイル\enum</Filter>
     </ClInclude>
-    <ClInclude Include="header\TextAndRectStruct.h">
+    <ClInclude Include="header\TextAndRect.h">
       <Filter>ヘッダー ファイル\struct</Filter>
     </ClInclude>
-    <ClInclude Include="header\VertStruct.h">
+    <ClInclude Include="header\Vert.h">
       <Filter>ヘッダー ファイル\struct</Filter>
     </ClInclude>
     <ClInclude Include="header\GameObjIdManager.h">
@@ -860,7 +863,7 @@
     <ClInclude Include="header\PieceVertIndices.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
-    <ClInclude Include="header\PixelStruct.h">
+    <ClInclude Include="header\Pixel.h">
       <Filter>ヘッダー ファイル\struct</Filter>
     </ClInclude>
     <ClInclude Include="header\WoodTexture.h">
@@ -899,7 +902,7 @@
     <ClInclude Include="header\OptionButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
-    <ClInclude Include="header\GameExitButton.h">
+    <ClInclude Include="header\ExitGameButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
     <ClInclude Include="header\I_SceneState.h">
@@ -911,7 +914,13 @@
     <ClInclude Include="header\SelectingPiece.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
-    <ClInclude Include="header\StartMenu.h">
+    <ClInclude Include="header\Title.h">
+      <Filter>ヘッダー ファイル\scene_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CancelButton.h">
+      <Filter>ヘッダー ファイル\ui\button</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_SelectingButtonScene.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
   </ItemGroup>

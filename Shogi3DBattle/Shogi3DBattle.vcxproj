@@ -29,12 +29,14 @@
     <ClCompile Include="src\BoardTexture.cpp" />
     <ClCompile Include="src\BoardVertIndices.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
+    <ClCompile Include="src\CancelButton.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
-    <ClCompile Include="src\GameExitButton.cpp" />
+    <ClCompile Include="src\ExitGameButton.cpp" />
     <ClCompile Include="src\Gold.cpp" />
     <ClCompile Include="src\I_Board.cpp" />
     <ClCompile Include="src\I_ButtonUI.cpp" />
     <ClCompile Include="src\I_Piece.cpp" />
+    <ClCompile Include="src\I_SelectingButtonScene.cpp" />
     <ClCompile Include="src\King.cpp" />
     <ClCompile Include="src\Knight.cpp" />
     <ClCompile Include="src\Lance.cpp" />
@@ -75,7 +77,7 @@
     <ClCompile Include="src\SelectingPiece.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Silver.cpp" />
-    <ClCompile Include="src\StartMenu.cpp" />
+    <ClCompile Include="src\Title.cpp" />
     <ClCompile Include="src\TextFormat.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyMap.cpp" />
@@ -112,6 +114,7 @@
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
     <ClInclude Include="header\Application.h" />
+    <ClInclude Include="header\CancelButton.h" />
     <ClInclude Include="header\BasicTexType.h" />
     <ClInclude Include="header\Bishop.h" />
     <ClInclude Include="header\Board5x5Texture.h" />
@@ -125,9 +128,10 @@
     <ClInclude Include="header\BuffResourceDesc.h" />
     <ClInclude Include="header\BuffType.h" />
     <ClInclude Include="header\ContinueStartButton.h" />
-    <ClInclude Include="header\GameExitButton.h" />
+    <ClInclude Include="header\ExitGameButton.h" />
     <ClInclude Include="header\I_Piece.h" />
     <ClInclude Include="header\I_ProjMat.h" />
+    <ClInclude Include="header\I_SelectingButtonScene.h" />
     <ClInclude Include="header\NewStartButton.h" />
     <ClInclude Include="header\Camera.h" />
     <ClInclude Include="header\ConstBuffFactory.h" />
@@ -172,13 +176,13 @@
     <ClInclude Include="header\Pawn.h" />
     <ClInclude Include="header\PersProjMat.h" />
     <ClInclude Include="header\PieceVertIndices.h" />
-    <ClInclude Include="header\PixelStruct.h" />
+    <ClInclude Include="header\Pixel.h" />
     <ClInclude Include="header\Rook.h" />
     <ClInclude Include="header\SelectingPiece.h" />
     <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\Silver.h" />
-    <ClInclude Include="header\StartMenu.h" />
-    <ClInclude Include="header\TextAndRectStruct.h" />
+    <ClInclude Include="header\Title.h" />
+    <ClInclude Include="header\TextAndRect.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />
     <ClInclude Include="header\GameWindow.h" />
@@ -215,7 +219,7 @@
     <ClInclude Include="header\UIType.h" />
     <ClInclude Include="header\UploadHeapProp.h" />
     <ClInclude Include="header\VecCalc.h" />
-    <ClInclude Include="header\VertStruct.h" />
+    <ClInclude Include="header\Vert.h" />
     <ClInclude Include="header\VertBuffFactory.h" />
     <ClInclude Include="header\Vertices.h" />
     <ClInclude Include="header\View.h" />

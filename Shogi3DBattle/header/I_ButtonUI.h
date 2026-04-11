@@ -1,7 +1,7 @@
 #pragma once
 
 #include"UI.h"
-#include"TextAndRectStruct.h"
+#include"TextAndRect.h"
 #include"I_SceneState.h"
 #include<vector>
 
@@ -22,6 +22,6 @@ public:
     void SetIsSelected(bool select); // 選択状態セット
     bool IsSelected();               // 選択状態を返す
 
-    I_ButtonUI(D2D1_RECT_F rect, std::vector<TextAndRect> textAndRects); 
+    I_ButtonUI(D2D1_RECT_F rect, std::vector<TextAndRect> textAndRects = std::vector<TextAndRect>()); 
     virtual ~I_ButtonUI() = default;
 };

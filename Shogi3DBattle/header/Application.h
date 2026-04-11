@@ -10,7 +10,6 @@
 #include"ButtonUIType.h"
 
 #include"I_BufferedData.h"
-#include"VertStruct.h"
 
 #include"KeyMap.h"
 
