@@ -820,13 +820,15 @@ void DX12::ExeD2D()
             _blackBrush->GetBrush());
 
         // テキスト描画　選択されていたら赤色
-        auto brushColor = buttonUI->IsSelected() ? _redBrush->GetBrush() : _blackBrush->GetBrush();
-        for(auto& text2D : buttonUI->GetText2Ds())
+        for (auto& text2D : buttonUI->GetText2Ds())
+        {
+            auto brushColor = buttonUI->IsSelected() ? _redBrush->GetBrush() : text2D.brush;
             _d2dDeviceContext->DrawTextW(
                 text2D.text,
                 text2D.rect,
                 _uiTextFormat->GetTextFormat(),
                 brushColor);
+        }
     }
         
     EndD2D(wrappedBackBuff); // Direct2D終了
@@ -864,6 +866,11 @@ void DX12::WaitProcessWithFence()
     }
 }
 
+// 黒色ブラシを返す
+ID2D1SolidColorBrush* DX12::GetBrackBrush()
+{
+    return _blackBrush->GetBrush();
+}
 
 
 //// 描画設定更新

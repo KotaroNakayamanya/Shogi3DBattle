@@ -27,8 +27,11 @@ NewStartButton::NewStartButton(
     // テキストの指定がなければデフォルトテキストを追加
     if (_text2Ds.size() == 0)
     {
+        auto dx12 = Application::GetInstance().GetDX12();
+
         Text2D defaultText;
         defaultText.text = L"はじめから";
+        defaultText.brush = dx12->GetBrackBrush();
         defaultText.rect = _rect;
 
         _text2Ds.push_back(defaultText);

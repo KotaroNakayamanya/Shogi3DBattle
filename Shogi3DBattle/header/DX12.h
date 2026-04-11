@@ -147,6 +147,9 @@ public:
     bool InitDX12(GameWindow* gameWindow); // DirectX12初期作成
     void ExeDX12(); // DirectX12実行処理
 
+    IDWriteTextFormat*    textFormat; // テキストフォーマット
+    ID2D1SolidColorBrush* GetBrackBrush(); // 黒色ブラシを返す
+
     void ProcessChangeWindowSize( // ウインドウサイズ変更処理
         UINT width, UINT height);
 

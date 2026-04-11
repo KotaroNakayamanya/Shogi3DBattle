@@ -361,6 +361,8 @@ KeyMap* Application::GetKeyMap(){return _keyMap.get();} // 将棋盤頂点イン
 void Application::SetIsDrawMap(bool flag){_isDrawMap = flag;} // マップ描画フラグをセット
 bool Application::IsDrawMap()            {return _isDrawMap;} // マップ描画フラグを返す
 
+DX12* Application::GetDX12(){return _dx12.get();} // DirectX12を返す
+
 bool Application::IsDrawUINotEmpty(){return _buttonUIs.size() > 0;} // UIの空状況を返す
 
 

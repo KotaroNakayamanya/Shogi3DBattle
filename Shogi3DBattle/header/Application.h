@@ -102,6 +102,8 @@ public:
     void SetIsDrawMap(bool flag); // マップ描画フラグをセット
     bool IsDrawMap();             // マップ描画フラグを返す
 
+    DX12* GetDX12(); // DirectX12を返す
+
     // ボタンUI作成
     void PushButtonUI(
         ButtonUIType        buttonUIType,
