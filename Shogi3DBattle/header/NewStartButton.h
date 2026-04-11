@@ -8,6 +8,6 @@ public:
     std::unique_ptr<I_SceneState> ExePushButton() override; // ‚Í‚¶‚ß‚©‚çƒ{ƒ^ƒ“‰Ÿ‰ºˆ—
 
     NewStartButton(
-        D2D1_RECT_F              rect,
-        std::vector<TextAndRect> textAndRects = std::vector<TextAndRect>()); 
+        D2D1_RECT_F         rect,
+        std::vector<Text2D> textAndRects = std::vector<Text2D>()); 
 };

@@ -104,9 +104,9 @@ public:
 
     // ボタンUI作成
     void PushButtonUI(
-        ButtonUIType             buttonUIType,
-        D2D1_RECT_F              rect,
-        std::vector<TextAndRect> textAndRects = std::vector<TextAndRect>());
+        ButtonUIType        buttonUIType,
+        D2D1_RECT_F         rect,
+        std::vector<Text2D> text2D = std::vector<Text2D>());
 
     std::vector<std::unique_ptr<I_ButtonUI>>& GetButtonUIs(); // ボタンUIを返す
 

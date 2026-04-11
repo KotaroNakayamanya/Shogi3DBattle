@@ -132,6 +132,7 @@
     <ClInclude Include="header\I_Piece.h" />
     <ClInclude Include="header\I_ProjMat.h" />
     <ClInclude Include="header\I_SelectingButtonScene.h" />
+    <ClInclude Include="header\I_TextUI.h" />
     <ClInclude Include="header\NewStartButton.h" />
     <ClInclude Include="header\Camera.h" />
     <ClInclude Include="header\ConstBuffFactory.h" />
@@ -182,7 +183,7 @@
     <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\Silver.h" />
     <ClInclude Include="header\Title.h" />
-    <ClInclude Include="header\TextAndRect.h" />
+    <ClInclude Include="header\Text2D.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />
     <ClInclude Include="header\GameWindow.h" />

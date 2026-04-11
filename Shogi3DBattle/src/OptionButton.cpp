@@ -7,14 +7,14 @@ std::unique_ptr<I_SceneState> OptionButton::ExePushButton()
 }
 
 OptionButton::OptionButton(
-    D2D1_RECT_F              rect,
-    std::vector<TextAndRect> textAndRects)
-    : I_ButtonUI(rect, textAndRects)
+    D2D1_RECT_F         rect,
+    std::vector<Text2D> text2Ds)
+    : I_ButtonUI(rect, text2Ds)
 {
     // テキストの指定がなければデフォルトテキストを追加
-    if (_textAndRects.size() == 0)
+    if (_text2Ds.size() == 0)
     {
-        TextAndRect defaultText = {L"オプション", _rect};
-        _textAndRects.push_back(defaultText);
+        Text2D defaultText = {L"オプション", _rect};
+        _text2Ds.push_back(defaultText);
     }
 }

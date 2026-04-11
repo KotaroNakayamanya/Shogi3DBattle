@@ -11,14 +11,14 @@ std::unique_ptr<I_SceneState> ExitGameButton::ExePushButton()
 }
 
 ExitGameButton::ExitGameButton(
-    D2D1_RECT_F              rect,
-    std::vector<TextAndRect> textAndRects)
-    : I_ButtonUI(rect, textAndRects)
+    D2D1_RECT_F         rect,
+    std::vector<Text2D> text2Ds)
+    : I_ButtonUI(rect, text2Ds)
 {
     // テキストがなければデフォルトテキストを追加
-    if (_textAndRects.size() == 0)
+    if (_text2Ds.size() == 0)
     {
-        TextAndRect defaultText = {L"ゲーム終了", _rect};
-        _textAndRects.push_back(defaultText);
+        Text2D defaultText = {L"ゲーム終了", _rect};
+        _text2Ds.push_back(defaultText);
     }
 }

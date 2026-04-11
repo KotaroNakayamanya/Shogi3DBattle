@@ -821,10 +821,10 @@ void DX12::ExeD2D()
 
         // テキスト描画　選択されていたら赤色
         auto brushColor = buttonUI->IsSelected() ? _redBrush->GetBrush() : _blackBrush->GetBrush();
-        for(auto& textAndRect : buttonUI->GetTextAndRects())
+        for(auto& text2D : buttonUI->GetText2Ds())
             _d2dDeviceContext->DrawTextW(
-                textAndRect.text,
-                textAndRect.rect,
+                text2D.text,
+                text2D.rect,
                 _uiTextFormat->GetTextFormat(),
                 brushColor);
     }

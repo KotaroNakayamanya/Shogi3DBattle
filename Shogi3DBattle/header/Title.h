@@ -7,7 +7,7 @@
 class Title : public I_SelectingButtonScene
 {
 private:
-    Camera*    _mainCamera;  // メインカメラ
+    Camera* _mainCamera;  // メインカメラ
     
     void SetButtonUI() override; // ボタンUIセット
 
@@ -20,16 +20,8 @@ private:
         int cursorYMove) override;
 
     std::unique_ptr<I_SceneState> ExeDecisionButton(); // 決定ボタン処理
-    std::unique_ptr<I_SceneState> ExeCancelButton(); // キャンセルボタン処理
+    std::unique_ptr<I_SceneState> ExeCancelButton();   // キャンセルボタン処理
 
 public:
-    //// タイトル画面シーン動作
-    //std::unique_ptr<I_SceneState> ExeSceneOperation(
-    //    unsigned char inputMemory,
-    //    int cursorX,
-    //    int cursorXMove,
-    //    int cursorY,
-    //    int cursorYMove) override;
-
     Title();
 };

@@ -395,26 +395,26 @@ std::vector<NaturalBufferedData<unsigned short>*> Application::GetAllVertIndices
 }
 // ボタンUI作成
 void Application::PushButtonUI(
-    ButtonUIType             buttonUIType,
-    D2D1_RECT_F              rect,
-    std::vector<TextAndRect> textAndRects)
+    ButtonUIType        buttonUIType,
+    D2D1_RECT_F         rect,
+    std::vector<Text2D> text2Ds)
 {
     switch (buttonUIType)
     {
         case ButtonUIType::NEW_START_BUTTON: // はじめから
-            _buttonUIs.push_back(std::make_unique<NewStartButton>(rect, textAndRects));
+            _buttonUIs.push_back(std::make_unique<NewStartButton>(rect, text2Ds));
             break;
 
         case ButtonUIType::CONTINUE_START_BUTTON: // つづきから
-            _buttonUIs.push_back(std::make_unique<ContinueStartButton>(rect, textAndRects));
+            _buttonUIs.push_back(std::make_unique<ContinueStartButton>(rect, text2Ds));
             break;
 
         case ButtonUIType::OPTION_BUTTON: // オプション
-            _buttonUIs.push_back(std::make_unique<OptionButton>(rect, textAndRects));
+            _buttonUIs.push_back(std::make_unique<OptionButton>(rect, text2Ds));
             break;
 
         case ButtonUIType::EXIT_GAME_BUTTON: // ゲーム終了
-            _buttonUIs.push_back(std::make_unique<ExitGameButton>(rect, textAndRects));
+            _buttonUIs.push_back(std::make_unique<ExitGameButton>(rect, text2Ds));
             break;
 
         default:
