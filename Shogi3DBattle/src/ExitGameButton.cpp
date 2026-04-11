@@ -18,7 +18,10 @@ ExitGameButton::ExitGameButton(
     // テキストがなければデフォルトテキストを追加
     if (_text2Ds.size() == 0)
     {
-        Text2D defaultText = {L"ゲーム終了", _rect};
+        Text2D defaultText;
+        defaultText.text = L"ゲーム終了";
+        defaultText.rect = _rect;
+
         _text2Ds.push_back(defaultText);
     }
 }

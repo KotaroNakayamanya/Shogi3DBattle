@@ -14,7 +14,10 @@ OptionButton::OptionButton(
     // テキストの指定がなければデフォルトテキストを追加
     if (_text2Ds.size() == 0)
     {
-        Text2D defaultText = {L"オプション", _rect};
+        Text2D defaultText;
+        defaultText.text = L"オプション";
+        defaultText.rect = _rect;
+
         _text2Ds.push_back(defaultText);
     }
 }

@@ -14,7 +14,4 @@ private:
 public:
     void SetTextFormat(ComPtr<IDWriteTextFormat> textFormat); // テキストフォーマットセット
     IDWriteTextFormat* GetTextFormat();                       // テキストフォーマットを返す
-
-    TextFormat();
-    ~TextFormat();
 };
