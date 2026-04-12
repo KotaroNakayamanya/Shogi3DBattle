@@ -4,6 +4,7 @@
 #include"WrappedBuff.h"
 #include"Brush.h"
 #include<string>
+#include"Text2D.h"
 
 class D2DDeviceContext
 {
@@ -19,7 +20,8 @@ public:
         D2DRenderTarget* d2dRenderTarget,
         WrappedBuff* wrappedBuff);
 
-    HRESULT CreateBrush(Brush* brush, D2D1::ColorF color); // ブラシ作成
+    //HRESULT CreateBrush(Brush* brush, D2D1::ColorF color); // ブラシ作成
+    ComPtr<ID2D1SolidColorBrush> CreateBrush(D2D1::ColorF color); // ブラシ作成
 
     void SetRenderTarget(D2DRenderTarget* d2dRenderTarget); // レンダーターゲットセット
     void BeginDraw();                                       // 描画開始
@@ -31,6 +33,8 @@ public:
         D2D1_RECT_F rect,
         IDWriteTextFormat* textFormat,
         ID2D1Brush* brush);
+
+    void DrawText2D(Text2D text2D); // 2Dテキスト描画
 
     void DrawRectangle( // 四角形描画
         D2D1_RECT_F rect,

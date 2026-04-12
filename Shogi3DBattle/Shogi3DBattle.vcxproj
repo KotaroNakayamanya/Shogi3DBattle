@@ -77,7 +77,7 @@
     <ClCompile Include="src\SelectingPiece.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Silver.cpp" />
-    <ClCompile Include="src\Title.cpp" />
+    <ClCompile Include="src\TitleMenu.cpp" />
     <ClCompile Include="src\TextFormat.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyMap.cpp" />
@@ -182,7 +182,7 @@
     <ClInclude Include="header\SelectingPiece.h" />
     <ClInclude Include="header\Shader.h" />
     <ClInclude Include="header\Silver.h" />
-    <ClInclude Include="header\Title.h" />
+    <ClInclude Include="header\TitleMenu.h" />
     <ClInclude Include="header\Text2D.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />

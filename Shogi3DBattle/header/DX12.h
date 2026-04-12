@@ -14,8 +14,13 @@
 
 #include"Vert.h"
 
+#include<wrl.h>
+
 class DX12
 {
+    template<typename T>
+    using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 private:
     UINT _currentBackBuffIdx; // 現在のバックバッファインデックス
 
@@ -83,12 +88,15 @@ private:
     
     // テキストフォーマット
     std::unique_ptr<TextFormat> _pieceTextFormat; // 駒のテキストフォーマット
-    std::unique_ptr<TextFormat> _uiTextFormat; // UIテキストフォーマット
+    std::unique_ptr<TextFormat> _normalTextFormat; // UIテキストフォーマット
 
     // ブラシ
-    std::unique_ptr<Brush> _blackBrush; // 黒色ブラシ
-    std::unique_ptr<Brush> _redBrush;   // 赤色ブラシ
-    std::unique_ptr<Brush> _uiBrush;    // UI用ブラシ
+    //std::unique_ptr<Brush> _blackBrush; // 黒色ブラシ
+    //std::unique_ptr<Brush> _redBrush;   // 赤色ブラシ
+    //std::unique_ptr<Brush> _buttonUIBackBrush;    // ボタンUI背景ブラシ
+    ComPtr<ID2D1SolidColorBrush> _blackBrush; // 黒色ブラシ
+    ComPtr<ID2D1SolidColorBrush> _redBrush;   // 赤色ブラシ
+    ComPtr<ID2D1SolidColorBrush> _buttonUIBackBrush;    // ボタンUI背景ブラシ
     
 
         
@@ -147,8 +155,8 @@ public:
     bool InitDX12(GameWindow* gameWindow); // DirectX12初期作成
     void ExeDX12(); // DirectX12実行処理
 
-    IDWriteTextFormat*    textFormat; // テキストフォーマット
-    ID2D1SolidColorBrush* GetBrackBrush(); // 黒色ブラシを返す
+    IDWriteTextFormat*    GetNormalTextFormat(); // 通常のテキストフォーマットを返す
+    ID2D1SolidColorBrush* GetBrackBrush();       // 黒色ブラシを返す
 
     void ProcessChangeWindowSize( // ウインドウサイズ変更処理
         UINT width, UINT height);

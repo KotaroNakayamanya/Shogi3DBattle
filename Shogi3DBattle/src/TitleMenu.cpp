@@ -1,9 +1,9 @@
-#include"Title.h"
+#include"TitleMenu.h"
 #include"Application.h"
 #include"SelectingPiece.h"
 
 // ボタンUIセット
-void Title::SetButtonUI()
+void TitleMenu::SetButtonUI()
 {
     auto& app = Application::GetInstance();
 
@@ -45,7 +45,7 @@ void Title::SetButtonUI()
 }
 
 // タイトル画面シーン動作
-std::unique_ptr<I_SceneState> Title::ExeSelectingButtonSceneOperation(
+std::unique_ptr<I_SceneState> TitleMenu::ExeSelectingButtonSceneOperation(
     unsigned char inputMemory,
     int cursorX,
     int cursorY,
@@ -67,7 +67,7 @@ std::unique_ptr<I_SceneState> Title::ExeSelectingButtonSceneOperation(
 }
 
 // 決定ボタン
-std::unique_ptr<I_SceneState> Title::ExeDecisionButton()
+std::unique_ptr<I_SceneState> TitleMenu::ExeDecisionButton()
 {
     // ボタンUIが選択されていればボタン処理実行、選択されていなければ何もしない
     return _selectingButton ?
@@ -75,14 +75,14 @@ std::unique_ptr<I_SceneState> Title::ExeDecisionButton()
 }
 
 // キャンセルボタン処理
-std::unique_ptr<I_SceneState> Title::ExeCancelButton()
+std::unique_ptr<I_SceneState> TitleMenu::ExeCancelButton()
 {
     auto gameWindow = Application::GetInstance().GetGameWindow();
     DestroyWindow(gameWindow->GetHWND());
     return nullptr;
 }
 
-Title::Title()
+TitleMenu::TitleMenu()
 {
     auto& app = Application::GetInstance();
 

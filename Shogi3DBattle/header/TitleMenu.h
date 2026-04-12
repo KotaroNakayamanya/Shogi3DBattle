@@ -4,7 +4,7 @@
 #include"Camera.h"
 #include"I_ButtonUI.h"
 
-class Title : public I_SelectingButtonScene
+class TitleMenu : public I_SelectingButtonScene
 {
 private:
     Camera* _mainCamera;  // メインカメラ
@@ -23,5 +23,5 @@ private:
     std::unique_ptr<I_SceneState> ExeCancelButton();   // キャンセルボタン処理
 
 public:
-    Title();
+    TitleMenu();
 };

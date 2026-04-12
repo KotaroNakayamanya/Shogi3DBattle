@@ -15,12 +15,11 @@ OptionButton::OptionButton(
     // テキストの指定がなければデフォルトテキストを追加
     if (_text2Ds.size() == 0)
     {
-        auto dx12 = Application::GetInstance().GetDX12();
-
         Text2D defaultText;
-        defaultText.text  = L"オプション";
-        defaultText.brush = dx12->GetBrackBrush();
-        defaultText.rect  = _rect;
+        defaultText.text       = L"オプション";
+        defaultText.textFormat = GetDefaultTextFormat();
+        defaultText.brush      = GetDefaultBrush();
+        defaultText.rect       = _rect;
 
         _text2Ds.push_back(defaultText);
     }

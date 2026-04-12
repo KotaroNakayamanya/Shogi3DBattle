@@ -13,6 +13,9 @@ private:
 protected:
     std::vector<Text2D> _text2Ds; // 2Dテキスト
 
+    IDWriteTextFormat*    GetDefaultTextFormat(); // デフォルトのテキストフォーマットを返す
+    ID2D1SolidColorBrush* GetDefaultBrush();      // デフォルトのブラシを返す
+
 public:
     virtual std::unique_ptr<I_SceneState> ExePushButton() = 0; // ボタン押下処理
 

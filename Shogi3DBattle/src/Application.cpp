@@ -5,7 +5,7 @@
 #include<thread>
 #include<functional>
 
-#include"Title.h"
+#include"TitleMenu.h"
 
 #include"PersProjMat.h"
 #include"NonePersProjMat.h"
@@ -143,7 +143,7 @@ void Application::InitKeyMap()
 // シーンステート初期処理
 void Application::InitSceneState()
 {
-    _sceneState = std::make_unique<Title>(); // スタート画面
+    _sceneState = std::make_unique<TitleMenu>(); // スタート画面
 }
 
 

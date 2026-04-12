@@ -269,9 +269,6 @@ failed:
 // ビュー作成
 void DX12::CreateView()
 {
-    //auto& app = Application::GetInstance();
-    //auto shogiObjcts = app.GetGameObjects();
-
     // バックバッファ用RTV作成
     for (UINT i = 0; i < _rtvHeap->GetDescNum(); i++)
     {
@@ -399,21 +396,19 @@ HRESULT DX12::CreateD2D()
     for (UINT i = 0; i < pieceBuffNum; i++)
         if (FAILED(_d2dDeviceContext->CreateD2DRenderTarget(_d2dPieceTexRenderTargets[i].get(), _wrappedPieceTexBuffs[i].get()))) goto failed;
 
-    // DirectWriteファクトリー作成
+    // テキストフォーマット作成
     if (FAILED(CreateDWriteFactory())) goto failed;
-    
-    // ブラシ作成
-    if(FAILED(_d2dDeviceContext->CreateBrush(_blackBrush.get(), D2D1::ColorF(D2D1::ColorF::Black)))) goto failed; // 黒色ブラシ作成
-    if(FAILED(_d2dDeviceContext->CreateBrush(_redBrush.get(), D2D1::ColorF(D2D1::ColorF::Red)))) goto failed; // 赤色ブラシ作成
-    if(FAILED(_d2dDeviceContext->CreateBrush(_uiBrush.get(), D2D1::ColorF(D2D1::ColorF::LightYellow, 0.9f)))) goto failed; // UIブラシ作成
-
-
-    // 駒のテキストフォーマット作成
-    if(FAILED(_dWriteFactory->CreatePieceTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed;
-    // UIテキストフォーマット作成
+    if(FAILED(_dWriteFactory->CreatePieceTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed; // 駒のテキストフォーマット作成
     float fontSize;
     fontSize = gameWindow->GetWindowHeight() / 20;
-    if(FAILED(_dWriteFactory->CreateUITextFormat(_uiTextFormat.get(), L"メイリオ"))) goto failed;
+    if(FAILED(_dWriteFactory->CreateUITextFormat(_normalTextFormat.get(), L"メイリオ"))) goto failed; // 通常テキストフォーマット作成
+    
+    // ブラシ作成
+    _blackBrush        = _d2dDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Black)); // 黒色ブラシ作成
+    _redBrush          = _d2dDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Red)); // 赤色ブラシ作成
+    _buttonUIBackBrush = _d2dDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::LightYellow, 0.9f)); // UIブラシ作成
+
+
 
     return S_OK;
 
@@ -450,10 +445,8 @@ HRESULT DX12::WriteToBuff()
         vertices->SetStartDataIdx(idx);
         idx += vertices->GetDatas().size();
     }
-    //if(FAILED(_vertBuff->WriteToBuff<Vert>(board->GetVertices()))) goto failed; // 将棋盤頂点集合をバッファに書き込み
     if(FAILED(static_cast<Vertices*>(board->GetVertices())->WriteToBuff(_vertBuff.get()))) goto failed; // 将棋盤頂点集合をバッファに書き込み
     for (auto& piece : pieces)
-        //if(FAILED(_vertBuff->WriteToBuff<Vert>(piece->GetVertices()))) goto failed; // 駒の頂点集合をバッファに書き込み
         if(FAILED(static_cast<Vertices*>(piece->GetVertices())->WriteToBuff(_vertBuff.get()))) goto failed; // 駒の頂点集合をバッファに書き込み
 
 
@@ -462,8 +455,6 @@ HRESULT DX12::WriteToBuff()
     boardVertIndices->SetStartDataIdx(idx);
     idx += boardVertIndices->GetDatas().size();
     pieceVertIndices->SetStartDataIdx(idx);
-    //if (FAILED(_idxBuff->WriteToBuff<unsigned short>(boardVertIndices))) goto failed; // 将棋盤インデックス集合をバッファに書き込み
-    //if (FAILED(_idxBuff->WriteToBuff<unsigned short>(pieceVertIndices))) goto failed; // 駒のインデックス集合をバッファに書き込み
     if (FAILED(boardVertIndices->WriteToBuff(_idxBuff.get()))) goto failed; // 将棋盤インデックス集合をバッファに書き込み
     if (FAILED(pieceVertIndices->WriteToBuff(_idxBuff.get()))) goto failed; // 駒のインデックス集合をバッファに書き込み
 
@@ -482,11 +473,8 @@ HRESULT DX12::WriteToBuff()
     mapCamera ->SetStartDataIdx(idx);
 
 
-    //if(FAILED(_woodTexBuff->WriteToBuff<Pixel>(woodTex))) goto failed; // 木材テクスチャをバッファに書き込み
     if(FAILED(woodTex->WriteToBuff(_woodTexBuff.get()))) goto failed; // 木材テクスチャをバッファに書き込み
 
-    //if(FAILED(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_55)]->WriteToBuff<Pixel>(boardLineTexs[0].get()))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
-    //if(FAILED(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_99)]->WriteToBuff<Pixel>(boardLineTexs[1].get()))) goto failed; // 9×9将棋盤黒線テクスチャをバッファに書き込み
     if(FAILED(boardLineTexs[0]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_55)].get()))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
     if(FAILED(boardLineTexs[1]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_99)].get()))) goto failed; // 9×9将棋盤黒線テクスチャをバッファに書き込み
 
@@ -535,19 +523,21 @@ void DX12::CreatePieceTex(
     
     auto size = 256 / 2;
     D2D1_RECT_F rect = {0, 5, size, size};
-    _d2dDeviceContext->DrawTextW( // 黒色で駒表面を描画
+    _d2dDeviceContext->DrawTextW( // 黒色で駒表面文字を描画
         frontText,
         rect,
         _pieceTextFormat->GetTextFormat(),
-        _blackBrush->GetBrush());
+        //_blackBrush->GetBrush());
+        _blackBrush.Get());
 
     rect.left += size;
     rect.right += size;
-    _d2dDeviceContext->DrawTextW( // 赤色で駒裏面を描画
+    _d2dDeviceContext->DrawTextW( // 赤色で駒裏面文字を描画
         backText,
         rect,
         _pieceTextFormat->GetTextFormat(),
-        _redBrush->GetBrush());
+        //_redBrush->GetBrush());
+        _redBrush.Get());
 
     EndD2D(wrappedRenderTexBuff); // Direct2D終了
 
@@ -816,18 +806,17 @@ void DX12::ExeD2D()
         // 四角形描画
         _d2dDeviceContext->DrawRectangle(
             buttonUI->GetRect(),
-            _uiBrush->GetBrush(),
-            _blackBrush->GetBrush());
+            //_buttonUIBackBrush->GetBrush(),
+            //_blackBrush->GetBrush());
+            _buttonUIBackBrush.Get(),
+            _blackBrush.Get());
 
-        // テキスト描画　選択されていたら赤色
+        // テキスト描画
         for (auto& text2D : buttonUI->GetText2Ds())
         {
-            auto brushColor = buttonUI->IsSelected() ? _redBrush->GetBrush() : text2D.brush;
-            _d2dDeviceContext->DrawTextW(
-                text2D.text,
-                text2D.rect,
-                _uiTextFormat->GetTextFormat(),
-                brushColor);
+            auto tempText2D = text2D;
+            if(buttonUI->IsSelected()) tempText2D.brush = _redBrush.Get(); // 選択状態ならテキスト赤色
+            _d2dDeviceContext->DrawText2D(tempText2D);
         }
     }
         
@@ -866,11 +855,10 @@ void DX12::WaitProcessWithFence()
     }
 }
 
+// 通常のテキストフォーマットを返す
+IDWriteTextFormat* DX12::GetNormalTextFormat(){return _normalTextFormat->GetTextFormat();}
 // 黒色ブラシを返す
-ID2D1SolidColorBrush* DX12::GetBrackBrush()
-{
-    return _blackBrush->GetBrush();
-}
+ID2D1SolidColorBrush* DX12::GetBrackBrush(){return _blackBrush.Get();}
 
 
 //// 描画設定更新
@@ -931,13 +919,8 @@ DX12::DX12() {
     _deviceContext = std::make_unique<DeviceContext>();
     _d2dDeviceContext = std::make_unique<D2DDeviceContext>();
 
-    // ブラシ
-    _blackBrush = std::make_unique<Brush>();
-    _redBrush   = std::make_unique<Brush>();
-    _uiBrush    = std::make_unique<Brush>();
-
     _pieceTextFormat = std::make_unique<TextFormat>();
-    _uiTextFormat = std::make_unique<TextFormat>();
+    _normalTextFormat = std::make_unique<TextFormat>();
 
     _cmdAllocator = std::make_unique<CmdAllocator>();
     _cmdList      = std::make_unique<CmdList>();

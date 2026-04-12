@@ -1,4 +1,19 @@
 #include"I_ButtonUI.h"
+#include"Application.h"
+
+// デフォルトのテキストフォーマットを返す
+IDWriteTextFormat* I_ButtonUI::GetDefaultTextFormat()
+{
+    auto dx12 = Application::GetInstance().GetDX12();
+    return dx12->GetNormalTextFormat();
+}
+
+// デフォルトのブラシを返す
+ID2D1SolidColorBrush* I_ButtonUI::GetDefaultBrush()
+{
+    auto dx12 = Application::GetInstance().GetDX12();
+    return dx12->GetBrackBrush();
+}
 
 void                I_ButtonUI::SetText2Ds(std::vector<Text2D> tr){_text2Ds = tr;}   // 2Dテキストセット
 std::vector<Text2D> I_ButtonUI::GetText2Ds()                      {return _text2Ds;} // 2Dテキストを返す

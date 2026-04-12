@@ -18,12 +18,11 @@ ExitGameButton::ExitGameButton(
     // テキストがなければデフォルトテキストを追加
     if (_text2Ds.size() == 0)
     {
-        auto dx12 = Application::GetInstance().GetDX12();
-
         Text2D defaultText;
-        defaultText.text = L"ゲーム終了";
-        defaultText.brush = dx12->GetBrackBrush();
-        defaultText.rect = _rect;
+        defaultText.text       = L"ゲーム終了";
+        defaultText.textFormat = GetDefaultTextFormat();
+        defaultText.brush      = GetDefaultBrush();
+        defaultText.rect       = _rect;
 
         _text2Ds.push_back(defaultText);
     }
