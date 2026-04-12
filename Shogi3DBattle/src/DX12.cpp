@@ -398,10 +398,10 @@ HRESULT DX12::CreateD2D()
 
     // テキストフォーマット作成
     if (FAILED(CreateDWriteFactory())) goto failed;
-    if(FAILED(_dWriteFactory->CreatePieceTextFormat(_pieceTextFormat.get(), L"メイリオ"))) goto failed; // 駒のテキストフォーマット作成
+    _pieceTextFormat = _dWriteFactory->CreatePieceTextFormat(L"メイリオ"); // 駒のテキストフォーマット作成
     float fontSize;
     fontSize = gameWindow->GetWindowHeight() / 20;
-    if(FAILED(_dWriteFactory->CreateUITextFormat(_normalTextFormat.get(), L"メイリオ"))) goto failed; // 通常テキストフォーマット作成
+    _normalTextFormat = _dWriteFactory->CreateUITextFormat(L"メイリオ"); // 通常テキストフォーマット作成
     
     // ブラシ作成
     _blackBrush        = _d2dDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Black)); // 黒色ブラシ作成
@@ -526,8 +526,7 @@ void DX12::CreatePieceTex(
     _d2dDeviceContext->DrawTextW( // 黒色で駒表面文字を描画
         frontText,
         rect,
-        _pieceTextFormat->GetTextFormat(),
-        //_blackBrush->GetBrush());
+        _pieceTextFormat.Get(),
         _blackBrush.Get());
 
     rect.left += size;
@@ -535,8 +534,7 @@ void DX12::CreatePieceTex(
     _d2dDeviceContext->DrawTextW( // 赤色で駒裏面文字を描画
         backText,
         rect,
-        _pieceTextFormat->GetTextFormat(),
-        //_redBrush->GetBrush());
+        _pieceTextFormat.Get(),
         _redBrush.Get());
 
     EndD2D(wrappedRenderTexBuff); // Direct2D終了
@@ -856,7 +854,7 @@ void DX12::WaitProcessWithFence()
 }
 
 // 通常のテキストフォーマットを返す
-IDWriteTextFormat* DX12::GetNormalTextFormat(){return _normalTextFormat->GetTextFormat();}
+IDWriteTextFormat* DX12::GetNormalTextFormat(){return _normalTextFormat.Get();}
 // 黒色ブラシを返す
 ID2D1SolidColorBrush* DX12::GetBrackBrush(){return _blackBrush.Get();}
 
@@ -918,9 +916,6 @@ DX12::DX12() {
     _device11      = std::make_unique<Device11>();
     _deviceContext = std::make_unique<DeviceContext>();
     _d2dDeviceContext = std::make_unique<D2DDeviceContext>();
-
-    _pieceTextFormat = std::make_unique<TextFormat>();
-    _normalTextFormat = std::make_unique<TextFormat>();
 
     _cmdAllocator = std::make_unique<CmdAllocator>();
     _cmdList      = std::make_unique<CmdList>();

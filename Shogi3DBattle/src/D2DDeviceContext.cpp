@@ -40,20 +40,6 @@ HRESULT D2DDeviceContext::CreateD2DRenderTarget(
     return S_OK;
 }
 
-//// ブラシ作成
-//HRESULT D2DDeviceContext::CreateBrush(Brush* brush, D2D1::ColorF color)
-//{
-//    ComPtr<ID2D1SolidColorBrush> brushCom;
-//
-//    HRESULT result;
-//    result = _d2dDeviceContext->CreateSolidColorBrush(
-//        color,
-//        brushCom.ReleaseAndGetAddressOf());
-//    if(FAILED(result)) return result;
-//
-//    brush->SetBrush(brushCom);
-//    return S_OK;
-//}
 // ブラシ作成 
 Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> D2DDeviceContext::CreateBrush(D2D1::ColorF color)
 {

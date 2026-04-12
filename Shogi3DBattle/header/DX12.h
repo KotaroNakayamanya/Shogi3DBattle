@@ -87,13 +87,10 @@ private:
 
     
     // テキストフォーマット
-    std::unique_ptr<TextFormat> _pieceTextFormat; // 駒のテキストフォーマット
-    std::unique_ptr<TextFormat> _normalTextFormat; // UIテキストフォーマット
+    ComPtr<IDWriteTextFormat> _pieceTextFormat; // 駒のテキストフォーマット
+    ComPtr<IDWriteTextFormat> _normalTextFormat; // UIテキストフォーマット
 
     // ブラシ
-    //std::unique_ptr<Brush> _blackBrush; // 黒色ブラシ
-    //std::unique_ptr<Brush> _redBrush;   // 赤色ブラシ
-    //std::unique_ptr<Brush> _buttonUIBackBrush;    // ボタンUI背景ブラシ
     ComPtr<ID2D1SolidColorBrush> _blackBrush; // 黒色ブラシ
     ComPtr<ID2D1SolidColorBrush> _redBrush;   // 赤色ブラシ
     ComPtr<ID2D1SolidColorBrush> _buttonUIBackBrush;    // ボタンUI背景ブラシ

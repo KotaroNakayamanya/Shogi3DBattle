@@ -51,7 +51,6 @@
     <ClCompile Include="src\CSUOffset.cpp" />
     <ClCompile Include="src\D2DDeviceContext.cpp" />
     <ClCompile Include="src\D2DRenderTarget.cpp" />
-    <ClCompile Include="src\Brush.cpp" />
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Device11.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
@@ -78,7 +77,6 @@
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Silver.cpp" />
     <ClCompile Include="src\TitleMenu.cpp" />
-    <ClCompile Include="src\TextFormat.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyMap.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -153,7 +151,6 @@
     <ClInclude Include="header\CSUOffset.h" />
     <ClInclude Include="header\D2DDeviceContext.h" />
     <ClInclude Include="header\D2DRenderTarget.h" />
-    <ClInclude Include="header\Brush.h" />
     <ClInclude Include="header\DSVFactory.h" />
     <ClInclude Include="header\DSVHeapDesc.h" />
     <ClInclude Include="header\DSVHeapFactory.h" />
@@ -214,7 +211,6 @@
     <ClInclude Include="header\TexBuffFactory.h" />
     <ClInclude Include="header\TexHeapProp.h" />
     <ClInclude Include="header\TexResourceDesc.h" />
-    <ClInclude Include="header\TextFormat.h" />
     <ClInclude Include="header\ButtonUIType.h" />
     <ClInclude Include="header\UI.h" />
     <ClInclude Include="header\UIType.h" />

@@ -2,7 +2,6 @@
 
 #include"D2DRenderTarget.h"
 #include"WrappedBuff.h"
-#include"Brush.h"
 #include<string>
 #include"Text2D.h"
 
@@ -20,7 +19,6 @@ public:
         D2DRenderTarget* d2dRenderTarget,
         WrappedBuff* wrappedBuff);
 
-    //HRESULT CreateBrush(Brush* brush, D2D1::ColorF color); // ブラシ作成
     ComPtr<ID2D1SolidColorBrush> CreateBrush(D2D1::ColorF color); // ブラシ作成
 
     void SetRenderTarget(D2DRenderTarget* d2dRenderTarget); // レンダーターゲットセット
@@ -40,8 +38,6 @@ public:
         D2D1_RECT_F rect,
         ID2D1Brush* fillBrush,
         ID2D1Brush* strokeBrush);
-
-    void DrawTextBlackH(std::wstring text, D2D1_RECT_F rect); // 黒色横書きで文字を書く
 
     void SetD2DDeviceContext(ComPtr<ID2D1DeviceContext> d2dDeviceContext); // Direct2Dデバイスコンテキストセット
 

@@ -2,7 +2,6 @@
 
 #include<dwrite.h>
 #include<wrl.h>
-#include"TextFormat.h"
 #include<string>
 
 class DWriteFactory
@@ -17,12 +16,7 @@ private:
 
 public:
     // テキストフォーマット作成
-    HRESULT CreatePieceTextFormat(
-        TextFormat* textFormat,
-        std::wstring fontName);
+    ComPtr<IDWriteTextFormat> CreatePieceTextFormat(std::wstring fontName);
 
-    // UIテキストフォーマット作成
-    HRESULT CreateUITextFormat(
-        TextFormat* textFormat,
-        std::wstring fontName);
+    ComPtr<IDWriteTextFormat> CreateUITextFormat(std::wstring fontName);
 };

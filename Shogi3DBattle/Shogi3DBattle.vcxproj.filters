@@ -432,9 +432,6 @@
     <ClCompile Include="src\D2DRenderTarget.cpp">
       <Filter>ソース ファイル\dx12\d3d11\d2d</Filter>
     </ClCompile>
-    <ClCompile Include="src\Brush.cpp">
-      <Filter>ソース ファイル\dx12\d3d11\d2d</Filter>
-    </ClCompile>
     <ClCompile Include="src\WrappedBuff.cpp">
       <Filter>ソース ファイル\dx12\d3d11\wrapped_buff</Filter>
     </ClCompile>
@@ -458,9 +455,6 @@
     </ClCompile>
     <ClCompile Include="src\I_Texture.cpp">
       <Filter>ソース ファイル\texutre</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextFormat.cpp">
-      <Filter>ソース ファイル\dx12\d3d11</Filter>
     </ClCompile>
     <ClCompile Include="src\KeyMap.cpp">
       <Filter>ソース ファイル</Filter>
@@ -713,16 +707,10 @@
     <ClInclude Include="header\Adapter.h">
       <Filter>ヘッダー ファイル\DX12\factory</Filter>
     </ClInclude>
-    <ClInclude Include="header\TextFormat.h">
-      <Filter>ヘッダー ファイル\DX12\d3d11</Filter>
-    </ClInclude>
     <ClInclude Include="header\D2DDeviceContext.h">
       <Filter>ヘッダー ファイル\DX12\d3d11\d2d</Filter>
     </ClInclude>
     <ClInclude Include="header\D2DRenderTarget.h">
-      <Filter>ヘッダー ファイル\DX12\d3d11\d2d</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Brush.h">
       <Filter>ヘッダー ファイル\DX12\d3d11\d2d</Filter>
     </ClInclude>
     <ClInclude Include="header\WrappedBuff.h">
