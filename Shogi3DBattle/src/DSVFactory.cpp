@@ -1,12 +1,12 @@
 #include"DSVFactory.h"
 
 // DSVì¬
-void DSVFactory::CreateView(Heap* dsvHeap, UINT i, Buff* dsBuff, ID3D12Device* device)
+void DSVFactory::CreateView(Heap* dsvHeap, UINT i, ID3D12Resource* dsBuff, ID3D12Device* device)
 {
     D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = GetDSVDesc();
 
     device->CreateDepthStencilView(
-        dsBuff->GetBuff(),
+        dsBuff,
         &dsvDesc,
         dsvHeap->GetDescHandle(i));
 }

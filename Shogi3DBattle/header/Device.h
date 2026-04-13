@@ -13,7 +13,6 @@
 #include"Heap.h"
 #include"View.h"
 #include"GameWindow.h"
-#include"Buff.h"
 #include"Fence.h"
 #include"Shader.h"
 #include"CSUHeap.h"
@@ -73,11 +72,11 @@ public:
 
     HRESULT CreateFence(Fence* fence); // フェンス作成
     
-    HRESULT CreateBuff(Buff* buff, UINT width, UINT height, BuffType buffType);                        // バッファ作成
+    ComPtr<ID3D12Resource> CreateBuff(UINT width, UINT height, BuffType buffType);                        // バッファ作成
     HRESULT CreateHeap   (Heap* heap, UINT descNum, Heap::HeapType heapType);                                // ヒープ作成
     HRESULT CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum, Heap::HeapType heapType); // ヒープ作成（CSU）
-    void CreateView   (Heap* heap,       UINT i, Buff* buff, View::ViewType viewType);                       // ビュー作成
-    void CreateCSUView(CSUHeap* csuHeap, UINT i, Buff* buff, View::ViewType viewType);                       // ビュー作成（CSU系）
+    void CreateView   (Heap* heap,       UINT i, ID3D12Resource* buff, View::ViewType viewType);                       // ビュー作成
+    void CreateCSUView(CSUHeap* csuHeap, UINT i, ID3D12Resource* buff, View::ViewType viewType);                       // ビュー作成（CSU系）
 
     HRESULT CreateRootSignature(RootSignature* rootSignature, CSUHeap* csuHeap); // ルートシグネチャ作成
     void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成

@@ -1,14 +1,12 @@
 #pragma once
 
-#include"Buff.h"
 #include"Heap.h"
 
 class IViewFactory
 {
 public:
     // ÉrÉÖÅ[çÏê¨
-    virtual void CreateView(Heap* heap, UINT i, Buff* buff, ID3D12Device* device) = 0;
+    virtual void CreateView(Heap* heap, UINT i, ID3D12Resource* buff, ID3D12Device* device) = 0;
 
-    IViewFactory()          = default;
     virtual ~IViewFactory() = default;
 };

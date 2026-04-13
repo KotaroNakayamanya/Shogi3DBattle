@@ -1,20 +1,14 @@
 #include"D2DDeviceContext.h"
 #include"Application.h"
 
+template<typename T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 // Direct2Dレンダーターゲット作成
-HRESULT D2DDeviceContext::CreateD2DRenderTarget(
-    D2DRenderTarget* d2dRenderTarget,
-    WrappedBuff* wrappedBuff)
+ComPtr<ID2D1Bitmap1> D2DDeviceContext::CreateD2DRenderTarget(IDXGISurface* dxgiSurface)
 {
-    ComPtr<ID2D1Bitmap1> d2dRenderTargetCom;
+    ComPtr<ID2D1Bitmap1> ComPtr;
     
-    HRESULT result;
-
-    // DXGIサーフェイス作成
-    ComPtr<IDXGISurface> dxgiSurface;
-    result = wrappedBuff->SetAsDXGISurfaceCom(&dxgiSurface);
-    if(FAILED(result)) return result;
-
     // dpi取得
     auto gameWindow = Application::GetInstance().GetGameWindow();
     auto dpi = GetDpiForWindow(gameWindow->GetHWND());
@@ -30,14 +24,12 @@ HRESULT D2DDeviceContext::CreateD2DRenderTarget(
 
     
 
-    result = _d2dDeviceContext->CreateBitmapFromDxgiSurface(
-        dxgiSurface.Get(),
+    _d2dDeviceContext->CreateBitmapFromDxgiSurface(
+        dxgiSurface,
         &bitmapProps,
-        d2dRenderTargetCom.ReleaseAndGetAddressOf());
-    if(FAILED(result)) return result;
+        ComPtr.ReleaseAndGetAddressOf());
 
-    d2dRenderTarget->SetD2DRenderTarget(d2dRenderTargetCom);
-    return S_OK;
+    return ComPtr;
 }
 
 // ブラシ作成 
@@ -55,9 +47,9 @@ Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> D2DDeviceContext::CreateBrush(D2D1:
 
 
 // レンダーターゲットセット
-void D2DDeviceContext::SetRenderTarget(D2DRenderTarget* d2dRenderTarget)
+void D2DDeviceContext::SetRenderTarget(ID2D1Bitmap1* d2dRenderTarget)
 {
-    _d2dDeviceContext->SetTarget(d2dRenderTarget->GetD2DRenderTarget());
+    _d2dDeviceContext->SetTarget(d2dRenderTarget);
 }
 
 // 描画開始
@@ -127,6 +119,3 @@ void D2DDeviceContext::DrawText2D(Text2D text2D)
 
 // Direct2Dデバイスコンテキストセット
 void D2DDeviceContext::SetD2DDeviceContext(ComPtr<ID2D1DeviceContext> d2dDeviceContext){_d2dDeviceContext = d2dDeviceContext;}
-
-D2DDeviceContext::D2DDeviceContext(){}
-D2DDeviceContext::~D2DDeviceContext(){}

@@ -1,14 +1,14 @@
 #include"SRVFactory.h"
 
 // SRVì¬
-void SRVFactory::CreateView(Heap* csuHeap, UINT i, Buff* texBuff, ID3D12Device* device)
+void SRVFactory::CreateView(Heap* csuHeap, UINT i, ID3D12Resource* texBuff, ID3D12Device* device)
 {
     auto srvHandle = csuHeap->GetDescHandle(i);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = GetSRVDesc();
 
     device->CreateShaderResourceView(
-        texBuff->GetBuff(),
+        texBuff,
         &srvDesc,
         srvHandle);
 }
@@ -28,6 +28,3 @@ D3D12_SHADER_RESOURCE_VIEW_DESC SRVFactory::GetSRVDesc()
 
     return desc;
 }
-
-SRVFactory::SRVFactory(){}
-SRVFactory::~SRVFactory(){}

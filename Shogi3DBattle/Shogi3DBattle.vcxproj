@@ -50,7 +50,6 @@
     <ClCompile Include="src\CSUHeapDesc.cpp" />
     <ClCompile Include="src\CSUOffset.cpp" />
     <ClCompile Include="src\D2DDeviceContext.cpp" />
-    <ClCompile Include="src\D2DRenderTarget.cpp" />
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Device11.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
@@ -87,7 +86,6 @@
     <ClCompile Include="src\RenderTexBuffFactory.cpp" />
     <ClCompile Include="src\ResourceBarrier.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
-    <ClCompile Include="src\Buff.cpp" />
     <ClCompile Include="src\Heap.cpp" />
     <ClCompile Include="src\RTVFactory.cpp" />
     <ClCompile Include="src\RTVHeapDesc.cpp" />
@@ -106,7 +104,6 @@
     <ClCompile Include="src\ViewMat.cpp" />
     <ClCompile Include="src\WoodTexture.cpp" />
     <ClCompile Include="src\WorldMat.cpp" />
-    <ClCompile Include="src\WrappedBuff.cpp" />
     <ClCompile Include="src\DepthWriteResourceStates.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,7 +147,6 @@
     <ClInclude Include="header\CSUHeapFactory.h" />
     <ClInclude Include="header\CSUOffset.h" />
     <ClInclude Include="header\D2DDeviceContext.h" />
-    <ClInclude Include="header\D2DRenderTarget.h" />
     <ClInclude Include="header\DSVFactory.h" />
     <ClInclude Include="header\DSVHeapDesc.h" />
     <ClInclude Include="header\DSVHeapFactory.h" />
@@ -198,7 +194,6 @@
     <ClInclude Include="header\RenderTexBuffFactory.h" />
     <ClInclude Include="header\ResourceBarrier.h" />
     <ClInclude Include="header\RootSignature.h" />
-    <ClInclude Include="header\Buff.h" />
     <ClInclude Include="header\Heap.h" />
     <ClInclude Include="header\I_SceneState.h" />
     <ClInclude Include="header\RTVFactory.h" />
@@ -224,7 +219,6 @@
     <ClInclude Include="header\ViewMat.h" />
     <ClInclude Include="header\WoodTexture.h" />
     <ClInclude Include="header\WorldMat.h" />
-    <ClInclude Include="header\WrappedBuff.h" />
     <ClInclude Include="header\DepthWriteResourceStates.h" />
   </ItemGroup>
   <ItemGroup>

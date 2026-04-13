@@ -2,10 +2,9 @@
 #include"CBVFactory.h"
 
 // CBVì¬
-void CBVFactory::CreateView(Heap* csuHeap, UINT i, Buff* constBuff, ID3D12Device* device)
+void CBVFactory::CreateView(Heap* csuHeap, UINT i, ID3D12Resource* constBuff, ID3D12Device* device)
 {
-    D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = GetCBVDesc(constBuff->GetBuff());
-
+    auto cbvDesc = GetCBVDesc(constBuff);
     auto cbvHandle = csuHeap->GetDescHandle(i);
 
     device->CreateConstantBufferView(

@@ -3,27 +3,27 @@
 #include"BuffResourceDesc.h"
 #include"ReadResourceStates.h"
 
+template<typename T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 // 頂点バッファ作成
-HRESULT VertBuffFactory::CreateBuff(Buff* vertBuff, UINT width, UINT height, ID3D12Device* device)
+ComPtr<ID3D12Resource> VertBuffFactory::CreateBuff(UINT width, UINT height, ID3D12Device* device)
 {
-    Microsoft::WRL::ComPtr<ID3D12Resource> vertBuffCom;
+    Microsoft::WRL::ComPtr<ID3D12Resource> comPtr;
 
     D3D12_HEAP_PROPERTIES heapProp       = _heapProp->GetHeapProp();
     D3D12_RESOURCE_DESC   resourceDesc   = _resourceDesc->GetResourceDesc(width, height);
     D3D12_RESOURCE_STATES resourceStates = _resourceStates->GetResourceStates();
 
-    HRESULT result;
-    result = device->CreateCommittedResource(
+    device->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
         resourceStates,
         nullptr,
-        IID_PPV_ARGS(vertBuffCom.ReleaseAndGetAddressOf()));
-    if(FAILED(result)) return result;
+        IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
 
-    vertBuff->SetBuff(vertBuffCom);
-    return S_OK;
+    return comPtr;
 }
 
 VertBuffFactory::VertBuffFactory()

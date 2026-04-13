@@ -11,18 +11,18 @@ protected:
 
 public:
     // バッファに書き込み
-    HRESULT WriteToBuff(Buff* buff) override
+    HRESULT WriteToBuff(ID3D12Resource* buff) override
     {
         T* buffMap;
 
-        HRESULT result = buff->GetBuff()->Map(0, nullptr, (void**)&buffMap);
+        HRESULT result = buff->Map(0, nullptr, (void**)&buffMap);
         if (FAILED(result)) return result;
 
         buffMap += _startDataIdx;
 
         std::copy(_datas.begin(), _datas.end(), buffMap);
 
-        buff->GetBuff()->Unmap(0, nullptr);
+        buff->Unmap(0, nullptr);
 
         return S_OK;
     }

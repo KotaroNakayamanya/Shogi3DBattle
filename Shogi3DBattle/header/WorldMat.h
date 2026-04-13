@@ -12,7 +12,7 @@ public:
     void              SetMat(DirectX::XMMATRIX worldMat); // ワールド行列セット
     DirectX::XMMATRIX GetMat() override; // ワールド行列を返す
     
-    HRESULT WriteToBuff(Buff* buff) override; // バッファに書き込み
+    HRESULT WriteToBuff(ID3D12Resource* buff) override; // バッファに書き込み
 
     WorldMat();
 };

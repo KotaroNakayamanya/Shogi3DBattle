@@ -41,17 +41,17 @@ private:
     std::unique_ptr<SwapChain> _swapChain; // スワップチェーン
 
     // バッファ
-    std::vector<std::unique_ptr<Buff>> _backBuffs; // バックバッファ
-    std::unique_ptr<Buff> _dsBuff; // デプスステンシルバッファ
-    std::unique_ptr<Buff> _vertBuff; // 頂点バッファ
-    std::unique_ptr<Buff> _idxBuff;  // インデックスバッファ
-    std::unique_ptr<Buff> _constBuff; // コンスタントバッファ
+    std::vector<ComPtr<ID3D12Resource>> _backBuffs; // バックバッファ
+    ComPtr<ID3D12Resource> _dsBuff; // デプスステンシルバッファ
+    ComPtr<ID3D12Resource> _vertBuff; // 頂点バッファ
+    ComPtr<ID3D12Resource> _idxBuff;  // インデックスバッファ
+    ComPtr<ID3D12Resource> _constBuff; // コンスタントバッファ
 
-    std::unique_ptr<Buff>   _woodTexBuff; // 木材テクスチャバッファ
-    std::vector<std::unique_ptr<Buff>> _shogiObjTexBuffs; // 将棋オブジェクト種類ごとのテクスチャバッファ
+    ComPtr<ID3D12Resource> _woodTexBuff; // 木材テクスチャバッファ
+    std::vector<ComPtr<ID3D12Resource>> _shogiObjTexBuffs; // 将棋オブジェクト種類ごとのテクスチャバッファ
 
-    std::vector<std::unique_ptr<WrappedBuff>> _wrappedPieceTexBuffs; // ラップされた駒テクスチャバッファ
-    std::vector<std::unique_ptr<D2DRenderTarget>> _d2dPieceTexRenderTargets; // 駒テクスチャ作成用レンダーターゲット
+    std::vector<ComPtr<ID3D11Resource>> _wrappedPieceTexBuffs; // ラップされた駒テクスチャバッファ
+    std::vector<ComPtr<ID2D1Bitmap1>> _d2dPieceTexRenderTargets; // 駒テクスチャ作成用レンダーターゲット
 
     void CreateRenderTex(); // レンダーテクスチャ作成
     void CreatePieceTex(
@@ -99,10 +99,10 @@ private:
         
 
     // Direct2Dラップバッファ
-    std::vector<std::unique_ptr<WrappedBuff>> _wrappedBackBuffs; // ラップされたバックバッファ
+    std::vector<ComPtr<ID3D11Resource>> _wrappedBackBuffs; // ラップされたバックバッファ
 
     // Direct2Dレンダーターゲット
-    std::vector<std::unique_ptr<D2DRenderTarget>> _d2dRenderTargets; // Direct2Dレンダーターゲット
+    std::vector<ComPtr<ID2D1Bitmap1>> _d2dRenderTargets; // Direct2Dレンダーターゲット
     
     
     // その他
@@ -133,8 +133,8 @@ private:
 
     void PrepareRenderTargetToFlip(); // レンダーターゲットのフリップ準備
 
-    void StartD2D(WrappedBuff* wrappedBuff, D2DRenderTarget* d2dRenderTarget); // Direct2D開始
-    void EndD2D(WrappedBuff* wrappedBuff);   // Direct2D終了
+    void StartD2D(ID3D11Resource** wrappedBuffAddress, ID2D1Bitmap1* d2dRenderTarget); // Direct2D開始
+    void EndD2D(ID3D11Resource** wrappedBuffAddresss);   // Direct2D終了
     
 
 

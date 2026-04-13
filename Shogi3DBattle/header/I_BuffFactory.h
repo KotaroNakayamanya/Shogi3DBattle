@@ -1,6 +1,6 @@
 #pragma once
 
-#include"Buff.h"
+#include<wrl.h>
 #include<memory>
 #include"IHeapProp.h"
 #include"IResourceDesc.h"
@@ -8,6 +8,9 @@
 
 class I_BuffFactory
 {
+    template<typename T>
+    using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 protected:
     std::unique_ptr<IHeapProp>       _heapProp;      // ヒーププロパティ
     std::unique_ptr<IResourceDesc>   _resourceDesc;  // リソースディスクリプタ
@@ -15,7 +18,7 @@ protected:
 
 public:
     // バッファ作成
-    virtual HRESULT CreateBuff(Buff* buff, UINT widht, UINT height, ID3D12Device* device) = 0;
+    virtual ComPtr<ID3D12Resource> CreateBuff(UINT widht, UINT height, ID3D12Device* device) = 0;
 
     virtual ~I_BuffFactory() = default;
 };

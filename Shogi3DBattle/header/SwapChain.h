@@ -1,8 +1,8 @@
 #pragma once
 
 #include<dxgi1_6.h>
+#include<d3d12.h>
 #include<wrl.h>
-#include"Buff.h"
 
 class SwapChain
 {
@@ -13,7 +13,7 @@ private:
     ComPtr<IDXGISwapChain4> _swapChain; // スワップチェーン
 
 public:
-    HRESULT CreateBackBuff(Buff* backBuff, UINT i); // バックバッファ作成
+    ComPtr<ID3D12Resource> CreateBackBuff(UINT i); // バックバッファ作成
 
     UINT GetCurrentBackBufferIdx(); // 現在のバックバッファインデックスを返す
     void Flip(); // 画面フリップ

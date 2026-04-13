@@ -3,6 +3,9 @@
 
 #pragma comment(lib, "d2d1")
 
+template<typename T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 // Direct2Dデバイスコンテキスト作成
 HRESULT Device11::CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext)
 {
@@ -41,69 +44,57 @@ HRESULT Device11::CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext)
 }
 
 // ラップされたバックバッファ作成
-HRESULT Device11::CreateWrappedBackBuff(
-    WrappedBuff* wrappedBuff,
-    Buff* buff)
+ComPtr<ID3D11Resource> Device11::CreateWrappedBackBuff(ID3D12Resource* buff)
 {
-    ComPtr<ID3D11Resource> wrappedBuffCom;
+    ComPtr<ID3D11Resource> ComPtr;
 
     D3D11_RESOURCE_FLAGS flags = {};
     flags.BindFlags = D3D11_BIND_RENDER_TARGET;
 
-    HRESULT result;
-    result = _device11->CreateWrappedResource(
-        buff->GetBuff(),
+    _device11->CreateWrappedResource(
+        buff,
         &flags,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
-        IID_PPV_ARGS(wrappedBuffCom.ReleaseAndGetAddressOf()));
-    if(FAILED(result)) return result;
+        IID_PPV_ARGS(ComPtr.ReleaseAndGetAddressOf()));
 
-    wrappedBuff->SetWrappedBuff(wrappedBuffCom);
-    return S_OK;
+    return ComPtr;
 }
 
 // ラップされたテクスチャバッファ作成
-HRESULT Device11::CreateWrappedTexBuff(
-    WrappedBuff* wrappedBuff,
-    Buff* buff)
+ComPtr<ID3D11Resource> Device11::CreateWrappedTexBuff(ID3D12Resource* buff)
 {
-    ComPtr<ID3D11Resource> wrappedBuffCom;
+    ComPtr<ID3D11Resource> ComPtr;
 
     D3D11_RESOURCE_FLAGS flags = {};
     flags.BindFlags = D3D11_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
-    //flags.BindFlags = D3D10_BIND_SHADER_RESOURCE;
 
-    HRESULT result;
-    result = _device11->CreateWrappedResource(
-        buff->GetBuff(),
+    _device11->CreateWrappedResource(
+        buff,
         &flags,
-        //D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_RENDER_TARGET,
-        IID_PPV_ARGS(wrappedBuffCom.ReleaseAndGetAddressOf()));
-    if(FAILED(result)) return result;
+        IID_PPV_ARGS(ComPtr.ReleaseAndGetAddressOf()));
 
-    wrappedBuff->SetWrappedBuff(wrappedBuffCom);
-    return S_OK;
+    return ComPtr;
 }
 
 
 
 
 // ラップされたバッファへのレンダリングを許可
-void Device11::AcquireWrappedBuff(WrappedBuff* wrappedBackBuff)
+void Device11::AcquireWrappedBuff(ID3D11Resource** wrappedBuffAddress)
 {
     _device11->AcquireWrappedResources(
-        wrappedBackBuff->GetWrappedBuffPtr(),
+        wrappedBuffAddress,
         1); // バックバッファ数 1
 }
 
 // ラップされたバッファへのレンダリングをリリース
-void Device11::ReleaseWrappedBuff(WrappedBuff* wrappedBackBuffer)
+void Device11::ReleaseWrappedBuff(ID3D11Resource** wrappedBuffAddress)
 {
     _device11->ReleaseWrappedResources(
-        wrappedBackBuffer->GetWrappedBuffPtr(),
+        wrappedBuffAddress,
         1); // バッファ数 1
 }
 

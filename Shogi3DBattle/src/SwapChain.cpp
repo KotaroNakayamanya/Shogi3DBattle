@@ -1,18 +1,18 @@
 #include"SwapChain.h"
 
+template<typename T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 // バックバッファ作成
-HRESULT SwapChain::CreateBackBuff(Buff* backBuff, UINT i)
+ComPtr<ID3D12Resource> SwapChain::CreateBackBuff(UINT i)
 {
-    ComPtr<ID3D12Resource> backBuffCom;
+    ComPtr<ID3D12Resource> comPtr;
 
-    HRESULT result;
-    result = _swapChain->GetBuffer(
+    _swapChain->GetBuffer(
         i,
-        IID_PPV_ARGS(backBuffCom.ReleaseAndGetAddressOf()));
-    if(FAILED(result)) return result;
+        IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
 
-    backBuff->SetBuff(backBuffCom);
-    return S_OK;
+    return comPtr;
 }
 
 // 現在のバックバッファインデックスを返す

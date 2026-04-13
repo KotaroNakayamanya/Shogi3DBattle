@@ -1,6 +1,6 @@
 #pragma once
 
-#include"Buff.h"
+#include<d3d12.h>
 
 class I_BufferedData
 {
@@ -8,7 +8,7 @@ protected:
     unsigned int _startDataIdx; // バッファ内のデータ書き込み位置
 
 public:
-    virtual HRESULT WriteToBuff(Buff * buff) = 0; // バッファに書き込む
+    virtual HRESULT WriteToBuff(ID3D12Resource* buff) = 0; // バッファに書き込む
 
     //virtual unsigned int GetSize() = 0; // データサイズを返す
 

@@ -10,8 +10,5 @@ private:
 
 public:
     // SRVçÏê¨
-    void CreateView(Heap* csuHeap, UINT i, Buff* texBuff, ID3D12Device* device) override;
-
-    SRVFactory();
-    ~SRVFactory();
+    void CreateView(Heap* csuHeap, UINT i, ID3D12Resource* texID3D12Resource, ID3D12Device* device) override;
 };

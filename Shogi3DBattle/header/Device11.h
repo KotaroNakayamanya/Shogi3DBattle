@@ -3,8 +3,6 @@
 #include<d3d11on12.h>
 #include<memory>
 #include"D2DDeviceContext.h"
-#include"WrappedBuff.h"
-#include"Buff.h"
 
 class Device11
 {
@@ -18,14 +16,14 @@ public:
     // Direct2Dデバイスコンテキスト作成
     HRESULT CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext);
     // ラップされたバックバッファ作成
-    HRESULT CreateWrappedBackBuff(WrappedBuff* wrappedBuff, Buff* buff);
+    ComPtr<ID3D11Resource> CreateWrappedBackBuff(ID3D12Resource* buff);
     // ラップされたテクスチャバッファ作成
-    HRESULT CreateWrappedTexBuff(WrappedBuff* wrappedBuff, Buff* buff);
+    ComPtr<ID3D11Resource> CreateWrappedTexBuff(ID3D12Resource* buff);
 
     // ラップされたバッファへのレンダリングを許可
-    void AcquireWrappedBuff(WrappedBuff* wrappedBuff);
+    void AcquireWrappedBuff(ID3D11Resource** wrappedBuffAddress);
     // ラップされたバッファへのレンダリングをリリース
-    void ReleaseWrappedBuff(WrappedBuff* wrappedBuff);
+    void ReleaseWrappedBuff(ID3D11Resource** wrappedBuffAddress);
 
     void SetDevice11(ComPtr<ID3D11On12Device> device11); // Direct3D11デバイスセット
 

@@ -4,10 +4,12 @@
 
 class IdxBuffFactory : public I_BuffFactory
 {
+    template<typename T>
+    using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 public:
     // インデックスバッファ作成
-    HRESULT CreateBuff(Buff* idxBuff, UINT widht, UINT height, ID3D12Device* device) override;
+    ComPtr<ID3D12Resource> CreateBuff(UINT widht, UINT height, ID3D12Device* device) override;
 
     IdxBuffFactory();
-    ~IdxBuffFactory() = default;
 };

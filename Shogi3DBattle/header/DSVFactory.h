@@ -10,7 +10,7 @@ private:
 
 public:
     // DSVçÏê¨
-    void CreateView(Heap* dsvHeap, UINT i, Buff* dsBuff, ID3D12Device* device) override;
+    void CreateView(Heap* dsvHeap, UINT i, ID3D12Resource* dsID3D12Resource, ID3D12Device* device) override;
 
     DSVFactory();
     ~DSVFactory();

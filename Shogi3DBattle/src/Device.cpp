@@ -16,6 +16,9 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
+template<typename T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 // コマンドアロケータオブジェクト作成
 HRESULT Device::CreateCmdAllocator(CmdAllocator* cmdAllocator)
 {
@@ -107,7 +110,7 @@ HRESULT Device::CreateFence(Fence* fence)
 
 
 // バッファ作成
-HRESULT Device::CreateBuff(Buff* buff, UINT width, UINT height, BuffType buffType)
+ComPtr<ID3D12Resource> Device::CreateBuff(UINT width, UINT height, BuffType buffType)
 {
     switch (buffType)
     {
@@ -136,10 +139,10 @@ HRESULT Device::CreateBuff(Buff* buff, UINT width, UINT height, BuffType buffTyp
         break;
 
     default:
-        return E_FAIL;
+        return nullptr;
     }
 
-    _buffFactory->CreateBuff(buff, width, height, _device.Get());
+    return _buffFactory->CreateBuff(width, height, _device.Get());
 }
 
 // ヒープ作成
@@ -178,7 +181,7 @@ HRESULT Device::CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT u
 }
 
 // ビュー作成
-void Device::CreateView(Heap* heap, UINT i, Buff* buff, View::ViewType viewType)
+void Device::CreateView(Heap* heap, UINT i, ID3D12Resource* buff, View::ViewType viewType)
 {
     switch (viewType)
     {
@@ -206,7 +209,7 @@ void Device::CreateView(Heap* heap, UINT i, Buff* buff, View::ViewType viewType)
 }
 
 // ビュー作成（CSU系）
-void Device::CreateCSUView(CSUHeap* csuHeap, UINT i, Buff* buff, View::ViewType viewType)
+void Device::CreateCSUView(CSUHeap* csuHeap, UINT i, ID3D12Resource* buff, View::ViewType viewType)
 {
     UINT offset = 0;
 

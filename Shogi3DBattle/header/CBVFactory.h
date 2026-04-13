@@ -10,7 +10,7 @@ private:
 
 public:
     // CBVçÏê¨
-    void CreateView(Heap* csuHeap, UINT i, Buff* constBuff, ID3D12Device* device) override;
+    void CreateView(Heap* csuHeap, UINT i, ID3D12Resource* constID3D12Resource, ID3D12Device* device) override;
 
     CBVFactory();
     ~CBVFactory();

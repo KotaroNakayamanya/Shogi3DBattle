@@ -3,9 +3,9 @@ void               I_Texture::SetPixels(std::vector<Pixel> pixels){_pixels = pix
 std::vector<Pixel> I_Texture::GetPixels(){return _pixels;}
 
 // バッファに書き込み
-HRESULT I_Texture::WriteToBuff(Buff* buff)
+HRESULT I_Texture::WriteToBuff(ID3D12Resource* buff)
 {
-    return buff->GetBuff()->WriteToSubresource(
+    return buff->WriteToSubresource(
         0,
         nullptr,
         _pixels.data(),

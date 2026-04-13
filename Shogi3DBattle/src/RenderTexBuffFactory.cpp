@@ -1,14 +1,15 @@
 #include"RenderTexBuffFactory.h"
-#include"TexHeapProp.h"
+#include"DefaultHeapProp.h"
 #include"TexResourceDesc.h"
 #include"PShaderResourceStates.h"
 
-#include"DefaultHeapProp.h"
+template<typename T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 // レンダーテクスチャバッファ作成
-HRESULT RenderTexBuffFactory::CreateBuff(Buff* constBuff, UINT width, UINT height, ID3D12Device* device)
+ComPtr<ID3D12Resource> RenderTexBuffFactory::CreateBuff(UINT width, UINT height, ID3D12Device* device)
 {
-    Microsoft::WRL::ComPtr<ID3D12Resource> constBuffCom;
+    Microsoft::WRL::ComPtr<ID3D12Resource> comPtr;
 
     D3D12_HEAP_PROPERTIES heapProp       = _heapProp->GetHeapProp();
     D3D12_RESOURCE_DESC   resourceDesc   = _resourceDesc->GetResourceDesc(width, height);
@@ -23,18 +24,15 @@ HRESULT RenderTexBuffFactory::CreateBuff(Buff* constBuff, UINT width, UINT heigh
 
     resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
-    HRESULT result;
-    result = device->CreateCommittedResource(
+    device->CreateCommittedResource(
         &heapProp,
         D3D12_HEAP_FLAG_NONE,
         &resourceDesc,
         resourceStates,
         &clearValue,
-        IID_PPV_ARGS(constBuffCom.ReleaseAndGetAddressOf()));
-    if(FAILED(result)) return result;
+        IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
 
-    constBuff->SetBuff(constBuffCom);
-    return S_OK;
+    return comPtr;
 }
 
 RenderTexBuffFactory::RenderTexBuffFactory()

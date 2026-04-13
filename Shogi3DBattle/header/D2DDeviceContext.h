@@ -1,8 +1,6 @@
 #pragma once
 
-#include"D2DRenderTarget.h"
-#include"WrappedBuff.h"
-#include<string>
+#include<wrl.h>
 #include"Text2D.h"
 
 class D2DDeviceContext
@@ -15,13 +13,11 @@ private:
     
 public:
     // Direct2Dレンダーターゲット作成
-    HRESULT CreateD2DRenderTarget(
-        D2DRenderTarget* d2dRenderTarget,
-        WrappedBuff* wrappedBuff);
+    ComPtr<ID2D1Bitmap1> CreateD2DRenderTarget(IDXGISurface* dxgiSurface);
 
     ComPtr<ID2D1SolidColorBrush> CreateBrush(D2D1::ColorF color); // ブラシ作成
 
-    void SetRenderTarget(D2DRenderTarget* d2dRenderTarget); // レンダーターゲットセット
+    void SetRenderTarget(ID2D1Bitmap1* d2dRenderTarget); // レンダーターゲットセット
     void BeginDraw();                                       // 描画開始
     void SetTransform(D2D1::Matrix3x2F mat);
     void EndDraw();                                         // 描画終了
@@ -40,7 +36,4 @@ public:
         ID2D1Brush* strokeBrush);
 
     void SetD2DDeviceContext(ComPtr<ID2D1DeviceContext> d2dDeviceContext); // Direct2Dデバイスコンテキストセット
-
-    D2DDeviceContext();
-    ~D2DDeviceContext();
 };
