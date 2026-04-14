@@ -9,7 +9,6 @@
 #include"Heap.h"
 #include"View.h"
 #include"GameWindow.h"
-#include"Fence.h"
 #include"Shader.h"
 #include"CSUHeap.h"
 #include"RootSignature.h"
