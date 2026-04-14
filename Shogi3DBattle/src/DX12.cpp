@@ -191,7 +191,6 @@ HRESULT DX12::CreateBuff()
 
     // 頂点バッファ作成
     widthSize = 0;
-    //for(auto& shogiObj : shogiObjects) widthSize += sizeof(Vert) * shogiObj->GetVertices()->GetDatas().size();
     for(auto& shogiObj : shogiObjects) widthSize += sizeof(Vert) * static_cast<Vertices*>(shogiObj->GetVertices())->GetDatas().size();
     heightSize = 1;
     _vertBuff = _device->CreateBuff(widthSize, heightSize, BuffType::VERTEX);
@@ -239,10 +238,11 @@ failed:
 HRESULT DX12::CreateHeap()
 {
     // バックバッファRTVヒープ作成
-    if (FAILED(_device->CreateHeap(_rtvHeap.get(), _swapChain->GetBackBuffNum(), Heap::RTV))) goto failed;
+    if (FAILED(_device->CreateHeap(_rtvHeap.get(), _swapChain->GetBackBuffNum(), HeapType::RTV))) goto failed;
+
 
     // DSVヒープ作成
-    if (FAILED(_device->CreateHeap(_dsvHeap.get(), 1, Heap::DSV))) goto failed;
+    if (FAILED(_device->CreateHeap(_dsvHeap.get(), 1, HeapType::DSV))) goto failed;
 
     // CSUヒープ作成
     UINT woodTexNum, pieceTexNum, boardTexNum;
@@ -253,10 +253,10 @@ HRESULT DX12::CreateHeap()
     cbvNum = 1;
     srvNum = woodTexNum + boardTexNum + pieceTexNum; // 木材テクスチャ1 将棋盤テクスチャ2　駒テクスチャ8
     uavNum = 0;
-    if (FAILED(_device->CreateCSUHeap(_csuHeap.get(), cbvNum, srvNum, uavNum, Heap::CSU))) goto failed;
+    if (FAILED(_device->CreateCSUHeap(_csuHeap.get(), cbvNum, srvNum, uavNum, HeapType::CSU))) goto failed;
 
     // 駒ごとの文字テクスチャ作成用RTVヒープ
-    if (FAILED(_device->CreateHeap(_texRTVHeap.get(), pieceTexNum, Heap::RTV))) goto failed;
+    if (FAILED(_device->CreateHeap(_texRTVHeap.get(), pieceTexNum, HeapType::RTV))) goto failed;
 
     return S_OK;
 

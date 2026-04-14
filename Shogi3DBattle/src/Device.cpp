@@ -146,19 +146,19 @@ ComPtr<ID3D12Resource> Device::CreateBuff(UINT width, UINT height, BuffType buff
 }
 
 // ヒープ作成
-HRESULT Device::CreateHeap(Heap* heap, UINT descNum, Heap::HeapType heapType)
+HRESULT Device::CreateHeap(Heap* heap, UINT descNum, HeapType heapType)
 {
     switch (heapType)
     {
-    case Heap::RTV:
+    case HeapType::RTV:
         _heapFactory.reset(new RTVHeapFactory());
         break;
 
-    case Heap::DSV:
+    case HeapType::DSV:
         _heapFactory.reset(new DSVHeapFactory());
         break;
 
-    case Heap::CSU:
+    case HeapType::CSU:
         _heapFactory.reset(new CSUHeapFactory());
         break;
 
@@ -170,7 +170,7 @@ HRESULT Device::CreateHeap(Heap* heap, UINT descNum, Heap::HeapType heapType)
 }
 
 // ヒープ作成（CSU）
-HRESULT Device::CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum, Heap::HeapType heapType)
+HRESULT Device::CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum, HeapType heapType)
 {
     // CSUヒープ内訳取得
     csuHeap->SetCBVNum(cbvNum);

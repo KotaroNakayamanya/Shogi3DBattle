@@ -13,13 +13,6 @@ protected:
     UINT _descOffset; // ディスクリプタオフセット
 
 public:
-    enum HeapType // ヒープタイプ ヒープ作成時に使用
-    {
-        RTV, // レンダーターゲットビュー
-        DSV, // デプスステンシルビュー
-        CSU  // コンスタントバッファビュー、シェーダーリソースビュー、アンオーダーアクセスビュー
-    };
-
     D3D12_CPU_DESCRIPTOR_HANDLE GetDescHandle(UINT i);    // 引数の位置のディスクリプタハンドルを返す
     D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescHandle(UINT i); // 引数の位置のGPUディスクリプタハンドルを返す
     UINT GetDescNum(); // ディスクリプタの数を返す

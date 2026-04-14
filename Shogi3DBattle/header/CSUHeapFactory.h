@@ -7,9 +7,6 @@
 class CSUHeapFactory : public HeapFactory
 {
 public:
-    //// CSUƒq[ƒvì¬
-    //HRESULT CreateHeap(Heap* heap, UINT descNum) override;
-
     CSUHeapFactory()
     {
         _heapDesc   = std::make_unique<CSUHeapDesc>();

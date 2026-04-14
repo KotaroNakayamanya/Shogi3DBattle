@@ -121,9 +121,6 @@
     <Filter Include="ソース ファイル\dx12\d3d11\d2d">
       <UniqueIdentifier>{fef2eff7-a21b-4429-8a73-872629473ebe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\dx12\d3d11\wrapped_buff">
-      <UniqueIdentifier>{45c8e7f4-ff05-44ce-bea4-32c48e1da24f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\dx12\d3d11\factory">
       <UniqueIdentifier>{709a9bf8-c9b0-4675-952a-1017ed069b32}</UniqueIdentifier>
     </Filter>
@@ -153,9 +150,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\DX12\d3d11\d2d">
       <UniqueIdentifier>{11da42aa-d1ed-4c47-9e20-05b419e20293}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\DX12\d3d11\wrappe_buff">
-      <UniqueIdentifier>{cc004109-94c3-4b11-8c75-19c744102379}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\DX12\d3d11\factory">
       <UniqueIdentifier>{1384760b-baea-4aa1-9975-d6dddd2ff29d}</UniqueIdentifier>
@@ -898,6 +892,9 @@
     </ClInclude>
     <ClInclude Include="header\I_TextUI.h">
       <Filter>ヘッダー ファイル\ui\text</Filter>
+    </ClInclude>
+    <ClInclude Include="header\HeapType.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
