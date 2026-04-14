@@ -6,7 +6,6 @@
 
 #include"Device11.h"
 #include"DeviceContext.h"
-#include"SwapChain.h"
 #include"Heap.h"
 #include"View.h"
 #include"GameWindow.h"

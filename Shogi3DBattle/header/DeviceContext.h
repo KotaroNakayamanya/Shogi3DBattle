@@ -16,7 +16,4 @@ public:
     void Flash();
 
     void SetDeviceContext(ComPtr<ID3D11DeviceContext> deviceContext); // デバイスコンテキストセット
-
-    DeviceContext();
-    ~DeviceContext();
 };

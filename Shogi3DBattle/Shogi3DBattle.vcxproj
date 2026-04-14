@@ -88,7 +88,6 @@
     <ClCompile Include="src\RTVHeapDesc.cpp" />
     <ClCompile Include="src\RTVOffset.cpp" />
     <ClCompile Include="src\SRVFactory.cpp" />
-    <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\I_Texture.cpp" />
     <ClCompile Include="src\TexBuffFactory.cpp" />
     <ClCompile Include="src\TexHeapProp.cpp" />
@@ -196,7 +195,6 @@
     <ClInclude Include="header\RTVHeapFactory.h" />
     <ClInclude Include="header\RTVOffset.h" />
     <ClInclude Include="header\SRVFactory.h" />
-    <ClInclude Include="header\SwapChain.h" />
     <ClInclude Include="header\I_Texture.h" />
     <ClInclude Include="header\TexBuffFactory.h" />
     <ClInclude Include="header\TexHeapProp.h" />

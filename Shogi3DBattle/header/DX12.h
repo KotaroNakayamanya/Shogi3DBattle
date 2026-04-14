@@ -22,7 +22,7 @@ class DX12
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    UINT _currentBackBuffIdx; // 現在のバックバッファインデックス
+    unsigned int _currentBackBuffIdx; // 現在のバックバッファインデックス
 
     // ファクトリー系
     std::unique_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリー
@@ -38,7 +38,7 @@ private:
     HRESULT CreateCommand(); // コマンド系作成
 
     // スワップチェーン
-    std::unique_ptr<SwapChain> _swapChain; // スワップチェーン
+    ComPtr<IDXGISwapChain4> _swapChain; // スワップチェーン
 
     // バッファ
     std::vector<ComPtr<ID3D12Resource>> _backBuffs; // バックバッファ

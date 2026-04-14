@@ -31,7 +31,7 @@ bool DX12::InitDX12(GameWindow* gameWindow)
 {
     if(FAILED(CreateFactory())) goto failed; // ファクトリー系作成
     if(FAILED(CreateCommand())) goto failed; // コマンド系作成
-    if(FAILED(_dxgiFactory->CreateSwapChain(_swapChain.get(), _cmdQueue.Get(), gameWindow))) goto failed; // スワップチェーン作成
+    _swapChain = _dxgiFactory->CreateSwapChain(_cmdQueue.Get(), gameWindow); // スワップチェーン作成
     if(FAILED(_device->CreateFence(_fence.get()))) goto failed; // フェンス作成
     
     if(FAILED(CreateBuff())) goto failed; // バッファ系作成
@@ -155,11 +155,15 @@ HRESULT DX12::CreateBuff()
 
 
     // バックバッファ作成
-    _backBuffs.resize(_swapChain->GetBackBuffNum());
-    for (UINT i = 0; i < _backBuffs.size(); i++)
-    {
-        _backBuffs[i] = _swapChain->CreateBackBuff(i);
-    }
+    DXGI_SWAP_CHAIN_DESC swapChainDesc;
+    _swapChain->GetDesc(&swapChainDesc);
+    auto backBuffNum = swapChainDesc.BufferCount;
+
+    _backBuffs.resize(backBuffNum);
+    for (unsigned int i = 0; i < backBuffNum; i++)
+        _swapChain->GetBuffer(
+            i,
+            IID_PPV_ARGS(_backBuffs[i].ReleaseAndGetAddressOf()));
 
     // デプスステンシルバッファ作成
     D3D12_RESOURCE_DESC backBuffDesc;
@@ -227,7 +231,10 @@ failed:
 HRESULT DX12::CreateHeap()
 {
     // バックバッファRTVヒープ作成
-    if (FAILED(_device->CreateHeap(_rtvHeap.get(), _swapChain->GetBackBuffNum(), HeapType::RTV))) goto failed;
+    DXGI_SWAP_CHAIN_DESC swapChainDesc;
+    _swapChain->GetDesc(&swapChainDesc);
+    auto backBuffNum = swapChainDesc.BufferCount;
+    if (FAILED(_device->CreateHeap(_rtvHeap.get(), backBuffNum, HeapType::RTV))) goto failed;
 
 
     // DSVヒープ作成
@@ -351,8 +358,11 @@ HRESULT DX12::CreateD2D()
     // Direct2Dデバイスコンテキスト作成
     if (FAILED(_device11->CreateD2DDeviceContext(_d2dDeviceContext.get()))) goto failed;
     
-    UINT backBuffNum; // バックバッファの数
-    backBuffNum = _swapChain->GetBackBuffNum();
+    DXGI_SWAP_CHAIN_DESC swapChainDesc;
+    _swapChain->GetDesc(&swapChainDesc);
+    unsigned int backBuffNum;
+    backBuffNum = swapChainDesc.BufferCount;
+
     _wrappedBackBuffs.resize(backBuffNum);
     _d2dRenderTargets.resize(backBuffNum);
     for (UINT i = 0; i < backBuffNum; i++)
@@ -592,13 +602,13 @@ void DX12::ExitRenderTex(GameObjType shogiObjType)
 void DX12::ExeDX12()
 {
     
-    _currentBackBuffIdx = _swapChain->GetCurrentBackBufferIdx(); // バックバッファインデックス取得
+    _currentBackBuffIdx = _swapChain->GetCurrentBackBufferIndex(); // バックバッファインデックス取得
     
     InitRenderTarget(); // レンダーターゲット初期処理
     ExeD3D(); // Direct3D処理実行
     ExeD2D(); // Direct2D処理実行
     PrepareRenderTargetToFlip(); // 画面フリップ準備処理
-    _swapChain->Flip(); // 画面フリップ
+    _swapChain->Present(1, 0); // 画面フリップ
 }
 
 // レンダーターゲット初期処理
@@ -629,8 +639,6 @@ void DX12::ExeD3D()
     auto& app    = Application::GetInstance();
     auto  board  = app.GetBoard();
     auto& pieces = app.GetPieces();
-    auto boardVertIndices = app.GetBoardVertIndices();
-    auto pieceVertIndices = app.GetPieceVertIndices();
 
     auto mainCamera = app.GetMainCamera();
     auto mapCamera = app.GetMapCamera();
@@ -653,9 +661,6 @@ void DX12::ExeD3D()
         if(FAILED(static_cast<WorldMat*>(piece->GetWorldMat())->WriteToBuff(_constBuff.Get()))) return; // 駒書き込み
     if(FAILED(mainCamera->WriteToBuff(_constBuff.Get()))) return; // メインカメラ書き込み
     
-
-    //_constBuff->WriteToBuff<DirectX::XMMATRIX>(mapCamera);
-
     ExeCmd(); // コマンド実行
 
 
@@ -805,11 +810,9 @@ void DX12::ExeD2D()
 
     for (auto& buttonUI : buttonUIs)
     {
-        // 四角形描画
+        // ボタンの枠を描画
         _d2dDeviceContext->DrawRectangle(
             buttonUI->GetRect(),
-            //_buttonUIBackBrush->GetBrush(),
-            //_blackBrush->GetBrush());
             _buttonUIBackBrush.Get(),
             _blackBrush.Get());
 
@@ -919,8 +922,6 @@ DX12::DX12() {
     _device11      = std::make_unique<Device11>();
     _deviceContext = std::make_unique<DeviceContext>();
     _d2dDeviceContext = std::make_unique<D2DDeviceContext>();
-
-    _swapChain = std::make_unique<SwapChain>();
 
     _dsvHeap = std::make_unique<Heap>();
 

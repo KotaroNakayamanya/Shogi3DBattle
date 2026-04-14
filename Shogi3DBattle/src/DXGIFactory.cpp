@@ -4,6 +4,9 @@
 
 #pragma comment(lib, "d3d12.lib")
 
+template<typename T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 // 使用するアダプター作成
 HRESULT DXGIFactory::CreateAdapter(Adapter* adapter)
 {
@@ -63,28 +66,24 @@ std::vector<Microsoft::WRL::ComPtr<IDXGIAdapter>> DXGIFactory::GetCanUseAdapters
 }
 
 // スワップチェーン作成
-HRESULT DXGIFactory::CreateSwapChain(
-    SwapChain* swapChain,
+ComPtr<IDXGISwapChain4> DXGIFactory::CreateSwapChain(
     ID3D12CommandQueue* cmdQueue,
     GameWindow* gameWindow)
 {
-    ComPtr<IDXGISwapChain4> swapChainCom;
+    ComPtr<IDXGISwapChain4> comPtr;
 
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc = GetSwapChainDesc(
         gameWindow->GetWindowWidth(), gameWindow->GetWindowHeight(), 2);
 
-    HRESULT result;
-    result = _dxgiFactory->CreateSwapChainForHwnd(
+    _dxgiFactory->CreateSwapChainForHwnd(
         cmdQueue,
         gameWindow->GetHWND(),
         &swapChainDesc,
         nullptr,
         nullptr,
-        (IDXGISwapChain1**)swapChainCom.ReleaseAndGetAddressOf());
-    if(FAILED(result)) return result;
+        (IDXGISwapChain1**)comPtr.ReleaseAndGetAddressOf());
 
-    swapChain->SetSwapChain(swapChainCom);
-    return S_OK;
+    return comPtr;
 }
 
 // スワップチェーンディスクリプタ
@@ -157,11 +156,4 @@ HRESULT DXGIFactory::CreateDevice(Device* device, Adapter* adapter)
     return S_OK;;
 }
 
-
-
-
-
 void DXGIFactory::SetDXGIFactory(ComPtr<IDXGIFactory6> dxgiFactory){_dxgiFactory = dxgiFactory;} // DXGIファクトリーセット
-
-DXGIFactory::DXGIFactory(){}
-DXGIFactory::~DXGIFactory(){}

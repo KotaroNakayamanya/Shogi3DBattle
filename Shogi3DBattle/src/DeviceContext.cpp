@@ -7,6 +7,3 @@ void DeviceContext::Flash()
 
 // デバイスコンテキストセット
 void DeviceContext::SetDeviceContext(ComPtr<ID3D11DeviceContext> deviceContext){_deviceContext = deviceContext;}
-
-DeviceContext::DeviceContext(){}
-DeviceContext::~DeviceContext(){}

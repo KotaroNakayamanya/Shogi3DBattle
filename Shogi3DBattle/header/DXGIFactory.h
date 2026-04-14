@@ -2,7 +2,6 @@
 
 #include"Adapter.h"
 #include"Device.h"
-#include"SwapChain.h"
 #include"GameWindow.h"
 
 class DXGIFactory
@@ -22,13 +21,9 @@ private:
 public:
     HRESULT CreateAdapter(Adapter* adapter); // 使用するアダプター作成
     HRESULT CreateDevice(Device* device, Adapter* adapter); // Direct3Dデバイス作成
-    HRESULT CreateSwapChain( // スワップチェーン作成
-        SwapChain* swapChain,
+    ComPtr<IDXGISwapChain4> CreateSwapChain( // スワップチェーン作成
         ID3D12CommandQueue* cmdQueue,
         GameWindow* gameWindow);
 
     void SetDXGIFactory(ComPtr<IDXGIFactory6> dxgiFactory); // DXGIファクトリーセット
-
-    DXGIFactory();
-    ~DXGIFactory();
 };
