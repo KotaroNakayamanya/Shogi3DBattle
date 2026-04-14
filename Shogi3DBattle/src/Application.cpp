@@ -45,7 +45,7 @@ bool Application::Init()
     InitSceneState(); // シーンステート初期処理
 
     if(_gameWindow->InitGameWindow() == false) goto failed;      // ゲームウインドウ初期処理
-    if(_dx12->InitDX12(_gameWindow.get()) == false) goto failed; // DirectX12初期処理
+    if(_dx12->InitDX12() == false) goto failed; // DirectX12初期処理
 
     // 駒の初期位置調整
     for (int i = 1; i < _pieces.size(); i++)

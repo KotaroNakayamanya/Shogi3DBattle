@@ -27,11 +27,11 @@ namespace {
 
 
 // DirectX12初期処理
-bool DX12::InitDX12(GameWindow* gameWindow)
+bool DX12::InitDX12()
 {
     if(FAILED(CreateFactory())) goto failed; // ファクトリー系作成
     if(FAILED(CreateCommand())) goto failed; // コマンド系作成
-    _swapChain = _dxgiFactory->CreateSwapChain(_cmdQueue.Get(), gameWindow); // スワップチェーン作成
+    _swapChain = _dxgiFactory->CreateSwapChain(_cmdQueue.Get()); // スワップチェーン作成
     _fenceVal = 0;                   // フェンス値初期値セット
     _fence = _device->CreateFence(_fenceVal); // フェンス作成
     

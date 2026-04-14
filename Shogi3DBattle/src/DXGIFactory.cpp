@@ -1,6 +1,7 @@
 #include"DXGIFactory.h"
 #include<string>
 #include<array>
+#include"Application.h"
 
 #pragma comment(lib, "d3d12.lib")
 
@@ -66,14 +67,12 @@ std::vector<Microsoft::WRL::ComPtr<IDXGIAdapter>> DXGIFactory::GetCanUseAdapters
 }
 
 // スワップチェーン作成
-ComPtr<IDXGISwapChain4> DXGIFactory::CreateSwapChain(
-    ID3D12CommandQueue* cmdQueue,
-    GameWindow* gameWindow)
+ComPtr<IDXGISwapChain4> DXGIFactory::CreateSwapChain(ID3D12CommandQueue* cmdQueue)
 {
-    ComPtr<IDXGISwapChain4> comPtr;
+    auto gameWindow = Application::GetInstance().GetGameWindow();
+    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = GetSwapChainDesc(gameWindow);
 
-    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = GetSwapChainDesc(
-        gameWindow->GetWindowWidth(), gameWindow->GetWindowHeight(), 2);
+    ComPtr<IDXGISwapChain4> comPtr;
 
     _dxgiFactory->CreateSwapChainForHwnd(
         cmdQueue,
@@ -87,15 +86,14 @@ ComPtr<IDXGISwapChain4> DXGIFactory::CreateSwapChain(
 }
 
 // スワップチェーンディスクリプタ
-DXGI_SWAP_CHAIN_DESC1 DXGIFactory::GetSwapChainDesc(
-    UINT windowWidth, UINT windowHeight, UINT backBuffNum)
+DXGI_SWAP_CHAIN_DESC1 DXGIFactory::GetSwapChainDesc(GameWindow* gameWindow)
 {
     DXGI_SWAP_CHAIN_DESC1 desc = {};
 
     desc.Width =  // 横の解像度
-         windowWidth;
+         gameWindow->GetWindowWidth();
     desc.Height = // 縦の解像度
-         windowHeight;
+         gameWindow->GetWindowHeight();
     desc.Format =
         DXGI_FORMAT_R8G8B8A8_UNORM;
     desc.Stereo =
@@ -107,7 +105,7 @@ DXGI_SWAP_CHAIN_DESC1 DXGIFactory::GetSwapChainDesc(
     desc.BufferUsage =
         DXGI_USAGE_BACK_BUFFER;
     desc.BufferCount =
-        backBuffNum;
+        2;
     desc.Scaling =
         DXGI_SCALING_STRETCH;
     desc.SwapEffect =

@@ -151,7 +151,7 @@ private:
     void SetCommandDrawGameObj(); // ゲームオブジェクト描画コマンドセット
     
 public:
-    bool InitDX12(GameWindow* gameWindow); // DirectX12初期作成
+    bool InitDX12(); // DirectX12初期作成
     void ExeDX12(); // DirectX12実行処理
 
     IDWriteTextFormat*    GetNormalTextFormat(); // 通常のテキストフォーマットを返す

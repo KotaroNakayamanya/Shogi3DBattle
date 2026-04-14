@@ -15,15 +15,12 @@ private:
 
     std::vector<ComPtr<IDXGIAdapter>> GetCanUseAdapters(); // 使用可能なアダプタを取得
 
-    DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc( // スワップチェーンディスクリプタ
-        UINT windowWidth, UINT windowHeight, UINT backBuffNum);
+    DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc(GameWindow* gameWindow); // スワップチェーンディスクリプタ
 
 public:
     HRESULT CreateAdapter(Adapter* adapter); // 使用するアダプター作成
     HRESULT CreateDevice(Device* device, Adapter* adapter); // Direct3Dデバイス作成
-    ComPtr<IDXGISwapChain4> CreateSwapChain( // スワップチェーン作成
-        ID3D12CommandQueue* cmdQueue,
-        GameWindow* gameWindow);
+    ComPtr<IDXGISwapChain4> CreateSwapChain(ID3D12CommandQueue* cmdQueue); // スワップチェーン作成
 
     void SetDXGIFactory(ComPtr<IDXGIFactory6> dxgiFactory); // DXGIファクトリーセット
 };
