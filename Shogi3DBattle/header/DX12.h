@@ -105,7 +105,8 @@ private:
     
     
     // その他
-    std::unique_ptr<Fence> _fence; // フェンス
+    unsigned int        _fenceVal; // フェンス値記録
+    ComPtr<ID3D12Fence> _fence; // フェンス
     std::unique_ptr<ResourceBarrier> _rb; // リソースバリア
 
     // 描画領域

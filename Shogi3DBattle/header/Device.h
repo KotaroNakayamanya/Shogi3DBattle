@@ -67,7 +67,7 @@ public:
     ComPtr<ID3D12GraphicsCommandList> CreateCmdList     (ID3D12CommandAllocator* comAllocator); // コマンドリスト作成
     ComPtr<ID3D12CommandQueue>        CreateCmdQueue    ();                                     // コマンドキュー作成
 
-    HRESULT CreateFence(Fence* fence); // フェンス作成
+    ComPtr<ID3D12Fence> CreateFence(unsigned int fenceVal); // フェンス作成
     
     ComPtr<ID3D12Resource> CreateBuff(UINT width, UINT height, BuffType buffType);                        // バッファ作成
     HRESULT CreateHeap   (Heap* heap, UINT descNum, HeapType heapType);                                // ヒープ作成

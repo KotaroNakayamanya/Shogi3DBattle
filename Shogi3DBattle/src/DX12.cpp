@@ -32,7 +32,8 @@ bool DX12::InitDX12(GameWindow* gameWindow)
     if(FAILED(CreateFactory())) goto failed; // ファクトリー系作成
     if(FAILED(CreateCommand())) goto failed; // コマンド系作成
     _swapChain = _dxgiFactory->CreateSwapChain(_cmdQueue.Get(), gameWindow); // スワップチェーン作成
-    if(FAILED(_device->CreateFence(_fence.get()))) goto failed; // フェンス作成
+    _fenceVal = 0;                   // フェンス値初期値セット
+    _fence = _device->CreateFence(_fenceVal); // フェンス作成
     
     if(FAILED(CreateBuff())) goto failed; // バッファ系作成
     if(FAILED(CreateHeap())) goto failed; // ヒープ作成
@@ -847,14 +848,14 @@ void DX12::PrepareRenderTargetToFlip()
 void DX12::WaitProcessWithFence()
 {
     // GPU処理完了後のフェンスの値を設定
-    auto nextFenceVal = _fence->GetFenceVal() + 1;
-    _cmdQueue->Signal(_fence->GetFence(), nextFenceVal);
+    _fenceVal++;
+    _cmdQueue->Signal(_fence.Get(), _fenceVal);
     
     // フェンス値が更新されるまで待機
-    while (_fence->GetFenceVal() != nextFenceVal)
+    while (_fence->GetCompletedValue() != _fenceVal)
     {
         HANDLE event = nullptr;
-        _fence->GetFence()->SetEventOnCompletion(nextFenceVal, event);
+        _fence->SetEventOnCompletion(_fenceVal, event);
         WaitForSingleObject(event, INFINITE);
         CloseHandle(event);
     }
@@ -924,8 +925,6 @@ DX12::DX12() {
     _d2dDeviceContext = std::make_unique<D2DDeviceContext>();
 
     _dsvHeap = std::make_unique<Heap>();
-
-    _fence = std::make_unique<Fence>();
 
     _mainViewport    = std::make_unique<D3D12_VIEWPORT>();
     _mainScissorRect = std::make_unique<D3D12_RECT>();
