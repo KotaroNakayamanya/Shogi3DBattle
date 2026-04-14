@@ -136,17 +136,6 @@ failed:
 
 
 
-// DirectWriteファクトリー作成
-HRESULT DX12::CreateDWriteFactory()
-{
-    return DWriteCreateFactory(
-        DWRITE_FACTORY_TYPE_SHARED,
-        __uuidof(IDWriteFactory),
-        reinterpret_cast<IUnknown**>(_dWriteFactory->_dWriteFactory.ReleaseAndGetAddressOf()));
-}
-
-
-
 
 // バッファ系作成
 HRESULT DX12::CreateBuff()
@@ -401,11 +390,11 @@ HRESULT DX12::CreateD2D()
     }
         
     // テキストフォーマット作成
-    if (FAILED(CreateDWriteFactory())) goto failed;
-    _pieceTextFormat = _dWriteFactory->CreatePieceTextFormat(L"メイリオ"); // 駒のテキストフォーマット作成
+    _textFormatFactory = std::make_unique<TextFormatFactory>();
+    _pieceTextFormat = _textFormatFactory->CreatePieceTextFormat(L"メイリオ"); // 駒のテキストフォーマット作成
     float fontSize;
     fontSize = gameWindow->GetWindowHeight() / 20;
-    _normalTextFormat = _dWriteFactory->CreateUITextFormat(L"メイリオ"); // 通常テキストフォーマット作成
+    _normalTextFormat = _textFormatFactory->CreateUITextFormat(L"メイリオ"); // 通常テキストフォーマット作成
     
     // ブラシ作成
     _blackBrush        = _d2dDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Black)); // 黒色ブラシ作成
@@ -915,7 +904,6 @@ DX12::DX12() {
     _texRTVHeap   = std::make_unique<Heap>();
     _csuHeap       = std::make_unique<CSUHeap>();
 
-    _dWriteFactory = std::make_unique<DWriteFactory>();
     _device11      = std::make_unique<Device11>();
     _deviceContext = std::make_unique<DeviceContext>();
     _d2dDeviceContext = std::make_unique<D2DDeviceContext>();
@@ -925,8 +913,6 @@ DX12::DX12() {
     _cmdQueue     = std::make_unique<CmdQueue>();
 
     _swapChain = std::make_unique<SwapChain>();
-
-    
 
     _dsvHeap = std::make_unique<Heap>();
 

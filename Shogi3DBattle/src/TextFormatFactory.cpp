@@ -1,13 +1,13 @@
-#include"DWriteFactory.h"
+#include"TextFormatFactory.h"
 #include"Application.h"
 
 template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 // 駒用フォーマット作成
-ComPtr<IDWriteTextFormat> DWriteFactory::CreatePieceTextFormat(std::wstring fontName)
+ComPtr<IDWriteTextFormat> TextFormatFactory::CreatePieceTextFormat(std::wstring fontName)
 {
-    ComPtr<IDWriteTextFormat> textFormatCom;
+    ComPtr<IDWriteTextFormat> comPtr;
 
     _dWriteFactory->CreateTextFormat(
         fontName.c_str(),
@@ -17,29 +17,29 @@ ComPtr<IDWriteTextFormat> DWriteFactory::CreatePieceTextFormat(std::wstring font
         DWRITE_FONT_STRETCH_NORMAL,
         50.0f,
         L"ja-jp",
-        textFormatCom.ReleaseAndGetAddressOf());
+        comPtr.ReleaseAndGetAddressOf());
 
     // 横位置を中央に
-    textFormatCom->SetTextAlignment(
+    comPtr->SetTextAlignment(
         DWRITE_TEXT_ALIGNMENT_CENTER);
 
     // 縦位置を中央に
-    textFormatCom->SetParagraphAlignment(
+    comPtr->SetParagraphAlignment(
         DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
     // 縦書きにする
-    textFormatCom->SetReadingDirection(
+    comPtr->SetReadingDirection(
         DWRITE_READING_DIRECTION_TOP_TO_BOTTOM);
 
     // 右から左へ
-    textFormatCom->SetFlowDirection(
+    comPtr->SetFlowDirection(
         DWRITE_FLOW_DIRECTION_RIGHT_TO_LEFT);
 
-    return textFormatCom;
+    return comPtr;
 }
 
 // UIテキストフォーマット作成
-ComPtr<IDWriteTextFormat> DWriteFactory::CreateUITextFormat(std::wstring fontName)
+ComPtr<IDWriteTextFormat> TextFormatFactory::CreateUITextFormat(std::wstring fontName)
 {
     ComPtr<IDWriteTextFormat> ComPtr;
 
@@ -65,4 +65,16 @@ ComPtr<IDWriteTextFormat> DWriteFactory::CreateUITextFormat(std::wstring fontNam
         DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
     return ComPtr;
+}
+
+TextFormatFactory::TextFormatFactory()
+{
+    ComPtr<IDWriteFactory> comPtr;
+
+    DWriteCreateFactory(
+        DWRITE_FACTORY_TYPE_SHARED,
+        __uuidof(IDWriteFactory),
+        reinterpret_cast<IUnknown**>(comPtr.ReleaseAndGetAddressOf()));
+
+    _dWriteFactory = comPtr;
 }

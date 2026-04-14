@@ -44,8 +44,6 @@ private:
 
     // UI 
     std::vector<std::unique_ptr<I_ButtonUI>> _buttonUIs; // ボタンUI
-
-
     
 
     std::unique_ptr<I_SceneState>  _sceneState;   // シーンステート
@@ -54,21 +52,11 @@ private:
     void InitKeyMap(); // 操作ボタン初期処理
     void InitSceneState(); // シーンステート初期処理
 
-    
-
-    
-
-
     // カメラ
     std::unique_ptr<Camera> _mainCamera; // メインカメラ
     std::unique_ptr<Camera> _mapCamera;  // マップカメラ
     void CreateCamera(); // カメラ作成
 
-
-    
-
-
-    
 
     Application(); // デフォルトコンストラクタ禁止
     Application(const Application&) = delete; // コピー禁止

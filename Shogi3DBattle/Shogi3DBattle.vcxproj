@@ -58,7 +58,7 @@
     <ClCompile Include="src\DSVFactory.cpp" />
     <ClCompile Include="src\DSVHeapDesc.cpp" />
     <ClCompile Include="src\DSVOffset.cpp" />
-    <ClCompile Include="src\DWriteFactory.cpp" />
+    <ClCompile Include="src\TextFormatFactory.cpp" />
     <ClCompile Include="src\DX12.cpp" />
     <ClCompile Include="src\DXGIFactory.cpp" />
     <ClCompile Include="src\CSUHeap.cpp" />
@@ -152,7 +152,7 @@
     <ClInclude Include="header\DSVHeapDesc.h" />
     <ClInclude Include="header\DSVHeapFactory.h" />
     <ClInclude Include="header\DSVOffset.h" />
-    <ClInclude Include="header\DWriteFactory.h" />
+    <ClInclude Include="header\TextFormatFactory.h" />
     <ClInclude Include="header\Device.h" />
     <ClInclude Include="header\Device11.h" />
     <ClInclude Include="header\DeviceContext.h" />

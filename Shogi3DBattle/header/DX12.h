@@ -4,7 +4,7 @@
 
 #include"DXGIFactory.h"
 #include"Device.h"
-#include"DWriteFactory.h"
+#include"TextFormatFactory.h"
 
 #include"ResourceBarrier.h"
 #include"ViewMat.h"
@@ -81,9 +81,8 @@ private:
     std::unique_ptr<Device11>         _device11;         // Direct3D11デバイス
     std::unique_ptr<DeviceContext>    _deviceContext;    // デバイスコンテキスト
     std::unique_ptr<D2DDeviceContext> _d2dDeviceContext; // Direct2Dデバイスコンテキスト
-    std::unique_ptr<DWriteFactory>    _dWriteFactory;    // DirectWriteファクトリー
+    std::unique_ptr<TextFormatFactory> _textFormatFactory;    // テキストフォーマットファクトリー
     HRESULT CreateD2D(); // Direct2D系作成
-    HRESULT CreateDWriteFactory(); // DirectWriteファクトリー作成
 
     
     // テキストフォーマット
