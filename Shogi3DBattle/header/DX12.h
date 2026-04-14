@@ -33,7 +33,7 @@ private:
 
     // コマンド
     ComPtr<ID3D12CommandAllocator> _cmdAllocator; // コマンドアロケータ
-    std::unique_ptr<CmdList> _cmdList; // コマンドリスト
+    ComPtr<ID3D12GraphicsCommandList>      _cmdList; // コマンドリスト
     std::unique_ptr<CmdQueue> _cmdQueue; // コマンドリスト
     HRESULT CreateCommand(); // コマンド系作成
 
@@ -146,6 +146,8 @@ private:
     
   
     void WaitProcessWithFence();
+
+    void SetCommandDrawGameObj(); // ゲームオブジェクト描画コマンドセット
     
 public:
     bool InitDX12(GameWindow* gameWindow); // DirectX12初期作成

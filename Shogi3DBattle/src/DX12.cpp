@@ -123,7 +123,7 @@ HRESULT DX12::CreateCommand()
     // コマンドアロケータ作成
     _cmdAllocator = _device->CreateCmdAllocator();
     // コマンドリスト作成
-    if (FAILED(_device->CreateCmdList(_cmdList.get(), _cmdAllocator.Get()))) goto failed;
+    _cmdList      = _device->CreateCmdList     (_cmdAllocator.Get());
     // コマンドキュー作成
     if (FAILED(_device->CreateCmdQueue(_cmdQueue.get()))) goto failed;
 
@@ -542,13 +542,15 @@ void DX12::InitRenderTex(GameObjType shogiObjType)
     // テクスチャのリソースバリアをレンダーターゲットに変更
     auto renderTexBuff = _shogiObjTexBuffs[idx].Get();
     auto resourceBarrier = _rb->GetRBTexToRenderTarget(renderTexBuff);
-    _cmdList->SetResourceBarrier(resourceBarrier);
+    _cmdList->ResourceBarrier(1, &resourceBarrier);
 
     // レンダーターゲットに設定
     auto rtvHandle = _texRTVHeap->GetDescHandle(idx);
-    _cmdList->SetRenderTarget(rtvHandle);
+    _cmdList->OMSetRenderTargets(1, &rtvHandle, true, nullptr);
 
-    _cmdList->ClearRenderTarget(rtvHandle); // レンダーターゲットクリア
+    // レンダーターゲットクリア
+    float clearRTVColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    _cmdList->ClearRenderTargetView(rtvHandle, clearRTVColor, 0, nullptr);
 
     ExeCmd(); // コマンド実行
 }
@@ -577,7 +579,7 @@ void DX12::ExitRenderTex(GameObjType shogiObjType)
     // テクスチャのリソースバリアをテクスチャに戻す
     auto renderTexBuff = _shogiObjTexBuffs[idx].Get();
     auto resourceBarrier = _rb->GetRBRenderTargetToTex(renderTexBuff);
-     _cmdList->SetResourceBarrier(resourceBarrier);
+     _cmdList->ResourceBarrier(1, &resourceBarrier);
 
     ExeCmd(); // コマンド実行
 }
@@ -604,16 +606,18 @@ void DX12::InitRenderTarget()
 {
     // バックバッファリソースをレンダーターゲットに変更
     auto resourceBarrier = _rb->GetRBToRenderTarget(_backBuffs[_currentBackBuffIdx].Get());
-    _cmdList->SetResourceBarrier(resourceBarrier);
+    _cmdList->ResourceBarrier(1, &resourceBarrier);
 
     // バックバッファをレンダーターゲットに設定
     auto rtvHandle = _rtvHeap->GetDescHandle(_currentBackBuffIdx);
     auto dsvHandle = _dsvHeap->GetDescHandle(0);
-    _cmdList->SetRenderTarget(rtvHandle, dsvHandle);
+    _cmdList->OMSetRenderTargets(1, &rtvHandle, true, &dsvHandle);
 
     // クリア処理
-    _cmdList->ClearRenderTarget(rtvHandle); // レンダーターゲットクリア
-    _cmdList->ClearDepthStencil(dsvHandle); // デプスステンシルクリア
+    float clearRTVColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    _cmdList->ClearRenderTargetView(rtvHandle, clearRTVColor, 0, nullptr);
+    _cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
 }
 
 
@@ -635,24 +639,13 @@ void DX12::ExeD3D()
 
     // ビューポートセット
     D3D12_VIEWPORT viewports[] = {*_mainViewport.get()};
-    _cmdList->SetViewports(1, viewports);
+    _cmdList->RSSetViewports(1, viewports);
 
     // シザー矩形セット
     D3D12_RECT scissorRects[] = {*_mainScissorRect.get()};
-    _cmdList->SetScissorRects(1, scissorRects);
+    _cmdList->RSSetScissorRects(1, scissorRects);
 
-    // 将棋盤描画コマンドセット
-    _cmdList->SetIdxBuffView(GetIdxBuffView(boardVertIndices));
-    _cmdList->SetVertBuffView(GetVertBuffView(static_cast<Vertices*>(board->GetVertices())));
-    _cmdList->SetDrawWithIdx(boardVertIndices);
-
-    // 駒描画コマンドセット
-    _cmdList->SetIdxBuffView(GetIdxBuffView(pieceVertIndices));
-    for (UINT i = 0; i < pieces.size(); i++)
-    {
-        _cmdList->SetVertBuffView(GetVertBuffView(static_cast<Vertices*>(pieces[i]->GetVertices())));
-        _cmdList->SetDrawWithIdx(pieceVertIndices);
-    }
+    SetCommandDrawGameObj(); // ゲームオブジェクト描画コマンドセット
 
     // 定数バッファに書き込み
     if(FAILED(static_cast<WorldMat*>(board->GetWorldMat())->WriteToBuff(_constBuff.Get()))) return; // 将棋盤書き込み
@@ -672,35 +665,23 @@ void DX12::ExeD3D()
         // バックバッファをレンダーターゲットに設定
         auto rtvHandle = _rtvHeap->GetDescHandle(_currentBackBuffIdx);
         auto dsvHandle = _dsvHeap->GetDescHandle(0);
-        _cmdList->SetRenderTarget(rtvHandle, dsvHandle);
+        _cmdList->OMSetRenderTargets(1, &rtvHandle, true, &dsvHandle);
 
         // クリア処理
-        //_cmdList->ClearRenderTarget(rtvHandle); // レンダーターゲットクリア
-        _cmdList->ClearDepthStencil(dsvHandle); // デプスステンシルクリア
+        _cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
         Set3DCmd(); // 3Dコマンドセット
 
         // ビューポートセット
         viewports[0] = {*_mapViewport.get()};
-        _cmdList->SetViewports(1, viewports);
+        _cmdList->RSSetViewports(1, viewports);
 
         // シザー矩形セット
         scissorRects[0] = {*_mapScissorRect.get()};
-        _cmdList->SetScissorRects(1, scissorRects);
+        _cmdList->RSSetScissorRects(1, scissorRects);
 
-        // 将棋盤描画コマンドセット
-        _cmdList->SetIdxBuffView(GetIdxBuffView(boardVertIndices));
-        _cmdList->SetVertBuffView(GetVertBuffView(static_cast<Vertices*>(board->GetVertices())));
-        _cmdList->SetDrawWithIdx(boardVertIndices);
-
-        // 駒描画コマンドセット
-        _cmdList->SetIdxBuffView(GetIdxBuffView(pieceVertIndices));
-        for (UINT i = 0; i < pieces.size(); i++)
-        {
-            _cmdList->SetVertBuffView(GetVertBuffView(static_cast<Vertices*>(pieces[i]->GetVertices())));
-            _cmdList->SetDrawWithIdx(pieceVertIndices);
-        }
-
+        SetCommandDrawGameObj(); // ゲームオブジェクト描画コマンドセット
+        
         // カメラをマップカメラに変更
         mapCamera->WriteToBuff(_constBuff.Get());
 
@@ -712,26 +693,53 @@ void DX12::ExeD3D()
     
 }
 
+// ゲームオブジェクト描画コマンドセット
+void DX12::SetCommandDrawGameObj()
+{
+    // 将棋盤描画コマンドセット
+    auto board  = Application::GetInstance().GetBoard();
+    auto boardVertIndices = Application::GetInstance().GetBoardVertIndices();
+    auto idxBuffView = GetIdxBuffView(boardVertIndices);
+    _cmdList->IASetIndexBuffer(&idxBuffView);
+    auto vertBuffView = GetVertBuffView(static_cast<Vertices*>(board->GetVertices()));
+    _cmdList->IASetVertexBuffers(0, 1, &vertBuffView);
+
+    _cmdList->DrawIndexedInstanced(boardVertIndices->GetDatas().size(), 1, 0, 0, 0);
+
+    // 駒描画コマンドセット
+    auto& pieces = Application::GetInstance().GetPieces();
+    auto  pieceVertIndices = Application::GetInstance().GetPieceVertIndices();
+    idxBuffView = GetIdxBuffView(pieceVertIndices);
+    _cmdList->IASetIndexBuffer(&idxBuffView);
+    for (UINT i = 0; i < pieces.size(); i++)
+    { 
+        auto vertBuffView = GetVertBuffView(static_cast<Vertices*>(pieces[i]->GetVertices()));
+        _cmdList->IASetVertexBuffers(0, 1, &vertBuffView);
+
+        _cmdList->DrawIndexedInstanced(pieceVertIndices->GetDatas().size(), 1, 0, 0, 0);
+    }
+}
+
 // 3Dコマンドセット
 void DX12::Set3DCmd()
 {
     // パイプラインセット
-    _cmdList->SetPipeline(_pipeline->GetPipelineState());
+    _cmdList->SetPipelineState(_pipeline->GetPipelineState());
 
     // ルートシグネチャセット
-    _cmdList->SetRootSignature(_rootSignature->GetRootSignature());
+    _cmdList->SetGraphicsRootSignature(_rootSignature->GetRootSignature());
 
     // CSUヒープセット
     ID3D12DescriptorHeap* csuHeaps[] = {_csuHeap->GetHeap()};
     auto csuHeapNum = sizeof(csuHeaps) / sizeof(ID3D12DescriptorHeap*);
-    _cmdList->SetCSUHeaps(1, csuHeaps); 
+    _cmdList->SetDescriptorHeaps(1, csuHeaps); 
 
     // ルートパラメータとディスクリプタ関連付け
-    _cmdList->SetDescriptorTable(0, _csuHeap->GetGPUCBVHandle(0)); // CBV
-    _cmdList->SetDescriptorTable(1, _csuHeap->GetGPUSRVHandle(0)); // SRV
+    _cmdList->SetGraphicsRootDescriptorTable(0, _csuHeap->GetGPUCBVHandle(0)); // CBV
+    _cmdList->SetGraphicsRootDescriptorTable(1, _csuHeap->GetGPUSRVHandle(0)); // SRV
 
     // トポロジーセット
-    _cmdList->SetTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    _cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 // 頂点バッファビュー
@@ -775,10 +783,10 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(NaturalBufferedData<unsigned short>
 void DX12::ExeCmd()
 {
     _cmdList->Close(); // コマンドクローズ
-    _cmdQueue->ExeCmd(_cmdList.get()); // コマンド実行
+    _cmdQueue->ExeCmd(_cmdList.Get()); // コマンド実行
     WaitProcessWithFence(); // フェンスによる同期処理
     _cmdAllocator->Reset();               // コマンドアロケータリセット
-    _cmdList->Reset(_cmdAllocator.Get()); // コマンドリストリセット
+    _cmdList->Reset(_cmdAllocator.Get(), nullptr); // コマンドリストリセット
 }
 
 
@@ -821,7 +829,7 @@ void DX12::PrepareRenderTargetToFlip()
 {
     // バックバッファを表示画面に設定
     auto resourceBarrier = _rb->GetRBToPresent(_backBuffs[_currentBackBuffIdx].Get());
-    _cmdList->SetResourceBarrier(resourceBarrier);
+    _cmdList->ResourceBarrier(1, &resourceBarrier);
 
     ExeCmd(); // コマンド実行
 }
@@ -908,7 +916,6 @@ DX12::DX12() {
     _deviceContext = std::make_unique<DeviceContext>();
     _d2dDeviceContext = std::make_unique<D2DDeviceContext>();
 
-    _cmdList      = std::make_unique<CmdList>();
     _cmdQueue     = std::make_unique<CmdQueue>();
 
     _swapChain = std::make_unique<SwapChain>();

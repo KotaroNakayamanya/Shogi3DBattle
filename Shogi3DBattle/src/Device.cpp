@@ -32,7 +32,7 @@ ComPtr<ID3D12CommandAllocator> Device::CreateCmdAllocator()
 }
 
 // コマンドリスト作成
-HRESULT Device::CreateCmdList(CmdList* cmdList, ID3D12CommandAllocator* cmdAllocator)
+ComPtr<ID3D12GraphicsCommandList> Device::CreateCmdList(ID3D12CommandAllocator* cmdAllocator)
 {
     ComPtr<ID3D12GraphicsCommandList> comPtr;
 
@@ -43,8 +43,7 @@ HRESULT Device::CreateCmdList(CmdList* cmdList, ID3D12CommandAllocator* cmdAlloc
         nullptr,
         IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
 
-    cmdList->SetCmdList(comPtr);
-    return S_OK;
+    return comPtr;
 }
 
 // コマンドキュー作成

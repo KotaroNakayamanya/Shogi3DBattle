@@ -1,9 +1,9 @@
 #include"CmdQueue.h"
 
 // コマンド実行
-void CmdQueue::ExeCmd(CmdList* cmdList)
+void CmdQueue::ExeCmd(ID3D12CommandList* cmdList)
 {
-    ID3D12CommandList* commandLists[] = {cmdList->GetCmdList()}; // リストに格納
+    ID3D12CommandList* commandLists[] = {cmdList}; // リストに格納
     _cmdQueue->ExecuteCommandLists(1, commandLists); // コマンドキュー実行
 }
 
