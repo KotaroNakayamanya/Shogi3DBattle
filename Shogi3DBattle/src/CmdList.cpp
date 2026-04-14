@@ -108,9 +108,9 @@ void CmdList::Close()
 }
 
 // コマンドリセット
-void CmdList::Reset(CmdAllocator* cmdAllocator)
+void CmdList::Reset(ID3D12CommandAllocator* cmdAllocator)
 {
-    _cmdList->Reset(cmdAllocator->GetCmdAllocator(), nullptr);
+    _cmdList->Reset(cmdAllocator, nullptr);
 }
 
 

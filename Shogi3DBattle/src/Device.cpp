@@ -20,35 +20,30 @@ template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 // コマンドアロケータオブジェクト作成
-HRESULT Device::CreateCmdAllocator(CmdAllocator* cmdAllocator)
+ComPtr<ID3D12CommandAllocator> Device::CreateCmdAllocator()
 {
-    ComPtr<ID3D12CommandAllocator> cmdAllocatorCom;
+    ComPtr<ID3D12CommandAllocator> comPtr;
 
-    HRESULT result;
-    result = _device->CreateCommandAllocator(
+    _device->CreateCommandAllocator(
         D3D12_COMMAND_LIST_TYPE_DIRECT,
-        IID_PPV_ARGS(cmdAllocatorCom.ReleaseAndGetAddressOf()));
-    if(FAILED(result)) return result;
+        IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
 
-    cmdAllocator->SetCmdAllocator(cmdAllocatorCom);
-    return S_OK;
+    return comPtr;
 }
 
 // コマンドリスト作成
-HRESULT Device::CreateCmdList(CmdList* cmdList, CmdAllocator* cmdAllocator)
+HRESULT Device::CreateCmdList(CmdList* cmdList, ID3D12CommandAllocator* cmdAllocator)
 {
-    ComPtr<ID3D12GraphicsCommandList> cmdListCom;
+    ComPtr<ID3D12GraphicsCommandList> comPtr;
 
-    HRESULT result;
-    result = _device->CreateCommandList(
+    _device->CreateCommandList(
         0,
         D3D12_COMMAND_LIST_TYPE_DIRECT,
-        cmdAllocator->GetCmdAllocator(),
+        cmdAllocator,
         nullptr,
-        IID_PPV_ARGS(cmdListCom.ReleaseAndGetAddressOf()));
-    if(FAILED(result)) return result;
+        IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
 
-    cmdList->SetCmdList(cmdListCom);
+    cmdList->SetCmdList(comPtr);
     return S_OK;
 }
 

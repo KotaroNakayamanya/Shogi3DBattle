@@ -121,9 +121,9 @@ HRESULT DX12::CreateDXGIFactory()
 HRESULT DX12::CreateCommand()
 {
     // コマンドアロケータ作成
-    if (FAILED(_device->CreateCmdAllocator(_cmdAllocator.get()))) goto failed;
+    _cmdAllocator = _device->CreateCmdAllocator();
     // コマンドリスト作成
-    if (FAILED(_device->CreateCmdList(_cmdList.get(), _cmdAllocator.get()))) goto failed;
+    if (FAILED(_device->CreateCmdList(_cmdList.get(), _cmdAllocator.Get()))) goto failed;
     // コマンドキュー作成
     if (FAILED(_device->CreateCmdQueue(_cmdQueue.get()))) goto failed;
 
@@ -778,7 +778,7 @@ void DX12::ExeCmd()
     _cmdQueue->ExeCmd(_cmdList.get()); // コマンド実行
     WaitProcessWithFence(); // フェンスによる同期処理
     _cmdAllocator->Reset();               // コマンドアロケータリセット
-    _cmdList->Reset(_cmdAllocator.get()); // コマンドリストリセット
+    _cmdList->Reset(_cmdAllocator.Get()); // コマンドリストリセット
 }
 
 
@@ -908,7 +908,6 @@ DX12::DX12() {
     _deviceContext = std::make_unique<DeviceContext>();
     _d2dDeviceContext = std::make_unique<D2DDeviceContext>();
 
-    _cmdAllocator = std::make_unique<CmdAllocator>();
     _cmdList      = std::make_unique<CmdList>();
     _cmdQueue     = std::make_unique<CmdQueue>();
 

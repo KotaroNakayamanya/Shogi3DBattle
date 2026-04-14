@@ -6,7 +6,6 @@
 
 #include"Device11.h"
 #include"DeviceContext.h"
-#include"CmdAllocator.h"
 #include"CmdList.h"
 #include"CmdQueue.h"
 #include"SwapChain.h"
@@ -67,8 +66,8 @@ private:
     D3D12_DEPTH_STENCIL_DESC GetDepthStencilDesc(); // デプスステンシルディスクリプタ
 
 public:
-    HRESULT CreateCmdAllocator(CmdAllocator* comAllocator);              // コマンドアロケータ作成
-    HRESULT CreateCmdList(CmdList* comList, CmdAllocator* comAllocator); // コマンドリスト作成
+    ComPtr<ID3D12CommandAllocator> CreateCmdAllocator();              // コマンドアロケータ作成
+    HRESULT CreateCmdList(CmdList* comList, ID3D12CommandAllocator* comAllocator); // コマンドリスト作成
     HRESULT CreateCmdQueue(CmdQueue* comQueue);                          // コマンドキュー作成
 
     HRESULT CreateFence(Fence* fence); // フェンス作成

@@ -32,7 +32,7 @@ private:
     HRESULT CreateDXGIFactory(); // DXGIファクトリー作成
 
     // コマンド
-    std::unique_ptr<CmdAllocator> _cmdAllocator; // コマンドアロケータ
+    ComPtr<ID3D12CommandAllocator> _cmdAllocator; // コマンドアロケータ
     std::unique_ptr<CmdList> _cmdList; // コマンドリスト
     std::unique_ptr<CmdQueue> _cmdQueue; // コマンドリスト
     HRESULT CreateCommand(); // コマンド系作成

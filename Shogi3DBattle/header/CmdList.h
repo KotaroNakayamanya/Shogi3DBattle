@@ -3,7 +3,6 @@
 #include<d3d12.h>
 #include<wrl.h>
 #include"NaturalBufferedData.h"
-#include"CmdAllocator.h"
 
 class CmdList
 {
@@ -45,7 +44,7 @@ public:
 
     void Close(); // コマンドクローズ
 
-    void Reset(CmdAllocator* cmdAllocator); // コマンドリセット
+    void Reset(ID3D12CommandAllocator* cmdAllocator); // コマンドリセット
     
 
     

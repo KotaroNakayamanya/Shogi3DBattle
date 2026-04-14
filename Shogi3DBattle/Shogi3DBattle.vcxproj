@@ -44,7 +44,6 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\ConstBuffFactory.cpp" />
     <ClCompile Include="src\CBVFactory.cpp" />
-    <ClCompile Include="src\CmdAllocator.cpp" />
     <ClCompile Include="src\CmdList.cpp" />
     <ClCompile Include="src\CmdQueue.cpp" />
     <ClCompile Include="src\CSUHeapDesc.cpp" />
@@ -141,7 +140,6 @@
     <ClInclude Include="header\Gold.h" />
     <ClInclude Include="header\I_BuffFactory.h" />
     <ClInclude Include="header\CBVFactory.h" />
-    <ClInclude Include="header\CmdAllocator.h" />
     <ClInclude Include="header\CmdList.h" />
     <ClInclude Include="header\CmdQueue.h" />
     <ClInclude Include="header\CSUHeapDesc.h" />
