@@ -24,7 +24,7 @@ public:
     HRESULT CreateDevice(Device* device, Adapter* adapter); // Direct3Dデバイス作成
     HRESULT CreateSwapChain( // スワップチェーン作成
         SwapChain* swapChain,
-        CmdQueue* cmdQueue,
+        ID3D12CommandQueue* cmdQueue,
         GameWindow* gameWindow);
 
     void SetDXGIFactory(ComPtr<IDXGIFactory6> dxgiFactory); // DXGIファクトリーセット

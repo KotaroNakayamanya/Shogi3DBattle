@@ -47,20 +47,17 @@ ComPtr<ID3D12GraphicsCommandList> Device::CreateCmdList(ID3D12CommandAllocator* 
 }
 
 // コマンドキュー作成
-HRESULT Device::CreateCmdQueue(CmdQueue* cmdQueue)
+ComPtr<ID3D12CommandQueue> Device::CreateCmdQueue()
 {
-    ComPtr<ID3D12CommandQueue> cmdQueueCom;
+    ComPtr<ID3D12CommandQueue> comPtr;
 
     D3D12_COMMAND_QUEUE_DESC cmdQueueDesc = GetCmdQueueDesc();
 
-    HRESULT result;
-    result = _device->CreateCommandQueue(
+    _device->CreateCommandQueue(
         &cmdQueueDesc,
-        IID_PPV_ARGS(cmdQueueCom.ReleaseAndGetAddressOf()));
-    if(FAILED(result)) return result;
+        IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
 
-    cmdQueue->SetCmdQueue(cmdQueueCom);
-    return S_OK;
+    return comPtr;
 }
 
 // コマンドキューディスクリプタ
@@ -679,7 +676,7 @@ D3D12_DEPTH_STENCIL_DESC Device::GetDepthStencilDesc()
 HRESULT Device::CreateD3D11(
     Device11* device11,
     DeviceContext* deviceContext,
-    CmdQueue* cmdQueue)
+    ID3D12CommandQueue** cmdQueueAddress)
 {
     ComPtr<ID3D11On12Device> device11Com;
     ComPtr<ID3D11DeviceContext> deviceContextCom;
@@ -698,7 +695,7 @@ HRESULT Device::CreateD3D11(
         flags,
         nullptr, // 3D12の機能レベル使用
         0,       // 機能レベル配列サイズ(nullptrのため0）
-        reinterpret_cast<IUnknown**>(cmdQueue->GetCmdQueuePtr()),
+        reinterpret_cast<IUnknown**>(cmdQueueAddress),
         1, // キューの個数 1
         0, // ノードマスク
         device11Origin.ReleaseAndGetAddressOf(),

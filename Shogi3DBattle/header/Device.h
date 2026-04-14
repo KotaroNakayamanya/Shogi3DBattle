@@ -6,7 +6,6 @@
 
 #include"Device11.h"
 #include"DeviceContext.h"
-#include"CmdQueue.h"
 #include"SwapChain.h"
 #include"Heap.h"
 #include"View.h"
@@ -65,9 +64,9 @@ private:
     D3D12_DEPTH_STENCIL_DESC GetDepthStencilDesc(); // デプスステンシルディスクリプタ
 
 public:
-    ComPtr<ID3D12CommandAllocator> CreateCmdAllocator();                                     // コマンドアロケータ作成
-    ComPtr<ID3D12GraphicsCommandList>      CreateCmdList     (ID3D12CommandAllocator* comAllocator); // コマンドリスト作成
-    HRESULT CreateCmdQueue(CmdQueue* comQueue);                          // コマンドキュー作成
+    ComPtr<ID3D12CommandAllocator>    CreateCmdAllocator();                                     // コマンドアロケータ作成
+    ComPtr<ID3D12GraphicsCommandList> CreateCmdList     (ID3D12CommandAllocator* comAllocator); // コマンドリスト作成
+    ComPtr<ID3D12CommandQueue>        CreateCmdQueue    ();                                     // コマンドキュー作成
 
     HRESULT CreateFence(Fence* fence); // フェンス作成
     
@@ -96,7 +95,7 @@ public:
     HRESULT CreateD3D11( // Direct3D11系作成
         Device11* device11,
         DeviceContext* deviceContext,
-        CmdQueue* cmdQueue);
+        ID3D12CommandQueue** cmdQueueAddress);
 
 
 

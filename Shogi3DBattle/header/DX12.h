@@ -32,9 +32,9 @@ private:
     HRESULT CreateDXGIFactory(); // DXGIファクトリー作成
 
     // コマンド
-    ComPtr<ID3D12CommandAllocator> _cmdAllocator; // コマンドアロケータ
-    ComPtr<ID3D12GraphicsCommandList>      _cmdList; // コマンドリスト
-    std::unique_ptr<CmdQueue> _cmdQueue; // コマンドリスト
+    ComPtr<ID3D12CommandAllocator>    _cmdAllocator; // コマンドアロケータ
+    ComPtr<ID3D12GraphicsCommandList> _cmdList;      // コマンドリスト
+    ComPtr<ID3D12CommandQueue>        _cmdQueue;     // コマンドリスト
     HRESULT CreateCommand(); // コマンド系作成
 
     // スワップチェーン

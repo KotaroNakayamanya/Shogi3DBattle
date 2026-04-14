@@ -31,7 +31,7 @@ bool DX12::InitDX12(GameWindow* gameWindow)
 {
     if(FAILED(CreateFactory())) goto failed; // ファクトリー系作成
     if(FAILED(CreateCommand())) goto failed; // コマンド系作成
-    if(FAILED(_dxgiFactory->CreateSwapChain(_swapChain.get(), _cmdQueue.get(), gameWindow))) goto failed; // スワップチェーン作成
+    if(FAILED(_dxgiFactory->CreateSwapChain(_swapChain.get(), _cmdQueue.Get(), gameWindow))) goto failed; // スワップチェーン作成
     if(FAILED(_device->CreateFence(_fence.get()))) goto failed; // フェンス作成
     
     if(FAILED(CreateBuff())) goto failed; // バッファ系作成
@@ -125,7 +125,7 @@ HRESULT DX12::CreateCommand()
     // コマンドリスト作成
     _cmdList      = _device->CreateCmdList     (_cmdAllocator.Get());
     // コマンドキュー作成
-    if (FAILED(_device->CreateCmdQueue(_cmdQueue.get()))) goto failed;
+    _cmdQueue = _device->CreateCmdQueue();
 
     return S_OK;
 
@@ -347,7 +347,7 @@ HRESULT DX12::CreateD2D()
     auto gameWindow = Application::GetInstance().GetGameWindow();
 
     // Direct3D11系作成
-    if (FAILED(_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.get()))) goto failed;
+    if (FAILED(_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.GetAddressOf()))) goto failed;
     // Direct2Dデバイスコンテキスト作成
     if (FAILED(_device11->CreateD2DDeviceContext(_d2dDeviceContext.get()))) goto failed;
     
@@ -783,7 +783,11 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(NaturalBufferedData<unsigned short>
 void DX12::ExeCmd()
 {
     _cmdList->Close(); // コマンドクローズ
-    _cmdQueue->ExeCmd(_cmdList.Get()); // コマンド実行
+
+    // コマンド実行
+    ID3D12CommandList* commandLists[] = {_cmdList.Get()}; // リストに格納
+    _cmdQueue->ExecuteCommandLists(1, commandLists); // コマンドキュー実行
+
     WaitProcessWithFence(); // フェンスによる同期処理
     _cmdAllocator->Reset();               // コマンドアロケータリセット
     _cmdList->Reset(_cmdAllocator.Get(), nullptr); // コマンドリストリセット
@@ -841,7 +845,7 @@ void DX12::WaitProcessWithFence()
 {
     // GPU処理完了後のフェンスの値を設定
     auto nextFenceVal = _fence->GetFenceVal() + 1;
-    _cmdQueue->GetCmdQueue()->Signal(_fence->GetFence(), nextFenceVal);
+    _cmdQueue->Signal(_fence->GetFence(), nextFenceVal);
     
     // フェンス値が更新されるまで待機
     while (_fence->GetFenceVal() != nextFenceVal)
@@ -915,8 +919,6 @@ DX12::DX12() {
     _device11      = std::make_unique<Device11>();
     _deviceContext = std::make_unique<DeviceContext>();
     _d2dDeviceContext = std::make_unique<D2DDeviceContext>();
-
-    _cmdQueue     = std::make_unique<CmdQueue>();
 
     _swapChain = std::make_unique<SwapChain>();
 
