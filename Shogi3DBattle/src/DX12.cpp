@@ -7,6 +7,7 @@
 #include"WorldMat.h"
 
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d2d1")
 #pragma comment(lib, "dwrite.lib")
 
 namespace {
@@ -320,11 +321,21 @@ HRESULT DX12::CreateD2D()
 {   
     auto gameWindow = Application::GetInstance().GetGameWindow();
 
+
     // Direct3D11系作成
-    if (FAILED(_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.GetAddressOf()))) goto failed;
-    // Direct2Dデバイスコンテキスト作成
-    _d2dDeviceContext = _device11->CreateD2DDeviceContext();
+    _device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.GetAddressOf());
+
+    // Direct2Dファクトリー系作成
+    _direct2DFactory = CreateDirect2DFactory(); // Direct2Dファクトリー作成
+
+    auto dxgiDevice = _device11->GetDXGIDevice();                                // DXGIデバイス取得
+    _direct2DDevice  = _direct2DFactory->CreateDirect2DDevice(dxgiDevice.Get()); // Direct2Dデバイス作成
+    _direct2DFactory.reset(); // Direct2Dファクトリー解放
     
+    _d2dDeviceContext = _direct2DDevice->CreateDirect2DDeviceContext(); // Direct2Dデバイスコンテキスト作成
+    _direct2DDevice.reset(); // Direct2Dデバイス解放
+    
+
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
     _swapChain->GetDesc(&swapChainDesc);
     unsigned int backBuffNum;
@@ -385,6 +396,27 @@ HRESULT DX12::CreateD2D()
 failed:
     return E_FAIL;
 }
+
+// Direct2Dファクトリー作成
+std::unique_ptr<Direct2DFactory> DX12::CreateDirect2DFactory()
+{
+    ComPtr<ID2D1Factory3> comPtr;
+
+    HRESULT result;
+
+    result = D2D1CreateFactory(
+        D2D1_FACTORY_TYPE_SINGLE_THREADED,
+        __uuidof(ID2D1Factory3),
+        nullptr,
+        reinterpret_cast<void**>(comPtr.ReleaseAndGetAddressOf()));
+
+    assert(SUCCEEDED(result));
+
+    return std::make_unique<Direct2DFactory>(comPtr);
+}
+
+
+
 
 // バッファに書き込み
 HRESULT DX12::WriteToBuff()

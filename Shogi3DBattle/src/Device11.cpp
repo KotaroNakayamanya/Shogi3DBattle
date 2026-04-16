@@ -7,46 +7,6 @@
 template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-// Direct2Dデバイスコンテキスト作成
-std::unique_ptr<D2DDeviceContext> Device11::CreateD2DDeviceContext()
-{
-
-    HRESULT result;
-    
-    // Direct2Dファクトリー作成
-    ComPtr<ID2D1Factory3> d2dFactory;
-
-    result = D2D1CreateFactory(
-        D2D1_FACTORY_TYPE_SINGLE_THREADED,
-        __uuidof(ID2D1Factory3),
-        nullptr,
-        reinterpret_cast<void**>(d2dFactory.ReleaseAndGetAddressOf()));
-
-    assert(SUCCEEDED(result));
-
-    // DXGIデバイス作成
-    ComPtr<IDXGIDevice> dxgiDevice;
-    result = _device11.As(&dxgiDevice);
-    assert(SUCCEEDED(result));
-
-    // D2Dデバイス作成
-    ComPtr<ID2D1Device> d2dDevice;
-    result = d2dFactory->CreateDevice(
-        dxgiDevice.Get(),
-        d2dDevice.ReleaseAndGetAddressOf());
-    assert(SUCCEEDED(result));
-
-
-    ComPtr<ID2D1DeviceContext> comPtr;
-
-    result = d2dDevice->CreateDeviceContext(
-        D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
-        comPtr.ReleaseAndGetAddressOf());
-    assert(SUCCEEDED(result));
-
-    return std::make_unique<D2DDeviceContext>(comPtr);
-}
-
 // ラップされたバックバッファ作成
 ComPtr<ID3D11Resource> Device11::CreateWrappedBackBuff(ID3D12Resource* buff)
 {
@@ -108,5 +68,11 @@ void Device11::ReleaseWrappedBuff(ID3D11Resource** wrappedBuffAddress)
 // Direct3D11デバイスセット
 void Device11::SetDevice11(ComPtr<ID3D11On12Device> device11){_device11 = device11;}
 
-Device11::Device11(){}
-Device11::~Device11(){}
+// Direct3DDeviceをDXGIDeviceとして返す
+ComPtr<IDXGIDevice> Device11::GetDXGIDevice()
+{
+    ComPtr<IDXGIDevice> comPtr;
+    _device11.As(&comPtr);
+
+    return comPtr;
+}

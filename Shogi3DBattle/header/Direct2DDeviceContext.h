@@ -3,13 +3,13 @@
 #include<wrl.h>
 #include"Text2D.h"
 
-class D2DDeviceContext
+class Direct2DDeviceContext
 {
     template<typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 private:
-    ComPtr<ID2D1DeviceContext> _d2dDeviceContext;
+    ComPtr<ID2D1DeviceContext> _direct2DDeviceContext; // Direct2Dデバイスコンテキスト
     
 public:
     // Direct2Dレンダーターゲット作成
@@ -35,7 +35,7 @@ public:
         ID2D1Brush* fillBrush,
         ID2D1Brush* strokeBrush);
 
-    void SetD2DDeviceContext(ComPtr<ID2D1DeviceContext> d2dDeviceContext); // Direct2Dデバイスコンテキストセット
+    void SetDirect2DDeviceContext(ComPtr<ID2D1DeviceContext> direct2DDeviceContext); // Direct2Dデバイスコンテキストセット
 
-    D2DDeviceContext(ComPtr<ID2D1DeviceContext> comPtr);
+    Direct2DDeviceContext(ComPtr<ID2D1DeviceContext> comPtr);
 };

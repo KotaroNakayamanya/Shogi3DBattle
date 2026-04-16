@@ -16,6 +16,9 @@
 
 #include<wrl.h>
 
+#include"Direct2DFactory.h"
+#include"Direct2DDevice.h"
+
 class DX12
 {
     template<typename T>
@@ -78,11 +81,15 @@ private:
     // Direct2D
 
     // Direct2Dファクトリー
-    ComPtr<ID2D1Factory3> _direct2DFactory; // Direct2Dファクトリー
+    std::unique_ptr<Direct2DFactory> _direct2DFactory;        // Direct2Dファクトリー
+    std::unique_ptr<Direct2DFactory> CreateDirect2DFactory(); // Direct2Dファクトリー作成
+
+    // Direct2Dデバイス
+    std::unique_ptr<Direct2DDevice> _direct2DDevice;
 
     std::unique_ptr<Device11>         _device11;         // Direct3D11デバイス
     std::unique_ptr<DeviceContext>    _deviceContext;    // デバイスコンテキスト
-    std::unique_ptr<D2DDeviceContext> _d2dDeviceContext; // Direct2Dデバイスコンテキスト
+    std::unique_ptr<Direct2DDeviceContext> _d2dDeviceContext; // Direct2Dデバイスコンテキスト
     std::unique_ptr<TextFormatFactory> _textFormatFactory;    // テキストフォーマットファクトリー
     HRESULT CreateD2D(); // Direct2D系作成
 
@@ -163,5 +170,4 @@ public:
         UINT width, UINT height);
 
     DX12();
-    ~DX12() = default;
 };

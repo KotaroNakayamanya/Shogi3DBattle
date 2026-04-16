@@ -402,7 +402,7 @@
     <ClCompile Include="src\ResourceBarrier.cpp">
       <Filter>ソース ファイル\dx12\resource_barrier</Filter>
     </ClCompile>
-    <ClCompile Include="src\D2DDeviceContext.cpp">
+    <ClCompile Include="src\Direct2DDeviceContext.cpp">
       <Filter>ソース ファイル\dx12\d3d11\d2d</Filter>
     </ClCompile>
     <ClCompile Include="src\Device11.cpp">
@@ -537,6 +537,12 @@
     <ClCompile Include="src\TextFormatFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\Direct2DFactory.cpp">
+      <Filter>ソース ファイル\dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Direct2DDevice.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -659,7 +665,7 @@
     <ClInclude Include="header\Adapter.h">
       <Filter>ヘッダー ファイル\DX12\factory</Filter>
     </ClInclude>
-    <ClInclude Include="header\D2DDeviceContext.h">
+    <ClInclude Include="header\Direct2DDeviceContext.h">
       <Filter>ヘッダー ファイル\DX12\d3d11\d2d</Filter>
     </ClInclude>
     <ClInclude Include="header\Device11.h">

@@ -18,6 +18,8 @@
 #include"BuffType.h"
 #include"HeapType.h"
 
+#include<string>
+
 class Device
 {
     template<typename T>

@@ -31,6 +31,8 @@
     <ClCompile Include="src\BuffResourceDesc.cpp" />
     <ClCompile Include="src\CancelButton.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
+    <ClCompile Include="src\Direct2DDevice.cpp" />
+    <ClCompile Include="src\Direct2DFactory.cpp" />
     <ClCompile Include="src\ExitGameButton.cpp" />
     <ClCompile Include="src\Gold.cpp" />
     <ClCompile Include="src\I_Board.cpp" />
@@ -46,7 +48,7 @@
     <ClCompile Include="src\CBVFactory.cpp" />
     <ClCompile Include="src\CSUHeapDesc.cpp" />
     <ClCompile Include="src\CSUOffset.cpp" />
-    <ClCompile Include="src\D2DDeviceContext.cpp" />
+    <ClCompile Include="src\Direct2DDeviceContext.cpp" />
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Device11.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
@@ -141,7 +143,7 @@
     <ClInclude Include="header\CSUHeapDesc.h" />
     <ClInclude Include="header\CSUHeapFactory.h" />
     <ClInclude Include="header\CSUOffset.h" />
-    <ClInclude Include="header\D2DDeviceContext.h" />
+    <ClInclude Include="header\Direct2DDeviceContext.h" />
     <ClInclude Include="header\DSVFactory.h" />
     <ClInclude Include="header\DSVHeapDesc.h" />
     <ClInclude Include="header\DSVHeapFactory.h" />

@@ -1,11 +1,11 @@
-#include"D2DDeviceContext.h"
+#include"Direct2DDeviceContext.h"
 #include"Application.h"
 
 template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 // Direct2Dレンダーターゲット作成
-ComPtr<ID2D1Bitmap1> D2DDeviceContext::CreateD2DRenderTarget(IDXGISurface* dxgiSurface)
+ComPtr<ID2D1Bitmap1> Direct2DDeviceContext::CreateD2DRenderTarget(IDXGISurface* dxgiSurface)
 {
     ComPtr<ID2D1Bitmap1> ComPtr;
     
@@ -24,7 +24,7 @@ ComPtr<ID2D1Bitmap1> D2DDeviceContext::CreateD2DRenderTarget(IDXGISurface* dxgiS
 
     
 
-    _d2dDeviceContext->CreateBitmapFromDxgiSurface(
+    _direct2DDeviceContext->CreateBitmapFromDxgiSurface(
         dxgiSurface,
         &bitmapProps,
         ComPtr.ReleaseAndGetAddressOf());
@@ -33,11 +33,11 @@ ComPtr<ID2D1Bitmap1> D2DDeviceContext::CreateD2DRenderTarget(IDXGISurface* dxgiS
 }
 
 // ブラシ作成 
-Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> D2DDeviceContext::CreateBrush(D2D1::ColorF color)
+Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> Direct2DDeviceContext::CreateBrush(D2D1::ColorF color)
 {
     ComPtr<ID2D1SolidColorBrush> comPtr;
 
-    _d2dDeviceContext->CreateSolidColorBrush(
+    _direct2DDeviceContext->CreateSolidColorBrush(
         color,
         comPtr.ReleaseAndGetAddressOf());
 
@@ -47,37 +47,37 @@ Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> D2DDeviceContext::CreateBrush(D2D1:
 
 
 // レンダーターゲットセット
-void D2DDeviceContext::SetRenderTarget(ID2D1Bitmap1* d2dRenderTarget)
+void Direct2DDeviceContext::SetRenderTarget(ID2D1Bitmap1* d2dRenderTarget)
 {
-    _d2dDeviceContext->SetTarget(d2dRenderTarget);
+    _direct2DDeviceContext->SetTarget(d2dRenderTarget);
 }
 
 // 描画開始
-void D2DDeviceContext::BeginDraw()
+void Direct2DDeviceContext::BeginDraw()
 {
-    _d2dDeviceContext->BeginDraw();
+    _direct2DDeviceContext->BeginDraw();
 }
 
 // トランスフォーム
-void D2DDeviceContext::SetTransform(D2D1::Matrix3x2F mat)
+void Direct2DDeviceContext::SetTransform(D2D1::Matrix3x2F mat)
 {
-    _d2dDeviceContext->SetTransform(mat);
+    _direct2DDeviceContext->SetTransform(mat);
 }
 
 // 描画終了
-void D2DDeviceContext::EndDraw()
+void Direct2DDeviceContext::EndDraw()
 {
-    _d2dDeviceContext->EndDraw();
+    _direct2DDeviceContext->EndDraw();
 }
 
 // テキスト描画
-void D2DDeviceContext::DrawTextW(
+void Direct2DDeviceContext::DrawTextW(
     std::wstring text,
     D2D1_RECT_F rect,
     IDWriteTextFormat* textFormat,
     ID2D1Brush* brush)
 {
-    _d2dDeviceContext->DrawTextW(
+    _direct2DDeviceContext->DrawTextW(
         text.c_str(),
         static_cast<UINT32>(text.length()),
         textFormat,
@@ -86,16 +86,16 @@ void D2DDeviceContext::DrawTextW(
 }
 
 // 四角形描画
-void D2DDeviceContext::DrawRectangle(
+void Direct2DDeviceContext::DrawRectangle(
     D2D1_RECT_F rect,
     ID2D1Brush* fillBrush,
     ID2D1Brush* strokeBrush)
 {
-    _d2dDeviceContext->FillRectangle(
+    _direct2DDeviceContext->FillRectangle(
         rect,fillBrush
     );
 
-    _d2dDeviceContext->DrawRectangle(
+    _direct2DDeviceContext->DrawRectangle(
         rect,
         strokeBrush,
         2.0f,
@@ -103,10 +103,10 @@ void D2DDeviceContext::DrawRectangle(
 }
 
 // 2Dテキスト描画
-void D2DDeviceContext::DrawText2D(Text2D text2D)
+void Direct2DDeviceContext::DrawText2D(Text2D text2D)
 {
 
-    _d2dDeviceContext->DrawTextW(
+    _direct2DDeviceContext->DrawTextW(
         text2D.text.c_str(),
         static_cast<UINT32>(text2D.text.length()),
         text2D.textFormat,
@@ -118,6 +118,6 @@ void D2DDeviceContext::DrawText2D(Text2D text2D)
 
 
 // Direct2Dデバイスコンテキストセット
-void D2DDeviceContext::SetD2DDeviceContext(ComPtr<ID2D1DeviceContext> d2dDeviceContext){_d2dDeviceContext = d2dDeviceContext;}
+void Direct2DDeviceContext::SetDirect2DDeviceContext(ComPtr<ID2D1DeviceContext> direct2DDeviceContext){_direct2DDeviceContext = direct2DDeviceContext;}
 
-D2DDeviceContext::D2DDeviceContext(ComPtr<ID2D1DeviceContext> comPtr) : _d2dDeviceContext(comPtr){}
+Direct2DDeviceContext::Direct2DDeviceContext(ComPtr<ID2D1DeviceContext> comPtr) : _direct2DDeviceContext(comPtr){}

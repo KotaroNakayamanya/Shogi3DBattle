@@ -1,8 +1,7 @@
 #pragma once
 
 #include<d3d11on12.h>
-#include<memory>
-#include"D2DDeviceContext.h"
+#include<wrl.h>
 
 class Device11
 {
@@ -13,8 +12,6 @@ private:
     ComPtr<ID3D11On12Device> _device11;
 
 public:
-    // Direct2Dデバイスコンテキスト作成
-    std::unique_ptr<D2DDeviceContext> CreateD2DDeviceContext();
     // ラップされたバックバッファ作成
     ComPtr<ID3D11Resource> CreateWrappedBackBuff(ID3D12Resource* buff);
     // ラップされたテクスチャバッファ作成
@@ -27,6 +24,5 @@ public:
 
     void SetDevice11(ComPtr<ID3D11On12Device> device11); // Direct3D11デバイスセット
 
-    Device11();
-    ~Device11();
+    ComPtr<IDXGIDevice> GetDXGIDevice(); // Direct3DDeviceをDXGIDeviceとして返す
 };
