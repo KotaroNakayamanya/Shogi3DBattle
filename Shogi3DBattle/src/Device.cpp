@@ -14,9 +14,6 @@
 #include"CBVFactory.h"
 #include"SRVFactory.h"
 
-#include<d3dcompiler.h>
-#pragma comment(lib, "d3dcompiler.lib")
-
 template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -229,33 +226,6 @@ void Device::CreateCSUView(CSUHeap* csuHeap, UINT i, ID3D12Resource* buff, View:
     CreateView(csuHeap, offset + i, buff, viewType);
 }
 
-
-
-// シェーダー作成
-ComPtr<ID3DBlob> Device::CreateShader(
-    std::wstring fileName,
-    std::string funcName,
-    std::string shaderType)
-{
-    ComPtr<ID3DBlob> comPtr;
-   
-    std::wstring path = L"shader/";
-
-    HRESULT result;
-    result = D3DCompileFromFile(
-        (path + fileName).c_str(),
-        nullptr,
-        D3D_COMPILE_STANDARD_FILE_INCLUDE,
-        funcName.c_str(),
-        shaderType.c_str(),
-        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-        0,
-        comPtr.ReleaseAndGetAddressOf(),
-        nullptr);
-    assert(SUCCEEDED(result));
-
-    return comPtr;
-}
 
 
 

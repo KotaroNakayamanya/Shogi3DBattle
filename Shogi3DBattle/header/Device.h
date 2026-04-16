@@ -77,11 +77,6 @@ public:
     HRESULT CreateRootSignature(RootSignature* rootSignature, CSUHeap* csuHeap); // ルートシグネチャ作成
     void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成
 
-    ComPtr<ID3DBlob> CreateShader( // シェーダー作成
-        std::wstring fileName,
-        std::string funcName,
-        std::string shaderType);
-
     HRESULT CreatePipeline( // パイプラインステート作成
         Pipeline* pipeline,
         RootSignature* rootSignature,

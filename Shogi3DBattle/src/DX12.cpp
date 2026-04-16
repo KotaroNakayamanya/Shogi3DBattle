@@ -5,8 +5,10 @@
 #include<cassert>
 #include"Vertices.h"
 #include"WorldMat.h"
+#include<d3dcompiler.h>
 
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d2d1")
 #pragma comment(lib, "dwrite.lib")
@@ -52,7 +54,8 @@ void DX12::InitDX12()
     
     if (FAILED(_device->CreateRootSignature(_rootSignature.get(), _csuHeap.get()))) goto failed; // ルートシグネチャオブジェクト作成
     _device->CreateInputLayout(_inputLayout.get()); // 頂点バッファ入力レイアウト作成
-    if(FAILED(CreateShader())) goto failed; // シェーダー系作成
+    _vShader = CreateShader(L"VertexShader.hlsl", "VShader", "vs_5_1"); // 頂点シェーダー作成
+    _pShader = CreateShader(L"PixelShader.hlsl",  "PShader", "ps_5_1"); // ピクセルシェーダー作成
 
     // パイプラインオブジェクト作成
     if (FAILED(_device->CreatePipeline(
@@ -265,13 +268,32 @@ void DX12::CreateView()
 }
 
 // シェーダー系作成
-HRESULT DX12::CreateShader()
+ComPtr<ID3DBlob> DX12::CreateShader(
+    std::wstring fileName,
+    std::string funcName,
+    std::string shaderType)
 {
-    _vShader = _device->CreateShader(L"VertexShader.hlsl", "VShader", "vs_5_1"); // 頂点シェーダー作成
-    _pShader = _device->CreateShader(L"PixelShader.hlsl",  "PShader", "ps_5_1"); // ピクセルシェーダー作成
+    ComPtr<ID3DBlob> comPtr;
+   
+    std::wstring path = L"shader/";
 
-    return S_OK;
+    HRESULT result;
+    result = D3DCompileFromFile(
+        (path + fileName).c_str(),
+        nullptr,
+        D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        funcName.c_str(),
+        shaderType.c_str(),
+        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+        0,
+        comPtr.ReleaseAndGetAddressOf(),
+        nullptr);
+    assert(SUCCEEDED(result));
+
+    return comPtr;
 }
+
+
 
 // 描画領域系作成
 void DX12::CreateDrawArea()
