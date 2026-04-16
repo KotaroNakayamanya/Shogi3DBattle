@@ -137,7 +137,7 @@ private:
     
 
     ComPtr<ID3D12RootSignature> _rootSignature; // ルートシグネチャ
-    std::unique_ptr<Pipeline> _pipeline; // パイプライン
+    ComPtr<ID3D12PipelineState> _pipeline; // パイプライン
 
     void InitRenderTarget(); // レンダーターゲット初期処理
 

@@ -57,14 +57,11 @@ void DX12::InitDX12()
     _vShader = CreateShader(L"VertexShader.hlsl", "VShader", "vs_5_1"); // 頂点シェーダー作成
     _pShader = CreateShader(L"PixelShader.hlsl",  "PShader", "ps_5_1"); // ピクセルシェーダー作成
 
-    // パイプラインオブジェクト作成
-    if (FAILED(_device->CreatePipeline(
-        _pipeline.get(),      // パイプライン
+    
+    _pipeline = _device->CreatePipeline( // パイプラインオブジェクト作成
         _rootSignature.Get(), // ルートシグネチャ
         _vShader.Get(),       // 頂点シェーダ
-        _pShader.Get())))     // ピクセルシェーダ
-        goto failed;
-
+        _pShader.Get());     // ピクセルシェーダ
     
     CreateDrawArea(); // 描画領域系作成
     
@@ -784,7 +781,7 @@ void DX12::SetCommandDrawGameObj()
 void DX12::Set3DCmd()
 {
     // パイプラインセット
-    _cmdList->SetPipelineState(_pipeline->GetPipelineState());
+    _cmdList->SetPipelineState(_pipeline.Get());
 
     // ルートシグネチャセット
     _cmdList->SetGraphicsRootSignature(_rootSignature.Get());
@@ -976,8 +973,6 @@ DX12::DX12() {
     _mainScissorRect = std::make_unique<D3D12_RECT>();
     _mapViewport     = std::make_unique<D3D12_VIEWPORT>();
     _mapScissorRect  = std::make_unique<D3D12_RECT>();
-
-    _pipeline      = std::make_unique<Pipeline>();
 
     _pieceTexRTVHeap = std::make_unique<Heap>();
     _pieceTexSRVHeap = std::make_unique<CSUHeap>();

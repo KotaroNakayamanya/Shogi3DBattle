@@ -409,8 +409,7 @@ void Device::DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc)
 
 
 // パイプラインステート作成
-HRESULT Device::CreatePipeline(
-    Pipeline* pipeline,
+ComPtr<ID3D12PipelineState> Device::CreatePipeline(
     ID3D12RootSignature* rootSignature,
     ID3DBlob* vShader,
     ID3DBlob* pShader)
@@ -423,10 +422,16 @@ HRESULT Device::CreatePipeline(
 
     auto inputLayout = CreateInputLayout();
     desc.InputLayout = GetInputLayoutDesc(inputLayout);
-    
-    return _device->CreateGraphicsPipelineState(
+
+    ComPtr<ID3D12PipelineState> comPtr;
+
+    HRESULT result;
+    result = _device->CreateGraphicsPipelineState(
         &desc,
-        IID_PPV_ARGS(pipeline->_pipelineState.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
+    assert(SUCCEEDED(result));
+
+    return comPtr;
 }
 
 // パイプラインステートディスクリプタ

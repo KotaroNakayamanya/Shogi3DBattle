@@ -1,5 +1,7 @@
 #pragma once
 
+#include<vector>
+
 #include"HeapFactory.h"
 #include"IViewFactory.h"
 #include"I_BuffFactory.h"
@@ -9,7 +11,6 @@
 #include"View.h"
 #include"GameWindow.h"
 #include"CSUHeap.h"
-#include"Pipeline.h"
 
 #include"BuffType.h"
 #include"HeapType.h"
@@ -73,8 +74,7 @@ public:
 
     ComPtr<ID3D12RootSignature> CreateRootSignature(CSUHeap* csuHeap); // ルートシグネチャ作成
 
-    HRESULT CreatePipeline( // パイプラインステート作成
-        Pipeline* pipeline,
+    ComPtr<ID3D12PipelineState> CreatePipeline( // パイプラインステート作成
         ID3D12RootSignature* rootSignature,
         ID3DBlob* vShader,
         ID3DBlob* pShader);

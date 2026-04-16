@@ -279,9 +279,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pipeline.cpp">
-      <Filter>ソース ファイル\dx12\pipeline</Filter>
-    </ClCompile>
     <ClCompile Include="src\Device.cpp">
       <Filter>ソース ファイル\dx12\factory</Filter>
     </ClCompile>
@@ -517,9 +514,6 @@
     </ClInclude>
     <ClInclude Include="header\DX12.h">
       <Filter>ヘッダー ファイル\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Pipeline.h">
-      <Filter>ヘッダー ファイル\dx12\pipeline</Filter>
     </ClInclude>
     <ClInclude Include="header\IHeapDesc.h">
       <Filter>ヘッダー ファイル\dx12\heap\factory\heap_desc</Filter>
