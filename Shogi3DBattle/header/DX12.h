@@ -44,12 +44,12 @@ private:
 
     // バッファ
     std::vector<ComPtr<ID3D12Resource>> _backBuffs; // バックバッファ
-    ComPtr<ID3D12Resource> _dsBuff; // デプスステンシルバッファ
-    ComPtr<ID3D12Resource> _vertBuff; // 頂点バッファ
-    ComPtr<ID3D12Resource> _idxBuff;  // インデックスバッファ
-    ComPtr<ID3D12Resource> _constBuff; // コンスタントバッファ
+    ComPtr<ID3D12Resource>              _dsBuff;    // デプスステンシルバッファ
+    ComPtr<ID3D12Resource>              _vertBuff;  // 頂点バッファ
+    ComPtr<ID3D12Resource>              _idxBuff;   // インデックスバッファ
+    ComPtr<ID3D12Resource>              _constBuff; // コンスタントバッファ
 
-    ComPtr<ID3D12Resource> _woodTexBuff; // 木材テクスチャバッファ
+    std::vector<ComPtr<ID3D12Resource>> _woodTexBuffs; // 木材テクスチャバッファ
     std::vector<ComPtr<ID3D12Resource>> _shogiObjTexBuffs; // 将棋オブジェクト種類ごとのテクスチャバッファ
 
     std::vector<ComPtr<ID3D11Resource>> _wrappedPieceTexBuffs; // ラップされた駒テクスチャバッファ
@@ -91,7 +91,6 @@ private:
     // Direct2Dデバイス
     std::unique_ptr<Direct2DDevice>        _direct2DDevice;
     std::unique_ptr<Direct2DDeviceContext> _direct2DDeviceContext; // Direct2Dデバイスコンテキスト
-
     HRESULT CreateD2D(); // Direct2D系作成
 
     

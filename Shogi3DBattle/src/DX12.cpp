@@ -6,6 +6,7 @@
 #include"Vertices.h"
 #include"WorldMat.h"
 #include<d3dcompiler.h>
+#include"BasicTexType.h"
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
@@ -166,9 +167,10 @@ HRESULT DX12::CreateBuff()
     _idxBuff = _device->CreateBuff(widthSize, heightSize, BuffType::INDEX);
 
     // 木材テクスチャバッファ作成
+    _woodTexBuffs.resize(1);
     widthSize  = woodTex->GetWidth();
     heightSize = woodTex->GetHeight();
-    _woodTexBuff = _device->CreateBuff(widthSize, heightSize, BuffType::TEXTURE);
+    _woodTexBuffs[0] = _device->CreateBuff(widthSize, heightSize, BuffType::TEXTURE);
 
     // 将棋オブジェクト種類ごとのテクスチャバッファ作成
     unsigned int gameObjTexNum;
@@ -254,7 +256,7 @@ void DX12::CreateView()
 
     // 木材テクスチャ用SRV作成
     auto woodTexNum = 1;
-    _device->CreateCSUView(_csuHeap.get(), 0, _woodTexBuff.Get(), View::SRV);
+    _device->CreateCSUView(_csuHeap.get(), 0, _woodTexBuffs[0].Get(), View::SRV);
 
     // 将棋オブジェクト用SRV作成
     auto shogiObjTexNum = 10;
@@ -535,7 +537,7 @@ HRESULT DX12::WriteToBuff()
     mapCamera ->SetStartDataIdx(idx);
 
 
-    if(FAILED(woodTex->WriteToBuff(_woodTexBuff.Get()))) goto failed; // 木材テクスチャをバッファに書き込み
+    if(FAILED(woodTex->WriteToBuff(_woodTexBuffs[static_cast<unsigned int>(BasicTexType::YELLOW_WOOD)].Get()))) goto failed; // 木材テクスチャをバッファに書き込み
 
     if(FAILED(boardLineTexs[0]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_55)].Get()))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
     if(FAILED(boardLineTexs[1]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_99)].Get()))) goto failed; // 9×9将棋盤黒線テクスチャをバッファに書き込み
