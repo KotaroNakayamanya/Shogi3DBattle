@@ -119,3 +119,5 @@ void D2DDeviceContext::DrawText2D(Text2D text2D)
 
 // Direct2Dデバイスコンテキストセット
 void D2DDeviceContext::SetD2DDeviceContext(ComPtr<ID2D1DeviceContext> d2dDeviceContext){_d2dDeviceContext = d2dDeviceContext;}
+
+D2DDeviceContext::D2DDeviceContext(ComPtr<ID2D1DeviceContext> comPtr) : _d2dDeviceContext(comPtr){}

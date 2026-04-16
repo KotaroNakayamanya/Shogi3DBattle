@@ -323,7 +323,7 @@ HRESULT DX12::CreateD2D()
     // Direct3D11系作成
     if (FAILED(_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.GetAddressOf()))) goto failed;
     // Direct2Dデバイスコンテキスト作成
-    if (FAILED(_device11->CreateD2DDeviceContext(_d2dDeviceContext.get()))) goto failed;
+    _d2dDeviceContext = _device11->CreateD2DDeviceContext();
     
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
     _swapChain->GetDesc(&swapChainDesc);
@@ -884,7 +884,6 @@ DX12::DX12() {
 
     _device11      = std::make_unique<Device11>();
     _deviceContext = std::make_unique<DeviceContext>();
-    _d2dDeviceContext = std::make_unique<D2DDeviceContext>();
 
     _dsvHeap = std::make_unique<Heap>();
 

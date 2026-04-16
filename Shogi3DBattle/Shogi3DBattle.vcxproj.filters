@@ -303,21 +303,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\SwapChain.cpp">
-      <Filter>ソース ファイル\dx12\swap_chain</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CmdAllocator.cpp">
-      <Filter>ソース ファイル\dx12\command</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CmdList.cpp">
-      <Filter>ソース ファイル\dx12\command</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CmdQueue.cpp">
-      <Filter>ソース ファイル\dx12\command</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Fence.cpp">
-      <Filter>ソース ファイル\dx12\fence</Filter>
-    </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
       <Filter>ソース ファイル\dx12\root_signature</Filter>
     </ClCompile>
@@ -421,9 +406,6 @@
       <Filter>ソース ファイル\dx12\d3d11\d2d</Filter>
     </ClCompile>
     <ClCompile Include="src\Device11.cpp">
-      <Filter>ソース ファイル\dx12\d3d11\factory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DWriteFactory.cpp">
       <Filter>ソース ファイル\dx12\d3d11\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\DeviceContext.cpp">
@@ -552,6 +534,9 @@
     <ClCompile Include="src\I_SelectingButtonScene.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
+    <ClCompile Include="src\TextFormatFactory.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -559,21 +544,6 @@
     </ClInclude>
     <ClInclude Include="header\DX12.h">
       <Filter>ヘッダー ファイル\DX12</Filter>
-    </ClInclude>
-    <ClInclude Include="header\SwapChain.h">
-      <Filter>ヘッダー ファイル\DX12\swap_chain</Filter>
-    </ClInclude>
-    <ClInclude Include="header\CmdAllocator.h">
-      <Filter>ヘッダー ファイル\DX12\command</Filter>
-    </ClInclude>
-    <ClInclude Include="header\CmdList.h">
-      <Filter>ヘッダー ファイル\DX12\command</Filter>
-    </ClInclude>
-    <ClInclude Include="header\CmdQueue.h">
-      <Filter>ヘッダー ファイル\DX12\command</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Fence.h">
-      <Filter>ヘッダー ファイル\DX12\fence</Filter>
     </ClInclude>
     <ClInclude Include="header\Pipeline.h">
       <Filter>ヘッダー ファイル\DX12\pipeline</Filter>
@@ -693,9 +663,6 @@
       <Filter>ヘッダー ファイル\DX12\d3d11\d2d</Filter>
     </ClInclude>
     <ClInclude Include="header\Device11.h">
-      <Filter>ヘッダー ファイル\DX12\d3d11\factory</Filter>
-    </ClInclude>
-    <ClInclude Include="header\DWriteFactory.h">
       <Filter>ヘッダー ファイル\DX12\d3d11\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\InputLayout.h">
@@ -894,6 +861,15 @@
       <Filter>ヘッダー ファイル\ui\text</Filter>
     </ClInclude>
     <ClInclude Include="header\HeapType.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\TextFormatFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Direct2DFactory.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Direct2DDevice.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,5 @@
 #include"Device11.h"
+#include<cassert>
 #include"Application.h"
 
 #pragma comment(lib, "d2d1")
@@ -7,40 +8,43 @@ template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 // Direct2Dデバイスコンテキスト作成
-HRESULT Device11::CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext)
+std::unique_ptr<D2DDeviceContext> Device11::CreateD2DDeviceContext()
 {
-    ComPtr<ID2D1DeviceContext> d2dDeviceContextCom;
 
     HRESULT result;
     
     // Direct2Dファクトリー作成
     ComPtr<ID2D1Factory3> d2dFactory;
+
     result = D2D1CreateFactory(
         D2D1_FACTORY_TYPE_SINGLE_THREADED,
         __uuidof(ID2D1Factory3),
         nullptr,
         reinterpret_cast<void**>(d2dFactory.ReleaseAndGetAddressOf()));
-    if(FAILED(result)) return result;
+
+    assert(SUCCEEDED(result));
 
     // DXGIデバイス作成
     ComPtr<IDXGIDevice> dxgiDevice;
     result = _device11.As(&dxgiDevice);
-    if(FAILED(result)) return result;
+    assert(SUCCEEDED(result));
 
     // D2Dデバイス作成
     ComPtr<ID2D1Device> d2dDevice;
     result = d2dFactory->CreateDevice(
         dxgiDevice.Get(),
         d2dDevice.ReleaseAndGetAddressOf());
-    if(FAILED(result)) return result;
+    assert(SUCCEEDED(result));
+
+
+    ComPtr<ID2D1DeviceContext> comPtr;
 
     result = d2dDevice->CreateDeviceContext(
         D2D1_DEVICE_CONTEXT_OPTIONS_NONE,
-        d2dDeviceContextCom.ReleaseAndGetAddressOf());
-    if(FAILED(result)) return result;
+        comPtr.ReleaseAndGetAddressOf());
+    assert(SUCCEEDED(result));
 
-     d2dDeviceContext->SetD2DDeviceContext(d2dDeviceContextCom);
-    return S_OK;
+    return std::make_unique<D2DDeviceContext>(comPtr);
 }
 
 // ラップされたバックバッファ作成

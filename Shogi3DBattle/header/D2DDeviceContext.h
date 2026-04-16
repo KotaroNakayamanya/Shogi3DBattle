@@ -36,4 +36,6 @@ public:
         ID2D1Brush* strokeBrush);
 
     void SetD2DDeviceContext(ComPtr<ID2D1DeviceContext> d2dDeviceContext); // Direct2Dデバイスコンテキストセット
+
+    D2DDeviceContext(ComPtr<ID2D1DeviceContext> comPtr);
 };

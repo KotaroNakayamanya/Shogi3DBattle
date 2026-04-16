@@ -14,7 +14,7 @@ private:
 
 public:
     // Direct2Dデバイスコンテキスト作成
-    HRESULT CreateD2DDeviceContext(D2DDeviceContext* d2dDeviceContext);
+    std::unique_ptr<D2DDeviceContext> CreateD2DDeviceContext();
     // ラップされたバックバッファ作成
     ComPtr<ID3D11Resource> CreateWrappedBackBuff(ID3D12Resource* buff);
     // ラップされたテクスチャバッファ作成

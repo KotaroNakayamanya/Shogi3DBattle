@@ -76,6 +76,10 @@ private:
     void CreateView(); // ビュー作成
 
     // Direct2D
+
+    // Direct2Dファクトリー
+    ComPtr<ID2D1Factory3> _direct2DFactory; // Direct2Dファクトリー
+
     std::unique_ptr<Device11>         _device11;         // Direct3D11デバイス
     std::unique_ptr<DeviceContext>    _deviceContext;    // デバイスコンテキスト
     std::unique_ptr<D2DDeviceContext> _d2dDeviceContext; // Direct2Dデバイスコンテキスト

@@ -112,6 +112,8 @@
     <ClInclude Include="header\Board9x9Texture.h" />
     <ClInclude Include="header\BoardTexture.h" />
     <ClInclude Include="header\BoardVertIndices.h" />
+    <ClInclude Include="header\Direct2DDevice.h" />
+    <ClInclude Include="header\Direct2DFactory.h" />
     <ClInclude Include="header\HeapType.h" />
     <ClInclude Include="header\I_ButtonUI.h" />
     <ClInclude Include="header\I_Board.h" />
