@@ -24,18 +24,16 @@ class DX12
 private:
     unsigned int _currentBackBuffIdx; // 現在のバックバッファインデックス
 
-    // ファクトリー系
+    // DXGIファクトリー
     std::unique_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリー
-    std::unique_ptr<Adapter>     _adapter;     // アダプター
-    std::unique_ptr<Device>      _device;      // Direct3D12デバイス
-    HRESULT CreateFactory(); // ファクトリー系作成
-    HRESULT CreateDXGIFactory(); // DXGIファクトリー作成
+    std::unique_ptr<DXGIFactory> CreateDXGIFactory(); // ファクトリー系作成
+
+    std::unique_ptr<Device>      _device;      // Direct3Dデバイス
 
     // コマンド
     ComPtr<ID3D12CommandAllocator>    _cmdAllocator; // コマンドアロケータ
     ComPtr<ID3D12GraphicsCommandList> _cmdList;      // コマンドリスト
     ComPtr<ID3D12CommandQueue>        _cmdQueue;     // コマンドリスト
-    HRESULT CreateCommand(); // コマンド系作成
 
     // スワップチェーン
     ComPtr<IDXGISwapChain4> _swapChain; // スワップチェーン
@@ -151,7 +149,7 @@ private:
     void SetCommandDrawGameObj(); // ゲームオブジェクト描画コマンドセット
     
 public:
-    bool InitDX12(); // DirectX12初期作成
+    void InitDX12(); // DirectX12初期作成
     void ExeDX12(); // DirectX12実行処理
 
     IDWriteTextFormat*    GetNormalTextFormat(); // 通常のテキストフォーマットを返す

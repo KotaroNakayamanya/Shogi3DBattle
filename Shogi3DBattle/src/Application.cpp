@@ -36,7 +36,7 @@
 
 
 // 初期処理
-bool Application::Init()
+void Application::Init()
 {   
     CreateGameObj(); // ゲームオブジェクト作成
     CreateTex();      // テクスチャ作成
@@ -44,8 +44,8 @@ bool Application::Init()
     InitKeyMap();     // 操作ボタン設定
     InitSceneState(); // シーンステート初期処理
 
-    if(_gameWindow->InitGameWindow() == false) goto failed;      // ゲームウインドウ初期処理
-    if(_dx12->InitDX12() == false) goto failed; // DirectX12初期処理
+    _gameWindow->InitGameWindow();      // ゲームウインドウ初期処理
+    _dx12->InitDX12(); // DirectX12初期処理
 
     // 駒の初期位置調整
     for (int i = 1; i < _pieces.size(); i++)
@@ -53,13 +53,6 @@ bool Application::Init()
         DirectX::XMFLOAT3 vec = {i*10.0f, 10.0f, 0.0f};
         _pieces[i]->Move(vec);
     }
-
-
-    return true;
-
-failed:
-    assert(false);
-    return false;
 }
 
 

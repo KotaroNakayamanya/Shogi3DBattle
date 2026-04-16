@@ -100,6 +100,5 @@ public:
 
     void SetDevice(ComPtr<ID3D12Device> device); // Direct3Dデバイスセット
 
-    Device();
-    ~Device();
+    Device(ComPtr<ID3D12Device> comPtr);
 };

@@ -1,4 +1,5 @@
 #include"DXGIFactory.h"
+#include<cassert>
 #include<string>
 #include<array>
 #include"Application.h"
@@ -9,7 +10,7 @@ template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 // 使用するアダプター作成
-HRESULT DXGIFactory::CreateAdapter(Adapter* adapter)
+ComPtr<IDXGIAdapter> DXGIFactory::CreateAdapter()
 {
     // 探索対象のアダプター名
     std::array<std::wstring, 3> adapterNames =
@@ -20,33 +21,28 @@ HRESULT DXGIFactory::CreateAdapter(Adapter* adapter)
     };
 
     // 使用可能なアダプターを取得
-    std::vector<ComPtr<IDXGIAdapter>> canUseAdapters =
-        GetCanUseAdapters();
-    // 使用可能なアダプターがなければ失敗を返す
-    if(canUseAdapters.size() == 0) return E_FAIL;
+    auto canUseAdapters = GetCanUseAdapters();
+    // 使用可能なアダプターがなければnullptrを返す
+    if(canUseAdapters.size() == 0) return nullptr;
     
 
-    for(auto& adapterCom : canUseAdapters)
+    for(auto& adapterComPtr : canUseAdapters)
     {
         // アダプター名取得
         DXGI_ADAPTER_DESC adapterDesc;
-        adapterCom->GetDesc(&adapterDesc);
+        adapterComPtr->GetDesc(&adapterDesc);
         std::wstring descStr = adapterDesc.Description;
 
         // リストに存在するアダプターであれば利用する
         auto it = std::find(adapterNames.begin(), adapterNames.begin(), descStr);
         if (it != adapterNames.end())
         {
-            adapter->SetAdapter(adapterCom);
-            goto complete;
+            return adapterComPtr;
         }
     }
 
     // 見つからなければ一番最初のアダプターを利用する
-    adapter->SetAdapter(canUseAdapters[0]);
-
-complete:
-    return S_OK;
+    return canUseAdapters[0];
 }
 
 // 使用可能なアダプターのリストを取得
@@ -74,13 +70,17 @@ ComPtr<IDXGISwapChain4> DXGIFactory::CreateSwapChain(ID3D12CommandQueue* cmdQueu
 
     ComPtr<IDXGISwapChain4> comPtr;
 
-    _dxgiFactory->CreateSwapChainForHwnd(
+    HRESULT result;
+
+    result = _dxgiFactory->CreateSwapChainForHwnd(
         cmdQueue,
         gameWindow->GetHWND(),
         &swapChainDesc,
         nullptr,
         nullptr,
         (IDXGISwapChain1**)comPtr.ReleaseAndGetAddressOf());
+
+    assert(SUCCEEDED(result));
 
     return comPtr;
 }
@@ -122,9 +122,8 @@ DXGI_SWAP_CHAIN_DESC1 DXGIFactory::GetSwapChainDesc(GameWindow* gameWindow)
 
 
 // Direct3Dデバイス作成
-HRESULT DXGIFactory::CreateDevice(Device* device, Adapter* adapter)
+std::unique_ptr<Device> DXGIFactory::CreateDevice()
 {
-    ComPtr<ID3D12Device> deviceCom;
 
     std::array<D3D_FEATURE_LEVEL, 5> featureLevels = // GPU機能レベルを列挙
     {
@@ -135,23 +134,26 @@ HRESULT DXGIFactory::CreateDevice(Device* device, Adapter* adapter)
         D3D_FEATURE_LEVEL_11_0
     };
 
+    auto adapter = CreateAdapter();
+
+    ComPtr<ID3D12Device> comPtr;
     // GPU機能レベルの配列順にデバイス作成を試みる
     HRESULT result;
     auto it = std::find_if(featureLevels.begin(), featureLevels.end(),
-        [&deviceCom, &result, &adapter](D3D_FEATURE_LEVEL featureLevel)
+        [&comPtr, &result, &adapter](D3D_FEATURE_LEVEL featureLevel)
         {
             result = D3D12CreateDevice(
-                adapter->GetAdapter(),
+                adapter.Get(),
                 featureLevel,
-                IID_PPV_ARGS(deviceCom.ReleaseAndGetAddressOf()));
+                IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
 
             return result == S_OK; // 作成できたら戻る
         });
+    assert(SUCCEEDED(result));
 
-    if(it == featureLevels.end()) return result; // エラー
-
-    device->SetDevice(deviceCom);
-    return S_OK;;
+    return std::make_unique<Device>(comPtr);
 }
 
 void DXGIFactory::SetDXGIFactory(ComPtr<IDXGIFactory6> dxgiFactory){_dxgiFactory = dxgiFactory;} // DXGIファクトリーセット
+
+DXGIFactory::DXGIFactory(ComPtr<IDXGIFactory6> comPtr) : _dxgiFactory(comPtr){}

@@ -4,7 +4,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     Application& app = Application::GetInstance();
 
-    if(app.Init() == false) return -1; // 初期化処理
+    app.Init(); // 初期化処理
 
     app.Run(); // ゲーム実行
 

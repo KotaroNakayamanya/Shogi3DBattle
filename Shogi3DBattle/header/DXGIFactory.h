@@ -18,9 +18,11 @@ private:
     DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc(GameWindow* gameWindow); // スワップチェーンディスクリプタ
 
 public:
-    HRESULT CreateAdapter(Adapter* adapter); // 使用するアダプター作成
-    HRESULT CreateDevice(Device* device, Adapter* adapter); // Direct3Dデバイス作成
+    ComPtr<IDXGIAdapter> CreateAdapter(); // 使用するアダプター作成
+    std::unique_ptr<Device> CreateDevice(); // Direct3Dデバイス作成
     ComPtr<IDXGISwapChain4> CreateSwapChain(ID3D12CommandQueue* cmdQueue); // スワップチェーン作成
 
     void SetDXGIFactory(ComPtr<IDXGIFactory6> dxgiFactory); // DXGIファクトリーセット
+
+    DXGIFactory(ComPtr<IDXGIFactory6> comPtr);
 };

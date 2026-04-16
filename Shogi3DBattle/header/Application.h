@@ -65,7 +65,7 @@ private:
 public:
     static Application& GetInstance(); // シングルトンインスタンスを返す
 
-    bool Init(); // 初期処理
+    void Init(); // 初期処理
     void Run();  // ゲーム実行処理
     void Exit(); // 終了処理
 

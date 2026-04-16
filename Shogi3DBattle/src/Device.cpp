@@ -1,4 +1,5 @@
 #include"Device.h"
+#include<cassert>
 #include"DSBuffFactory.h"
 #include"ConstBuffFactory.h"
 #include"VertBuffFactory.h"
@@ -24,9 +25,13 @@ ComPtr<ID3D12CommandAllocator> Device::CreateCmdAllocator()
 {
     ComPtr<ID3D12CommandAllocator> comPtr;
 
-    _device->CreateCommandAllocator(
+    HRESULT result;
+
+    result = _device->CreateCommandAllocator(
         D3D12_COMMAND_LIST_TYPE_DIRECT,
         IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
+
+    assert(SUCCEEDED(result));
 
     return comPtr;
 }
@@ -36,12 +41,16 @@ ComPtr<ID3D12GraphicsCommandList> Device::CreateCmdList(ID3D12CommandAllocator* 
 {
     ComPtr<ID3D12GraphicsCommandList> comPtr;
 
-    _device->CreateCommandList(
+    HRESULT result;
+
+    result = _device->CreateCommandList(
         0,
         D3D12_COMMAND_LIST_TYPE_DIRECT,
         cmdAllocator,
         nullptr,
         IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
+
+    assert(SUCCEEDED(result));
 
     return comPtr;
 }
@@ -53,9 +62,13 @@ ComPtr<ID3D12CommandQueue> Device::CreateCmdQueue()
 
     D3D12_COMMAND_QUEUE_DESC cmdQueueDesc = GetCmdQueueDesc();
 
-    _device->CreateCommandQueue(
+    HRESULT result;
+
+    result = _device->CreateCommandQueue(
         &cmdQueueDesc,
         IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
+
+    assert(SUCCEEDED(result));
 
     return comPtr;
 }
@@ -85,10 +98,14 @@ ComPtr<ID3D12Fence> Device::CreateFence(unsigned int fenceVal)
 {
     ComPtr<ID3D12Fence> comPtr;
 
-    _device->CreateFence(
+    HRESULT result;
+
+    result = _device->CreateFence(
         fenceVal,
         D3D12_FENCE_FLAG_NONE,
         IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
+
+    assert(SUCCEEDED(result));
 
     return comPtr;
 }
@@ -713,5 +730,4 @@ HRESULT Device::CreateD3D11(
 // Direct3Dデバイスセット
 void Device::SetDevice(ComPtr<ID3D12Device> device){_device = device;}
 
-Device::Device(){}
-Device::~Device(){}
+Device::Device(ComPtr<ID3D12Device> comPtr) : _device(comPtr){}

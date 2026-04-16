@@ -16,10 +16,12 @@ namespace {
     // デバッグ有効化
     void EnableDebugLayer()
     {
-        ComPtr<ID3D12Debug> debugLayer = nullptr;
+        ComPtr<ID3D12Debug> debugLayer;
 
-        D3D12GetDebugInterface(
-            IID_PPV_ARGS(debugLayer.ReleaseAndGetAddressOf()));
+        HRESULT result;
+
+        result = D3D12GetDebugInterface(IID_PPV_ARGS(debugLayer.ReleaseAndGetAddressOf()));
+        assert(SUCCEEDED(result));
 
         debugLayer->EnableDebugLayer();
     }
@@ -27,12 +29,19 @@ namespace {
 
 
 // DirectX12初期処理
-bool DX12::InitDX12()
+void DX12::InitDX12()
 {
-    if(FAILED(CreateFactory())) goto failed; // ファクトリー系作成
-    if(FAILED(CreateCommand())) goto failed; // コマンド系作成
+    _dxgiFactory = CreateDXGIFactory(); // DXGIファクトリー
+    
+    _device = _dxgiFactory->CreateDevice(); // デバイス作成
+
+    _cmdAllocator = _device->CreateCmdAllocator();                    // コマンドアロケータ作成
+    _cmdList      = _device->CreateCmdList     (_cmdAllocator.Get()); // コマンドリスト作成
+    _cmdQueue     = _device->CreateCmdQueue    ();                    // コマンドキュー作成
+
     _swapChain = _dxgiFactory->CreateSwapChain(_cmdQueue.Get()); // スワップチェーン作成
-    _fenceVal = 0;                   // フェンス値初期値セット
+
+    _fenceVal = 0;                            // フェンス値初期値セット
     _fence = _device->CreateFence(_fenceVal); // フェンス作成
     
     if(FAILED(CreateBuff())) goto failed; // バッファ系作成
@@ -62,78 +71,35 @@ bool DX12::InitDX12()
     CreateRenderTex(); // レンダーテクスチャ作成
 
     
-    return true;
 
 failed:
-    assert(false);
-    return false;
+    return; 
 }
 
 
 
-
-// ファクトリー系作成
-HRESULT DX12::CreateFactory()
-{
-    // DXGIファクトリー作成
-    if(FAILED(CreateDXGIFactory())) goto failed;
-    // アダプター作成
-    if (FAILED(_dxgiFactory->CreateAdapter(_adapter.get()))) goto failed;
-    // デバイス作成
-    if (FAILED(_dxgiFactory->CreateDevice(_device.get(), _adapter.get()))) goto failed;
-    
-    _adapter.reset(); // アダプター破棄
-    
-    return S_OK;
-
-failed:
-    return E_FAIL;
-}
 
 // DXGIファクトリー作成
-HRESULT DX12::CreateDXGIFactory()
+std::unique_ptr<DXGIFactory> DX12::CreateDXGIFactory()
 {
+    // DXGIファクトリー作成
+    ComPtr<IDXGIFactory6> comPtr;
+
+
     HRESULT result;
-
-    ComPtr<IDXGIFactory6> dxgiFactoryCom
-    ;
-
-    // デバッグモードのときは詳細を表示させるファクトリーを使用する
 #ifdef _DEBUG
+    // デバッグモードのときは詳細を表示させるDXGIファクトリーを使用する
     result = CreateDXGIFactory2(
         DXGI_CREATE_FACTORY_DEBUG,
-        IID_PPV_ARGS(dxgiFactoryCom.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
 #else
     result = CreateDXGIFactory1(
-        IID_PPV_ARGS(dxgiFactoryCom.ReleaseAndGetAddressOf()));
+        IID_PPV_ARGS(com.ReleaseAndGetAddressOf()));
 #endif
-    
-    if(FAILED(result)) return result;
+    assert(SUCCEEDED(result));
 
-    _dxgiFactory->SetDXGIFactory(dxgiFactoryCom);
-
-    return S_OK;
+    return std::make_unique<DXGIFactory>(comPtr);
 }
-
-
-
-
-// コマンド系作成
-HRESULT DX12::CreateCommand()
-{
-    // コマンドアロケータ作成
-    _cmdAllocator = _device->CreateCmdAllocator();
-    // コマンドリスト作成
-    _cmdList      = _device->CreateCmdList     (_cmdAllocator.Get());
-    // コマンドキュー作成
-    _cmdQueue = _device->CreateCmdQueue();
-
-    return S_OK;
-
-failed:
-    return E_FAIL;
-}
-
 
 
 
@@ -911,10 +877,6 @@ DX12::DX12() {
 #ifdef _DEBUG
     ::EnableDebugLayer();
 #endif
-
-    _dxgiFactory = std::make_unique<DXGIFactory>();
-    _adapter     = std::make_unique<Adapter>();
-    _device      = std::make_unique<Device>();
 
     _rtvHeap      = std::make_unique<Heap>();
     _texRTVHeap   = std::make_unique<Heap>();

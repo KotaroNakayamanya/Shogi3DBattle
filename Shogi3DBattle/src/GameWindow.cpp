@@ -4,7 +4,7 @@
 LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 // ゲームウインドウ初期処理
-bool GameWindow::InitGameWindow()
+void GameWindow::InitGameWindow()
 {
     CreateWindowClass(); // ウインドウクラス作成
     RegisterClassEx(&_windowClass); //ウインドウクラス登録
@@ -13,8 +13,6 @@ bool GameWindow::InitGameWindow()
     AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, false); // クライアント領域調整
 
     CreateWindowObj(); // ウインドウオブジェクト作成
-
-    return true;
 }
 
 // ウインドウクラス作成
@@ -125,9 +123,3 @@ void GameWindow::SetWindowWidth (UINT windowWidth){_windowWidth = windowWidth;} 
 UINT GameWindow::GetWindowWidth(){return _windowWidth;}                            // ウインドウ横サイズを返す
 void GameWindow::SetWindowHeight(UINT windowHeight){_windowHeight = windowHeight;} // ウインドウ縦サイズセット
 UINT GameWindow::GetWindowHeight(){return _windowHeight;}                          // ウインドウ縦サイズを返す
-
-GameWindow::GameWindow()
-{
-    _isHiddenCursor = false;
-}
-GameWindow::~GameWindow(){}

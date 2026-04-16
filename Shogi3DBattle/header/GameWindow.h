@@ -15,7 +15,8 @@ private:
     void CreateWindowObj();   // ウインドウオブジェクト作成
 
 public:
-    bool InitGameWindow();  // ゲームウインドウ初期処理
+    void InitGameWindow();  // ゲームウインドウ初期処理
+
     void DisplayWindow(); // ウインドウを表示する
     void DestroyClass();  // クラス破棄
 
@@ -31,7 +32,4 @@ public:
     UINT GetWindowWidth();                   // ウインドウ横サイズを返す
     void SetWindowHeight(UINT windowHeight); // ウインドウ縦サイズセット
     UINT GetWindowHeight();                  // ウインドウ縦サイズを返す
-
-    GameWindow();
-    ~GameWindow();
 };
