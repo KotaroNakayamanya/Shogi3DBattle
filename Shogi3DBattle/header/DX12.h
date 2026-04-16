@@ -64,7 +64,7 @@ private:
     void InitRenderTex(GameObjType shogiObjType); // レンダーテクスチャ初期処理
     void ExitRenderTex(GameObjType shogiObjType); // レンダリング終了処理
 
-    HRESULT CreateBuff(); // バッファ系作成
+    void CreateBuff(); // バッファ系作成
     HRESULT WriteToBuff(); // バッファに書き込み  
 
     // ヒープ
@@ -136,8 +136,7 @@ private:
         std::string shaderType);
     
 
-    //std::unique_ptr<InputLayout> _inputLayout; // 入力レイアウト
-    std::unique_ptr<RootSignature> _rootSignature; // ルートシグネチャ
+    ComPtr<ID3D12RootSignature> _rootSignature; // ルートシグネチャ
     std::unique_ptr<Pipeline> _pipeline; // パイプライン
 
     void InitRenderTarget(); // レンダーターゲット初期処理

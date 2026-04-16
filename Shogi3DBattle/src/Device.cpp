@@ -230,15 +230,20 @@ void Device::CreateCSUView(CSUHeap* csuHeap, UINT i, ID3D12Resource* buff, View:
 
 
 // ルートシグネチャ作成
-HRESULT Device::CreateRootSignature(RootSignature* rootSignature, CSUHeap* csuHeap)
+ComPtr<ID3D12RootSignature> Device::CreateRootSignature(CSUHeap* csuHeap)
 {
-    ComPtr<ID3DBlob> _rootSignatureBlob = GetRootSignatureBlob(csuHeap); // ルートシグネチャバイナリ作成
+    auto                        rootSignatureBlob = GetRootSignatureBlob(csuHeap);
+    ComPtr<ID3D12RootSignature> comPtr;
 
-    return _device->CreateRootSignature(
+    HRESULT result;
+    result = _device->CreateRootSignature(
         0,
-        _rootSignatureBlob->GetBufferPointer(),
-        _rootSignatureBlob->GetBufferSize(),
-        IID_PPV_ARGS(rootSignature->_rootSignature.ReleaseAndGetAddressOf()));
+        rootSignatureBlob->GetBufferPointer(),
+        rootSignatureBlob->GetBufferSize(),
+        IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
+    assert(SUCCEEDED(result));
+
+    return comPtr;
 }
 
 // ルートシグネチャBlob取得
@@ -406,13 +411,13 @@ void Device::DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc)
 // パイプラインステート作成
 HRESULT Device::CreatePipeline(
     Pipeline* pipeline,
-    RootSignature* rootSignature,
+    ID3D12RootSignature* rootSignature,
     ID3DBlob* vShader,
     ID3DBlob* pShader)
 {
     D3D12_GRAPHICS_PIPELINE_STATE_DESC desc =
         GetPipelineStateDesc(
-            rootSignature->_rootSignature.Get(),
+            rootSignature,
             vShader,
             pShader);
 

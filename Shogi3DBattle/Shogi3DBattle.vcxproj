@@ -81,7 +81,6 @@
     <ClCompile Include="src\Pipeline.cpp" />
     <ClCompile Include="src\RenderTexBuffFactory.cpp" />
     <ClCompile Include="src\ResourceBarrier.cpp" />
-    <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Heap.cpp" />
     <ClCompile Include="src\RTVFactory.cpp" />
     <ClCompile Include="src\RTVHeapDesc.cpp" />
@@ -185,7 +184,6 @@
     <ClInclude Include="header\Pipeline.h" />
     <ClInclude Include="header\RenderTexBuffFactory.h" />
     <ClInclude Include="header\ResourceBarrier.h" />
-    <ClInclude Include="header\RootSignature.h" />
     <ClInclude Include="header\Heap.h" />
     <ClInclude Include="header\I_SceneState.h" />
     <ClInclude Include="header\RTVFactory.h" />

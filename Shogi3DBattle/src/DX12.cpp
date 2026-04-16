@@ -49,19 +49,18 @@ void DX12::InitDX12()
     _fenceVal = 0;                            // フェンス値初期値セット
     _fence = _device->CreateFence(_fenceVal); // フェンス作成
     
-    if(FAILED(CreateBuff())) goto failed; // バッファ系作成
+    CreateBuff(); // バッファ系作成
     if(FAILED(CreateHeap())) goto failed; // ヒープ作成
     CreateView(); // ビュー作成
     
-    if (FAILED(_device->CreateRootSignature(_rootSignature.get(), _csuHeap.get()))) goto failed; // ルートシグネチャオブジェクト作成
-    //_device->CreateInputLayout(_inputLayout.get()); // 頂点バッファ入力レイアウト作成
+    _rootSignature = _device->CreateRootSignature(_csuHeap.get()); // ルートシグネチャオブジェクト作成
     _vShader = CreateShader(L"VertexShader.hlsl", "VShader", "vs_5_1"); // 頂点シェーダー作成
     _pShader = CreateShader(L"PixelShader.hlsl",  "PShader", "ps_5_1"); // ピクセルシェーダー作成
 
     // パイプラインオブジェクト作成
     if (FAILED(_device->CreatePipeline(
         _pipeline.get(),      // パイプライン
-        _rootSignature.get(), // ルートシグネチャ
+        _rootSignature.Get(), // ルートシグネチャ
         _vShader.Get(),       // 頂点シェーダ
         _pShader.Get())))     // ピクセルシェーダ
         goto failed;
@@ -110,7 +109,7 @@ std::unique_ptr<DXGIFactory> DX12::CreateDXGIFactory()
 
 
 // バッファ系作成
-HRESULT DX12::CreateBuff()
+void DX12::CreateBuff()
 {
     auto& app = Application::GetInstance();
     
@@ -193,11 +192,6 @@ HRESULT DX12::CreateBuff()
 
         _shogiObjTexBuffs[i] = _device->CreateBuff(widthSize, heightSize, buffType);
     }
-
-    return S_OK;
-
-failed:
-    return E_FAIL;
 }
 
 // ヒープ作成
@@ -793,7 +787,7 @@ void DX12::Set3DCmd()
     _cmdList->SetPipelineState(_pipeline->GetPipelineState());
 
     // ルートシグネチャセット
-    _cmdList->SetGraphicsRootSignature(_rootSignature->GetRootSignature());
+    _cmdList->SetGraphicsRootSignature(_rootSignature.Get());
 
     // CSUヒープセット
     ID3D12DescriptorHeap* csuHeaps[] = {_csuHeap->GetHeap()};
@@ -983,7 +977,6 @@ DX12::DX12() {
     _mapViewport     = std::make_unique<D3D12_VIEWPORT>();
     _mapScissorRect  = std::make_unique<D3D12_RECT>();
 
-    _rootSignature = std::make_unique<RootSignature>();
     _pipeline      = std::make_unique<Pipeline>();
 
     _pieceTexRTVHeap = std::make_unique<Heap>();

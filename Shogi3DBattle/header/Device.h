@@ -9,7 +9,6 @@
 #include"View.h"
 #include"GameWindow.h"
 #include"CSUHeap.h"
-#include"RootSignature.h"
 #include"Pipeline.h"
 
 #include"BuffType.h"
@@ -72,12 +71,11 @@ public:
     void CreateView   (Heap* heap,       UINT i, ID3D12Resource* buff, View::ViewType viewType);                       // ビュー作成
     void CreateCSUView(CSUHeap* csuHeap, UINT i, ID3D12Resource* buff, View::ViewType viewType);                       // ビュー作成（CSU系）
 
-    HRESULT CreateRootSignature(RootSignature* rootSignature, CSUHeap* csuHeap); // ルートシグネチャ作成
-    //void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成
+    ComPtr<ID3D12RootSignature> CreateRootSignature(CSUHeap* csuHeap); // ルートシグネチャ作成
 
     HRESULT CreatePipeline( // パイプラインステート作成
         Pipeline* pipeline,
-        RootSignature* rootSignature,
+        ID3D12RootSignature* rootSignature,
         ID3DBlob* vShader,
         ID3DBlob* pShader);
 
