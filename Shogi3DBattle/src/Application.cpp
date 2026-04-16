@@ -81,7 +81,7 @@ void Application::CreateGameObj()
 void Application::CreateTex()
 {
     // 黄色木材テクスチャ作成
-    _woodTex = std::make_unique<WoodTexture>();
+    _woodTexs.push_back(std::make_unique<WoodTexture>());
 
     // 将棋盤乗算テクスチャ作成
     _boardLineTexs.push_back(std::make_unique<Board5x5Texture>());
@@ -342,13 +342,33 @@ InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // イ
 
 Camera* Application::GetMainCamera(){return _mainCamera.get();} // メインカメラを返す
 Camera* Application::GetMapCamera() {return _mapCamera.get();}  // マップカメラを返す
+// 木材テクスチャを返す
+std::vector<I_Texture*> Application::GetWoodTexs()
+{
+    std::vector<I_Texture*> vec;
+    for(auto& ele : _woodTexs) vec.push_back(ele.get());
 
-I_Texture* Application::GetWoodTex(){return _woodTex.get();} // 木材テクスチャを返す
-std::vector<std::unique_ptr<I_Texture>>& Application::GetBoardLineTexs(){return _boardLineTexs;}
+    return vec;
+} 
+// 将棋盤黒線テクスチャを返す
+std::vector<I_Texture*> Application::GetBoardLineTexs()
+{
+    std::vector<I_Texture*> vec;
+    for(auto& ele : _boardLineTexs) vec.push_back(ele.get());
+
+    return vec;
+}
 NaturalBufferedData<unsigned short>* Application::GetBoardVertIndices(){return _boardIndices.get();} // 駒の頂点インデックスを返す
 NaturalBufferedData<unsigned short>* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
 I_Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す
-std::vector<std::unique_ptr<I_Piece>>& Application::GetPieces(){return _pieces;} // 駒を返す
+// 駒を返す
+std::vector<I_Piece*> Application::GetPieces()
+{
+    std::vector<I_Piece*> vec;
+    for(auto& ele : _pieces) vec.push_back(ele.get());
+
+    return vec;
+} 
 KeyMap* Application::GetKeyMap(){return _keyMap.get();} // 将棋盤頂点インデックスを返す
 
 void Application::SetIsDrawMap(bool flag){_isDrawMap = flag;} // マップ描画フラグをセット

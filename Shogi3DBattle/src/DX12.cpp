@@ -114,7 +114,7 @@ HRESULT DX12::CreateBuff()
 {
     auto& app = Application::GetInstance();
     
-    auto  woodTex = app.GetWoodTex();
+    auto woodTexs = app.GetWoodTexs();
     
     auto shogiObjects   = app.GetGameObjects();
     auto allVertIndices = app.GetAllVertIndices();
@@ -168,8 +168,8 @@ HRESULT DX12::CreateBuff()
 
     // 木材テクスチャバッファ作成
     _woodTexBuffs.resize(1);
-    widthSize  = woodTex->GetWidth();
-    heightSize = woodTex->GetHeight();
+    widthSize  = woodTexs[0]->GetWidth();
+    heightSize = woodTexs[0]->GetHeight();
     _woodTexBuffs[0] = _device->CreateBuff(widthSize, heightSize, BuffType::TEXTURE);
 
     // 将棋オブジェクト種類ごとのテクスチャバッファ作成
@@ -485,10 +485,10 @@ HRESULT DX12::WriteToBuff()
 {
     auto& app    = Application::GetInstance();
     auto  board  = app.GetBoard();
-    auto& pieces = app.GetPieces();
-    auto  woodTex = app.GetWoodTex();
+    auto pieces = app.GetPieces();
+    auto woodTexs = app.GetWoodTexs();
 
-    auto& boardLineTexs = app.GetBoardLineTexs();
+    auto boardLineTexs = app.GetBoardLineTexs();
     auto boardVertIndices = app.GetBoardVertIndices();
     auto pieceVertIndices = app.GetPieceVertIndices();
 
@@ -537,7 +537,7 @@ HRESULT DX12::WriteToBuff()
     mapCamera ->SetStartDataIdx(idx);
 
 
-    if(FAILED(woodTex->WriteToBuff(_woodTexBuffs[static_cast<unsigned int>(BasicTexType::YELLOW_WOOD)].Get()))) goto failed; // 木材テクスチャをバッファに書き込み
+    if(FAILED(woodTexs[0]->WriteToBuff(_woodTexBuffs[static_cast<unsigned int>(BasicTexType::YELLOW_WOOD)].Get()))) goto failed; // 木材テクスチャをバッファに書き込み
 
     if(FAILED(boardLineTexs[0]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_55)].Get()))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
     if(FAILED(boardLineTexs[1]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_99)].Get()))) goto failed; // 9×9将棋盤黒線テクスチャをバッファに書き込み
@@ -699,7 +699,7 @@ void DX12::ExeD3D()
 {
     auto& app    = Application::GetInstance();
     auto  board  = app.GetBoard();
-    auto& pieces = app.GetPieces();
+    auto pieces = app.GetPieces();
 
     auto mainCamera = app.GetMainCamera();
     auto mapCamera = app.GetMapCamera();
@@ -773,7 +773,7 @@ void DX12::SetCommandDrawGameObj()
     _cmdList->DrawIndexedInstanced(boardVertIndices->GetDatas().size(), 1, 0, 0, 0);
 
     // 駒描画コマンドセット
-    auto& pieces = Application::GetInstance().GetPieces();
+    auto pieces = Application::GetInstance().GetPieces();
     auto  pieceVertIndices = Application::GetInstance().GetPieceVertIndices();
     idxBuffView = GetIdxBuffView(pieceVertIndices);
     _cmdList->IASetIndexBuffer(&idxBuffView);

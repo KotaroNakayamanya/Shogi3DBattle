@@ -24,9 +24,9 @@ std::unique_ptr<I_SceneState> SelectingPiece::ExeSceneOperation(
 // 決定ボタン
 std::unique_ptr<I_SceneState> SelectingPiece::ExeDecisionButton()
 {
-    auto& pieces = Application::GetInstance().GetPieces();
+    auto pieces = Application::GetInstance().GetPieces();
 
-    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<MovingPiece>(pieces[0].get()); // 駒操作シーンに遷移する
+    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<MovingPiece>(pieces[0]); // 駒操作シーンに遷移する
     ReversProjMat(); // メインカメラをパース付きに戻す
 
     auto inputHandler = Application::GetInstance().GetInputHandler();

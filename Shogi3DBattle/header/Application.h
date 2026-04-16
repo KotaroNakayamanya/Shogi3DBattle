@@ -38,7 +38,7 @@ private:
 
 
     // テクスチャ
-    std::unique_ptr<I_Texture> _woodTex; // 木材テクスチャ
+    std::vector<std::unique_ptr<I_Texture>> _woodTexs; // 木材テクスチャ
     std::vector<std::unique_ptr<I_Texture>> _boardLineTexs; // 将棋盤黒線テクスチャ
     void CreateTex(); // テクスチャ作成
 
@@ -72,9 +72,9 @@ public:
     GameWindow* GetGameWindow(); // ゲームウインドウオブジェクトを返す
 
     I_Board* GetBoard(); // 将棋盤を返す
-    std::vector<std::unique_ptr<I_Piece>>& GetPieces(); // 駒を返す
-    I_Texture* GetWoodTex(); // 木材テクスチャを返す
-    std::vector<std::unique_ptr<I_Texture>>& GetBoardLineTexs(); // 将棋盤黒線テクスチャを返す
+    std::vector<I_Piece*> GetPieces(); // 駒を返す
+    std::vector<I_Texture*> GetWoodTexs(); // 木材テクスチャを返す
+    std::vector<I_Texture*> GetBoardLineTexs(); // 将棋盤黒線テクスチャを返す
     NaturalBufferedData<unsigned short>* GetBoardVertIndices(); // 将棋盤頂点インデックスを返す
     NaturalBufferedData<unsigned short>* GetPieceVertIndices(); // 駒の頂点インデックスを返す
     KeyMap* GetKeyMap(); // 将棋盤頂点インデックスを返す
