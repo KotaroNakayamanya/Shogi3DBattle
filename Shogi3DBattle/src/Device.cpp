@@ -403,94 +403,22 @@ void Device::DeleteRootSignatureDescMemory(D3D12_ROOT_SIGNATURE_DESC* desc)
 
 
 
-
-// 入力レイアウト作成
-void Device::CreateInputLayout(InputLayout* inputLayout)
-{
-    auto& layout = inputLayout->_inputLayout;
-
-    layout.resize(6);
-
-    layout[0] =
-    { // 頂点
-        "POSITION",
-        0,
-        DXGI_FORMAT_R32G32B32_FLOAT,
-        0,
-        D3D12_APPEND_ALIGNED_ELEMENT,
-        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-        0
-    };
-    layout[1] =
-    { // 法線
-        "NORMAL",
-        0,
-        DXGI_FORMAT_R32G32B32_FLOAT,
-        0,
-        D3D12_APPEND_ALIGNED_ELEMENT,
-        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-        0
-    };
-    layout[2] =
-    { // uv
-        "TEXCOORD",
-        0,
-        DXGI_FORMAT_R32G32_FLOAT,
-        0,
-        D3D12_APPEND_ALIGNED_ELEMENT,
-        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-        0
-    };
-    layout[3] =
-    { // オブジェクトインデックス
-        "OBJECT_INDEX",
-        0,
-        DXGI_FORMAT_R8_UINT,
-        0,
-        D3D12_APPEND_ALIGNED_ELEMENT,
-        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-        0
-    };
-    layout[4] =
-    { // 基本テクスチャインデックス
-        "BASIC_TEXTURE_INDEX",
-        0,
-        DXGI_FORMAT_R8_UINT,
-        0,
-        D3D12_APPEND_ALIGNED_ELEMENT,
-        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-        0
-    };
-    layout[5] =
-    { // デザインテクスチャインデックス
-        "DESIGN_TEXTURE_INDEX",
-        0,
-        DXGI_FORMAT_R8_UINT,
-        0,
-        D3D12_APPEND_ALIGNED_ELEMENT,
-        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-        0
-    };
-}
-
-
-
-
 // パイプラインステート作成
 HRESULT Device::CreatePipeline(
     Pipeline* pipeline,
     RootSignature* rootSignature,
-    InputLayout* inputLayout,
     ID3DBlob* vShader,
     ID3DBlob* pShader)
 {
     D3D12_GRAPHICS_PIPELINE_STATE_DESC desc =
         GetPipelineStateDesc(
             rootSignature->_rootSignature.Get(),
-            inputLayout->_inputLayout,
             vShader,
             pShader);
 
+    auto inputLayout = CreateInputLayout();
+    desc.InputLayout = GetInputLayoutDesc(inputLayout);
+    
     return _device->CreateGraphicsPipelineState(
         &desc,
         IID_PPV_ARGS(pipeline->_pipelineState.ReleaseAndGetAddressOf()));
@@ -499,7 +427,6 @@ HRESULT Device::CreatePipeline(
 // パイプラインステートディスクリプタ
 D3D12_GRAPHICS_PIPELINE_STATE_DESC Device::GetPipelineStateDesc(
     ID3D12RootSignature* rootSignature,
-    std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout,
     ID3DBlob* vShader,
     ID3DBlob* pShader)
 {
@@ -507,8 +434,6 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC Device::GetPipelineStateDesc(
 
     desc.pRootSignature =
         rootSignature;
-    desc.InputLayout =
-        GetInputLayoutDesc(inputLayout);
     desc.VS =
         GetVertexShaderDesc(vShader);
     desc.PS =
@@ -537,16 +462,87 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC Device::GetPipelineStateDesc(
     return desc;
 }
 
-// インプットレイアウトディスクリプタ
-D3D12_INPUT_LAYOUT_DESC Device::GetInputLayoutDesc(
-    std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout)
+// 頂点レイアウト作成
+std::vector<D3D12_INPUT_ELEMENT_DESC> Device::CreateInputLayout()
 {
+    std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
+
+    inputLayout.resize(6);
+
+    inputLayout[0] =
+    { // 頂点
+        "POSITION",
+        0,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+    inputLayout[1] =
+    { // 法線
+        "NORMAL",
+        0,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+    inputLayout[2] =
+    { // uv
+        "TEXCOORD",
+        0,
+        DXGI_FORMAT_R32G32_FLOAT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+    inputLayout[3] =
+    { // オブジェクトインデックス
+        "OBJECT_INDEX",
+        0,
+        DXGI_FORMAT_R8_UINT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+    inputLayout[4] =
+    { // 基本テクスチャインデックス
+        "BASIC_TEXTURE_INDEX",
+        0,
+        DXGI_FORMAT_R8_UINT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+    inputLayout[5] =
+    { // デザインテクスチャインデックス
+        "DESIGN_TEXTURE_INDEX",
+        0,
+        DXGI_FORMAT_R8_UINT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+
+    return inputLayout;
+}
+
+// インプットレイアウトディスクリプタ
+D3D12_INPUT_LAYOUT_DESC Device::GetInputLayoutDesc(std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout)
+{
+    
     D3D12_INPUT_LAYOUT_DESC desc = {};
 
     desc.pInputElementDescs =
         inputLayout.data();
     desc.NumElements =
-        static_cast<UINT>(inputLayout.size());
+        static_cast<unsigned int>(inputLayout.size());
 
     return desc;
 }

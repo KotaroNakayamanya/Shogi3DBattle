@@ -10,7 +10,6 @@
 #include"GameWindow.h"
 #include"CSUHeap.h"
 #include"RootSignature.h"
-#include"InputLayout.h"
 #include"Pipeline.h"
 
 #include"BuffType.h"
@@ -47,9 +46,9 @@ private:
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC GetPipelineStateDesc( // パイプラインステートディスクリプタ
         ID3D12RootSignature* rootSignature,
-        std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout,
         ID3DBlob* vShader,
         ID3DBlob* pShader); 
+    std::vector<D3D12_INPUT_ELEMENT_DESC> CreateInputLayout(); // 頂点レイアウト作成
     D3D12_SHADER_BYTECODE GetVertexShaderDesc( // 頂点シェーダーディスクリプタ
         ID3DBlob* vertexShaderBlob);
     D3D12_SHADER_BYTECODE GetPixelShaderDesc(  // ピクセルシェーダーディスクリプタ
@@ -57,8 +56,7 @@ private:
     D3D12_BLEND_DESC GetBlendStateDesc();                      // ブレンドステートディスクリプタ
     D3D12_RENDER_TARGET_BLEND_DESC GetRenderTargetBlendDesc(); // レンダーターゲットブレンドディスクリプタ
     D3D12_RASTERIZER_DESC GetRasterizerDesc();                 // ラスタライザディスクリプタ
-    D3D12_INPUT_LAYOUT_DESC GetInputLayoutDesc(                // インプットレイアウトディスクリプタ
-        std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout);
+    D3D12_INPUT_LAYOUT_DESC GetInputLayoutDesc(std::vector<D3D12_INPUT_ELEMENT_DESC>& inputLayout); // インプットレイアウトディスクリプタ
     D3D12_DEPTH_STENCIL_DESC GetDepthStencilDesc(); // デプスステンシルディスクリプタ
 
 public:
@@ -75,12 +73,11 @@ public:
     void CreateCSUView(CSUHeap* csuHeap, UINT i, ID3D12Resource* buff, View::ViewType viewType);                       // ビュー作成（CSU系）
 
     HRESULT CreateRootSignature(RootSignature* rootSignature, CSUHeap* csuHeap); // ルートシグネチャ作成
-    void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成
+    //void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成
 
     HRESULT CreatePipeline( // パイプラインステート作成
         Pipeline* pipeline,
         RootSignature* rootSignature,
-        InputLayout* inputLayout,
         ID3DBlob* vShader,
         ID3DBlob* pShader);
 

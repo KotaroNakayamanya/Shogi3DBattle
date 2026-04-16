@@ -129,16 +129,15 @@ private:
     void CreateDrawArea(); // 描画領域系作成
 
     // シェーダー
-    ComPtr<ID3DBlob> _vShader; // 頂点シェーダー
-    ComPtr<ID3DBlob> _pShader; // ピクセルシェーダー
-    // シェーダー作成
-    ComPtr<ID3DBlob> CreateShader(
+    ComPtr<ID3DBlob> _vShader;     // 頂点シェーダー
+    ComPtr<ID3DBlob> _pShader;     // ピクセルシェーダー
+    ComPtr<ID3DBlob> CreateShader( // シェーダー作成
         std::wstring fileName,
         std::string funcName,
         std::string shaderType);
     
 
-    std::unique_ptr<InputLayout> _inputLayout; // 入力レイアウト
+    //std::unique_ptr<InputLayout> _inputLayout; // 入力レイアウト
     std::unique_ptr<RootSignature> _rootSignature; // ルートシグネチャ
     std::unique_ptr<Pipeline> _pipeline; // パイプライン
 

@@ -53,7 +53,7 @@ void DX12::InitDX12()
     CreateView(); // ビュー作成
     
     if (FAILED(_device->CreateRootSignature(_rootSignature.get(), _csuHeap.get()))) goto failed; // ルートシグネチャオブジェクト作成
-    _device->CreateInputLayout(_inputLayout.get()); // 頂点バッファ入力レイアウト作成
+    //_device->CreateInputLayout(_inputLayout.get()); // 頂点バッファ入力レイアウト作成
     _vShader = CreateShader(L"VertexShader.hlsl", "VShader", "vs_5_1"); // 頂点シェーダー作成
     _pShader = CreateShader(L"PixelShader.hlsl",  "PShader", "ps_5_1"); // ピクセルシェーダー作成
 
@@ -61,7 +61,6 @@ void DX12::InitDX12()
     if (FAILED(_device->CreatePipeline(
         _pipeline.get(),      // パイプライン
         _rootSignature.get(), // ルートシグネチャ
-        _inputLayout.get(),   // 入力レイアウト
         _vShader.Get(),       // 頂点シェーダ
         _pShader.Get())))     // ピクセルシェーダ
         goto failed;
@@ -983,7 +982,6 @@ DX12::DX12() {
     _mapScissorRect  = std::make_unique<D3D12_RECT>();
 
     _rootSignature = std::make_unique<RootSignature>();
-    _inputLayout   = std::make_unique<InputLayout>();
     _pipeline      = std::make_unique<Pipeline>();
 
     _pieceTexRTVHeap = std::make_unique<Heap>();
