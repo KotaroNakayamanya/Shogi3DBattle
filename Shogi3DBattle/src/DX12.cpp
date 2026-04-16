@@ -7,6 +7,7 @@
 #include"WorldMat.h"
 
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d2d1")
 #pragma comment(lib, "dwrite.lib")
 
@@ -58,8 +59,8 @@ void DX12::InitDX12()
         _pipeline.get(),      // パイプライン
         _rootSignature.get(), // ルートシグネチャ
         _inputLayout.get(),   // 入力レイアウト
-        _vShader.get(),       // 頂点シェーダ
-        _pShader.get())))     // ピクセルシェーダ
+        _vShader.Get(),       // 頂点シェーダ
+        _pShader.Get())))     // ピクセルシェーダ
         goto failed;
 
     
@@ -266,13 +267,10 @@ void DX12::CreateView()
 // シェーダー系作成
 HRESULT DX12::CreateShader()
 {
-    if (FAILED(_device->CreateShader(_vShader.get(), L"VertexShader.hlsl", "VShader", "vs_5_1"))) goto failed; // 頂点シェーダー作成
-    if (FAILED(_device->CreateShader(_pShader.get(), L"PixelShader.hlsl",  "PShader", "ps_5_1"))) goto failed; // ピクセルシェーダー作成
+    _vShader = _device->CreateShader(L"VertexShader.hlsl", "VShader", "vs_5_1"); // 頂点シェーダー作成
+    _pShader = _device->CreateShader(L"PixelShader.hlsl",  "PShader", "ps_5_1"); // ピクセルシェーダー作成
 
     return S_OK;
-
-failed:
-    return E_FAIL;
 }
 
 // 描画領域系作成
@@ -323,7 +321,10 @@ HRESULT DX12::CreateD2D()
 
 
     // Direct3D11系作成
-    _device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.GetAddressOf());
+    auto device11AndDeviceContext = CreateDX11Device();
+    _device11.swap(device11AndDeviceContext.device11);
+    _deviceContext = device11AndDeviceContext.deviceContext;
+    //_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.GetAddressOf());
 
     // Direct2Dファクトリー系作成
     _direct2DFactory = CreateDirect2DFactory(); // Direct2Dファクトリー作成
@@ -332,7 +333,7 @@ HRESULT DX12::CreateD2D()
     _direct2DDevice  = _direct2DFactory->CreateDirect2DDevice(dxgiDevice.Get()); // Direct2Dデバイス作成
     _direct2DFactory.reset(); // Direct2Dファクトリー解放
     
-    _d2dDeviceContext = _direct2DDevice->CreateDirect2DDeviceContext(); // Direct2Dデバイスコンテキスト作成
+    _direct2DDeviceContext = _direct2DDevice->CreateDirect2DDeviceContext(); // Direct2Dデバイスコンテキスト作成
     _direct2DDevice.reset(); // Direct2Dデバイス解放
     
 
@@ -355,7 +356,7 @@ HRESULT DX12::CreateD2D()
         Microsoft::WRL::ComPtr<IDXGISurface> dxgiSurface;
         _wrappedBackBuffs[i].As(&dxgiSurface);
         // Direct2Dレンダーターゲット作成
-        _d2dRenderTargets[i] = _d2dDeviceContext->CreateD2DRenderTarget(dxgiSurface.Get());
+        _d2dRenderTargets[i] = _direct2DDeviceContext->CreateD2DRenderTarget(dxgiSurface.Get());
     }
 
     // ラップされた駒テクスチャバッファ作成
@@ -374,7 +375,7 @@ HRESULT DX12::CreateD2D()
         Microsoft::WRL::ComPtr<IDXGISurface> dxgiSurface;
         _wrappedPieceTexBuffs[i].As(&dxgiSurface);
 
-        _d2dPieceTexRenderTargets[i] = _d2dDeviceContext->CreateD2DRenderTarget(dxgiSurface.Get());
+        _d2dPieceTexRenderTargets[i] = _direct2DDeviceContext->CreateD2DRenderTarget(dxgiSurface.Get());
     }
         
     // テキストフォーマット作成
@@ -385,9 +386,9 @@ HRESULT DX12::CreateD2D()
     _normalTextFormat = _textFormatFactory->CreateUITextFormat(L"メイリオ"); // 通常テキストフォーマット作成
     
     // ブラシ作成
-    _blackBrush        = _d2dDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Black)); // 黒色ブラシ作成
-    _redBrush          = _d2dDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Red)); // 赤色ブラシ作成
-    _buttonUIBackBrush = _d2dDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::LightYellow, 0.9f)); // UIブラシ作成
+    _blackBrush        = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Black)); // 黒色ブラシ作成
+    _redBrush          = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Red)); // 赤色ブラシ作成
+    _buttonUIBackBrush = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::LightYellow, 0.9f)); // UIブラシ作成
 
 
 
@@ -395,6 +396,44 @@ HRESULT DX12::CreateD2D()
 
 failed:
     return E_FAIL;
+}
+
+// DirectX11系デバイス作成
+Device11AndDeviceContext DX12::CreateDX11Device()
+{
+    UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#ifdef _DEBUG
+    // デバッグモードならデバッグ出力
+    flags += D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+    ComPtr<ID3D11Device> device11ComPtr;
+    ComPtr<ID3D11DeviceContext> deviceContextComPtr;
+
+    HRESULT result;
+    result =  D3D11On12CreateDevice(
+        _device->GetDevice(),
+        flags,
+        nullptr, // 3D12の機能レベル使用
+        0,       // 機能レベル配列サイズ(nullptrのため0）
+        reinterpret_cast<IUnknown**>(_cmdQueue.GetAddressOf()),
+        1, // キューの個数 1
+        0, // ノードマスク
+        device11ComPtr.     ReleaseAndGetAddressOf(),
+        deviceContextComPtr.ReleaseAndGetAddressOf(),
+        nullptr); // 機能レベル返却先 nullptr
+    assert(SUCCEEDED(result));
+
+    ComPtr<ID3D11On12Device> device11On12ComPtr;
+    result = device11ComPtr.As(&device11On12ComPtr);
+    assert(SUCCEEDED(result));
+
+    Device11AndDeviceContext device11AndDeviceContext;
+
+    device11AndDeviceContext.device11      = std::make_unique<Device11>(device11On12ComPtr);
+    device11AndDeviceContext.deviceContext = deviceContextComPtr;
+
+    return device11AndDeviceContext;
 }
 
 // Direct2Dファクトリー作成
@@ -525,7 +564,7 @@ void DX12::CreatePieceTex(
     
     auto size = 256 / 2;
     D2D1_RECT_F rect = {0, 5, size, size};
-    _d2dDeviceContext->DrawTextW( // 黒色で駒表面文字を描画
+    _direct2DDeviceContext->DrawTextW( // 黒色で駒表面文字を描画
         frontText,
         rect,
         _pieceTextFormat.Get(),
@@ -533,7 +572,7 @@ void DX12::CreatePieceTex(
 
     rect.left += size;
     rect.right += size;
-    _d2dDeviceContext->DrawTextW( // 赤色で駒裏面文字を描画
+    _direct2DDeviceContext->DrawTextW( // 赤色で駒裏面文字を描画
         backText,
         rect,
         _pieceTextFormat.Get(),
@@ -568,17 +607,17 @@ void DX12::InitRenderTex(GameObjType shogiObjType)
 void DX12::StartD2D(ID3D11Resource** wrappedBuff, ID2D1Bitmap1* d2dRenderTarget)
 {
     _device11->AcquireWrappedBuff(wrappedBuff);
-    _d2dDeviceContext->SetRenderTarget(d2dRenderTarget);
-    _d2dDeviceContext->BeginDraw();
-    _d2dDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
+    _direct2DDeviceContext->SetRenderTarget(d2dRenderTarget);
+    _direct2DDeviceContext->BeginDraw();
+    _direct2DDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
 }
 
 // Direct2D終了
 void DX12::EndD2D(ID3D11Resource** wrappedBuff)
 {
-    _d2dDeviceContext->EndDraw();
+    _direct2DDeviceContext->EndDraw();
     _device11->ReleaseWrappedBuff(wrappedBuff);
-    _deviceContext->Flash(); // Direct2D描画
+    _deviceContext->Flush(); // Direct2D描画
 }
 
 // テクスチャへのレンダリング終了処理
@@ -810,7 +849,7 @@ void DX12::ExeD2D()
     for (auto& buttonUI : buttonUIs)
     {
         // ボタンの枠を描画
-        _d2dDeviceContext->DrawRectangle(
+        _direct2DDeviceContext->DrawRectangle(
             buttonUI->GetRect(),
             _buttonUIBackBrush.Get(),
             _blackBrush.Get());
@@ -820,7 +859,7 @@ void DX12::ExeD2D()
         {
             auto tempText2D = text2D;
             if(buttonUI->IsSelected()) tempText2D.brush = _redBrush.Get(); // 選択状態ならテキスト赤色
-            _d2dDeviceContext->DrawText2D(tempText2D);
+            _direct2DDeviceContext->DrawText2D(tempText2D);
         }
     }
         
@@ -914,9 +953,6 @@ DX12::DX12() {
     _texRTVHeap   = std::make_unique<Heap>();
     _csuHeap       = std::make_unique<CSUHeap>();
 
-    _device11      = std::make_unique<Device11>();
-    _deviceContext = std::make_unique<DeviceContext>();
-
     _dsvHeap = std::make_unique<Heap>();
 
     _mainViewport    = std::make_unique<D3D12_VIEWPORT>();
@@ -924,10 +960,6 @@ DX12::DX12() {
     _mapViewport     = std::make_unique<D3D12_VIEWPORT>();
     _mapScissorRect  = std::make_unique<D3D12_RECT>();
 
-    _vShader       = std::make_unique<Shader>();
-    _pShader       = std::make_unique<Shader>();
-
-    
     _rootSignature = std::make_unique<RootSignature>();
     _inputLayout   = std::make_unique<InputLayout>();
     _pipeline      = std::make_unique<Pipeline>();

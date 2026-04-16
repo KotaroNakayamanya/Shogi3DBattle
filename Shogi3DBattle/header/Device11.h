@@ -25,4 +25,6 @@ public:
     void SetDevice11(ComPtr<ID3D11On12Device> device11); // Direct3D11デバイスセット
 
     ComPtr<IDXGIDevice> GetDXGIDevice(); // Direct3DDeviceをDXGIDeviceとして返す
+
+    Device11(ComPtr<ID3D11On12Device> comPtr);
 };

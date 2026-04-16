@@ -76,3 +76,5 @@ ComPtr<IDXGIDevice> Device11::GetDXGIDevice()
 
     return comPtr;
 }
+
+Device11::Device11(ComPtr<ID3D11On12Device> comPtr) : _device11(comPtr){}

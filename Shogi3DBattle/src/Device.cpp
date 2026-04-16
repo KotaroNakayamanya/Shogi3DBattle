@@ -14,7 +14,7 @@
 #include"CBVFactory.h"
 #include"SRVFactory.h"
 
-#pragma comment(lib, "d3d11.lib")
+#include<d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
 template<typename T>
@@ -26,11 +26,9 @@ ComPtr<ID3D12CommandAllocator> Device::CreateCmdAllocator()
     ComPtr<ID3D12CommandAllocator> comPtr;
 
     HRESULT result;
-
     result = _device->CreateCommandAllocator(
         D3D12_COMMAND_LIST_TYPE_DIRECT,
         IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
-
     assert(SUCCEEDED(result));
 
     return comPtr;
@@ -42,14 +40,12 @@ ComPtr<ID3D12GraphicsCommandList> Device::CreateCmdList(ID3D12CommandAllocator* 
     ComPtr<ID3D12GraphicsCommandList> comPtr;
 
     HRESULT result;
-
     result = _device->CreateCommandList(
         0,
         D3D12_COMMAND_LIST_TYPE_DIRECT,
         cmdAllocator,
         nullptr,
         IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
-
     assert(SUCCEEDED(result));
 
     return comPtr;
@@ -59,15 +55,12 @@ ComPtr<ID3D12GraphicsCommandList> Device::CreateCmdList(ID3D12CommandAllocator* 
 ComPtr<ID3D12CommandQueue> Device::CreateCmdQueue()
 {
     ComPtr<ID3D12CommandQueue> comPtr;
-
     D3D12_COMMAND_QUEUE_DESC cmdQueueDesc = GetCmdQueueDesc();
 
     HRESULT result;
-
     result = _device->CreateCommandQueue(
         &cmdQueueDesc,
         IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
-
     assert(SUCCEEDED(result));
 
     return comPtr;
@@ -99,12 +92,10 @@ ComPtr<ID3D12Fence> Device::CreateFence(unsigned int fenceVal)
     ComPtr<ID3D12Fence> comPtr;
 
     HRESULT result;
-
     result = _device->CreateFence(
         fenceVal,
         D3D12_FENCE_FLAG_NONE,
         IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
-
     assert(SUCCEEDED(result));
 
     return comPtr;
@@ -241,13 +232,12 @@ void Device::CreateCSUView(CSUHeap* csuHeap, UINT i, ID3D12Resource* buff, View:
 
 
 // シェーダー作成
-HRESULT Device::CreateShader(
-    Shader* shader,
+ComPtr<ID3DBlob> Device::CreateShader(
     std::wstring fileName,
     std::string funcName,
     std::string shaderType)
 {
-    ComPtr<ID3DBlob> shaderCom;
+    ComPtr<ID3DBlob> comPtr;
    
     std::wstring path = L"shader/";
 
@@ -260,12 +250,11 @@ HRESULT Device::CreateShader(
         shaderType.c_str(),
         D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
         0,
-        shaderCom.ReleaseAndGetAddressOf(),
+        comPtr.ReleaseAndGetAddressOf(),
         nullptr);
-    if(FAILED(result)) return result;
+    assert(SUCCEEDED(result));
 
-    shader->SetShader(shaderCom);
-    return S_OK;
+    return comPtr;
 }
 
 
@@ -522,15 +511,15 @@ HRESULT Device::CreatePipeline(
     Pipeline* pipeline,
     RootSignature* rootSignature,
     InputLayout* inputLayout,
-    Shader* vShader,
-    Shader* pShader)
+    ID3DBlob* vShader,
+    ID3DBlob* pShader)
 {
     D3D12_GRAPHICS_PIPELINE_STATE_DESC desc =
         GetPipelineStateDesc(
             rootSignature->_rootSignature.Get(),
             inputLayout->_inputLayout,
-            vShader->GetShader(),
-            pShader->GetShader());
+            vShader,
+            pShader);
 
     return _device->CreateGraphicsPipelineState(
         &desc,
@@ -685,49 +674,8 @@ D3D12_DEPTH_STENCIL_DESC Device::GetDepthStencilDesc()
 
 
 
-// Direct3D11系作成
-HRESULT Device::CreateD3D11(
-    Device11* device11,
-    DeviceContext* deviceContext,
-    ID3D12CommandQueue** cmdQueueAddress)
-{
-    ComPtr<ID3D11On12Device> device11Com;
-    ComPtr<ID3D11DeviceContext> deviceContextCom;
-
-    UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-#ifdef _DEBUG
-    flags += D3D11_CREATE_DEVICE_DEBUG;
-#endif
-
-    HRESULT result;
-
-    ComPtr<ID3D11Device> device11Origin;
-
-    result =  D3D11On12CreateDevice(
-        _device.Get(),
-        flags,
-        nullptr, // 3D12の機能レベル使用
-        0,       // 機能レベル配列サイズ(nullptrのため0）
-        reinterpret_cast<IUnknown**>(cmdQueueAddress),
-        1, // キューの個数 1
-        0, // ノードマスク
-        device11Origin.ReleaseAndGetAddressOf(),
-        deviceContextCom.ReleaseAndGetAddressOf(),
-        nullptr); // 機能レベル返却先 nullptr
-    if(FAILED(result)) return result;
-
-    result = device11Origin.As(&device11Com);
-    if(FAILED(result)) return result;
-
-    device11->     SetDevice11(device11Com);
-    deviceContext->SetDeviceContext(deviceContextCom);
-    return result;
-}
-
-
-
-
-// Direct3Dデバイスセット
+// DirectX12デバイスセット
 void Device::SetDevice(ComPtr<ID3D12Device> device){_device = device;}
+ID3D12Device* Device::GetDevice(){return _device.Get();} // DirectX12デバイスを返す
 
 Device::Device(ComPtr<ID3D12Device> comPtr) : _device(comPtr){}

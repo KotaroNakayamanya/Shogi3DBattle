@@ -408,14 +408,8 @@
     <ClCompile Include="src\Device11.cpp">
       <Filter>ソース ファイル\dx12\d3d11\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\DeviceContext.cpp">
-      <Filter>ソース ファイル\dx12\d3d11\context</Filter>
-    </ClCompile>
     <ClCompile Include="src\RenderTexBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader.cpp">
-      <Filter>ソース ファイル\dx12\shader</Filter>
     </ClCompile>
     <ClCompile Include="src\VecCalc.cpp">
       <Filter>ソース ファイル\buffered_data\mat</Filter>
@@ -653,9 +647,6 @@
     <ClInclude Include="header\PShaderResourceStates.h">
       <Filter>ヘッダー ファイル\DX12\buff\_other\resource_state</Filter>
     </ClInclude>
-    <ClInclude Include="header\DeviceContext.h">
-      <Filter>ヘッダー ファイル\DX12\d3d11</Filter>
-    </ClInclude>
     <ClInclude Include="header\Device.h">
       <Filter>ヘッダー ファイル\DX12\factory</Filter>
     </ClInclude>
@@ -676,9 +667,6 @@
     </ClInclude>
     <ClInclude Include="header\ResourceBarrier.h">
       <Filter>ヘッダー ファイル\DX12\resource_barrier</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Shader.h">
-      <Filter>ヘッダー ファイル\DX12\shader</Filter>
     </ClInclude>
     <ClInclude Include="header\GameWindow.h">
       <Filter>ヘッダー ファイル</Filter>
@@ -876,6 +864,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\Direct2DDevice.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Device11AndDeviceContext.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

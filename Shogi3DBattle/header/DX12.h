@@ -18,6 +18,7 @@
 
 #include"Direct2DFactory.h"
 #include"Direct2DDevice.h"
+#include"Device11AndDeviceContext.h"
 
 class DX12
 {
@@ -78,23 +79,24 @@ private:
     // ビュー
     void CreateView(); // ビュー作成
 
-    // Direct2D
+    // DirectX11デバイス
+    std::unique_ptr<Device11>   _device11;         // Direct3D(11)デバイス
+    ComPtr<ID3D11DeviceContext> _deviceContext;    // デバイスコンテキスト
+    Device11AndDeviceContext CreateDX11Device(); // DirectX11系デバイス作成
 
     // Direct2Dファクトリー
     std::unique_ptr<Direct2DFactory> _direct2DFactory;        // Direct2Dファクトリー
     std::unique_ptr<Direct2DFactory> CreateDirect2DFactory(); // Direct2Dファクトリー作成
 
     // Direct2Dデバイス
-    std::unique_ptr<Direct2DDevice> _direct2DDevice;
+    std::unique_ptr<Direct2DDevice>        _direct2DDevice;
+    std::unique_ptr<Direct2DDeviceContext> _direct2DDeviceContext; // Direct2Dデバイスコンテキスト
 
-    std::unique_ptr<Device11>         _device11;         // Direct3D11デバイス
-    std::unique_ptr<DeviceContext>    _deviceContext;    // デバイスコンテキスト
-    std::unique_ptr<Direct2DDeviceContext> _d2dDeviceContext; // Direct2Dデバイスコンテキスト
-    std::unique_ptr<TextFormatFactory> _textFormatFactory;    // テキストフォーマットファクトリー
     HRESULT CreateD2D(); // Direct2D系作成
 
     
     // テキストフォーマット
+    std::unique_ptr<TextFormatFactory> _textFormatFactory;    // テキストフォーマットファクトリー
     ComPtr<IDWriteTextFormat> _pieceTextFormat; // 駒のテキストフォーマット
     ComPtr<IDWriteTextFormat> _normalTextFormat; // UIテキストフォーマット
 
@@ -127,8 +129,8 @@ private:
     void CreateDrawArea(); // 描画領域系作成
 
     // シェーダー
-    std::unique_ptr<Shader> _vShader; // 頂点シェーダー
-    std::unique_ptr<Shader> _pShader; // ピクセルシェーダー
+    ComPtr<ID3DBlob> _vShader; // 頂点シェーダー
+    ComPtr<ID3DBlob> _pShader; // ピクセルシェーダー
     HRESULT CreateShader(); // シェーダー系作成
 
     std::unique_ptr<InputLayout> _inputLayout; // 入力レイアウト

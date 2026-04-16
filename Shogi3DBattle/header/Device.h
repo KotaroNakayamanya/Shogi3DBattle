@@ -5,11 +5,9 @@
 #include"I_BuffFactory.h"
 
 #include"Device11.h"
-#include"DeviceContext.h"
 #include"Heap.h"
 #include"View.h"
 #include"GameWindow.h"
-#include"Shader.h"
 #include"CSUHeap.h"
 #include"RootSignature.h"
 #include"InputLayout.h"
@@ -79,8 +77,7 @@ public:
     HRESULT CreateRootSignature(RootSignature* rootSignature, CSUHeap* csuHeap); // ルートシグネチャ作成
     void CreateInputLayout(InputLayout* inputLayout); // 入力レイアウト作成
 
-    HRESULT CreateShader( // シェーダー作成
-        Shader* shader,
+    ComPtr<ID3DBlob> CreateShader( // シェーダー作成
         std::wstring fileName,
         std::string funcName,
         std::string shaderType);
@@ -89,18 +86,12 @@ public:
         Pipeline* pipeline,
         RootSignature* rootSignature,
         InputLayout* inputLayout,
-        Shader* vShader,
-        Shader* pShader);
-
-    HRESULT CreateD3D11( // Direct3D11系作成
-        Device11* device11,
-        DeviceContext* deviceContext,
-        ID3D12CommandQueue** cmdQueueAddress);
+        ID3DBlob* vShader,
+        ID3DBlob* pShader);
 
 
-
-
-    void SetDevice(ComPtr<ID3D12Device> device); // Direct3Dデバイスセット
+    void SetDevice(ComPtr<ID3D12Device> device); // DirectX12デバイスセット
+    ID3D12Device* GetDevice(); // DirectX12デバイスを返す
 
     Device(ComPtr<ID3D12Device> comPtr);
 };
