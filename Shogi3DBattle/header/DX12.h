@@ -91,7 +91,7 @@ private:
     // Direct2Dデバイス
     std::unique_ptr<Direct2DDevice>        _direct2DDevice;
     std::unique_ptr<Direct2DDeviceContext> _direct2DDeviceContext; // Direct2Dデバイスコンテキスト
-    HRESULT CreateD2D(); // Direct2D系作成
+    void CreateD2D(); // Direct2D系作成
 
     
     // テキストフォーマット

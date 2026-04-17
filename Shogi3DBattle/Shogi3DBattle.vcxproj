@@ -61,7 +61,7 @@
     <ClCompile Include="src\DXGIFactory.cpp" />
     <ClCompile Include="src\CSUHeap.cpp" />
     <ClCompile Include="src\GameWindow.cpp" />
-    <ClCompile Include="src\HeapFactory.cpp" />
+    <ClCompile Include="src\I_HeapFactory.cpp" />
     <ClCompile Include="src\IdxBuffFactory.cpp" />
     <ClCompile Include="src\NonePersProjMat.cpp" />
     <ClCompile Include="src\OptionButton.cpp" />
@@ -148,7 +148,7 @@
     <ClInclude Include="header\TextFormatFactory.h" />
     <ClInclude Include="header\Device.h" />
     <ClInclude Include="header\Device11.h" />
-    <ClInclude Include="header\HeapFactory.h" />
+    <ClInclude Include="header\I_HeapFactory.h" />
     <ClInclude Include="header\IdxBuffFactory.h" />
     <ClInclude Include="header\IHeapProp.h" />
     <ClInclude Include="header\IDescOffset.h" />

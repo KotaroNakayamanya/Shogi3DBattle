@@ -2,7 +2,7 @@
 
 #include<vector>
 
-#include"HeapFactory.h"
+#include"I_HeapFactory.h"
 #include"IViewFactory.h"
 #include"I_BuffFactory.h"
 
@@ -26,7 +26,7 @@ private:
     ComPtr<ID3D12Device> _device; // Direct3Dデバイス
 
     std::unique_ptr<I_BuffFactory> _buffFactory; // バッファファクトリー 
-    std::unique_ptr<HeapFactory>  _heapFactory; // ヒープファクトリー
+    std::unique_ptr<I_HeapFactory>  _heapFactory; // ヒープファクトリー
     std::unique_ptr<IViewFactory> _viewFactory; // ビューファクトリー
 
     D3D12_COMMAND_QUEUE_DESC GetCmdQueueDesc(); // コマンドキューディスクリプタ
@@ -67,8 +67,8 @@ public:
     ComPtr<ID3D12Fence> CreateFence(unsigned int fenceVal); // フェンス作成
     
     ComPtr<ID3D12Resource> CreateBuff(UINT width, UINT height, BuffType buffType);                        // バッファ作成
-    HRESULT CreateHeap   (Heap* heap, UINT descNum, HeapType heapType);                                // ヒープ作成
-    HRESULT CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum, HeapType heapType); // ヒープ作成（CSU）
+    std::unique_ptr<Heap> CreateHeap   (UINT descNum, HeapType heapType);                                // ヒープ作成
+    std::unique_ptr<CSUHeap> CreateCSUHeap(UINT cbvNum, UINT srvNum, UINT uavNum, HeapType heapType); // ヒープ作成（CSU）
     void CreateView   (Heap* heap,       UINT i, ID3D12Resource* buff, View::ViewType viewType);                       // ビュー作成
     void CreateCSUView(CSUHeap* csuHeap, UINT i, ID3D12Resource* buff, View::ViewType viewType);                       // ビュー作成（CSU系）
 

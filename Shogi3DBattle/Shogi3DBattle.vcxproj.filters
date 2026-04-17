@@ -312,7 +312,7 @@
     <ClCompile Include="src\RTVHeapDesc.cpp">
       <Filter>ソース ファイル\dx12\heap\heap_desc</Filter>
     </ClCompile>
-    <ClCompile Include="src\HeapFactory.cpp">
+    <ClCompile Include="src\I_HeapFactory.cpp">
       <Filter>ソース ファイル\dx12\heap\factory</Filter>
     </ClCompile>
     <ClCompile Include="src\CBVFactory.cpp">
@@ -548,7 +548,7 @@
     <ClInclude Include="header\RTVHeapFactory.h">
       <Filter>ヘッダー ファイル\dx12\heap\factory</Filter>
     </ClInclude>
-    <ClInclude Include="header\HeapFactory.h">
+    <ClInclude Include="header\I_HeapFactory.h">
       <Filter>ヘッダー ファイル\dx12\heap\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\DSVHeapFactory.h">

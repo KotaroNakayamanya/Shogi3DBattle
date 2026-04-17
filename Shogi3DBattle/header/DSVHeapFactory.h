@@ -1,10 +1,10 @@
 #pragma once
 
-#include"HeapFactory.h"
+#include"I_HeapFactory.h"
 #include"DSVHeapDesc.h"
 #include"DSVOffset.h"
 
-class DSVHeapFactory : public HeapFactory
+class DSVHeapFactory : public I_HeapFactory
 {
 public:
     // DSVÉqÅ[ÉvçÏê¨

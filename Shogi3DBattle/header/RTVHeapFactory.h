@@ -1,10 +1,10 @@
 #pragma once
 
-#include"HeapFactory.h"
+#include"I_HeapFactory.h"
 #include"RTVHeapDesc.h"
 #include"RTVOffset.h"
 
-class RTVHeapFactory : public HeapFactory
+class RTVHeapFactory : public I_HeapFactory
 {
 public:
     //// RTVÉqÅ[ÉvçÏê¨

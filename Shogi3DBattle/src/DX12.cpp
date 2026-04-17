@@ -65,7 +65,7 @@ void DX12::InitDX12()
     
     CreateDrawArea(); // 描画領域系作成
     
-    if(FAILED(CreateD2D())) goto failed; // DirectX11系作成 
+    CreateD2D(); // DirectX11系作成 
 
     if(FAILED(WriteToBuff())) goto failed; // バッファに書き込み
 
@@ -198,11 +198,11 @@ HRESULT DX12::CreateHeap()
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
     _swapChain->GetDesc(&swapChainDesc);
     auto backBuffNum = swapChainDesc.BufferCount;
-    if (FAILED(_device->CreateHeap(_rtvHeap.get(), backBuffNum, HeapType::RTV))) goto failed;
+    _rtvHeap = _device->CreateHeap(backBuffNum, HeapType::RTV);
 
 
     // DSVヒープ作成
-    if (FAILED(_device->CreateHeap(_dsvHeap.get(), 1, HeapType::DSV))) goto failed;
+    _dsvHeap = _device->CreateHeap(1, HeapType::DSV);
 
     // CSUヒープ作成
     UINT woodTexNum, pieceTexNum, boardTexNum;
@@ -213,10 +213,10 @@ HRESULT DX12::CreateHeap()
     cbvNum = 1;
     srvNum = woodTexNum + boardTexNum + pieceTexNum; // 木材テクスチャ1 将棋盤テクスチャ2　駒テクスチャ8
     uavNum = 0;
-    if (FAILED(_device->CreateCSUHeap(_csuHeap.get(), cbvNum, srvNum, uavNum, HeapType::CSU))) goto failed;
+    _csuHeap = _device->CreateCSUHeap(cbvNum, srvNum, uavNum, HeapType::CSU);
 
     // 駒ごとの文字テクスチャ作成用RTVヒープ
-    if (FAILED(_device->CreateHeap(_texRTVHeap.get(), pieceTexNum, HeapType::RTV))) goto failed;
+    _texRTVHeap = _device->CreateHeap(pieceTexNum, HeapType::RTV);
 
     return S_OK;
 
@@ -329,7 +329,7 @@ void DX12::CreateDrawArea()
 
 
 // Direct2D系作成
-HRESULT DX12::CreateD2D()
+void DX12::CreateD2D()
 {   
     auto gameWindow = Application::GetInstance().GetGameWindow();
 
@@ -338,7 +338,6 @@ HRESULT DX12::CreateD2D()
     auto device11AndDeviceContext = CreateDX11Device();
     _device11.swap(device11AndDeviceContext.device11);
     _deviceContext = device11AndDeviceContext.deviceContext;
-    //_device->CreateD3D11(_device11.get(), _deviceContext.get(), _cmdQueue.GetAddressOf());
 
     // Direct2Dファクトリー系作成
     _direct2DFactory = CreateDirect2DFactory(); // Direct2Dファクトリー作成
@@ -403,13 +402,6 @@ HRESULT DX12::CreateD2D()
     _blackBrush        = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Black)); // 黒色ブラシ作成
     _redBrush          = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Red)); // 赤色ブラシ作成
     _buttonUIBackBrush = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::LightYellow, 0.9f)); // UIブラシ作成
-
-
-
-    return S_OK;
-
-failed:
-    return E_FAIL;
 }
 
 // DirectX11系デバイス作成
@@ -963,19 +955,11 @@ DX12::DX12() {
     ::EnableDebugLayer();
 #endif
 
-    _rtvHeap      = std::make_unique<Heap>();
-    _texRTVHeap   = std::make_unique<Heap>();
-    _csuHeap       = std::make_unique<CSUHeap>();
-
-    _dsvHeap = std::make_unique<Heap>();
-
     _mainViewport    = std::make_unique<D3D12_VIEWPORT>();
     _mainScissorRect = std::make_unique<D3D12_RECT>();
     _mapViewport     = std::make_unique<D3D12_VIEWPORT>();
     _mapScissorRect  = std::make_unique<D3D12_RECT>();
 
-    _pieceTexRTVHeap = std::make_unique<Heap>();
-    _pieceTexSRVHeap = std::make_unique<CSUHeap>();
 
     _rb = std::make_unique<ResourceBarrier>();
 }

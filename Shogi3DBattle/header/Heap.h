@@ -10,7 +10,7 @@ class Heap
 
 protected:
     ComPtr<ID3D12DescriptorHeap> _heap; // ヒープ
-    UINT _descOffset; // ディスクリプタオフセット
+    unsigned int _descOffset; // ディスクリプタオフセット
 
 public:
     D3D12_CPU_DESCRIPTOR_HANDLE GetDescHandle(UINT i);    // 引数の位置のディスクリプタハンドルを返す
@@ -20,7 +20,7 @@ public:
     void SetHeap(ComPtr<ID3D12DescriptorHeap> heap); // ヒープセット
     ID3D12DescriptorHeap* GetHeap(); // ヒープを返す
     void SetDescOffset(UINT RTVOffset); // ディスクリプタオフセットセット
+    unsigned int GetDescOffset(); // ディスクリプタオフセットを返す
 
-    Heap();
-    ~Heap();
+    Heap(ComPtr<ID3D12DescriptorHeap> heap, unsigned int descOffset);
 };

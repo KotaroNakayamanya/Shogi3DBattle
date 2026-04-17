@@ -31,6 +31,7 @@ void Heap::SetHeap(ComPtr<ID3D12DescriptorHeap> heap){_heap = heap;}
 ID3D12DescriptorHeap* Heap::GetHeap(){return _heap.Get();}
 // ディスクリプタオフセットセット
 void Heap::SetDescOffset(UINT descOffset){_descOffset = descOffset;}
+unsigned int Heap::GetDescOffset(){return _descOffset;} // ディスクリプタオフセットを返す
 
-Heap::Heap(){}
-Heap::~Heap(){}
+Heap::Heap(ComPtr<ID3D12DescriptorHeap> heap, unsigned int descOffset)
+    : _heap(heap), _descOffset(descOffset){}

@@ -1,10 +1,10 @@
 #pragma once
 
-#include"HeapFactory.h"
+#include"I_HeapFactory.h"
 #include"CSUHeapDesc.h"
 #include"CSUOffset.h"
 
-class CSUHeapFactory : public HeapFactory
+class CSUHeapFactory : public I_HeapFactory
 {
 public:
     CSUHeapFactory()

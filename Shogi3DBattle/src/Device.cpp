@@ -138,7 +138,7 @@ ComPtr<ID3D12Resource> Device::CreateBuff(UINT width, UINT height, BuffType buff
 }
 
 // ヒープ作成
-HRESULT Device::CreateHeap(Heap* heap, UINT descNum, HeapType heapType)
+std::unique_ptr<Heap> Device::CreateHeap(UINT descNum, HeapType heapType)
 {
     switch (heapType)
     {
@@ -155,21 +155,19 @@ HRESULT Device::CreateHeap(Heap* heap, UINT descNum, HeapType heapType)
         break;
 
     default:
-        return E_FAIL;
+        assert(false);
+        return nullptr;
     }
 
-    return _heapFactory->CreateHeap(heap, descNum, _device.Get());
+    return _heapFactory->CreateHeap(descNum, _device.Get());
 }
 
 // ヒープ作成（CSU）
-HRESULT Device::CreateCSUHeap(CSUHeap* csuHeap, UINT cbvNum, UINT srvNum, UINT uavNum, HeapType heapType)
+std::unique_ptr<CSUHeap> Device::CreateCSUHeap(UINT cbvNum, UINT srvNum, UINT uavNum, HeapType heapType)
 {
-    // CSUヒープ内訳取得
-    csuHeap->SetCBVNum(cbvNum);
-    csuHeap->SetSRVNum(srvNum);
-    csuHeap->SetUAVNum(uavNum);
-
-    return CreateHeap(csuHeap, cbvNum + srvNum + uavNum, heapType);
+    auto heapUniquePtr = CreateHeap(cbvNum + srvNum + uavNum, heapType);
+    auto heap = *heapUniquePtr;
+    return std::make_unique<CSUHeap>(heap, cbvNum, srvNum, uavNum);
 }
 
 // ビュー作成
