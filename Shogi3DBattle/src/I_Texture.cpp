@@ -1,16 +1,20 @@
 #include"I_Texture.h"
+#include<cassert>
+
 void               I_Texture::SetPixels(std::vector<Pixel> pixels){_pixels = pixels;}
 std::vector<Pixel> I_Texture::GetPixels(){return _pixels;}
 
 // バッファに書き込み
-HRESULT I_Texture::WriteToBuff(ID3D12Resource* buff)
+void I_Texture::WriteToBuff(ID3D12Resource* buff)
 {
-    return buff->WriteToSubresource(
+    HRESULT result;
+    result = buff->WriteToSubresource(
         0,
         nullptr,
         _pixels.data(),
         sizeof(Pixel) * GetWidth(),
         0);
+    assert(SUCCEEDED(result));
 }
 
 void I_Texture::SetWidth (UINT width) {_width  = width;}  // 横サイズセット

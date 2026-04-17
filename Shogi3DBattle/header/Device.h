@@ -17,6 +17,7 @@
 
 #include<string>
 
+
 class Device
 {
     template<typename T>
@@ -79,9 +80,7 @@ public:
         ID3DBlob* vShader,
         ID3DBlob* pShader);
 
-
-    void SetDevice(ComPtr<ID3D12Device> device); // DirectX12デバイスセット
     ID3D12Device* GetDevice(); // DirectX12デバイスを返す
 
-    Device(ComPtr<ID3D12Device> comPtr);
+    Device(ComPtr<IDXGIAdapter> adapter);
 };

@@ -8,7 +8,6 @@
 #include<d3dcompiler.h>
 #include"BasicTexType.h"
 
-#pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d2d1")
@@ -36,9 +35,8 @@ namespace {
 // DirectX12初期処理
 void DX12::InitDX12()
 {
-    _dxgiFactory = CreateDXGIFactory(); // DXGIファクトリー
-    
-    _device = _dxgiFactory->CreateDevice(); // デバイス作成
+    _dxgiFactory = std::make_unique<DXGIFactory>();                           // DXGIファクトリー作成
+    _device      = std::make_unique<Device>     (_dxgiFactory->GetAdapter()); // デバイス作成
 
     _cmdAllocator = _device->CreateCmdAllocator();                    // コマンドアロケータ作成
     _cmdList      = _device->CreateCmdList     (_cmdAllocator.Get()); // コマンドリスト作成
@@ -50,7 +48,7 @@ void DX12::InitDX12()
     _fence = _device->CreateFence(_fenceVal); // フェンス作成
     
     CreateBuff(); // バッファ系作成
-    if(FAILED(CreateHeap())) goto failed; // ヒープ作成
+    CreateHeap(); // ヒープ作成
     CreateView(); // ビュー作成
     
     _rootSignature = _device->CreateRootSignature(_csuHeap.get()); // ルートシグネチャオブジェクト作成
@@ -67,41 +65,10 @@ void DX12::InitDX12()
     
     CreateD2D(); // DirectX11系作成 
 
-    if(FAILED(WriteToBuff())) goto failed; // バッファに書き込み
+    WriteToBuff(); // バッファに書き込み
 
     CreateRenderTex(); // レンダーテクスチャ作成
-
-    
-
-failed:
-    return; 
 }
-
-
-
-
-// DXGIファクトリー作成
-std::unique_ptr<DXGIFactory> DX12::CreateDXGIFactory()
-{
-    // DXGIファクトリー作成
-    ComPtr<IDXGIFactory6> comPtr;
-
-
-    HRESULT result;
-#ifdef _DEBUG
-    // デバッグモードのときは詳細を表示させるDXGIファクトリーを使用する
-    result = CreateDXGIFactory2(
-        DXGI_CREATE_FACTORY_DEBUG,
-        IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
-#else
-    result = CreateDXGIFactory1(
-        IID_PPV_ARGS(com.ReleaseAndGetAddressOf()));
-#endif
-    assert(SUCCEEDED(result));
-
-    return std::make_unique<DXGIFactory>(comPtr);
-}
-
 
 
 
@@ -136,14 +103,13 @@ void DX12::CreateBuff()
     // デプスステンシルバッファ作成
     D3D12_RESOURCE_DESC backBuffDesc;
     backBuffDesc = _backBuffs[0]->GetDesc();
-    UINT widthSize, heightSize;
-    widthSize  = backBuffDesc.Width;
-    heightSize = backBuffDesc.Height;
+    auto widthSize  = static_cast<unsigned int>(backBuffDesc.Width);
+    auto heightSize = static_cast<unsigned int>(backBuffDesc.Height);
     _dsBuff = _device->CreateBuff(widthSize, heightSize, BuffType::DEPTH_STENCIL);
 
     // コンスタントバッファ作成
-    UINT worldMatNum, viewProjNum, totalMatNum;
-    worldMatNum = shogiObjects.size();
+    unsigned int worldMatNum, viewProjNum, totalMatNum;
+    worldMatNum = static_cast<unsigned int>(shogiObjects.size());
     viewProjNum = 1;
     totalMatNum = worldMatNum + viewProjNum;
     widthSize  = (sizeof(DirectX::XMMATRIX)*totalMatNum + 0xff) & ~0xff; // 256アラインメント
@@ -152,13 +118,13 @@ void DX12::CreateBuff()
 
     // 頂点バッファ作成
     widthSize = 0;
-    for(auto& shogiObj : shogiObjects) widthSize += sizeof(Vert) * static_cast<Vertices*>(shogiObj->GetVertices())->GetDatas().size();
+    for(auto& shogiObj : shogiObjects) widthSize += sizeof(Vert) * static_cast<unsigned int>(shogiObj->GetVertices()->GetDatas().size());
     heightSize = 1;
     _vertBuff = _device->CreateBuff(widthSize, heightSize, BuffType::VERTEX);
 
     // 頂点インデックスバッファ作成
     widthSize = 0;
-    for(auto& vertIndices : allVertIndices) {widthSize += sizeof(unsigned short) * vertIndices->GetDatas().size();}
+    for(auto& vertIndices : allVertIndices) widthSize += sizeof(unsigned short) * static_cast<unsigned int>(vertIndices->GetDatas().size());
     heightSize = 1;
     _idxBuff = _device->CreateBuff(widthSize, heightSize, BuffType::INDEX);
 
@@ -192,7 +158,7 @@ void DX12::CreateBuff()
 }
 
 // ヒープ作成
-HRESULT DX12::CreateHeap()
+void DX12::CreateHeap()
 {
     // バックバッファRTVヒープ作成
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
@@ -205,23 +171,18 @@ HRESULT DX12::CreateHeap()
     _dsvHeap = _device->CreateHeap(1, HeapType::DSV);
 
     // CSUヒープ作成
-    UINT woodTexNum, pieceTexNum, boardTexNum;
-    woodTexNum  = 1;
-    boardTexNum = 2;
-    pieceTexNum = 8;
-    UINT cbvNum, srvNum, uavNum;
-    cbvNum = 1;
-    srvNum = woodTexNum + boardTexNum + pieceTexNum; // 木材テクスチャ1 将棋盤テクスチャ2　駒テクスチャ8
-    uavNum = 0;
+    auto& app = Application::GetInstance();
+
+    unsigned int woodTexNum   = static_cast<unsigned int>(app.GetWoodTexs().size());
+    unsigned int boardTexNum  = static_cast<unsigned int>(app.GetBoardLineTexs().size());
+    unsigned int pieceTexNum  = 8;
+    unsigned int cbvNum = 1;
+    unsigned int srvNum = woodTexNum + boardTexNum + pieceTexNum;
+    unsigned int uavNum = 0;
     _csuHeap = _device->CreateCSUHeap(cbvNum, srvNum, uavNum, HeapType::CSU);
 
     // 駒ごとの文字テクスチャ作成用RTVヒープ
     _texRTVHeap = _device->CreateHeap(pieceTexNum, HeapType::RTV);
-
-    return S_OK;
-
-failed:
-    return E_FAIL;
 }
 
 // ビュー作成
@@ -250,8 +211,8 @@ void DX12::CreateView()
     _device->CreateCSUView(_csuHeap.get(), 0, _woodTexBuffs[0].Get(), View::SRV);
 
     // 将棋オブジェクト用SRV作成
-    auto shogiObjTexNum = 10;
-    for (UINT i = 0; i < shogiObjTexNum; i++)
+    unsigned int shogiObjTexNum = 10;
+    for (unsigned int i = 0; i < shogiObjTexNum; i++)
         _device->CreateCSUView(_csuHeap.get(), i + woodTexNum, _shogiObjTexBuffs[i].Get(), View::SRV);
 
     // レンダーによるテクスチャ作成用RTV作成
@@ -293,36 +254,39 @@ void DX12::CreateDrawArea()
     // ゲームウインドウ取得
     auto gameWindow = Application::GetInstance().GetGameWindow();
 
+    auto windowWidth  = gameWindow->GetWindowWidth();
+    auto windowHeight = gameWindow->GetWindowHeight();
+
     // メイン
     // ビューポート
-    _mainViewport->TopLeftX = 0; // 左上横位置
-    _mainViewport->TopLeftY = 0; // 左上縦位置
-    _mainViewport->Width    = gameWindow->GetWindowWidth();  // 横
-    _mainViewport->Height   = gameWindow->GetWindowHeight(); // 縦
+    _mainViewport->TopLeftX = 0.0f; // 左上横位置
+    _mainViewport->TopLeftY = 0.0f; // 左上縦位置
+    _mainViewport->Width    = static_cast<float>(windowWidth);  // 横
+    _mainViewport->Height   = static_cast<float>(windowHeight); // 縦
     _mainViewport->MaxDepth = 1.0f; // 深度最大値
     _mainViewport->MinDepth = 0.0f; // 深度最小値
     // シザー矩形
-    _mainScissorRect->left   = 0;                             // 左
-    _mainScissorRect->right  = gameWindow->GetWindowWidth();  // 右
-    _mainScissorRect->top    = 0;                             // 上
-    _mainScissorRect->bottom = gameWindow->GetWindowHeight(); // 下
+    _mainScissorRect->left   = 0;            // 左
+    _mainScissorRect->right  = windowWidth;  // 右
+    _mainScissorRect->top    = 0;            // 上
+    _mainScissorRect->bottom = windowHeight; // 下
 
     // マップ
     // ビューポート
-    auto height = gameWindow->GetWindowHeight() / 2;
-    auto topY = gameWindow->GetWindowHeight() - height;
-    int offset = 10;
-    _mapViewport->TopLeftX = offset; // 左上横位置
-    _mapViewport->TopLeftY = topY - offset; // 左上縦位置
-    _mapViewport->Width    = height;  // 横
-    _mapViewport->Height   = height; // 縦
+    auto length = windowHeight / 2;
+    auto topY   = windowHeight - length;
+    unsigned int offset = 10;
+    _mapViewport->TopLeftX = static_cast<float>(offset); // 左上横位置
+    _mapViewport->TopLeftY = static_cast<float>(topY - offset); // 左上縦位置
+    _mapViewport->Width    = static_cast<float>(length);  // 横
+    _mapViewport->Height   = static_cast<float>(length); // 縦
     _mapViewport->MaxDepth = 1.0f; // 深度最大値
     _mapViewport->MinDepth = 0.0f; // 深度最小値
     // シザー矩形
     _mapScissorRect->left   = offset;                        // 左
-    _mapScissorRect->right  = height;         // 右
+    _mapScissorRect->right  = length;         // 右
     _mapScissorRect->top    = topY - offset;                 // 上
-    _mapScissorRect->bottom = gameWindow->GetWindowHeight(); // 下
+    _mapScissorRect->bottom = windowHeight - offset; // 下
 
 
 }
@@ -373,9 +337,9 @@ void DX12::CreateD2D()
     }
 
     // ラップされた駒テクスチャバッファ作成
-    UINT boardBuffNum, pieceBuffNum;
+    unsigned int boardBuffNum, pieceBuffNum;
     boardBuffNum = 2;
-    pieceBuffNum = _shogiObjTexBuffs.size() - boardBuffNum;
+    pieceBuffNum = static_cast<unsigned int>(_shogiObjTexBuffs.size()) - boardBuffNum;
     _wrappedPieceTexBuffs.resize(pieceBuffNum);
     for (UINT i = 0; i < pieceBuffNum; i++)
         _wrappedPieceTexBuffs[i] = _device11->CreateWrappedTexBuff(_shogiObjTexBuffs[i].Get());
@@ -392,15 +356,15 @@ void DX12::CreateD2D()
     }
         
     // テキストフォーマット作成
-    _textFormatFactory = std::make_unique<TextFormatFactory>();
-    _pieceTextFormat = _textFormatFactory->CreatePieceTextFormat(L"メイリオ"); // 駒のテキストフォーマット作成
-    float fontSize;
-    fontSize = gameWindow->GetWindowHeight() / 20;
-    _normalTextFormat = _textFormatFactory->CreateUITextFormat(L"メイリオ"); // 通常テキストフォーマット作成
+    _directWriteFactory = std::make_unique<DirectWriteFactory>();
+    _pieceTextFormat = _directWriteFactory->CreatePieceTextFormat(L"メイリオ"); // 駒のテキストフォーマット作成
+    _normalTextFormat = _directWriteFactory->CreateUITextFormat(L"メイリオ"); // 通常テキストフォーマット作成
+    _boldTextFormat = _directWriteFactory->CreateTextFormat(); // 太めテキストフォーマット作成
     
     // ブラシ作成
     _blackBrush        = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Black)); // 黒色ブラシ作成
     _redBrush          = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Red)); // 赤色ブラシ作成
+    _yellowBrush       = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Yellow)); // 黄色ブラシ作成
     _buttonUIBackBrush = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::LightYellow, 0.9f)); // UIブラシ作成
 }
 
@@ -464,7 +428,7 @@ std::unique_ptr<Direct2DFactory> DX12::CreateDirect2DFactory()
 
 
 // バッファに書き込み
-HRESULT DX12::WriteToBuff()
+void DX12::WriteToBuff()
 {
     auto& app    = Application::GetInstance();
     auto  board  = app.GetBoard();
@@ -478,32 +442,32 @@ HRESULT DX12::WriteToBuff()
     auto mainCamera = app.GetMainCamera();
     auto mapCamera  = app.GetMapCamera();
 
-    UINT idx = 0;
-    UINT address = _vertBuff->GetGPUVirtualAddress();
+    unsigned int idx = 0;
+    auto address = _vertBuff->GetGPUVirtualAddress();
 
 
     // 頂点集合の書き込み位置をセット
     static_cast<Vertices*>(board->GetVertices())->SetStartDataIdx(idx);
-    idx += static_cast<Vertices*>(board->GetVertices())->GetDatas().size();
+    idx += static_cast<unsigned int>(board->GetVertices()->GetDatas().size());
     Vertices* vertices;
     for (auto& piece : pieces)
     {
         vertices = static_cast<Vertices*>(piece->GetVertices());
         vertices->SetStartDataIdx(idx);
-        idx += vertices->GetDatas().size();
+        idx += static_cast<unsigned int>(vertices->GetDatas().size());
     }
-    if(FAILED(static_cast<Vertices*>(board->GetVertices())->WriteToBuff(_vertBuff.Get()))) goto failed; // 将棋盤頂点集合をバッファに書き込み
+    board->GetVertices()->WriteToBuff(_vertBuff.Get()); // 将棋盤頂点集合をバッファに書き込み
     for (auto& piece : pieces)
-        if(FAILED(static_cast<Vertices*>(piece->GetVertices())->WriteToBuff(_vertBuff.Get()))) goto failed; // 駒の頂点集合をバッファに書き込み
+        piece->GetVertices()->WriteToBuff(_vertBuff.Get()); // 駒の頂点集合をバッファに書き込み
 
 
     // インデックス集合の書き込み位置をセット
     idx = 0;
     boardVertIndices->SetStartDataIdx(idx);
-    idx += boardVertIndices->GetDatas().size();
+    idx += static_cast<unsigned int>(boardVertIndices->GetDatas().size());
     pieceVertIndices->SetStartDataIdx(idx);
-    if (FAILED(boardVertIndices->WriteToBuff(_idxBuff.Get()))) goto failed; // 将棋盤インデックス集合をバッファに書き込み
-    if (FAILED(pieceVertIndices->WriteToBuff(_idxBuff.Get()))) goto failed; // 駒のインデックス集合をバッファに書き込み
+    boardVertIndices->WriteToBuff(_idxBuff.Get()); // 将棋盤インデックス集合をバッファに書き込み
+    pieceVertIndices->WriteToBuff(_idxBuff.Get()); // 駒のインデックス集合をバッファに書き込み
 
     // 定数データの書き込み位置をセット（後に書き込む）
     idx = 0;
@@ -520,15 +484,14 @@ HRESULT DX12::WriteToBuff()
     mapCamera ->SetStartDataIdx(idx);
 
 
-    if(FAILED(woodTexs[0]->WriteToBuff(_woodTexBuffs[static_cast<unsigned int>(BasicTexType::YELLOW_WOOD)].Get()))) goto failed; // 木材テクスチャをバッファに書き込み
+    woodTexs[0]->WriteToBuff(_woodTexBuffs[static_cast<unsigned int>(BasicTexType::YELLOW_WOOD)].Get()); // 木材テクスチャをバッファに書き込み
 
-    if(FAILED(boardLineTexs[0]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_55)].Get()))) goto failed; // 5×5将棋盤黒線テクスチャをバッファに書き込み
-    if(FAILED(boardLineTexs[1]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_99)].Get()))) goto failed; // 9×9将棋盤黒線テクスチャをバッファに書き込み
+    boardLineTexs[0]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_55)].Get()); // 5×5将棋盤黒線テクスチャをバッファに書き込み
+    boardLineTexs[1]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_99)].Get()); // 9×9将棋盤黒線テクスチャをバッファに書き込み
 
-    return S_OK;
 
 failed:
-    return E_FAIL;
+ int aaa = 3;
 }
 
 // レンダーテクスチャ作成
@@ -568,7 +531,7 @@ void DX12::CreatePieceTex(
 
     StartD2D(wrappedRenderTexBuffAddress, d2dRenderTarget); // Direct2D開始
     
-    auto size = 256 / 2;
+    auto size = 256.0f / 2.0f;
     D2D1_RECT_F rect = {0, 5, size, size};
     _direct2DDeviceContext->DrawTextW( // 黒色で駒表面文字を描画
         frontText,
@@ -700,10 +663,10 @@ void DX12::ExeD3D()
     SetCommandDrawGameObj(); // ゲームオブジェクト描画コマンドセット
 
     // 定数バッファに書き込み
-    if(FAILED(static_cast<WorldMat*>(board->GetWorldMat())->WriteToBuff(_constBuff.Get()))) return; // 将棋盤書き込み
+    board->GetWorldMat()->WriteToBuff(_constBuff.Get()); // 将棋盤書き込み
     for(auto& piece : pieces)
-        if(FAILED(static_cast<WorldMat*>(piece->GetWorldMat())->WriteToBuff(_constBuff.Get()))) return; // 駒書き込み
-    if(FAILED(mainCamera->WriteToBuff(_constBuff.Get()))) return; // メインカメラ書き込み
+        piece->GetWorldMat()->WriteToBuff(_constBuff.Get()); // 駒書き込み
+    mainCamera->WriteToBuff(_constBuff.Get()); // メインカメラ書き込み
     
     ExeCmd(); // コマンド実行
 
@@ -753,7 +716,7 @@ void DX12::SetCommandDrawGameObj()
     auto vertBuffView = GetVertBuffView(static_cast<Vertices*>(board->GetVertices()));
     _cmdList->IASetVertexBuffers(0, 1, &vertBuffView);
 
-    _cmdList->DrawIndexedInstanced(boardVertIndices->GetDatas().size(), 1, 0, 0, 0);
+    _cmdList->DrawIndexedInstanced(static_cast<unsigned int>(boardVertIndices->GetDatas().size()), 1, 0, 0, 0);
 
     // 駒描画コマンドセット
     auto pieces = Application::GetInstance().GetPieces();
@@ -765,7 +728,7 @@ void DX12::SetCommandDrawGameObj()
         auto vertBuffView = GetVertBuffView(static_cast<Vertices*>(pieces[i]->GetVertices()));
         _cmdList->IASetVertexBuffers(0, 1, &vertBuffView);
 
-        _cmdList->DrawIndexedInstanced(pieceVertIndices->GetDatas().size(), 1, 0, 0, 0);
+        _cmdList->DrawIndexedInstanced(static_cast<unsigned int>(pieceVertIndices->GetDatas().size()), 1, 0, 0, 0);
     }
 }
 
@@ -804,7 +767,7 @@ D3D12_VERTEX_BUFFER_VIEW DX12::GetVertBuffView(NaturalBufferedData<Vert>* vertic
     view.StrideInBytes =   // 頂点1つ分のサイズ
         sizeof(Vert);
     view.SizeInBytes = // 頂点全体のサイズ
-        sizeof(Vert) * vertices->GetDatas().size();
+        sizeof(Vert) * static_cast<unsigned int>(vertices->GetDatas().size());
 
     return view;
 }
@@ -822,7 +785,7 @@ D3D12_INDEX_BUFFER_VIEW DX12::GetIdxBuffView(NaturalBufferedData<unsigned short>
     view.Format =         // フォーマット unsigned short
         DXGI_FORMAT_R16_UINT;
     view.SizeInBytes =    // インデックス全体のサイズ
-        sizeof(unsigned short) * vertIndices->GetDatas().size();
+        sizeof(unsigned short) * static_cast<unsigned int>(vertIndices->GetDatas().size());
 
     return view;
 }
@@ -849,9 +812,17 @@ void DX12::ExeD2D()
 {
     auto wrappedBackBuffAddress = _wrappedBackBuffs[_currentBackBuffIdx].GetAddressOf();
     auto d2dRenderTarget = _d2dRenderTargets[_currentBackBuffIdx].Get();
-    auto& buttonUIs = Application::GetInstance().GetButtonUIs();
+    auto textUIs = Application::GetInstance().GetTextUIs();
+    auto buttonUIs = Application::GetInstance().GetButtonUIs();
     StartD2D(wrappedBackBuffAddress, d2dRenderTarget); // Direct2D開始
 
+    // テキストUI描画
+    for (auto& textUI : textUIs)
+    {
+        _direct2DDeviceContext->DrawText2D(textUI->GetText2D());
+    }
+
+    // ボタンUI描画
     for (auto& buttonUI : buttonUIs)
     {
         // ボタンの枠を描画
@@ -904,10 +875,12 @@ void DX12::WaitProcessWithFence()
     }
 }
 
-// 通常のテキストフォーマットを返す
-IDWriteTextFormat* DX12::GetNormalTextFormat(){return _normalTextFormat.Get();}
-// 黒色ブラシを返す
-ID2D1SolidColorBrush* DX12::GetBrackBrush(){return _blackBrush.Get();}
+
+IDWriteTextFormat* DX12::GetNormalTextFormat(){return _normalTextFormat.Get();} // 通常のテキストフォーマットを返す
+IDWriteTextFormat* DX12::GetBoldTextFormat()  {return _boldTextFormat.Get();}   // 太めのテキストフォーマットを返す
+
+ID2D1SolidColorBrush* DX12::GetBlackBrush() {return _blackBrush.Get();}  // 黒色ブラシを返す
+ID2D1SolidColorBrush* DX12::GetYellowBrush(){return _yellowBrush.Get();} // 黄色ブラシを返す
 
 
 //// 描画設定更新

@@ -5,12 +5,13 @@ void              WorldMat::SetMat(DirectX::XMMATRIX mat){_mat = mat;}  // ƒ[ƒ
 DirectX::XMMATRIX WorldMat::GetMat()                     {return _mat;} // ƒ[ƒ‹ƒhs—ñ‚ð•Ô‚·
 
 // ƒoƒbƒtƒ@‚É‘‚«ž‚Ý
-HRESULT WorldMat::WriteToBuff(ID3D12Resource* buff)
+void WorldMat::WriteToBuff(ID3D12Resource* buff)
 {
     DirectX::XMMATRIX* buffMap;
 
-    HRESULT result = buff->Map(0, nullptr, (void**)&buffMap);
-    if (FAILED(result)) return result;
+    HRESULT result;
+    result = buff->Map(0, nullptr, (void**)&buffMap);
+    assert(SUCCEEDED(result));
 
     buffMap += _startDataIdx;
 
@@ -19,8 +20,6 @@ HRESULT WorldMat::WriteToBuff(ID3D12Resource* buff)
     std::copy(datas.begin(), datas.end(), buffMap);
 
     buff->Unmap(0, nullptr);
-
-    return S_OK;
 }
 
 WorldMat::WorldMat()

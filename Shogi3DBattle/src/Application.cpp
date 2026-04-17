@@ -379,9 +379,30 @@ DX12* Application::GetDX12(){return _dx12.get();} // DirectX12を返す
 bool Application::IsDrawUINotEmpty(){return _buttonUIs.size() > 0;} // UIの空状況を返す
 
 
+// UIを全て削除する
+void Application::RemoveAllUI()
+{
+    _textUIs.clear();
+    _buttonUIs.clear();
+}
 
-void Application::RemoveAllUI(){_buttonUIs.clear();}      // UIを全て削除する
-std::vector<std::unique_ptr<I_ButtonUI>>& Application::GetButtonUIs(){return _buttonUIs;} // ボタンUIを返す
+// テキストUIを返す
+std::vector<TextUI*> Application::GetTextUIs()
+{
+    std::vector<TextUI*> vec;
+    for(auto& textUI : _textUIs) vec.push_back(textUI.get());
+    
+    return vec;
+}
+
+// ボタンUIを返す
+std::vector<I_ButtonUI*> Application::GetButtonUIs()
+{
+    std::vector<I_ButtonUI*> vec;
+    for(auto& buttonUI : _buttonUIs) vec.push_back(buttonUI.get());
+    
+    return vec;
+}
 
 // すべての将棋オブジェクトを返す
 std::vector<I_GameObj*> Application::GetGameObjects()
@@ -408,6 +429,12 @@ std::vector<NaturalBufferedData<unsigned short>*> Application::GetAllVertIndices
 
     return allVertIndices;
 }
+// テキストUIをプッシュ
+void::Application::PushTextUI(TextUI textUI)
+{
+    _textUIs.push_back(std::make_unique<TextUI>(textUI));
+}
+
 // ボタンUI作成
 void Application::PushButtonUI(
     ButtonUIType        buttonUIType,

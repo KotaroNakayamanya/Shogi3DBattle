@@ -27,7 +27,7 @@ public:
 
     DirectX::XMFLOAT3 GetNormLookVec(); // 正規化された視線ベクトルを返す
     
-    HRESULT WriteToBuff(ID3D12Resource* buff) override; // バッファに書き込み
+    void WriteToBuff(ID3D12Resource* buff) override; // バッファに書き込み
     
     void SetViewMat(ViewMat* viewMat);   // ビュー行列セット
     ViewMat* GetViewMat();               // ビュー行列を返す

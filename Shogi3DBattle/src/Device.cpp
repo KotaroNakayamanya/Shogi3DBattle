@@ -1,5 +1,6 @@
 #include"Device.h"
 #include<cassert>
+#include<array>
 #include"DSBuffFactory.h"
 #include"ConstBuffFactory.h"
 #include"VertBuffFactory.h"
@@ -13,6 +14,8 @@
 #include"DSVFactory.h"
 #include"CBVFactory.h"
 #include"SRVFactory.h"
+
+#pragma comment(lib, "d3d12.lib")
 
 template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -167,6 +170,7 @@ std::unique_ptr<CSUHeap> Device::CreateCSUHeap(UINT cbvNum, UINT srvNum, UINT ua
 {
     auto heapUniquePtr = CreateHeap(cbvNum + srvNum + uavNum, heapType);
     auto heap = *heapUniquePtr;
+
     return std::make_unique<CSUHeap>(heap, cbvNum, srvNum, uavNum);
 }
 
@@ -648,8 +652,30 @@ D3D12_DEPTH_STENCIL_DESC Device::GetDepthStencilDesc()
 
 
 
-// DirectX12デバイスセット
-void Device::SetDevice(ComPtr<ID3D12Device> device){_device = device;}
 ID3D12Device* Device::GetDevice(){return _device.Get();} // DirectX12デバイスを返す
 
-Device::Device(ComPtr<ID3D12Device> comPtr) : _device(comPtr){}
+Device::Device(ComPtr<IDXGIAdapter> adapter)
+{
+    std::array<D3D_FEATURE_LEVEL, 5> featureLevels = // GPU機能レベルを列挙
+    {
+        D3D_FEATURE_LEVEL_12_2,
+        D3D_FEATURE_LEVEL_12_1,
+        D3D_FEATURE_LEVEL_12_0,
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0
+    };
+
+    // GPU機能レベルの配列順にデバイス作成を試みる
+    HRESULT result;
+    auto it = std::find_if(featureLevels.begin(), featureLevels.end(),
+        [this, &result, &adapter](D3D_FEATURE_LEVEL featureLevel)
+        {
+            result = D3D12CreateDevice(
+                adapter.Get(),
+                featureLevel,
+                IID_PPV_ARGS(_device.ReleaseAndGetAddressOf()));
+
+            return result == S_OK; // 作成できたら戻る
+        });
+    assert(SUCCEEDED(result));
+}

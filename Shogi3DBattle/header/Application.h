@@ -6,6 +6,7 @@
 #include"I_SceneState.h"
 
 #include"Camera.h"
+#include"TextUI.h"
 #include"I_ButtonUI.h"
 #include"ButtonUIType.h"
 
@@ -43,6 +44,7 @@ private:
     void CreateTex(); // テクスチャ作成
 
     // UI 
+    std::vector<std::unique_ptr<TextUI>>     _textUIs;   // テキストUI
     std::vector<std::unique_ptr<I_ButtonUI>> _buttonUIs; // ボタンUI
     
 
@@ -92,13 +94,17 @@ public:
 
     DX12* GetDX12(); // DirectX12を返す
 
+    // テキストUIをプッシュ
+    void PushTextUI(TextUI textUI);
+
     // ボタンUI作成
     void PushButtonUI(
         ButtonUIType        buttonUIType,
         D2D1_RECT_F         rect,
         std::vector<Text2D> text2D = std::vector<Text2D>());
 
-    std::vector<std::unique_ptr<I_ButtonUI>>& GetButtonUIs(); // ボタンUIを返す
+    std::vector<TextUI*>     GetTextUIs(); // テキストUIを返す
+    std::vector<I_ButtonUI*> GetButtonUIs(); // ボタンUIを返す
 
     bool IsDrawUINotEmpty(); // UIの空状況を返す
 

@@ -12,5 +12,4 @@ public:
         _heapDesc   = std::make_unique<CSUHeapDesc>();
         _descOffset = std::make_unique<CSUOffset>();
     }
-    ~CSUHeapFactory(){}
 };

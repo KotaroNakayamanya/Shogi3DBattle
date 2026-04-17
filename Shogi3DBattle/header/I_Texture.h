@@ -16,7 +16,7 @@ public:
     void               SetPixels(std::vector<Pixel> pixels);
     std::vector<Pixel> GetPixels();
     // バッファに書き込む
-    HRESULT WriteToBuff(ID3D12Resource* buff) override;
+    void WriteToBuff(ID3D12Resource* buff) override;
 
     void SetWidth(UINT width);   // 横サイズセット
     UINT GetWidth();             // 横サイズを返す

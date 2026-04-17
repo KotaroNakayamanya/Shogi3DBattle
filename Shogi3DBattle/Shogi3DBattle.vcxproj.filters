@@ -498,7 +498,7 @@
     <ClCompile Include="src\I_SelectingButtonScene.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
-    <ClCompile Include="src\TextFormatFactory.cpp">
+    <ClCompile Include="src\DirectWriteFactory.cpp">
       <Filter>ソース ファイル\dx12\dx11</Filter>
     </ClCompile>
     <ClCompile Include="src\Direct2DDevice.cpp">
@@ -506,6 +506,9 @@
     </ClCompile>
     <ClCompile Include="src\Direct2DFactory.cpp">
       <Filter>ソース ファイル\dx12\dx11</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextUI.cpp">
+      <Filter>ソース ファイル\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -812,7 +815,7 @@
     <ClInclude Include="header\I_SelectingButtonScene.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_TextUI.h">
+    <ClInclude Include="header\TextUI.h">
       <Filter>ヘッダー ファイル\ui\text</Filter>
     </ClInclude>
     <ClInclude Include="header\Device11AndDeviceContext.h">
@@ -824,7 +827,7 @@
     <ClInclude Include="header\Direct2DFactory.h">
       <Filter>ヘッダー ファイル\dx12\dx11</Filter>
     </ClInclude>
-    <ClInclude Include="header\TextFormatFactory.h">
+    <ClInclude Include="header\DirectWriteFactory.h">
       <Filter>ヘッダー ファイル\dx12\dx11</Filter>
     </ClInclude>
     <ClInclude Include="header\HeapType.h">

@@ -4,7 +4,7 @@
 
 #include"DXGIFactory.h"
 #include"Device.h"
-#include"TextFormatFactory.h"
+#include"DirectWriteFactory.h"
 
 #include"ResourceBarrier.h"
 #include"ViewMat.h"
@@ -30,7 +30,6 @@ private:
 
     // DXGIファクトリー
     std::unique_ptr<DXGIFactory> _dxgiFactory; // DXGIファクトリー
-    std::unique_ptr<DXGIFactory> CreateDXGIFactory(); // ファクトリー系作成
 
     std::unique_ptr<Device>      _device;      // Direct3Dデバイス
 
@@ -65,7 +64,7 @@ private:
     void ExitRenderTex(GameObjType shogiObjType); // レンダリング終了処理
 
     void CreateBuff(); // バッファ系作成
-    HRESULT WriteToBuff(); // バッファに書き込み  
+    void WriteToBuff(); // バッファに書き込み  
 
     // ヒープ
     std::unique_ptr<Heap>    _rtvHeap; // RTVヒープ
@@ -74,7 +73,7 @@ private:
     std::unique_ptr<CSUHeap> _csuHeap; // CSUヒープ
     std::unique_ptr<Heap>    _pieceTexRTVHeap; // 駒テクスチャRTVヒープ
     std::unique_ptr<CSUHeap> _pieceTexSRVHeap; // 駒テクスチャSRVヒープ
-    HRESULT CreateHeap(); // ヒープ作成
+    void CreateHeap(); // ヒープ作成
 
     // ビュー
     void CreateView(); // ビュー作成
@@ -95,13 +94,15 @@ private:
 
     
     // テキストフォーマット
-    std::unique_ptr<TextFormatFactory> _textFormatFactory;    // テキストフォーマットファクトリー
+    std::unique_ptr<DirectWriteFactory> _directWriteFactory;    // DirectWriteファクトリー
     ComPtr<IDWriteTextFormat> _pieceTextFormat; // 駒のテキストフォーマット
-    ComPtr<IDWriteTextFormat> _normalTextFormat; // UIテキストフォーマット
+    ComPtr<IDWriteTextFormat> _normalTextFormat; // 通常テキストフォーマット
+    ComPtr<IDWriteTextFormat> _boldTextFormat;   // 太めテキストフォーマット
 
     // ブラシ
     ComPtr<ID2D1SolidColorBrush> _blackBrush; // 黒色ブラシ
     ComPtr<ID2D1SolidColorBrush> _redBrush;   // 赤色ブラシ
+    ComPtr<ID2D1SolidColorBrush> _yellowBrush;   // 黄色ブラシ
     ComPtr<ID2D1SolidColorBrush> _buttonUIBackBrush;    // ボタンUI背景ブラシ
     
 
@@ -168,7 +169,9 @@ public:
     void ExeDX12(); // DirectX12実行処理
 
     IDWriteTextFormat*    GetNormalTextFormat(); // 通常のテキストフォーマットを返す
-    ID2D1SolidColorBrush* GetBrackBrush();       // 黒色ブラシを返す
+    IDWriteTextFormat*    GetBoldTextFormat();   // 太めのテキストフォーマットを返す
+    ID2D1SolidColorBrush* GetBlackBrush();       // 黒色ブラシを返す
+    ID2D1SolidColorBrush* GetYellowBrush();      // 黄色ブラシを返す
 
     void ProcessChangeWindowSize( // ウインドウサイズ変更処理
         UINT width, UINT height);

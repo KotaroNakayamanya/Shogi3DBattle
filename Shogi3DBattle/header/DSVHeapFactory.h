@@ -7,9 +7,6 @@
 class DSVHeapFactory : public I_HeapFactory
 {
 public:
-    // DSVÉqÅ[ÉvçÏê¨
-    //HRESULT CreateHeap(Heap* heap, UINT descNum);
-
     DSVHeapFactory()
     {
         _heapDesc   = std::make_unique<DSVHeapDesc>();

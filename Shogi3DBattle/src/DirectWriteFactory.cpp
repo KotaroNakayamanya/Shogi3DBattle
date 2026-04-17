@@ -1,11 +1,11 @@
-#include"TextFormatFactory.h"
+#include"DirectWriteFactory.h"
 #include"Application.h"
 
 template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 // 駒用フォーマット作成
-ComPtr<IDWriteTextFormat> TextFormatFactory::CreatePieceTextFormat(std::wstring fontName)
+ComPtr<IDWriteTextFormat> DirectWriteFactory::CreatePieceTextFormat(std::wstring fontName)
 {
     ComPtr<IDWriteTextFormat> comPtr;
 
@@ -39,7 +39,7 @@ ComPtr<IDWriteTextFormat> TextFormatFactory::CreatePieceTextFormat(std::wstring 
 }
 
 // UIテキストフォーマット作成
-ComPtr<IDWriteTextFormat> TextFormatFactory::CreateUITextFormat(std::wstring fontName)
+ComPtr<IDWriteTextFormat> DirectWriteFactory::CreateUITextFormat(std::wstring fontName)
 {
     ComPtr<IDWriteTextFormat> ComPtr;
 
@@ -67,7 +67,37 @@ ComPtr<IDWriteTextFormat> TextFormatFactory::CreateUITextFormat(std::wstring fon
     return ComPtr;
 }
 
-TextFormatFactory::TextFormatFactory()
+// テキストフォーマット作成
+ComPtr<IDWriteTextFormat> DirectWriteFactory::CreateTextFormat()
+{
+    ComPtr<IDWriteTextFormat> ComPtr;
+
+    auto gameWindow = Application::GetInstance().GetGameWindow();
+    auto fontSize   = gameWindow->GetWindowHeight() / 20;
+
+    _dWriteFactory->CreateTextFormat(
+        L"メイリオ",
+        nullptr,
+        DWRITE_FONT_WEIGHT_HEAVY,
+        DWRITE_FONT_STYLE_NORMAL,
+        DWRITE_FONT_STRETCH_NORMAL,
+        fontSize,
+        L"ja-jp",
+        ComPtr.ReleaseAndGetAddressOf());
+
+    // 横位置を中央に
+    ComPtr->SetTextAlignment(
+        DWRITE_TEXT_ALIGNMENT_CENTER);
+
+    // 縦位置を中央に
+    ComPtr->SetParagraphAlignment(
+        DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+
+    return ComPtr;
+}
+
+
+DirectWriteFactory::DirectWriteFactory()
 {
     ComPtr<IDWriteFactory> comPtr;
 

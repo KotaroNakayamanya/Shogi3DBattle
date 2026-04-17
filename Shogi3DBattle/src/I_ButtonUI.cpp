@@ -12,7 +12,7 @@ IDWriteTextFormat* I_ButtonUI::GetDefaultTextFormat()
 ID2D1SolidColorBrush* I_ButtonUI::GetDefaultBrush()
 {
     auto dx12 = Application::GetInstance().GetDX12();
-    return dx12->GetBrackBrush();
+    return dx12->GetBlackBrush();
 }
 
 void                I_ButtonUI::SetText2Ds(std::vector<Text2D> tr){_text2Ds = tr;}   // 2Dテキストセット

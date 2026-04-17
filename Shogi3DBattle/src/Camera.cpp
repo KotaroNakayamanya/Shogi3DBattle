@@ -99,12 +99,13 @@ void Camera::SetProjMat(I_ProjMat* projMat)    {_projMat.reset(projMat);} // ƒvƒ
 I_ProjMat* Camera::GetProjMat()                {return _projMat.get();}   // ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚ð•Ô‚·
 
 // ƒoƒbƒtƒ@‚É‘‚«ž‚Ý
-HRESULT Camera::WriteToBuff(ID3D12Resource* buff)
+void Camera::WriteToBuff(ID3D12Resource* buff)
 {
     DirectX::XMMATRIX* buffMap;
 
-    HRESULT result = buff->Map(0, nullptr, (void**)&buffMap);
-    if (FAILED(result)) return result;
+    HRESULT result;
+    result = buff->Map(0, nullptr, (void**)&buffMap);
+    assert(SUCCEEDED(result));
 
     buffMap += _startDataIdx;
 
@@ -113,6 +114,4 @@ HRESULT Camera::WriteToBuff(ID3D12Resource* buff)
     std::copy(datas.begin(), datas.end(), buffMap);
 
     buff->Unmap(0, nullptr);
-
-    return S_OK;
 }

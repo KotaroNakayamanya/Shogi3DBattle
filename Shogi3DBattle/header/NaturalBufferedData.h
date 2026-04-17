@@ -2,6 +2,7 @@
 
 #include"I_BufferedData.h"
 #include<vector>
+#include<cassert>
 
 template<typename T>
 class NaturalBufferedData : public I_BufferedData
@@ -11,20 +12,19 @@ protected:
 
 public:
     // バッファに書き込み
-    HRESULT WriteToBuff(ID3D12Resource* buff) override
+    void WriteToBuff(ID3D12Resource* buff) override
     {
         T* buffMap;
 
-        HRESULT result = buff->Map(0, nullptr, (void**)&buffMap);
-        if (FAILED(result)) return result;
+        HRESULT result;
+        result = buff->Map(0, nullptr, (void**)&buffMap);
+        assert(SUCCEEDED(result));
 
         buffMap += _startDataIdx;
 
         std::copy(_datas.begin(), _datas.end(), buffMap);
 
         buff->Unmap(0, nullptr);
-
-        return S_OK;
     }
 
     void           SetDatas(std::vector<T> datas){_datas = datas;} // データ集合セット

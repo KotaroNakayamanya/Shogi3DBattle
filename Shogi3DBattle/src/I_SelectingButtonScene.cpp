@@ -22,10 +22,10 @@ std::unique_ptr<I_SceneState> I_SelectingButtonScene::ExeSceneOperation(
     }
 
     // 選択されているボタンを探す（後から追加されているボタンを優先して選択状態にする）
-    auto& buttonUIs = Application::GetInstance().GetButtonUIs();
+    auto buttonUIs = Application::GetInstance().GetButtonUIs();
     for (auto it = buttonUIs.rbegin(); it < buttonUIs.rend(); it++)
     {
-        auto& buttonUI = *it;
+        auto buttonUI = *it;
         auto rect = buttonUI->GetRect();
 
         // ボタンUIの範囲にカーソルがあるか判定
@@ -36,7 +36,7 @@ std::unique_ptr<I_SceneState> I_SelectingButtonScene::ExeSceneOperation(
         if (isSelected) // 選択されていれば選択状態にし、break
         {
             buttonUI->SetIsSelected(true);
-            _selectingButton = buttonUI.get();
+            _selectingButton = buttonUI;
 
             break;
         }

@@ -2,12 +2,49 @@
 #include"Application.h"
 #include"SelectingPiece.h"
 
+// テキストUIセット
+void TitleMenu::SetTextUI()
+{
+    auto& app = Application::GetInstance();
+
+    auto dx12 = app.GetDX12();
+
+    auto gameWindow   = app.GetGameWindow();
+    auto windowWidth  = gameWindow->GetWindowWidth();
+    auto windowHeight = gameWindow->GetWindowHeight();
+
+    auto width      = windowWidth  * 0.8f;
+    auto height     = windowHeight * 0.2f;
+
+    auto centerXPos = windowWidth / 2;
+    auto left  = centerXPos - (width / 2.0f);
+    auto right = left + width;
+
+    auto top = windowHeight * 0.1f;
+    auto bottom = top + height;
+
+
+    Text2D text2D;
+
+    text2D.text = L"将棋大戦３D";
+    text2D.rect = {left, top, right, bottom};
+
+    text2D.textFormat = dx12->GetBoldTextFormat();
+    text2D.brush = dx12->GetBlackBrush();
+    app.PushTextUI(text2D);
+
+    text2D.textFormat = dx12->GetNormalTextFormat();
+    text2D.brush = dx12->GetYellowBrush();
+    app.PushTextUI(text2D);
+
+}
+
 // ボタンUIセット
 void TitleMenu::SetButtonUI()
 {
     auto& app = Application::GetInstance();
 
-    auto gameWindow = app.GetGameWindow();
+    auto gameWindow   = app.GetGameWindow();
     auto windowWidth  = gameWindow->GetWindowWidth();
     auto windowHeight = gameWindow->GetWindowHeight();
 
@@ -52,6 +89,13 @@ std::unique_ptr<I_SceneState> TitleMenu::ExeSelectingButtonSceneOperation(
     int cursorXMove,
     int cursorYMove)
 {
+    // テキストUIセット
+    if (!_isSetTextUI)
+    {
+        SetTextUI();
+        _isSetTextUI = true;
+    }
+
     // 将棋盤回転
     static float rotationAngle = 0.005f;
     _mainCamera->RotationH(rotationAngle);
@@ -82,7 +126,7 @@ std::unique_ptr<I_SceneState> TitleMenu::ExeCancelButton()
     return nullptr;
 }
 
-TitleMenu::TitleMenu()
+TitleMenu::TitleMenu() : _isSetTextUI(false)
 {
     auto& app = Application::GetInstance();
 

@@ -4,13 +4,13 @@
 #include<array>
 #include"Application.h"
 
-#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "dxgi.lib")
 
 template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-// 使用するアダプター作成
-ComPtr<IDXGIAdapter> DXGIFactory::CreateAdapter()
+// 使用するアダプターを返す
+ComPtr<IDXGIAdapter> DXGIFactory::GetAdapter()
 {
     // 探索対象のアダプター名
     std::array<std::wstring, 3> adapterNames =
@@ -23,8 +23,11 @@ ComPtr<IDXGIAdapter> DXGIFactory::CreateAdapter()
     // 使用可能なアダプターを取得
     auto canUseAdapters = GetCanUseAdapters();
     // 使用可能なアダプターがなければnullptrを返す
-    if(canUseAdapters.size() == 0) return nullptr;
-    
+    if(canUseAdapters.size() == 0) 
+    {
+        assert(false);
+        return nullptr;
+    }
 
     for(auto& adapterComPtr : canUseAdapters)
     {
@@ -121,39 +124,17 @@ DXGI_SWAP_CHAIN_DESC1 DXGIFactory::GetSwapChainDesc(GameWindow* gameWindow)
 
 
 
-// Direct3Dデバイス作成
-std::unique_ptr<Device> DXGIFactory::CreateDevice()
+DXGIFactory::DXGIFactory()
 {
-
-    std::array<D3D_FEATURE_LEVEL, 5> featureLevels = // GPU機能レベルを列挙
-    {
-        D3D_FEATURE_LEVEL_12_2,
-        D3D_FEATURE_LEVEL_12_1,
-        D3D_FEATURE_LEVEL_12_0,
-        D3D_FEATURE_LEVEL_11_1,
-        D3D_FEATURE_LEVEL_11_0
-    };
-
-    auto adapter = CreateAdapter();
-
-    ComPtr<ID3D12Device> comPtr;
-    // GPU機能レベルの配列順にデバイス作成を試みる
     HRESULT result;
-    auto it = std::find_if(featureLevels.begin(), featureLevels.end(),
-        [&comPtr, &result, &adapter](D3D_FEATURE_LEVEL featureLevel)
-        {
-            result = D3D12CreateDevice(
-                adapter.Get(),
-                featureLevel,
-                IID_PPV_ARGS(comPtr.ReleaseAndGetAddressOf()));
-
-            return result == S_OK; // 作成できたら戻る
-        });
+#ifdef _DEBUG
+    // デバッグモードのときは詳細を表示させるDXGIファクトリーを使用する
+    result = CreateDXGIFactory2(
+        DXGI_CREATE_FACTORY_DEBUG,
+        IID_PPV_ARGS(_dxgiFactory.ReleaseAndGetAddressOf()));
+#else
+    result = CreateDXGIFactory1(
+        IID_PPV_ARGS(_dxgiFactory.ReleaseAndGetAddressOf()));
+#endif
     assert(SUCCEEDED(result));
-
-    return std::make_unique<Device>(comPtr);
 }
-
-void DXGIFactory::SetDXGIFactory(ComPtr<IDXGIFactory6> dxgiFactory){_dxgiFactory = dxgiFactory;} // DXGIファクトリーセット
-
-DXGIFactory::DXGIFactory(ComPtr<IDXGIFactory6> comPtr) : _dxgiFactory(comPtr){}
