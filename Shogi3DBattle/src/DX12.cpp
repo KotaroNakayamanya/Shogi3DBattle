@@ -190,21 +190,15 @@ void DX12::CreateView()
 {
     // バックバッファ用RTV作成
     for (UINT i = 0; i < _rtvHeap->GetDescNum(); i++)
-    {
         _device->CreateView(_rtvHeap.get(), i, _backBuffs[i].Get(), View::RTV);
-    }
 
     // DSV作成
     for (UINT i = 0; i < _dsvHeap->GetDescNum(); i++)
-    {
         _device->CreateView(_dsvHeap.get(), i, _dsBuff.Get(), View::DSV);
-    }
 
     // CBV作成
     for (UINT i = 0; i < _csuHeap->GetCBVNum(); i++)
-    {
         _device->CreateCSUView(_csuHeap.get(), i, _constBuff.Get(), View::CBV);
-    }
 
     // 木材テクスチャ用SRV作成
     auto woodTexNum = 1;
@@ -357,9 +351,10 @@ void DX12::CreateD2D()
         
     // テキストフォーマット作成
     _directWriteFactory = std::make_unique<DirectWriteFactory>();
-    _pieceTextFormat = _directWriteFactory->CreatePieceTextFormat(L"メイリオ"); // 駒のテキストフォーマット作成
-    _normalTextFormat = _directWriteFactory->CreateUITextFormat(L"メイリオ"); // 通常テキストフォーマット作成
-    _boldTextFormat = _directWriteFactory->CreateTextFormat(); // 太めテキストフォーマット作成
+    _pieceTextFormat = _directWriteFactory->CreatePieceTextFormat(); // 駒のテキストフォーマット作成
+    _normalTextFormat = _directWriteFactory->CreateUITextFormat(); // 通常テキストフォーマット作成
+    _titleTextFormat      = _directWriteFactory->CreateTitleTextFormat(DWRITE_FONT_WEIGHT_LIGHT); // タイトルテキストフォーマット作成
+    _titleFrameTextFormat = _directWriteFactory->CreateTitleTextFormat(DWRITE_FONT_WEIGHT_BOLD);   // タイトル枠テキストフォーマット作成
     
     // ブラシ作成
     _blackBrush        = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Black)); // 黒色ブラシ作成
@@ -877,7 +872,8 @@ void DX12::WaitProcessWithFence()
 
 
 IDWriteTextFormat* DX12::GetNormalTextFormat(){return _normalTextFormat.Get();} // 通常のテキストフォーマットを返す
-IDWriteTextFormat* DX12::GetBoldTextFormat()  {return _boldTextFormat.Get();}   // 太めのテキストフォーマットを返す
+IDWriteTextFormat* DX12::GetTitleTextFormat     (){return _titleTextFormat.Get();}      // タイトルテキストフォーマットを返す
+IDWriteTextFormat* DX12::GetTitleFrameTextFormat(){return _titleFrameTextFormat.Get();} // タイトル枠テキストフォーマットを返す
 
 ID2D1SolidColorBrush* DX12::GetBlackBrush() {return _blackBrush.Get();}  // 黒色ブラシを返す
 ID2D1SolidColorBrush* DX12::GetYellowBrush(){return _yellowBrush.Get();} // 黄色ブラシを返す

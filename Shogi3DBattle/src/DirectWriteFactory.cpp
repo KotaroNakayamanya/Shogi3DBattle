@@ -4,97 +4,103 @@
 template<typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-// 駒用フォーマット作成
-ComPtr<IDWriteTextFormat> DirectWriteFactory::CreatePieceTextFormat(std::wstring fontName)
+// テキストフォーマット作成
+ComPtr<IDWriteTextFormat> DirectWriteFactory::CreateTextFormat(
+    DWRITE_FONT_WEIGHT weight,
+    float              fontSize)
 {
     ComPtr<IDWriteTextFormat> comPtr;
 
-    _dWriteFactory->CreateTextFormat(
-        fontName.c_str(),
+    HRESULT result;
+    result = _dWriteFactory->CreateTextFormat(
+        L"メイリオ",
         nullptr,
-        DWRITE_FONT_WEIGHT_BOLD,
+        weight,
         DWRITE_FONT_STYLE_NORMAL,
         DWRITE_FONT_STRETCH_NORMAL,
-        50.0f,
+        fontSize,
         L"ja-jp",
         comPtr.ReleaseAndGetAddressOf());
+    assert(SUCCEEDED(result));
 
-    // 横位置を中央に
-    comPtr->SetTextAlignment(
-        DWRITE_TEXT_ALIGNMENT_CENTER);
+    return comPtr;
+}
 
-    // 縦位置を中央に
-    comPtr->SetParagraphAlignment(
-        DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+// 横書きテキストフォーマット作成
+ComPtr<IDWriteTextFormat> DirectWriteFactory::CreateHTextFormat(
+    DWRITE_FONT_WEIGHT weight,
+    float              fontSize)
+{
+    auto comPtr = CreateTextFormat(weight, fontSize);
 
-    // 縦書きにする
-    comPtr->SetReadingDirection(
-        DWRITE_READING_DIRECTION_TOP_TO_BOTTOM);
+    HRESULT result;
+    result = comPtr->SetReadingDirection(DWRITE_READING_DIRECTION_LEFT_TO_RIGHT); assert(SUCCEEDED(result)); // 横書き
+    result = comPtr->SetFlowDirection   (DWRITE_FLOW_DIRECTION_TOP_TO_BOTTOM);    assert(SUCCEEDED(result)); // 上から下へ
+    
+    return comPtr;
+}
 
-    // 右から左へ
-    comPtr->SetFlowDirection(
-        DWRITE_FLOW_DIRECTION_RIGHT_TO_LEFT);
+// 縦書きテキストフォーマット作成
+ComPtr<IDWriteTextFormat> DirectWriteFactory::CreateVTextFormat(
+    DWRITE_FONT_WEIGHT weight,
+    float              fontSize)
+{
+    auto comPtr = CreateTextFormat(weight, fontSize);
+
+    HRESULT result;
+    result = comPtr->SetReadingDirection(DWRITE_READING_DIRECTION_TOP_TO_BOTTOM); assert(SUCCEEDED(result)); // 縦書き
+    result = comPtr->SetFlowDirection   (DWRITE_FLOW_DIRECTION_RIGHT_TO_LEFT);    assert(SUCCEEDED(result)); // 右から左へ
+    
+    return comPtr;
+}
+
+
+
+
+// 駒用フォーマット作成
+ComPtr<IDWriteTextFormat> DirectWriteFactory::CreatePieceTextFormat()
+{
+    auto weight   = DWRITE_FONT_WEIGHT_BOLD;
+    auto fontSize = 50.0f;
+
+    auto comPtr = CreateVTextFormat(weight, fontSize);
+
+    HRESULT result; 
+    result = comPtr->SetTextAlignment     (DWRITE_TEXT_ALIGNMENT_CENTER);      assert(SUCCEEDED(result)); // 横位置を中央に
+    result = comPtr->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER); assert(SUCCEEDED(result)); // 縦位置を中央に
 
     return comPtr;
 }
 
 // UIテキストフォーマット作成
-ComPtr<IDWriteTextFormat> DirectWriteFactory::CreateUITextFormat(std::wstring fontName)
+ComPtr<IDWriteTextFormat> DirectWriteFactory::CreateUITextFormat()
 {
-    ComPtr<IDWriteTextFormat> ComPtr;
-
     auto gameWindow = Application::GetInstance().GetGameWindow();
-    auto fontSize   = gameWindow->GetWindowHeight() / 20;
 
-    _dWriteFactory->CreateTextFormat(
-        fontName.c_str(),
-        nullptr,
-        DWRITE_FONT_WEIGHT_BOLD,
-        DWRITE_FONT_STYLE_NORMAL,
-        DWRITE_FONT_STRETCH_NORMAL,
-        fontSize,
-        L"ja-jp",
-        ComPtr.ReleaseAndGetAddressOf());
+    auto weight   = DWRITE_FONT_WEIGHT_BOLD;
+    auto fontSize = gameWindow->GetWindowHeight() / 20.0f;
 
-    // 横位置を中央に
-    ComPtr->SetTextAlignment(
-        DWRITE_TEXT_ALIGNMENT_CENTER);
+    auto comPtr = CreateHTextFormat(weight, fontSize);
+    
+    comPtr->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);           // 横位置を中央に
+    comPtr->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER); // 縦位置を中央に
 
-    // 縦位置を中央に
-    ComPtr->SetParagraphAlignment(
-        DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+    return comPtr;
+}
+// タイトルテキストフォーマット作成
+ComPtr<IDWriteTextFormat> DirectWriteFactory::CreateTitleTextFormat(DWRITE_FONT_WEIGHT weight)
+{
+    auto fontSize = 120.0f;
 
-    return ComPtr;
+    auto comPtr = CreateHTextFormat(weight, fontSize);
+
+    comPtr->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);           // 横位置を中央に
+    comPtr->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER); // 縦位置を中央に
+
+    return comPtr;
 }
 
-// テキストフォーマット作成
-ComPtr<IDWriteTextFormat> DirectWriteFactory::CreateTextFormat()
-{
-    ComPtr<IDWriteTextFormat> ComPtr;
 
-    auto gameWindow = Application::GetInstance().GetGameWindow();
-    auto fontSize   = gameWindow->GetWindowHeight() / 20;
-
-    _dWriteFactory->CreateTextFormat(
-        L"メイリオ",
-        nullptr,
-        DWRITE_FONT_WEIGHT_HEAVY,
-        DWRITE_FONT_STYLE_NORMAL,
-        DWRITE_FONT_STRETCH_NORMAL,
-        fontSize,
-        L"ja-jp",
-        ComPtr.ReleaseAndGetAddressOf());
-
-    // 横位置を中央に
-    ComPtr->SetTextAlignment(
-        DWRITE_TEXT_ALIGNMENT_CENTER);
-
-    // 縦位置を中央に
-    ComPtr->SetParagraphAlignment(
-        DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-
-    return ComPtr;
-}
 
 
 DirectWriteFactory::DirectWriteFactory()

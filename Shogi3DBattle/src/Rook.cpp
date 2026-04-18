@@ -1,10 +1,6 @@
 #include"Rook.h"
 
-Rook::Rook()
+Rook::Rook() : I_Piece(260.0f, 300.0f)
 {
-    _gameObjType = GameObjType::ROOK;
-
-    float mmBottomWidth  = 260.0f;
-    float mmHeight       = 300.0f;
-    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
+    SetGameObjType(GameObjType::ROOK);
 }

@@ -148,7 +148,7 @@ void Application::Run()
     // ウインドウ表示
     _gameWindow->DisplayWindow();
 
-    auto framePerS = 60;
+    auto framePerS = 120;
     auto msPerFrame = std::chrono::milliseconds(1000 / framePerS);
 
     MSG msg = {};
@@ -177,15 +177,16 @@ void Application::Run()
 
             // マウス移動操作を削除
             _inputHandler->RemoveMouseMove();
-            // 描画等実行
-            _dx12->ExeDX12();
-            auto end = std::chrono::high_resolution_clock::now();
-            
+
             // フレーム同期処理
+            auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
             auto needSleepTime = std::chrono::duration_cast<std::chrono::milliseconds>(msPerFrame - duration);
-            if(needSleepTime.count() > 0) std::this_thread::sleep_for(needSleepTime);
+            if (needSleepTime.count() > 0) std::this_thread::sleep_for(needSleepTime);
             start = std::chrono::high_resolution_clock::now(); 
+            // 描画等実行
+            _dx12->ExeDX12();
+            
         }
 
         if (msg.message == WM_QUIT)

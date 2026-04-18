@@ -6,12 +6,13 @@
 // 移動
 void I_Piece::Move(DirectX::XMFLOAT3 vec)
 {
-    auto worldMat = _worldMat->GetMat();
-    worldMat *= DirectX::XMMatrixTranslation(vec.x, vec.y, vec.z);
-    _worldMat->SetMat(worldMat);
+    auto worldMat = GetWorldMat();
+    auto currentWorldMat = worldMat->GetMat();
+    auto newWorldMat = currentWorldMat * DirectX::XMMatrixTranslation(vec.x, vec.y, vec.z);
+    worldMat->SetMat(newWorldMat);
 }
 
-std::unique_ptr<Vertices> I_Piece::CreatePieceVertices(float mmBottomWidth, float mmHeight)
+I_Piece::I_Piece(float mmBottomWidth, float mmHeight)
 {
     // 指定されたサイズの駒の頂点集合作成
 
@@ -130,11 +131,9 @@ std::unique_ptr<Vertices> I_Piece::CreatePieceVertices(float mmBottomWidth, floa
         {{           0,       height, -thickness}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}}, // 左上  
     };
 
-    auto uniquePtr = std::make_unique<Vertices>();
-    uniquePtr->SetDatas(vertices);
-    uniquePtr->SetGameObjId(GameObjIdManager::GetId());
-    uniquePtr->SetBasicTexId(static_cast<unsigned char>(BasicTexType::YELLOW_WOOD));
-    uniquePtr->SetMulDesignTexId(static_cast<unsigned char>(_gameObjType));
-
-    return uniquePtr;
+    SetVertices(std::make_unique<Vertices>());
+    auto verticesPtr = GetVertices();
+    verticesPtr->SetDatas(vertices);
+    verticesPtr->SetGameObjId(GameObjIdManager::GetId());
+    verticesPtr->SetBasicTexId(static_cast<unsigned char>(BasicTexType::YELLOW_WOOD));
 }

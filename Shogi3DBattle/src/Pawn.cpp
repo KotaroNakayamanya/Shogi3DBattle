@@ -1,10 +1,6 @@
 #include"Pawn.h"
 
-Pawn::Pawn()
+Pawn::Pawn() : I_Piece(215.0f, 260.0f)
 {
-    _gameObjType = GameObjType::PAWN;
-
-    float mmBottomWidth  = 215.0f;
-    float mmHeight       = 260.0f;
-    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
+    SetGameObjType(GameObjType::PAWN);
 }

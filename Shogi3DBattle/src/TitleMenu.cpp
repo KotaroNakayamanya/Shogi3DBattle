@@ -27,13 +27,15 @@ void TitleMenu::SetTextUI()
     Text2D text2D;
 
     text2D.text = L"«Šû‘åí‚RD";
-    text2D.rect = {left, top, right, bottom};
 
-    text2D.textFormat = dx12->GetBoldTextFormat();
+    text2D.rect = {left, top, right, bottom};
+    text2D.textFormat = dx12->GetTitleFrameTextFormat();
     text2D.brush = dx12->GetBlackBrush();
     app.PushTextUI(text2D);
 
-    text2D.textFormat = dx12->GetNormalTextFormat();
+    auto offset = -5.0f;
+    text2D.rect = {left+offset, top+offset, right+offset, bottom+offset};
+    text2D.textFormat = dx12->GetTitleTextFormat();
     text2D.brush = dx12->GetYellowBrush();
     app.PushTextUI(text2D);
 

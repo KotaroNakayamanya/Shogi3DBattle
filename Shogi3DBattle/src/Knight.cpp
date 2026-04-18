@@ -1,10 +1,6 @@
 #include"Knight.h"
 
-Knight::Knight()
+Knight::Knight() : I_Piece(235.0f, 275.0f)
 {
-    _gameObjType = GameObjType::KNIGHT;
-
-    float mmBottomWidth  = 235.0f;
-    float mmHeight       = 275.0f;
-    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
+    SetGameObjType(GameObjType::KNIGHT);
 }

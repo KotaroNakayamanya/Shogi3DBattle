@@ -1,10 +1,6 @@
 #include"Silver.h"
 
-Silver::Silver()
+Silver::Silver() : I_Piece(250.0f, 285.0f)
 {
-    _gameObjType = GameObjType::SILVER;
-
-    float mmBottomWidth  = 250.0f;
-    float mmHeight       = 285.0f;
-    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
+    SetGameObjType(GameObjType::SILVER);
 }

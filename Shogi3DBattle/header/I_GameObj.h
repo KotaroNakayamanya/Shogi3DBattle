@@ -7,23 +7,19 @@
 
 class I_GameObj
 {
-protected:
+private:
     std::unique_ptr<Vertices> _vertices;    // 頂点集合
     std::unique_ptr<WorldMat> _worldMat;    // ワールド行列
     GameObjType               _gameObjType; // ゲームオブジェクトタイプ
+
+protected:
+    void SetVertices   (std::unique_ptr<Vertices> uniquePtr); // 頂点集合セット
+    void SetGameObjType(GameObjType type);                    // ゲームオブジェクトタイプセット
     
 public:
-    void      SetVertices(Vertices* vertices){_vertices.reset(vertices);} // 頂点集合セット
-    Vertices* GetVertices()                    {return _vertices.get();}    // 頂点集合を返す
+    Vertices*   GetVertices();    // 頂点集合を返す
+    WorldMat*   GetWorldMat();    // ワールド行列を返す 
+    GameObjType GetGameObjType(); // ゲームオブジェクトタイプを返す
 
-    void      SetWorldMat(WorldMat* worldMat){_worldMat.reset(worldMat);} // ワールド行列セット
-    WorldMat* GetWorldMat()                    {return _worldMat.get();}    // ワールド行列セット 
-
-    void        SetGameObjType(GameObjType type) {_gameObjType = type;} // ゲームオブジェクトタイプセット
-    GameObjType GetGameObjType()                 {return _gameObjType;} // ゲームオブジェクトタイプを返す
-
-    I_GameObj()
-    {
-        _worldMat = std::make_unique<WorldMat>();
-    }
+    I_GameObj();
 };

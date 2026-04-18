@@ -1,10 +1,6 @@
 #include"Lance.h"
 
-Lance::Lance()
+Lance::Lance() : I_Piece(225.0f, 280.0f)
 {
-    _gameObjType = GameObjType::LANCE;
-
-    float mmBottomWidth  = 225.0f;
-    float mmHeight       = 280.0f;
-    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
+    SetGameObjType(GameObjType::LANCE);
 }

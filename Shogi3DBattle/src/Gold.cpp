@@ -1,10 +1,6 @@
 #include"Gold.h"
 
-Gold::Gold()
+Gold::Gold() : I_Piece(250.0f, 285.0f)
 {
-    _gameObjType = GameObjType::GOLD;
-
-    float mmBottomWidth  = 250.0f;
-    float mmHeight       = 285.0f;
-    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
+    SetGameObjType(GameObjType::GOLD);
 }

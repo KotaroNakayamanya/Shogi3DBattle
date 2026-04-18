@@ -1,9 +1,6 @@
 #include"Board9x9.h"
 
-Board9x9::Board9x9()
+Board9x9::Board9x9() : I_Board(100.0f)
 {
-    _gameObjType = GameObjType::BOARD_99;
-
-    float size = 100.0f;
-    _vertices = CreateBoardVertices(size);
+    SetGameObjType(GameObjType::BOARD_99);
 }

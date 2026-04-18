@@ -19,5 +19,5 @@ BoardVertIndices::BoardVertIndices()
         vertIndices.push_back(0 + offset);
     }
 
-    _datas = vertIndices;
+    SetDatas(vertIndices);
 }

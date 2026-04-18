@@ -35,5 +35,5 @@ PieceVertIndices::PieceVertIndices()
         vertIndices.push_back(0 + offset + 4*i);
     }
 
-    _datas = vertIndices;
+    SetDatas(vertIndices);
 }

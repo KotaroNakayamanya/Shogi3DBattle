@@ -3,7 +3,7 @@
 #include"BasicTexType.h"
 
 // 指定されたサイズの将棋盤頂点集合作成
-std::unique_ptr<Vertices> I_Board::CreateBoardVertices(float size)
+I_Board::I_Board(float size)
 {
     float thickness = size * 0.8f;
 
@@ -43,11 +43,9 @@ std::unique_ptr<Vertices> I_Board::CreateBoardVertices(float size)
         {{0.0f, size, 0.0f     },  {-1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}}, // 左上        
     };
 
-    auto uniquePtr = std::make_unique<Vertices>();
-    uniquePtr->SetDatas(vertices);
-    uniquePtr->SetGameObjId(GameObjIdManager::GetId());
-    uniquePtr->SetBasicTexId    (static_cast<unsigned char>(BasicTexType::YELLOW_WOOD));
-    uniquePtr->SetMulDesignTexId(static_cast<unsigned char>(_gameObjType));
-
-    return uniquePtr;
+    SetVertices(std::make_unique<Vertices>());
+    auto verticesPtr = GetVertices();
+    verticesPtr->SetDatas(vertices);
+    verticesPtr->SetGameObjId(GameObjIdManager::GetId());
+    verticesPtr->SetBasicTexId    (static_cast<unsigned char>(BasicTexType::YELLOW_WOOD));
 }

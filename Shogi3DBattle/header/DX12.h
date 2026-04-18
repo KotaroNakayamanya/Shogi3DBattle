@@ -97,7 +97,8 @@ private:
     std::unique_ptr<DirectWriteFactory> _directWriteFactory;    // DirectWriteファクトリー
     ComPtr<IDWriteTextFormat> _pieceTextFormat; // 駒のテキストフォーマット
     ComPtr<IDWriteTextFormat> _normalTextFormat; // 通常テキストフォーマット
-    ComPtr<IDWriteTextFormat> _boldTextFormat;   // 太めテキストフォーマット
+    ComPtr<IDWriteTextFormat> _titleTextFormat;     // タイトルテキストフォーマット
+    ComPtr<IDWriteTextFormat> _titleFrameTextFormat; // タイトル枠テキストフォーマット
 
     // ブラシ
     ComPtr<ID2D1SolidColorBrush> _blackBrush; // 黒色ブラシ
@@ -169,7 +170,8 @@ public:
     void ExeDX12(); // DirectX12実行処理
 
     IDWriteTextFormat*    GetNormalTextFormat(); // 通常のテキストフォーマットを返す
-    IDWriteTextFormat*    GetBoldTextFormat();   // 太めのテキストフォーマットを返す
+    IDWriteTextFormat*    GetTitleTextFormat();      // タイトルテキストフォーマットを返す
+    IDWriteTextFormat*    GetTitleFrameTextFormat(); // タイトル枠テキストフォーマットを返す
     ID2D1SolidColorBrush* GetBlackBrush();       // 黒色ブラシを返す
     ID2D1SolidColorBrush* GetYellowBrush();      // 黄色ブラシを返す
 

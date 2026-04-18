@@ -28,5 +28,5 @@ public:
     }
 
     void           SetDatas(std::vector<T> datas){_datas = datas;} // データ集合セット
-    std::vector<T> GetDatas()                    {return _datas;}  // データ集合を返す   
+    std::vector<T> GetDatas()                    {return _datas;}  // データ集合を返す
 };

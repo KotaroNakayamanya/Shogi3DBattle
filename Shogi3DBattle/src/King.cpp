@@ -1,10 +1,6 @@
 #include"King.h"
 
-King::King()
+King::King() : I_Piece(285.0f, 320.0f)
 {
-    _gameObjType = GameObjType::KING;
-
-    float mmBottomWidth  = 285.0f;
-    float mmHeight       = 320.0f;
-    _vertices = CreatePieceVertices(mmBottomWidth, mmHeight);
+    SetGameObjType(GameObjType::KING);
 }
