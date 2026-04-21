@@ -5,5 +5,5 @@
 class Lance : public I_Piece
 {
 public:
-    Lance();
+    Lance(PlayerSide playerSide);
 };

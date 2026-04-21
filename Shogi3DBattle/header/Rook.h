@@ -5,5 +5,5 @@
 class Rook : public I_Piece
 {
 public:
-    Rook();
+    Rook(PlayerSide playerSide);
 };

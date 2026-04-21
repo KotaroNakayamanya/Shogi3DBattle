@@ -12,7 +12,8 @@ void I_Piece::Move(DirectX::XMFLOAT3 vec)
     worldMat->SetMat(newWorldMat);
 }
 
-I_Piece::I_Piece(float mmBottomWidth, float mmHeight)
+I_Piece::I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, PlayerSide playerSide)
+    : _playerSide(playerSide)
 {
     // 指定されたサイズの駒の頂点集合作成
 
@@ -132,8 +133,17 @@ I_Piece::I_Piece(float mmBottomWidth, float mmHeight)
     };
 
     SetVertices(std::make_unique<Vertices>());
+    // 頂点集合
     auto verticesPtr = GetVertices();
     verticesPtr->SetDatas(vertices);
     verticesPtr->SetGameObjId(GameObjIdManager::GetId());
     verticesPtr->SetBasicTexId(static_cast<unsigned char>(BasicTexType::YELLOW_WOOD));
+
+    // ワールド行列
+    auto worldMatPtr = GetWorldMat();
+    auto worldMat = DirectX::XMMatrixIdentity();
+    if(playerSide == PlayerSide::PLAYER_2) worldMat *= DirectX::XMMatrixRotationZ(DirectX::XM_PI);
+    worldMatPtr->SetMat(worldMat);
+
+    SetGameObjType(pieceType);
 }

@@ -5,5 +5,5 @@
 class Bishop : public I_Piece
 {
 public:
-    Bishop();
+    Bishop(PlayerSide playerSide);
 };

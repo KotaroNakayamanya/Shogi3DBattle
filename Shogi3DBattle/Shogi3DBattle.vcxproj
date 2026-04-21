@@ -126,6 +126,7 @@
     <ClInclude Include="header\I_Piece.h" />
     <ClInclude Include="header\I_ProjMat.h" />
     <ClInclude Include="header\I_SelectingButtonScene.h" />
+    <ClInclude Include="header\PlayerSide.h" />
     <ClInclude Include="header\TextUI.h" />
     <ClInclude Include="header\NewStartButton.h" />
     <ClInclude Include="header\Camera.h" />

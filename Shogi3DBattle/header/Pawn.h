@@ -5,5 +5,5 @@
 class Pawn : public I_Piece
 {
 public:
-    Pawn();
+    Pawn(PlayerSide playerSide);
 };

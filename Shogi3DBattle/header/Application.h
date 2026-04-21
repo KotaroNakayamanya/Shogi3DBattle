@@ -36,7 +36,7 @@ private:
     std::vector<std::unique_ptr<I_Piece>> _pieces;       // 駒
     std::unique_ptr<PieceVertIndices>     _pieceIndices; // 駒の頂点インデックス
     void CreateGameObj(); // 将棋オブジェクト作成
-
+    void CreatePlayerPieces(PlayerSide playerSide); // プレイヤーごとの駒作成
 
     // テクスチャ
     std::vector<std::unique_ptr<I_Texture>> _woodTexs; // 木材テクスチャ

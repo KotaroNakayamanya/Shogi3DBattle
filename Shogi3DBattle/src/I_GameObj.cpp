@@ -12,7 +12,7 @@ void I_GameObj::SetGameObjType(GameObjType type)
     _vertices->SetMulDesignTexId(static_cast<unsigned char>(type));
 
 } 
-GameObjType I_GameObj::GetGameObjType()                 {return _gameObjType;} // ゲームオブジェクトタイプを返す
+GameObjType I_GameObj::GetGameObjType(){return _gameObjType;} // ゲームオブジェクトタイプを返す
 
 I_GameObj::I_GameObj()
 {

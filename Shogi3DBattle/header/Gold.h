@@ -5,5 +5,5 @@
 class Gold : public I_Piece
 {
 public:
-    Gold();
+    Gold(PlayerSide playerSide);
 };

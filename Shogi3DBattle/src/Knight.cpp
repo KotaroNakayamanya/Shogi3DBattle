@@ -1,6 +1,3 @@
 #include"Knight.h"
 
-Knight::Knight() : I_Piece(235.0f, 275.0f)
-{
-    SetGameObjType(GameObjType::KNIGHT);
-}
+Knight::Knight(PlayerSide playerSide) : I_Piece(235.0f, 275.0f, GameObjType::KNIGHT, playerSide){}

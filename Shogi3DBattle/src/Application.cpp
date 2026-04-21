@@ -66,15 +66,22 @@ void Application::CreateGameObj()
     _boardIndices = std::make_unique<BoardVertIndices>();// 将棋盤インデックス作成
 
     // 駒作成 
-    for (int i = 0; i < 2; i++)  _pieces.push_back(std::make_unique<King>());   // 王作成
-    for (int i = 0; i < 2; i++)  _pieces.push_back(std::make_unique<Rook>());   // 飛作成
-    for (int i = 0; i < 2; i++)  _pieces.push_back(std::make_unique<Bishop>()); // 角作成
-    for (int i = 0; i < 4; i++)  _pieces.push_back(std::make_unique<Gold>());   // 金作成
-    for (int i = 0; i < 4; i++)  _pieces.push_back(std::make_unique<Silver>()); // 銀作成
-    for (int i = 0; i < 4; i++)  _pieces.push_back(std::make_unique<Knight>()); // 桂作成
-    for (int i = 0; i < 4; i++)  _pieces.push_back(std::make_unique<Lance>());  // 香作成
-    for (int i = 0; i < 18; i++) _pieces.push_back(std::make_unique<Pawn>());   // 歩作成 
+    CreatePlayerPieces(PlayerSide::PLAYER_1); // プレイヤー１の駒作成
+    CreatePlayerPieces(PlayerSide::PLAYER_2); // プレイヤー１の駒作成
     _pieceIndices = std::make_unique<PieceVertIndices>();                       // 駒の頂点インデックス集合作成
+}
+
+// プレイヤーごとの駒作成
+void Application::CreatePlayerPieces(PlayerSide playerSide)
+{
+    for (int i = 0; i < 1; i++) _pieces.push_back(std::make_unique<King>  (playerSide)); // 王 作成
+    for (int i = 0; i < 1; i++) _pieces.push_back(std::make_unique<Rook>  (playerSide)); // 飛 作成
+    for (int i = 0; i < 1; i++) _pieces.push_back(std::make_unique<Bishop>(playerSide)); // 角 作成
+    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<Gold>  (playerSide)); // 金 作成
+    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<Silver>(playerSide)); // 銀 作成
+    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<Knight>(playerSide)); // 桂 作成
+    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<Lance> (playerSide)); // 香 作成
+    for (int i = 0; i < 9; i++) _pieces.push_back(std::make_unique<Pawn>  (playerSide)); // 歩 作成 
 }
 
 // テクスチャ作成
