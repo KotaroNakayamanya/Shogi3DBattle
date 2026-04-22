@@ -48,11 +48,7 @@ void Application::Init()
     _dx12->InitDX12(); // DirectX12初期処理
 
     // 駒の初期位置調整
-    for (int i = 1; i < _pieces.size(); i++)
-    {
-        DirectX::XMFLOAT3 vec = {i*10.0f, 10.0f, 0.0f};
-        _pieces[i]->Move(vec);
-    }
+    _piecePosManager->InitPiecesPos(GetPieces(), GetBoard());
 }
 
 
@@ -488,6 +484,7 @@ Application::Application()
 {
     _gameWindow = std::make_unique<GameWindow>();
     _dx12 = std::make_unique<DX12>();
+    _piecePosManager = std::make_unique<PiecePositionManager>();
 
     _keyMap = std::make_unique<KeyMap>();
     _inputHandler = std::make_unique<InputHandler>();

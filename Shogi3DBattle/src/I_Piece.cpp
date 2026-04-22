@@ -12,6 +12,8 @@ void I_Piece::Move(DirectX::XMFLOAT3 vec)
     worldMat->SetMat(newWorldMat);
 }
 
+PlayerSide I_Piece::GetPlayerSide(){return _playerSide;} // 駒所有プレイヤーを返す
+
 I_Piece::I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, PlayerSide playerSide)
     : _playerSide(playerSide)
 {

@@ -4,6 +4,7 @@
 #include"DX12.h"
 #include"InputHandler.h"
 #include"I_SceneState.h"
+#include"PiecePositionManager.h"
 
 #include"Camera.h"
 #include"TextUI.h"
@@ -35,6 +36,7 @@ private:
     std::unique_ptr<BoardVertIndices> _boardIndices; // 将棋盤の頂点インデックス
     std::vector<std::unique_ptr<I_Piece>> _pieces;       // 駒
     std::unique_ptr<PieceVertIndices>     _pieceIndices; // 駒の頂点インデックス
+    std::unique_ptr<PiecePositionManager> _piecePosManager; // 駒の配置マネージャ
     void CreateGameObj(); // 将棋オブジェクト作成
     void CreatePlayerPieces(PlayerSide playerSide); // プレイヤーごとの駒作成
 

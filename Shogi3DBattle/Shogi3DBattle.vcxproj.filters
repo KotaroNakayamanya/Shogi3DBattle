@@ -513,6 +513,9 @@
     <ClCompile Include="src\I_GameObj.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\PiecePositionManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Application.h">
@@ -837,6 +840,9 @@
       <Filter>ヘッダー ファイル\dx12\heap</Filter>
     </ClInclude>
     <ClInclude Include="header\PlayerSide.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PiecePositionManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

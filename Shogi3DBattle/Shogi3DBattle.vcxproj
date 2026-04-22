@@ -68,6 +68,7 @@
     <ClCompile Include="src\OptionButton.cpp" />
     <ClCompile Include="src\Pawn.cpp" />
     <ClCompile Include="src\PersProjMat.cpp" />
+    <ClCompile Include="src\PiecePositionManager.cpp" />
     <ClCompile Include="src\PieceVertIndices.cpp" />
     <ClCompile Include="src\Rook.cpp" />
     <ClCompile Include="src\SelectingPiece.cpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="header\I_Piece.h" />
     <ClInclude Include="header\I_ProjMat.h" />
     <ClInclude Include="header\I_SelectingButtonScene.h" />
+    <ClInclude Include="header\PiecePositionManager.h" />
     <ClInclude Include="header\PlayerSide.h" />
     <ClInclude Include="header\TextUI.h" />
     <ClInclude Include="header\NewStartButton.h" />

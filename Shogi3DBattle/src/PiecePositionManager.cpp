@@ -1,0 +1,135 @@
+#include"PiecePositionManager.h"
+#include<cassert>
+#include<functional>
+
+// 駒の位置を初期化
+void PiecePositionManager::InitPiecesPos(std::vector<I_Piece*> pieces, I_Board* board)
+{
+    switch (board->GetGameObjType())
+    {
+        case GameObjType::BOARD_99:
+            ResizePiecePosOnBoardVec(9);
+            InitPiecesPosBoard9x9(pieces);
+            break;
+
+        default:
+            assert(false);
+            return;
+    }
+}
+
+// 将棋盤上の駒の配置状況のサイズを変更
+void PiecePositionManager::ResizePiecePosOnBoardVec(unsigned int squareNum)
+{
+    _piecePosOnBoard.clear();
+    _piecePosOnBoard.resize(squareNum);
+    for(auto& piecePosOnRow : _piecePosOnBoard) piecePosOnRow.resize(squareNum);
+}
+
+
+
+
+// 9x9将棋盤の初期位置へ駒を移動
+void PiecePositionManager::InitPiecesPosBoard9x9(std::vector<I_Piece*> pieces)
+{
+    for (auto piece : pieces)
+    {
+        // 中央（5五...vectorでは[4][4]）からずらして配置させる
+        int rowOffset, columnOffset;
+        switch (piece->GetGameObjType())
+        {
+            case GameObjType::KING:
+                rowOffset    = -4;
+                columnOffset =  0;
+                break;
+
+            case GameObjType::ROOK:
+                rowOffset    = -3;
+                columnOffset =  3;
+                break;
+
+            case GameObjType::BISHOP:
+                rowOffset    = -3;
+                columnOffset = -3;
+                break;
+
+            case GameObjType::GOLD:
+                rowOffset    = -4;
+                columnOffset = -1;
+                break;
+
+            case GameObjType::SILVER:
+                rowOffset    = -4;
+                columnOffset = -2;
+                break;
+                
+            case GameObjType::KNIGHT:
+                rowOffset    = -4;
+                columnOffset = -3;
+                break;
+
+            case GameObjType::LANCE:
+                rowOffset    = -4;
+                columnOffset = -4;
+                break;
+
+            case GameObjType::PAWN:
+                rowOffset    = -2;
+                columnOffset =  0;
+                break;
+
+            default:
+                assert(false);
+                return;
+        }
+
+        // 中央からオフセットを足して配置場所を得る
+        if (piece->GetPlayerSide() == PlayerSide::PLAYER_2) // 相手側の駒なら符号を逆にする
+        {
+            rowOffset    = -rowOffset;
+            columnOffset = -columnOffset;
+        }
+
+        
+        auto row    = 5 + rowOffset;
+        auto column = 5 + columnOffset;
+
+        auto isSet = false;
+        while (!isSet)
+        {
+            if (_piecePosOnBoard[row-1][column-1] == nullptr) // 配置を試みる
+            {
+                MovePiecePos(piece, row, column);
+                isSet = true;
+            }
+            else if (_piecePosOnBoard[row-1][9 - column] == nullptr) // 既に配置されていたら、反対側の列に配置を試みる
+            {
+                MovePiecePos(piece, row, 10-column);
+                isSet = true;
+            }
+            else // 反対側の列もすでに配置されているなら、配置場所の列を外側に1つ分ずらしてループに戻る
+            {
+                if(column <= 4) column--;
+                else            column++;
+            }
+        }
+    }
+}
+
+// 駒を指定のマスへ移動
+void PiecePositionManager::MovePiecePos(I_Piece* piece, unsigned int row, unsigned int column)
+{
+    _piecePosOnBoard[row-1][column-1] = piece;
+
+    auto worldMat = DirectX::XMMatrixIdentity();
+
+    if(piece->GetPlayerSide() == PlayerSide::PLAYER_2) // 相手の駒なら向きを変更
+        worldMat *= DirectX::XMMatrixRotationZ(DirectX::XM_PI);
+
+    auto xPos = 10.0f * column;
+    auto yPos = 10.0f * row;
+    worldMat *= DirectX::XMMatrixTranslation(xPos, yPos, 0.0f);
+
+    auto worldMatObj = piece->GetWorldMat();
+    worldMatObj->SetMat(worldMat);
+}

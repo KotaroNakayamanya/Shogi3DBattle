@@ -7,10 +7,11 @@
 class I_Piece : public I_GameObj
 {
 private:
-    PlayerSide _playerSide; // 駒所有者プレイヤー
+    PlayerSide _playerSide; // 駒所有プレイヤー
 public:
-    //void SetPlayerSide(PlayerSide playerSide); // 駒所有者プレイヤーセット
     void Move(DirectX::XMFLOAT3 vec); // 移動
+
+    PlayerSide GetPlayerSide(); // 駒所有プレイヤーを返す
 
     I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, PlayerSide playerSide);
     virtual ~I_Piece() = default;
