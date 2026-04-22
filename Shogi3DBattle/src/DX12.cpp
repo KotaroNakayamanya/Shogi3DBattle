@@ -77,7 +77,6 @@ void DX12::CreateBuff()
 {
     auto& app = Application::GetInstance();
     
-    auto woodTexs = app.GetWoodTexs();
     
     auto shogiObjects   = app.GetGameObjects();
     auto allVertIndices = app.GetAllVertIndices();
@@ -129,10 +128,14 @@ void DX12::CreateBuff()
     _idxBuff = _device->CreateBuff(widthSize, heightSize, BuffType::INDEX);
 
     // 木材テクスチャバッファ作成
-    _woodTexBuffs.resize(1);
-    widthSize  = woodTexs[0]->GetWidth();
-    heightSize = woodTexs[0]->GetHeight();
-    _woodTexBuffs[0] = _device->CreateBuff(widthSize, heightSize, BuffType::TEXTURE);
+    auto woodTexs = app.GetWoodTexs();
+    auto woodTexNum = static_cast<unsigned int>(woodTexs.size());
+    for (unsigned int i = 0; i < woodTexNum; i++)
+    {
+        widthSize  = woodTexs[i]->GetWidth();
+        heightSize = woodTexs[i]->GetHeight();
+        _woodTexBuffs.push_back(_device->CreateBuff(widthSize, heightSize, BuffType::TEXTURE));
+    }
 
     // 将棋オブジェクト種類ごとのテクスチャバッファ作成
     unsigned int gameObjTexNum;
@@ -201,13 +204,16 @@ void DX12::CreateView()
         _device->CreateCSUView(_csuHeap.get(), i, _constBuff.Get(), View::CBV);
 
     // 木材テクスチャ用SRV作成
-    auto woodTexNum = 1;
-    _device->CreateCSUView(_csuHeap.get(), 0, _woodTexBuffs[0].Get(), View::SRV);
+    unsigned int srvIdx = 0;
+    auto woodTexs = Application::GetInstance().GetWoodTexs();
+    auto woodTexNum = static_cast<unsigned int>(woodTexs.size());
+    for(unsigned int i = 0; i < woodTexNum; i++, srvIdx++)
+        _device->CreateCSUView(_csuHeap.get(), srvIdx, _woodTexBuffs[i].Get(), View::SRV);
 
     // 将棋オブジェクト用SRV作成
     unsigned int shogiObjTexNum = 10;
-    for (unsigned int i = 0; i < shogiObjTexNum; i++)
-        _device->CreateCSUView(_csuHeap.get(), i + woodTexNum, _shogiObjTexBuffs[i].Get(), View::SRV);
+    for (unsigned int i = 0; i < shogiObjTexNum; i++, srvIdx++)
+        _device->CreateCSUView(_csuHeap.get(), srvIdx, _shogiObjTexBuffs[i].Get(), View::SRV);
 
     // レンダーによるテクスチャ作成用RTV作成
     for(UINT i = 0; i < 8; i++)
@@ -478,15 +484,15 @@ void DX12::WriteToBuff()
     mainCamera->SetStartDataIdx(idx);
     mapCamera ->SetStartDataIdx(idx);
 
+    // 木材テクスチャをバッファに書き込み
+    auto woodTexNum = static_cast<unsigned int>(woodTexs.size());
+    for(unsigned int i = 0; i < woodTexNum; i++)
+        woodTexs[i]->WriteToBuff(_woodTexBuffs[i].Get()); 
 
-    woodTexs[0]->WriteToBuff(_woodTexBuffs[static_cast<unsigned int>(BasicTexType::YELLOW_WOOD)].Get()); // 木材テクスチャをバッファに書き込み
-
-    boardLineTexs[0]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_55)].Get()); // 5×5将棋盤黒線テクスチャをバッファに書き込み
-    boardLineTexs[1]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_99)].Get()); // 9×9将棋盤黒線テクスチャをバッファに書き込み
-
-
-failed:
- int aaa = 3;
+    // 将棋盤黒線テクスチャをバッファに書き込み
+    auto boardLineTexNum = static_cast<unsigned int>(boardLineTexs.size());
+    for(unsigned int i = 0; i < boardLineTexNum; i++)
+        boardLineTexs[i]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_55) + i].Get()); 
 }
 
 // レンダーテクスチャ作成
