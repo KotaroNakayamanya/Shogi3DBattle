@@ -88,7 +88,8 @@ void Application::CreatePlayerPieces(PlayerSide playerSide)
 void Application::CreateTex()
 {
     // 黄色木材テクスチャ作成
-    _woodTexs.push_back(std::make_unique<WoodTexture>(226, 232, 75));
+    _woodTexs.push_back(std::make_unique<WoodTexture>(226, 232,  75));
+    _woodTexs.push_back(std::make_unique<WoodTexture>(220, 220, 220));
 
     // 将棋盤乗算テクスチャ作成
     _boardLineTexs.push_back(std::make_unique<Board5x5Texture>());
