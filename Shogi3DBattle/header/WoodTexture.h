@@ -5,5 +5,5 @@
 class WoodTexture : public I_Texture
 {
 public:
-    WoodTexture();
+    WoodTexture(unsigned char r, unsigned char g, unsigned char b);
 };

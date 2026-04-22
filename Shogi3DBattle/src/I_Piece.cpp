@@ -137,7 +137,7 @@ I_Piece::I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, Pla
     auto verticesPtr = GetVertices();
     verticesPtr->SetDatas(vertices);
     verticesPtr->SetGameObjId(GameObjIdManager::GetId());
-    verticesPtr->SetBasicTexId(static_cast<unsigned char>(BasicTexType::YELLOW_WOOD));
+    verticesPtr->SetBasicTexId(static_cast<unsigned char>(playerSide));
 
     // ƒ[ƒ‹ƒhs—ñ
     auto worldMatPtr = GetWorldMat();

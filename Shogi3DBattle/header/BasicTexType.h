@@ -2,5 +2,6 @@
 
 enum class BasicTexType
 {
-    YELLOW_WOOD // â©êFñÿçﬁ
+    YELLOW_WOOD, // â©êFñÿçﬁ
+    GRAY_WOOD    // äDêFñÿçﬁ
 };

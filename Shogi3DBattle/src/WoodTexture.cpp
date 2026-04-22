@@ -1,6 +1,6 @@
 #include"WoodTexture.h"
 
-WoodTexture::WoodTexture()
+WoodTexture::WoodTexture(unsigned char r, unsigned char g, unsigned char b)
 {
     unsigned int lineSize = 256;
     unsigned int width  = lineSize;
@@ -12,24 +12,26 @@ WoodTexture::WoodTexture()
     // Šî–{F‚ğ“ü‚ê‚é
     for (auto& pixel : pixels)
     {
-        pixel.r = 226;
-        pixel.g = 232;
-        pixel.b =  75;
+        //pixel.r = 226;
+        //pixel.g = 232;
+        //pixel.b =  75;
+        pixel.r = r;
+        pixel.g = g;
+        pixel.b = b;
         pixel.a = 255;
     }
 
     // ”Â–Ú‚ğ“ü‚ê‚é
     UINT x = 0;
     UINT y = 0;
-    UINT subtColor = 10;
+    auto subtRate = 0.07f;
     for (auto& pixel : pixels)
     {
-        if ((x+y) % 20 == 0)
+        if ((x+y) % 20 == 1)
         {
-            pixel.r -= subtColor;
-            pixel.g -= subtColor;
-            pixel.b -= subtColor;
-
+            pixel.r -= static_cast<unsigned char>(pixel.r * subtRate);
+            pixel.g -= static_cast<unsigned char>(pixel.g * subtRate);
+            pixel.b -= static_cast<unsigned char>(pixel.b * subtRate);
         }
 
         // x‚Æy‚ÌŸ‚ÌÀ•W‚ğæ“¾
