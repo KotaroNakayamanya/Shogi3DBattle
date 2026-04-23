@@ -62,9 +62,9 @@ void Application::CreateGameObj()
     _boardIndices = std::make_unique<BoardVertIndices>();// 将棋盤インデックス作成
 
     // 駒作成 
-    CreatePlayerPieces(PlayerSide::PLAYER_1); // プレイヤー１の駒作成
-    CreatePlayerPieces(PlayerSide::PLAYER_2); // プレイヤー１の駒作成
-    _pieceIndices = std::make_unique<PieceVertIndices>();                       // 駒の頂点インデックス集合作成
+    CreatePlayerPieces(PlayerSide::PLAYER_1); // プレイヤー1の駒作成
+    CreatePlayerPieces(PlayerSide::PLAYER_2); // プレイヤー2の駒作成
+    _pieceIndices = std::make_unique<PieceVertIndices>(); // 駒の頂点インデックス集合作成
 }
 
 // プレイヤーごとの駒作成
@@ -97,35 +97,33 @@ void Application::CreateCamera()
 {
     // メインカメラ
     // ビュー行列作成
-    ViewMat* mainViewMat;
-    mainViewMat = new ViewMat();
-    DirectX::XMFLOAT3 f;
-    _mainCamera->SetViewMat(mainViewMat);
+    auto mainViewMat = std::make_unique<ViewMat>();
     // パースによるプロジェクション行列作成
-    PersProjMat* mainProjMat;
-    mainProjMat = new PersProjMat();
-    mainProjMat->SetFOV  (DirectX::XM_PIDIV2);
-    mainProjMat->SetAR   (16.0f / 9.0f);
-    mainProjMat->SetNearZ(1.0f);
-    mainProjMat->SetFarZ (150.0f);
-    _mainCamera->SetProjMat(mainProjMat);
+    auto fov   = DirectX::XM_PIDIV2;
+    auto ar    =  16.0f / 9.0f;
+    auto nearZ =   1.0f;
+    auto farZ  = 150.0f;
+    auto mainProjMat = std::make_unique<PersProjMat>(fov, ar, nearZ, farZ);
+
+    _mainCamera = std::make_unique<Camera>(std::move(mainViewMat), std::move(mainProjMat));
 
     // マップカメラ
     // ビュー行列作成
-    ViewMat* mapViewMat;
-    mapViewMat = new ViewMat();
-    f = {30.0f, 30.0f, -30.0f}; mapViewMat->SetEye  (f);
-    f = {30.0f, 30.0f,   0.0f}; mapViewMat->SetFocus(f);
-    f = {0.0f,   1.0f,   0.0f}; mapViewMat->SetUp   (f);
-    _mapCamera->SetViewMat(mapViewMat);
+    auto boardSize = _board->GetBoardSize();
+    auto centerPos = boardSize / 2.0f;
+    DirectX::XMFLOAT3 eye   = {centerPos, centerPos, -5.0f};
+    DirectX::XMFLOAT3 focus = {centerPos, centerPos,  0.0f};
+    DirectX::XMFLOAT3 up    = {     0.0f,     -1.0f,  0.0f};
+    auto mapViewMat = std::make_unique<ViewMat>(eye, focus, up);
     // パースではないプロジェクション行列作成
-    NonePersProjMat* mapProjMat;
-    mapProjMat = new NonePersProjMat();
-    mapProjMat->SetWidth (70.0f);
-    mapProjMat->SetHeight(70.0f);
-    mapProjMat->SetNearZ(0.0f);
-    mapProjMat->SetFarZ (50.0f);
-    _mapCamera->SetProjMat(mapProjMat);
+    auto margin = 10.0f;
+    auto width  = boardSize + margin;
+    auto height = boardSize + margin;
+         nearZ  =  1.0f;
+         farZ   = 10.0f;
+    auto mapProjMat = std::make_unique<NonePersProjMat>(width, height, nearZ, farZ);
+
+    _mapCamera = std::make_unique<Camera>(std::move(mapViewMat), std::move(mapProjMat));
 }
 
 // 操作ボタン初期処理
@@ -169,6 +167,7 @@ void Application::Run()
             POINT cursorPos;
             GetCursorPos(&cursorPos);
             ScreenToClient(_gameWindow->GetHWND(), &cursorPos);
+
             // シーン動作
             std::unique_ptr<I_SceneState> newSceneState = _sceneState->ExeSceneOperation(
                 _inputHandler->GetInputMemory(),
@@ -341,9 +340,10 @@ LRESULT CALLBACK WindowProcedure(
     return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-
-GameWindow* Application::GetGameWindow(){return _gameWindow.get();} // ゲームウインドウオブジェクトを返す
-InputHandler* Application::GetInputHandler(){return _inputHandler.get();} // インプットハンドラを返す
+DX12*            Application::GetDX12           (){return _dx12.get();}            // DirectX12を返す
+GameWindow*      Application::GetGameWindow     (){return _gameWindow.get();}      // ゲームウインドウオブジェクトを返す
+InputHandler*    Application::GetInputHandler   (){return _inputHandler.get();}    // インプットハンドラを返す
+PiecePosManager* Application::GetPiecePosManager(){return _piecePosManager.get();} // 駒の位置マネージャを返す
 
 Camera* Application::GetMainCamera(){return _mainCamera.get();} // メインカメラを返す
 Camera* Application::GetMapCamera() {return _mapCamera.get();}  // マップカメラを返す
@@ -379,7 +379,6 @@ KeyMap* Application::GetKeyMap(){return _keyMap.get();} // 将棋盤頂点イン
 void Application::SetIsDrawMap(bool flag){_isDrawMap = flag;} // マップ描画フラグをセット
 bool Application::IsDrawMap()            {return _isDrawMap;} // マップ描画フラグを返す
 
-DX12* Application::GetDX12(){return _dx12.get();} // DirectX12を返す
 
 bool Application::IsDrawUINotEmpty(){return _buttonUIs.size() > 0;} // UIの空状況を返す
 
@@ -484,11 +483,9 @@ Application::Application()
 {
     _gameWindow = std::make_unique<GameWindow>();
     _dx12 = std::make_unique<DX12>();
-    _piecePosManager = std::make_unique<PiecePositionManager>();
+    _piecePosManager = std::make_unique<PiecePosManager>();
 
     _keyMap = std::make_unique<KeyMap>();
     _inputHandler = std::make_unique<InputHandler>();
 
-    _mainCamera = std::make_unique<Camera>();
-    _mapCamera  = std::make_unique<Camera>();
 }

@@ -4,7 +4,7 @@
 #include"DX12.h"
 #include"InputHandler.h"
 #include"I_SceneState.h"
-#include"PiecePositionManager.h"
+#include"PiecePosManager.h"
 
 #include"Camera.h"
 #include"TextUI.h"
@@ -36,7 +36,7 @@ private:
     std::unique_ptr<BoardVertIndices> _boardIndices; // 将棋盤の頂点インデックス
     std::vector<std::unique_ptr<I_Piece>> _pieces;       // 駒
     std::unique_ptr<PieceVertIndices>     _pieceIndices; // 駒の頂点インデックス
-    std::unique_ptr<PiecePositionManager> _piecePosManager; // 駒の配置マネージャ
+    std::unique_ptr<PiecePosManager> _piecePosManager; // 駒の位置マネージャ
     void CreateGameObj(); // 将棋オブジェクト作成
     void CreatePlayerPieces(PlayerSide playerSide); // プレイヤーごとの駒作成
 
@@ -73,7 +73,10 @@ public:
     void Run();  // ゲーム実行処理
     void Exit(); // 終了処理
 
+    DX12* GetDX12(); // DirectX12を返す
     GameWindow* GetGameWindow(); // ゲームウインドウオブジェクトを返す
+    InputHandler* GetInputHandler(); // インプットハンドラを返す
+    PiecePosManager* GetPiecePosManager(); // 駒の位置マネージャを返す
 
     I_Board* GetBoard(); // 将棋盤を返す
     std::vector<I_Piece*> GetPieces(); // 駒を返す
@@ -86,7 +89,6 @@ public:
     std::vector<I_GameObj*> GetGameObjects(); // すべての将棋オブジェクトを返す
     std::vector<NaturalBufferedData<unsigned short>*> GetAllVertIndices(); // すべての頂点インデックスを返す
 
-    InputHandler* GetInputHandler(); // インプットハンドラを返す
     
     Camera* GetMainCamera(); // メインカメラを返す
     Camera* GetMapCamera();  // マップカメラを返す
@@ -94,7 +96,6 @@ public:
     void SetIsDrawMap(bool flag); // マップ描画フラグをセット
     bool IsDrawMap();             // マップ描画フラグを返す
 
-    DX12* GetDX12(); // DirectX12を返す
 
     // テキストUIをプッシュ
     void PushTextUI(TextUI textUI);

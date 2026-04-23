@@ -19,4 +19,9 @@ public:
     DirectX::XMFLOAT3 GetFocus();           // 注視点位置を返す
     void SetUp   (DirectX::XMFLOAT3 up);    // カメラ上側ベクトルセット
     DirectX::XMFLOAT3 GetUp();              // カメラ上側ベクトルを返す
+
+    ViewMat(
+        DirectX::XMFLOAT3 eye   = DirectX::XMFLOAT3(0.0f, -1.0f,  0.0f),
+        DirectX::XMFLOAT3 focus = DirectX::XMFLOAT3(0.0f,  0.0f,  0.0f),
+        DirectX::XMFLOAT3 up    = DirectX::XMFLOAT3(0.0f,  0.0f, -1.0f));
 };

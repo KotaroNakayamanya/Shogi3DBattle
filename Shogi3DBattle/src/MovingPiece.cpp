@@ -155,7 +155,10 @@ MovingPiece::MovingPiece(I_Piece* piece)
     _mainCamera->SetFocusPos(focusPos);
 
     // カメラの位置をフォーカス位置に合わせてセット
-    DirectX::XMFLOAT3 cameraPos = {focusX, focusY - 10.0f, focusZ - 10.0f};
+    float offsetY = -10.0f;
+    float offsetZ = -10.0f;
+    if(piece->GetPlayerSide() == PlayerSide::PLAYER_1) offsetY = -offsetY;
+    DirectX::XMFLOAT3 cameraPos = {focusX, focusY+offsetY, focusZ+offsetZ};
     _mainCamera->SetCameraPos(cameraPos);
 
     // カメラ上側ベクトルセット

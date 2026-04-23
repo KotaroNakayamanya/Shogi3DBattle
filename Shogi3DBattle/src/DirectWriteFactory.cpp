@@ -61,7 +61,7 @@ ComPtr<IDWriteTextFormat> DirectWriteFactory::CreateVTextFormat(
 ComPtr<IDWriteTextFormat> DirectWriteFactory::CreatePieceTextFormat()
 {
     auto weight   = DWRITE_FONT_WEIGHT_BOLD;
-    auto fontSize = 50.0f;
+    auto fontSize = 60.0f;
 
     auto comPtr = CreateVTextFormat(weight, fontSize);
 

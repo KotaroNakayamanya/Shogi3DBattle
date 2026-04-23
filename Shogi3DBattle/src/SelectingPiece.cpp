@@ -13,6 +13,11 @@ std::unique_ptr<I_SceneState> SelectingPiece::ExeSceneOperation(
     int cursorXMove,
     int cursorYMove)
 {
+    // 選択されている駒をチェック
+    _selectedPiece = nullptr;
+    auto piecePosManager = Application::GetInstance().GetPiecePosManager(); // 駒の位置マネージャ取得
+    _selectedPiece = piecePosManager->GetPlacedPiece(9, 5);
+
     if(inputMemory & InputHandler::DECISION)
         return ExeDecisionButton();
     if(inputMemory & InputHandler::CANCEL)
@@ -24,9 +29,8 @@ std::unique_ptr<I_SceneState> SelectingPiece::ExeSceneOperation(
 // 決定ボタン
 std::unique_ptr<I_SceneState> SelectingPiece::ExeDecisionButton()
 {
-    auto pieces = Application::GetInstance().GetPieces();
 
-    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<MovingPiece>(pieces[0]); // 駒操作シーンに遷移する
+    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<MovingPiece>(_selectedPiece); // 駒操作シーンに遷移する
     ReversProjMat(); // メインカメラをパース付きに戻す
 
     auto inputHandler = Application::GetInstance().GetInputHandler();

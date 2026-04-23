@@ -8,3 +8,6 @@ DirectX::XMMATRIX PersProjMat::GetMat()
 
 void PersProjMat::SetFOV(float fov){_fov = fov;} // 視野角セット
 void PersProjMat::SetAR (float ar) {_ar  = ar; } // アスペクト比セット
+
+PersProjMat::PersProjMat(float fov, float ar, float nearZ, float farZ)
+    : _fov(fov), _ar(ar), I_ProjMat(nearZ, farZ){}

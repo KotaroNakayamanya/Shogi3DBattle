@@ -513,8 +513,11 @@
     <ClCompile Include="src\I_GameObj.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\PiecePositionManager.cpp">
+    <ClCompile Include="src\PiecePosManager.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_ProjMat.cpp">
+      <Filter>ソース ファイル\buffered_data\mat\proj_mat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -842,7 +845,7 @@
     <ClInclude Include="header\PlayerSide.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="header\PiecePositionManager.h">
+    <ClInclude Include="header\PiecePosManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

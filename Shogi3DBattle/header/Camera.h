@@ -29,8 +29,9 @@ public:
     
     void WriteToBuff(ID3D12Resource* buff) override; // バッファに書き込み
     
-    void SetViewMat(ViewMat* viewMat);   // ビュー行列セット
     ViewMat* GetViewMat();               // ビュー行列を返す
     void SetProjMat(I_ProjMat* projMat); // プロジェクション行列セット
     I_ProjMat* GetProjMat();                 // プロジェクション行列を返す
+
+    Camera(std::unique_ptr<ViewMat> viewMat, std::unique_ptr<I_ProjMat> projMat);
 };

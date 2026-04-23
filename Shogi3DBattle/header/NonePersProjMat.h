@@ -14,4 +14,10 @@ public:
     void  SetWidth (float width);  // 横サイズセット
     float GetWidth();              // 横サイズを返す
     void  SetHeight(float height); // 縦サイズ比セット
+
+    NonePersProjMat(
+        float width  = 100.0f,
+        float height = 100.0f,
+        float nearZ  =   1.0f,
+        float farZ   =  50.0f);
 };

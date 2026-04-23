@@ -93,10 +93,9 @@ DirectX::XMFLOAT3 Camera::GetNormLookVec()
 
 
 
-void Camera::SetViewMat(ViewMat* viewMat){_viewMat.reset(viewMat);} // ビュー行列セット
-ViewMat* Camera::GetViewMat()            {return _viewMat.get();}   // ビュー行列を返す
-void Camera::SetProjMat(I_ProjMat* projMat)    {_projMat.reset(projMat);} // プロジェクション行列セット
-I_ProjMat* Camera::GetProjMat()                {return _projMat.get();}   // プロジェクション行列を返す
+ViewMat*   Camera::GetViewMat()                  {return _viewMat.get();}   // ビュー行列を返す
+void       Camera::SetProjMat(I_ProjMat* projMat){_projMat.reset(projMat);} // プロジェクション行列セット
+I_ProjMat* Camera::GetProjMat()                  {return _projMat.get();}   // プロジェクション行列を返す
 
 // バッファに書き込み
 void Camera::WriteToBuff(ID3D12Resource* buff)
@@ -115,3 +114,6 @@ void Camera::WriteToBuff(ID3D12Resource* buff)
 
     buff->Unmap(0, nullptr);
 }
+
+Camera::Camera(std::unique_ptr<ViewMat> viewMat, std::unique_ptr<I_ProjMat> projMat)
+    : _viewMat(std::move(viewMat)), _projMat(std::move(projMat)){}
