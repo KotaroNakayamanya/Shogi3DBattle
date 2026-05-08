@@ -5,7 +5,7 @@
 #include"Camera.h"
 #include"PersProjMat.h"
 
-class SelectingPiece : public I_SceneState
+class SelectingPieceScene : public I_SceneState
 {
 private:
     Camera*     _mainCamera;       // ƒƒCƒ“ƒJƒƒ‰
@@ -26,6 +26,6 @@ public:
         int cursorXMove,
         int cursorYMove) override;
 
-    SelectingPiece();
-    ~SelectingPiece();
+    SelectingPieceScene();
+    ~SelectingPieceScene();
 };

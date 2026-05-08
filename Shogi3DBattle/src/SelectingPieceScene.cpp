@@ -1,4 +1,4 @@
-#include"SelectingPiece.h"
+#include"SelectingPieceScene.h"
 #include"Application.h"
 #include"MovingPiece.h"
 #include"TitleMenu.h"
@@ -6,7 +6,7 @@
 #include"NonePersProjMat.h"
 
 // 駒選択シーン動作
-std::unique_ptr<I_SceneState> SelectingPiece::ExeSceneOperation(
+std::unique_ptr<I_SceneState> SelectingPieceScene::ExeSceneOperation(
     UCHAR inputMemory,
     int cursorX,
     int cursorY,
@@ -27,7 +27,7 @@ std::unique_ptr<I_SceneState> SelectingPiece::ExeSceneOperation(
 }
 
 // 決定ボタン
-std::unique_ptr<I_SceneState> SelectingPiece::ExeDecisionButton()
+std::unique_ptr<I_SceneState> SelectingPieceScene::ExeDecisionButton()
 {
 
     std::unique_ptr<I_SceneState> newSceneState = std::make_unique<MovingPiece>(_selectedPiece); // 駒操作シーンに遷移する
@@ -40,7 +40,7 @@ std::unique_ptr<I_SceneState> SelectingPiece::ExeDecisionButton()
 }
 
 // キャンセルボタン処理
-std::unique_ptr<I_SceneState> SelectingPiece::ExeCancelButton()
+std::unique_ptr<I_SceneState> SelectingPieceScene::ExeCancelButton()
 {
     std::unique_ptr<I_SceneState> newSceneState = std::make_unique<TitleMenu>(); // スタートメニューに遷移する
     ReversProjMat(); // メインカメラをパース付きに戻す
@@ -52,7 +52,7 @@ std::unique_ptr<I_SceneState> SelectingPiece::ExeCancelButton()
 }
 
 // パース付きプロジェクション行列に戻す
-void SelectingPiece::ReversProjMat()
+void SelectingPieceScene::ReversProjMat()
 {
     PersProjMat* persProjMat = new PersProjMat;
     *persProjMat = _oldPersProjMat;
@@ -63,7 +63,7 @@ void SelectingPiece::ReversProjMat()
 
 
 
-SelectingPiece::SelectingPiece()
+SelectingPieceScene::SelectingPieceScene()
 {
     _mainCamera     = Application::GetInstance().GetMainCamera();
     auto mapCamera  = Application::GetInstance().GetMapCamera();
@@ -85,4 +85,4 @@ SelectingPiece::SelectingPiece()
     _mainCamera->SetProjMat(nonePersProjMat);
 }
 
-SelectingPiece::~SelectingPiece(){}
+SelectingPieceScene::~SelectingPieceScene(){}

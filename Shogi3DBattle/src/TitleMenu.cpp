@@ -1,6 +1,5 @@
 #include"TitleMenu.h"
 #include"Application.h"
-#include"SelectingPiece.h"
 
 // テキストUIセット
 void TitleMenu::SetTextUI()

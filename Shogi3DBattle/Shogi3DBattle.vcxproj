@@ -41,6 +41,7 @@
     <ClCompile Include="src\I_Piece.cpp" />
     <ClCompile Include="src\I_ProjMat.cpp" />
     <ClCompile Include="src\I_SelectingButtonScene.cpp" />
+    <ClCompile Include="src\I_PieceButton.cpp" />
     <ClCompile Include="src\King.cpp" />
     <ClCompile Include="src\Knight.cpp" />
     <ClCompile Include="src\Lance.cpp" />
@@ -72,7 +73,8 @@
     <ClCompile Include="src\PiecePosManager.cpp" />
     <ClCompile Include="src\PieceVertIndices.cpp" />
     <ClCompile Include="src\Rook.cpp" />
-    <ClCompile Include="src\SelectingPiece.cpp" />
+    <ClCompile Include="src\SelectingPieceScene.cpp" />
+    <ClCompile Include="src\SelectPieceButton.cpp" />
     <ClCompile Include="src\Silver.cpp" />
     <ClCompile Include="src\TextUI.cpp" />
     <ClCompile Include="src\TitleMenu.cpp" />
@@ -127,9 +129,11 @@
     <ClInclude Include="header\I_Piece.h" />
     <ClInclude Include="header\I_ProjMat.h" />
     <ClInclude Include="header\I_SelectingButtonScene.h" />
+    <ClInclude Include="header\I_PieceButton.h" />
     <ClInclude Include="header\PiecePosManager.h" />
     <ClInclude Include="header\PlayerSide.h" />
     <ClInclude Include="header\I_TextButton.h" />
+    <ClInclude Include="header\SelectPieceButton.h" />
     <ClInclude Include="header\TextUI.h" />
     <ClInclude Include="header\NewStartButton.h" />
     <ClInclude Include="header\Camera.h" />
@@ -171,7 +175,7 @@
     <ClInclude Include="header\PieceVertIndices.h" />
     <ClInclude Include="header\Pixel.h" />
     <ClInclude Include="header\Rook.h" />
-    <ClInclude Include="header\SelectingPiece.h" />
+    <ClInclude Include="header\SelectingPieceScene.h" />
     <ClInclude Include="header\Silver.h" />
     <ClInclude Include="header\TitleMenu.h" />
     <ClInclude Include="header\Text2D.h" />

@@ -1,12 +1,12 @@
 #include"NewStartButton.h"
 #include"Application.h"
-#include"SelectingPiece.h"
+#include"SelectingPieceScene.h"
 
 // はじめからボタン押下処理
 std::unique_ptr<I_SceneState> NewStartButton::ExePushButtonProcess()
 {
     // 駒選択シーンに遷移
-    auto newSceneState = std::make_unique<SelectingPiece>();
+    auto newSceneState = std::make_unique<SelectingPieceScene>();
 
     // UI削除
     auto& app = Application::GetInstance();

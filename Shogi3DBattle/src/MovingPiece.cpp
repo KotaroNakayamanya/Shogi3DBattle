@@ -1,6 +1,6 @@
 #include"MovingPiece.h"
 #include"Application.h"
-#include"SelectingPiece.h"
+#include"SelectingPieceScene.h"
 #include<cmath>
 
 // 駒操作シーン動作
@@ -105,7 +105,7 @@ std::unique_ptr<I_SceneState> MovingPiece::ExeCancelButton()
         Application::GetInstance().SetIsDrawMap(false); 
         
         // シーンを駒選択シーンに変更
-        newSceneState = std::make_unique<SelectingPiece>();
+        newSceneState = std::make_unique<SelectingPieceScene>();
     }
 
     auto inputHandler = Application::GetInstance().GetInputHandler();

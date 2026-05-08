@@ -471,7 +471,7 @@
     <ClCompile Include="src\MovingPiece.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
-    <ClCompile Include="src\SelectingPiece.cpp">
+    <ClCompile Include="src\SelectingPieceScene.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
     <ClCompile Include="src\TitleMenu.cpp">
@@ -517,6 +517,12 @@
       <Filter>ソース ファイル\buffered_data\mat\proj_mat</Filter>
     </ClCompile>
     <ClCompile Include="cpp\I_TextButton.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_PieceButton.cpp">
+      <Filter>ソース ファイル\ui\button</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SelectPieceButton.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -812,7 +818,7 @@
     <ClInclude Include="header\MovingPiece.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
-    <ClInclude Include="header\SelectingPiece.h">
+    <ClInclude Include="header\SelectingPieceScene.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
     <ClInclude Include="header\TitleMenu.h">
@@ -846,6 +852,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\I_TextButton.h">
+      <Filter>ヘッダー ファイル\ui\button</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_PieceButton.h">
+      <Filter>ヘッダー ファイル\ui\button</Filter>
+    </ClInclude>
+    <ClInclude Include="header\SelectPieceButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
   </ItemGroup>
