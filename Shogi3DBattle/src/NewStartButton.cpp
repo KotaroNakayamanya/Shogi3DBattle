@@ -3,7 +3,7 @@
 #include"SelectingPiece.h"
 
 // はじめからボタン押下処理
-std::unique_ptr<I_SceneState> NewStartButton::ExePushButton()
+std::unique_ptr<I_SceneState> NewStartButton::ExePushButtonProcess()
 {
     // 駒選択シーンに遷移
     auto newSceneState = std::make_unique<SelectingPiece>();
@@ -19,20 +19,5 @@ std::unique_ptr<I_SceneState> NewStartButton::ExePushButton()
     return newSceneState;
 }
 
-NewStartButton::NewStartButton(
-    D2D1_RECT_F         rect,
-    std::vector<Text2D> text2Ds)
-    : I_ButtonUI(rect, text2Ds)
-{
-    // テキストの指定がなければデフォルトテキストを追加
-    if (_text2Ds.size() == 0)
-    {
-        Text2D defaultText;
-        defaultText.text       = L"はじめから";
-        defaultText.textFormat = GetDefaultTextFormat();
-        defaultText.brush      = GetDefaultBrush();
-        defaultText.rect       = _rect;
-
-        _text2Ds.push_back(defaultText);
-    }
-}
+NewStartButton::NewStartButton(D2D1_RECT_F rect, std::vector<TextUI*> textUIs)
+    : I_TextButton(rect, textUIs){}

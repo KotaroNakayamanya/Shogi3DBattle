@@ -1,15 +1,15 @@
 #pragma once
 
 #include"I_SceneState.h"
-#include"I_ButtonUI.h"
+#include"I_Button.h"
 
 class I_SelectingButtonScene : public I_SceneState
 {
 protected:
-    bool        _isSetButtonUI;   // UIがセットされているか判定
-    I_ButtonUI* _selectingButton; // 選択しているボタン
+    I_Button* _selectingButton; // 選択しているボタン
+    bool      _isSetButton;     // ボタンがセットされているか判定
 
-    virtual void SetButtonUI() = 0; // ボタンUIセット
+    virtual void SetButton() = 0; // ボタンUIセット
 
     // ボタン選択シーン動作
     virtual std::unique_ptr<I_SceneState> ExeSelectingButtonSceneOperation(

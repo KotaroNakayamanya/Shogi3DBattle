@@ -42,7 +42,7 @@ void TitleMenu::SetTextUI()
 }
 
 // ボタンUIセット
-void TitleMenu::SetButtonUI()
+void TitleMenu::SetButton()
 {
     auto& app = Application::GetInstance();
 
@@ -65,22 +65,22 @@ void TitleMenu::SetButtonUI()
 
     // はじめからボタン
     rect = {left, top, right, bottom};
-    app.PushButtonUI(ButtonUIType::NEW_START_BUTTON, rect);
+    app.PushButton(ButtonType::NEW_START_BUTTON, rect);
 
     // つづきからボタン
     rect.top    += heightOffset;
     rect.bottom += heightOffset;
-    app.PushButtonUI(ButtonUIType::CONTINUE_START_BUTTON, rect);
+    app.PushButton(ButtonType::CONTINUE_START_BUTTON, rect);
 
     // オプションボタン
     rect.top    += heightOffset;
     rect.bottom += heightOffset;
-    app.PushButtonUI(ButtonUIType::OPTION_BUTTON, rect);
+    app.PushButton(ButtonType::OPTION_BUTTON, rect);
 
     // ゲーム終了ボタン
     rect.top    += heightOffset;
     rect.bottom += heightOffset;
-    app.PushButtonUI(ButtonUIType::EXIT_GAME_BUTTON, rect);
+    app.PushButton(ButtonType::EXIT_GAME_BUTTON, rect);
 }
 
 // タイトル画面シーン動作
@@ -117,7 +117,7 @@ std::unique_ptr<I_SceneState> TitleMenu::ExeDecisionButton()
 {
     // ボタンUIが選択されていればボタン処理実行、選択されていなければ何もしない
     return _selectingButton ?
-        _selectingButton->ExePushButton() : nullptr;
+        _selectingButton->ExePushButtonProcess() : nullptr;
 }
 
 // キャンセルボタン処理

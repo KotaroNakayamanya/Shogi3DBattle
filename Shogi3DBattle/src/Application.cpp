@@ -386,8 +386,18 @@ bool Application::IsDrawUINotEmpty(){return _buttonUIs.size() > 0;} // UIの空�
 // UIを全て削除する
 void Application::RemoveAllUI()
 {
-    _textUIs.clear();
+    _frameUIs .clear();
+    _textUIs  .clear();
     _buttonUIs.clear();
+}
+
+// テキスト枠UIを返す
+std::vector<UI*> Application::GetFrameUIs()
+{
+    std::vector<UI*> vec;
+    for(auto& frameUI : _frameUIs) vec.push_back(frameUI.get());
+    
+    return vec;
 }
 
 // テキストUIを返す
@@ -400,9 +410,9 @@ std::vector<TextUI*> Application::GetTextUIs()
 }
 
 // ボタンUIを返す
-std::vector<I_ButtonUI*> Application::GetButtonUIs()
+std::vector<I_Button*> Application::GetButtons()
 {
-    std::vector<I_ButtonUI*> vec;
+    std::vector<I_Button*> vec;
     for(auto& buttonUI : _buttonUIs) vec.push_back(buttonUI.get());
     
     return vec;
@@ -434,38 +444,58 @@ std::vector<NaturalBufferedData<unsigned short>*> Application::GetAllVertIndices
     return allVertIndices;
 }
 // テキストUIをプッシュ
-void::Application::PushTextUI(TextUI textUI)
+void::Application::PushTextUI(Text2D text2D)
 {
-    _textUIs.push_back(std::make_unique<TextUI>(textUI));
+    _textUIs.push_back(std::make_unique<TextUI>(text2D));
 }
 
 // ボタンUI作成
-void Application::PushButtonUI(
-    ButtonUIType        buttonUIType,
-    D2D1_RECT_F         rect,
-    std::vector<Text2D> text2Ds)
+void Application::PushButton(
+    ButtonType  buttonUIType,
+    D2D1_RECT_F rect)
 {
+    Text2D text2D;
+    text2D.rect = rect;
+    text2D.textFormat = GetDX12()->GetNormalTextFormat();
+    text2D.brush = GetDX12()->GetBlackBrush();
+
+    std::vector<TextUI*> textUIs;
+    
     switch (buttonUIType)
     {
-        case ButtonUIType::NEW_START_BUTTON: // はじめから
-            _buttonUIs.push_back(std::make_unique<NewStartButton>(rect, text2Ds));
+        case ButtonType::NEW_START_BUTTON: // はじめから
+            text2D.text = L"はじめから";
+            PushTextUI(text2D);
+            textUIs.push_back(_textUIs.back().get());
+            _buttonUIs.push_back(std::make_unique<NewStartButton>(rect, textUIs));
             break;
 
-        case ButtonUIType::CONTINUE_START_BUTTON: // つづきから
-            _buttonUIs.push_back(std::make_unique<ContinueStartButton>(rect, text2Ds));
+        case ButtonType::CONTINUE_START_BUTTON: // つづきから
+            text2D.text = L"つづきから";
+            PushTextUI(text2D);
+            textUIs.push_back(_textUIs.back().get());
+            _buttonUIs.push_back(std::make_unique<ContinueStartButton>(rect, textUIs));
             break;
 
-        case ButtonUIType::OPTION_BUTTON: // オプション
-            _buttonUIs.push_back(std::make_unique<OptionButton>(rect, text2Ds));
+        case ButtonType::OPTION_BUTTON: // オプション
+            text2D.text = L"オプション";
+            PushTextUI(text2D);
+            textUIs.push_back(_textUIs.back().get());
+            _buttonUIs.push_back(std::make_unique<OptionButton>(rect, textUIs));
             break;
 
-        case ButtonUIType::EXIT_GAME_BUTTON: // ゲーム終了
-            _buttonUIs.push_back(std::make_unique<ExitGameButton>(rect, text2Ds));
+        case ButtonType::EXIT_GAME_BUTTON: // ゲーム終了
+            text2D.text = L"ゲーム終了";
+            PushTextUI(text2D);
+            textUIs.push_back(_textUIs.back().get());
+            _buttonUIs.push_back(std::make_unique<ExitGameButton>(rect, textUIs));
             break;
 
         default:
             return;
   }
+
+  _frameUIs.push_back(std::make_unique<UI>(rect));
 }
 
 

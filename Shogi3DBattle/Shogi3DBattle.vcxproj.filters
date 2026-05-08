@@ -489,10 +489,7 @@
     <ClCompile Include="src\OptionButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
-    <ClCompile Include="src\I_ButtonUI.cpp">
-      <Filter>ソース ファイル\ui\button</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CancelButton.cpp">
+    <ClCompile Include="src\I_Button.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
     <ClCompile Include="src\I_SelectingButtonScene.cpp">
@@ -518,6 +515,9 @@
     </ClCompile>
     <ClCompile Include="src\I_ProjMat.cpp">
       <Filter>ソース ファイル\buffered_data\mat\proj_mat</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\I_TextButton.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -677,7 +677,7 @@
     <ClInclude Include="header\BasicTexType.h">
       <Filter>ヘッダー ファイル\enum</Filter>
     </ClInclude>
-    <ClInclude Include="header\ButtonUIType.h">
+    <ClInclude Include="header\ButtonType.h">
       <Filter>ヘッダー ファイル\enum</Filter>
     </ClInclude>
     <ClInclude Include="header\UIType.h">
@@ -794,7 +794,7 @@
     <ClInclude Include="header\ContinueStartButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_ButtonUI.h">
+    <ClInclude Include="header\I_Button.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
     <ClInclude Include="header\NewStartButton.h">
@@ -817,9 +817,6 @@
     </ClInclude>
     <ClInclude Include="header\TitleMenu.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
-    </ClInclude>
-    <ClInclude Include="header\CancelButton.h">
-      <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
     <ClInclude Include="header\I_SelectingButtonScene.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
@@ -847,6 +844,9 @@
     </ClInclude>
     <ClInclude Include="header\PiecePosManager.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_TextButton.h">
+      <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

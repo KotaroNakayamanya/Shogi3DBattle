@@ -172,8 +172,10 @@ public:
     IDWriteTextFormat*    GetNormalTextFormat(); // 通常のテキストフォーマットを返す
     IDWriteTextFormat*    GetTitleTextFormat();      // タイトルテキストフォーマットを返す
     IDWriteTextFormat*    GetTitleFrameTextFormat(); // タイトル枠テキストフォーマットを返す
-    ID2D1SolidColorBrush* GetBlackBrush();       // 黒色ブラシを返す
-    ID2D1SolidColorBrush* GetYellowBrush();      // 黄色ブラシを返す
+
+    ID2D1SolidColorBrush* GetBlackBrush();  // 黒色ブラシを返す
+    ID2D1SolidColorBrush* GetRedBrush();    // 赤色ブラシを返す
+    ID2D1SolidColorBrush* GetYellowBrush(); // 黄色ブラシを返す
 
     void ProcessChangeWindowSize( // ウインドウサイズ変更処理
         UINT width, UINT height);

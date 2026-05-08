@@ -813,32 +813,27 @@ void DX12::ExeD2D()
 {
     auto wrappedBackBuffAddress = _wrappedBackBuffs[_currentBackBuffIdx].GetAddressOf();
     auto d2dRenderTarget = _d2dRenderTargets[_currentBackBuffIdx].Get();
+    auto frameUIs = Application::GetInstance().GetFrameUIs();
     auto textUIs = Application::GetInstance().GetTextUIs();
-    auto buttonUIs = Application::GetInstance().GetButtonUIs();
+    auto buttons = Application::GetInstance().GetButtons();
     StartD2D(wrappedBackBuffAddress, d2dRenderTarget); // Direct2D開始
+
+    // ボタン選択処理
+    for (auto& button : buttons) button->ExeSelectedStateProcess();
+
+    // テキスト枠UI描画
+    for (auto& frameUI : frameUIs)
+    {
+        _direct2DDeviceContext->DrawRectangle(
+            frameUI->GetRect(),
+            _buttonUIBackBrush.Get(),
+            _blackBrush.Get());
+    }
 
     // テキストUI描画
     for (auto& textUI : textUIs)
     {
         _direct2DDeviceContext->DrawText2D(textUI->GetText2D());
-    }
-
-    // ボタンUI描画
-    for (auto& buttonUI : buttonUIs)
-    {
-        // ボタンの枠を描画
-        _direct2DDeviceContext->DrawRectangle(
-            buttonUI->GetRect(),
-            _buttonUIBackBrush.Get(),
-            _blackBrush.Get());
-
-        // テキスト描画
-        for (auto& text2D : buttonUI->GetText2Ds())
-        {
-            auto tempText2D = text2D;
-            if(buttonUI->IsSelected()) tempText2D.brush = _redBrush.Get(); // 選択状態ならテキスト赤色
-            _direct2DDeviceContext->DrawText2D(tempText2D);
-        }
     }
         
     EndD2D(wrappedBackBuffAddress); // Direct2D終了
@@ -881,7 +876,8 @@ IDWriteTextFormat* DX12::GetNormalTextFormat(){return _normalTextFormat.Get();} 
 IDWriteTextFormat* DX12::GetTitleTextFormat     (){return _titleTextFormat.Get();}      // タイトルテキストフォーマットを返す
 IDWriteTextFormat* DX12::GetTitleFrameTextFormat(){return _titleFrameTextFormat.Get();} // タイトル枠テキストフォーマットを返す
 
-ID2D1SolidColorBrush* DX12::GetBlackBrush() {return _blackBrush.Get();}  // 黒色ブラシを返す
+ID2D1SolidColorBrush* DX12::GetBlackBrush() {return _blackBrush .Get();} // 黒色ブラシを返す
+ID2D1SolidColorBrush* DX12::GetRedBrush()   {return _redBrush   .Get();} // 赤色ブラシを返す
 ID2D1SolidColorBrush* DX12::GetYellowBrush(){return _yellowBrush.Get();} // 黄色ブラシを返す
 
 

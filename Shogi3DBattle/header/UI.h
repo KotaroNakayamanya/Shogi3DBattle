@@ -5,10 +5,10 @@
 class UI
 {
 protected:
-    D2D1_RECT_F _rect;         // UI”ÍˆÍ
+    D2D1_RECT_F _rect; // UI”ÍˆÍ
 
 public:
-    D2D1_RECT_F GetRect();                 // UI”ÍˆÍ‚ð•Ô‚·
+    D2D1_RECT_F GetRect(); // UI”ÍˆÍ‚ð•Ô‚·
 
     UI(D2D1_RECT_F rect);
 };

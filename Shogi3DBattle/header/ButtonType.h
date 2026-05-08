@@ -1,6 +1,6 @@
 #pragma once
 
-enum class ButtonUIType
+enum class ButtonType
 {
     NEW_START_BUTTON,      // ‚Í‚¶‚ß‚©‚ç
     CONTINUE_START_BUTTON, // ‚Â‚Ã‚«‚©‚ç

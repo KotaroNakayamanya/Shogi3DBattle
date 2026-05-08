@@ -8,8 +8,8 @@
 
 #include"Camera.h"
 #include"TextUI.h"
-#include"I_ButtonUI.h"
-#include"ButtonUIType.h"
+#include"I_Button.h"
+#include"ButtonType.h"
 
 #include"I_BufferedData.h"
 
@@ -46,8 +46,9 @@ private:
     void CreateTex(); // テクスチャ作成
 
     // UI 
-    std::vector<std::unique_ptr<TextUI>>     _textUIs;   // テキストUI
-    std::vector<std::unique_ptr<I_ButtonUI>> _buttonUIs; // ボタンUI
+    std::vector<std::unique_ptr<UI>>     _frameUIs; // テキスト枠UI
+    std::vector<std::unique_ptr<TextUI>> _textUIs;  // テキストUI
+    std::vector<std::unique_ptr<I_Button>> _buttonUIs; // ボタンUI
     
 
     std::unique_ptr<I_SceneState>  _sceneState;   // シーンステート
@@ -98,16 +99,16 @@ public:
 
 
     // テキストUIをプッシュ
-    void PushTextUI(TextUI textUI);
+    void PushTextUI(Text2D text2D);
 
     // ボタンUI作成
-    void PushButtonUI(
-        ButtonUIType        buttonUIType,
-        D2D1_RECT_F         rect,
-        std::vector<Text2D> text2D = std::vector<Text2D>());
+    void PushButton(
+        ButtonType        buttonUIType,
+        D2D1_RECT_F         rect);
 
+    std::vector<UI*>     GetFrameUIs(); // テキスト枠UIを返す
     std::vector<TextUI*>     GetTextUIs(); // テキストUIを返す
-    std::vector<I_ButtonUI*> GetButtonUIs(); // ボタンUIを返す
+    std::vector<I_Button*> GetButtons(); // ボタンUIを返す
 
     bool IsDrawUINotEmpty(); // UIの空状況を返す
 

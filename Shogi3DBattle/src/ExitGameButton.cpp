@@ -2,7 +2,7 @@
 #include"Application.h"
 
 // ゲーム終了ボタン押下処理
-std::unique_ptr<I_SceneState> ExitGameButton::ExePushButton()
+std::unique_ptr<I_SceneState> ExitGameButton::ExePushButtonProcess()
 {
     auto gameWindow = Application::GetInstance().GetGameWindow();
     DestroyWindow(gameWindow->GetHWND());
@@ -10,20 +10,5 @@ std::unique_ptr<I_SceneState> ExitGameButton::ExePushButton()
     return nullptr;
 }
 
-ExitGameButton::ExitGameButton(
-    D2D1_RECT_F         rect,
-    std::vector<Text2D> text2Ds)
-    : I_ButtonUI(rect, text2Ds)
-{
-    // テキストがなければデフォルトテキストを追加
-    if (_text2Ds.size() == 0)
-    {
-        Text2D defaultText;
-        defaultText.text       = L"ゲーム終了";
-        defaultText.textFormat = GetDefaultTextFormat();
-        defaultText.brush      = GetDefaultBrush();
-        defaultText.rect       = _rect;
-
-        _text2Ds.push_back(defaultText);
-    }
-}
+ExitGameButton::ExitGameButton(D2D1_RECT_F rect, std::vector<TextUI*> textUIs)
+    : I_TextButton(rect, textUIs){}

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cpp\I_TextButton.cpp" />
     <ClCompile Include="header\DefaultHeapProp.cpp" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -29,14 +30,13 @@
     <ClCompile Include="src\BoardTexture.cpp" />
     <ClCompile Include="src\BoardVertIndices.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
-    <ClCompile Include="src\CancelButton.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
     <ClCompile Include="src\Direct2DDevice.cpp" />
     <ClCompile Include="src\Direct2DFactory.cpp" />
     <ClCompile Include="src\ExitGameButton.cpp" />
     <ClCompile Include="src\Gold.cpp" />
     <ClCompile Include="src\I_Board.cpp" />
-    <ClCompile Include="src\I_ButtonUI.cpp" />
+    <ClCompile Include="src\I_Button.cpp" />
     <ClCompile Include="src\I_GameObj.cpp" />
     <ClCompile Include="src\I_Piece.cpp" />
     <ClCompile Include="src\I_ProjMat.cpp" />
@@ -106,7 +106,6 @@
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
     <ClInclude Include="header\Application.h" />
-    <ClInclude Include="header\CancelButton.h" />
     <ClInclude Include="header\BasicTexType.h" />
     <ClInclude Include="header\Bishop.h" />
     <ClInclude Include="header\Board5x5Texture.h" />
@@ -118,7 +117,7 @@
     <ClInclude Include="header\Direct2DDevice.h" />
     <ClInclude Include="header\Direct2DFactory.h" />
     <ClInclude Include="header\HeapType.h" />
-    <ClInclude Include="header\I_ButtonUI.h" />
+    <ClInclude Include="header\I_Button.h" />
     <ClInclude Include="header\I_Board.h" />
     <ClInclude Include="header\I_BufferedData.h" />
     <ClInclude Include="header\BuffResourceDesc.h" />
@@ -130,6 +129,7 @@
     <ClInclude Include="header\I_SelectingButtonScene.h" />
     <ClInclude Include="header\PiecePosManager.h" />
     <ClInclude Include="header\PlayerSide.h" />
+    <ClInclude Include="header\I_TextButton.h" />
     <ClInclude Include="header\TextUI.h" />
     <ClInclude Include="header\NewStartButton.h" />
     <ClInclude Include="header\Camera.h" />
@@ -199,7 +199,7 @@
     <ClInclude Include="header\TexBuffFactory.h" />
     <ClInclude Include="header\TexHeapProp.h" />
     <ClInclude Include="header\TexResourceDesc.h" />
-    <ClInclude Include="header\ButtonUIType.h" />
+    <ClInclude Include="header\ButtonType.h" />
     <ClInclude Include="header\UI.h" />
     <ClInclude Include="header\UIType.h" />
     <ClInclude Include="header\UploadHeapProp.h" />

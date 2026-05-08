@@ -9,10 +9,10 @@ std::unique_ptr<I_SceneState> I_SelectingButtonScene::ExeSceneOperation(
     int           cursorXMove,
     int           cursorYMove)
 {
-    if (!_isSetButtonUI) // ボタンUIがセットされていなければセット
+    if (!_isSetButton) // ボタンUIがセットされていなければセット
     {
-        SetButtonUI();
-        _isSetButtonUI = true;
+        SetButton();
+        _isSetButton = true;
     }
 
     if (_selectingButton) // ボタンが選択されていれば選択解除
@@ -22,7 +22,7 @@ std::unique_ptr<I_SceneState> I_SelectingButtonScene::ExeSceneOperation(
     }
 
     // 選択されているボタンを探す（後から追加されているボタンを優先して選択状態にする）
-    auto buttonUIs = Application::GetInstance().GetButtonUIs();
+    auto buttonUIs = Application::GetInstance().GetButtons();
     for (auto it = buttonUIs.rbegin(); it < buttonUIs.rend(); it++)
     {
         auto buttonUI = *it;
@@ -53,4 +53,4 @@ std::unique_ptr<I_SceneState> I_SelectingButtonScene::ExeSceneOperation(
 
 
 I_SelectingButtonScene::I_SelectingButtonScene()
-    : _isSetButtonUI(false), _selectingButton(nullptr){}
+    : _isSetButton(false), _selectingButton(nullptr){}

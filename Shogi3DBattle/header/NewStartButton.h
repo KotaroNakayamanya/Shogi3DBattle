@@ -1,13 +1,13 @@
 #pragma once
 
-#include"I_ButtonUI.h"
+#include"I_TextButton.h"
 
-class NewStartButton : public I_ButtonUI
+class NewStartButton : public I_TextButton
 {
 public:
-    std::unique_ptr<I_SceneState> ExePushButton() override; // はじめからボタン押下処理
+    std::unique_ptr<I_SceneState> ExePushButtonProcess() override; // はじめからボタン押下処理
 
     NewStartButton(
         D2D1_RECT_F         rect,
-        std::vector<Text2D> textAndRects = std::vector<Text2D>()); 
+        std::vector<TextUI*> textAndRects); 
 };
