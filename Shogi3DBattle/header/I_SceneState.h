@@ -6,7 +6,7 @@ class I_SceneState
 {
 public:
     // ƒV[ƒ““®ìˆ—
-    virtual std::unique_ptr<I_SceneState> ExeSceneOperation(
+    virtual std::unique_ptr<I_SceneState> ExeSceneProcess(
         unsigned char inputMemory,
         int cursorX,
         int cursorY,

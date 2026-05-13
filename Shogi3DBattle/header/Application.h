@@ -9,7 +9,9 @@
 #include"Camera.h"
 #include"TextUI.h"
 #include"I_Button.h"
-#include"ButtonType.h"
+
+#include"TextButtonType.h"
+#include"PieceButtonType.h"
 
 #include"I_BufferedData.h"
 
@@ -101,10 +103,16 @@ public:
     // テキストUIをプッシュ
     void PushTextUI(Text2D text2D);
 
-    // ボタンUI作成
-    void PushButton(
-        ButtonType        buttonUIType,
-        D2D1_RECT_F         rect);
+    // テキスト付きボタンを作成プッシュ
+    void PushTextButton(
+        TextButtonType textButtonType,
+        D2D1_RECT_F    rect);
+
+    // 駒ボタンを作成プッシュ
+    void PushPieceButton(
+        PieceButtonType pieceButtonType,
+        D2D1_RECT_F     rect,
+        I_Piece*        piece);
 
     std::vector<UI*>     GetFrameUIs(); // テキスト枠UIを返す
     std::vector<TextUI*>     GetTextUIs(); // テキストUIを返す

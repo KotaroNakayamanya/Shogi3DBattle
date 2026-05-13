@@ -5,7 +5,7 @@
 #include<thread>
 #include<functional>
 
-#include"TitleMenu.h"
+#include"TitleScene.h"
 
 #include"PersProjMat.h"
 #include"NonePersProjMat.h"
@@ -24,6 +24,7 @@
 #include"ContinueStartButton.h"
 #include"OptionButton.h"
 #include"ExitGameButton.h"
+#include"SelectPieceButton.h"
 
 #include"Board9x9.h"
 
@@ -138,7 +139,7 @@ void Application::InitKeyMap()
 // シーンステート初期処理
 void Application::InitSceneState()
 {
-    _sceneState = std::make_unique<TitleMenu>(); // スタート画面
+    _sceneState = std::make_unique<TitleScene>(); // スタート画面
 }
 
 
@@ -169,7 +170,7 @@ void Application::Run()
             ScreenToClient(_gameWindow->GetHWND(), &cursorPos);
 
             // シーン動作
-            std::unique_ptr<I_SceneState> newSceneState = _sceneState->ExeSceneOperation(
+            std::unique_ptr<I_SceneState> newSceneState = _sceneState->ExeSceneProcess(
                 _inputHandler->GetInputMemory(),
                 cursorPos.x,
                 cursorPos.y,
@@ -449,10 +450,10 @@ void::Application::PushTextUI(Text2D text2D)
     _textUIs.push_back(std::make_unique<TextUI>(text2D));
 }
 
-// ボタンUI作成
-void Application::PushButton(
-    ButtonType  buttonUIType,
-    D2D1_RECT_F rect)
+// テキスト付きボタンを作成プッシュ
+void Application::PushTextButton(
+    TextButtonType textButtonType,
+    D2D1_RECT_F    rect)
 {
     Text2D text2D;
     text2D.rect = rect;
@@ -461,30 +462,30 @@ void Application::PushButton(
 
     std::vector<TextUI*> textUIs;
     
-    switch (buttonUIType)
+    switch (textButtonType)
     {
-        case ButtonType::NEW_START_BUTTON: // はじめから
+        case TextButtonType::NEW_START_BUTTON: // はじめから
             text2D.text = L"はじめから";
             PushTextUI(text2D);
             textUIs.push_back(_textUIs.back().get());
             _buttonUIs.push_back(std::make_unique<NewStartButton>(rect, textUIs));
             break;
 
-        case ButtonType::CONTINUE_START_BUTTON: // つづきから
+        case TextButtonType::CONTINUE_START_BUTTON: // つづきから
             text2D.text = L"つづきから";
             PushTextUI(text2D);
             textUIs.push_back(_textUIs.back().get());
             _buttonUIs.push_back(std::make_unique<ContinueStartButton>(rect, textUIs));
             break;
 
-        case ButtonType::OPTION_BUTTON: // オプション
+        case TextButtonType::OPTION_BUTTON: // オプション
             text2D.text = L"オプション";
             PushTextUI(text2D);
             textUIs.push_back(_textUIs.back().get());
             _buttonUIs.push_back(std::make_unique<OptionButton>(rect, textUIs));
             break;
 
-        case ButtonType::EXIT_GAME_BUTTON: // ゲーム終了
+        case TextButtonType::EXIT_GAME_BUTTON: // ゲーム終了
             text2D.text = L"ゲーム終了";
             PushTextUI(text2D);
             textUIs.push_back(_textUIs.back().get());
@@ -496,6 +497,23 @@ void Application::PushButton(
   }
 
   _frameUIs.push_back(std::make_unique<UI>(rect));
+}
+
+// 駒ボタンを作成プッシュ
+void Application::PushPieceButton(
+    PieceButtonType pieceButtonType,
+    D2D1_RECT_F     rect,
+    I_Piece*        piece)
+{
+    switch (pieceButtonType)
+    {
+        case PieceButtonType::SELECT_PIECE_BUTTON:
+            _buttonUIs.push_back(std::make_unique<SelectPieceButton>(rect, piece));
+            break;
+
+        default:
+            return;
+    }
 }
 
 

@@ -1,8 +1,18 @@
 #include"I_SelectingButtonScene.h"
 #include"Application.h"
 
+// 決定ボタン処理
+std::unique_ptr<I_SceneState> I_SelectingButtonScene::ExeDecisionButtonProcess()
+{
+    // ボタンUIが選択されていればボタン処理実行、選択されていなければ何もしない
+    return _selectedButton ?
+        _selectedButton->ExePushButtonProcess() : nullptr;
+}
+
+I_Button* I_SelectingButtonScene::GetSelectedButton(){return _selectedButton;} // 選択されているボタンを返す
+
 // ボタン選択シーン動作
-std::unique_ptr<I_SceneState> I_SelectingButtonScene::ExeSceneOperation(
+std::unique_ptr<I_SceneState> I_SelectingButtonScene::ExeSceneProcess(
     unsigned char inputMemory,
     int           cursorX,
     int           cursorY,
@@ -15,10 +25,10 @@ std::unique_ptr<I_SceneState> I_SelectingButtonScene::ExeSceneOperation(
         _isSetButton = true;
     }
 
-    if (_selectingButton) // ボタンが選択されていれば選択解除
+    if (_selectedButton) // ボタンが選択されていれば選択解除
     {
-        _selectingButton->SetIsSelected(false);
-        _selectingButton = nullptr;
+        _selectedButton->SetIsSelected(false);
+        _selectedButton = nullptr;
     }
 
     // 選択されているボタンを探す（後から追加されているボタンを優先して選択状態にする）
@@ -36,7 +46,7 @@ std::unique_ptr<I_SceneState> I_SelectingButtonScene::ExeSceneOperation(
         if (isSelected) // 選択されていれば選択状態にし、break
         {
             buttonUI->SetIsSelected(true);
-            _selectingButton = buttonUI;
+            _selectedButton = buttonUI;
 
             break;
         }
@@ -51,6 +61,5 @@ std::unique_ptr<I_SceneState> I_SelectingButtonScene::ExeSceneOperation(
         cursorYMove);
 }
 
-
 I_SelectingButtonScene::I_SelectingButtonScene()
-    : _isSetButton(false), _selectingButton(nullptr){}
+    : _isSetButton(false), _selectedButton(nullptr){}

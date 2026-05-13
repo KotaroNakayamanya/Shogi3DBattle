@@ -1,31 +1,30 @@
 #pragma once
 
-#include"I_SceneState.h"
+#include"I_SelectingButtonScene.h"
 #include"I_Piece.h"
 #include"Camera.h"
 #include"PersProjMat.h"
 
-class SelectingPieceScene : public I_SceneState
+class SelectingPieceScene : public I_SelectingButtonScene
 {
 private:
     Camera*     _mainCamera;       // メインカメラ
     PersProjMat _oldPersProjMat; // プロジェクション行列保存
-    I_Piece* _selectedPiece; // 選択されている駒
+    I_Button* _selectedButton; // 選択されているボタン
 
-    std::unique_ptr<I_SceneState> ExeDecisionButton(); // 決定ボタン処理
     std::unique_ptr<I_SceneState> ExeCancelButton();   // キャンセルボタン処理
 
-    void ReversProjMat(); // パース付きプロジェクション行列に戻す
+    void SetButton() override; // ボタンUIセット
 
-public:
     // 駒選択シーン動作
-    std::unique_ptr<I_SceneState> ExeSceneOperation(
+    std::unique_ptr<I_SceneState> ExeSelectingButtonSceneOperation(
         unsigned char inputMemory,
         int cursorX,
         int cursorY,
         int cursorXMove,
         int cursorYMove) override;
 
+public:
     SelectingPieceScene();
     ~SelectingPieceScene();
 };

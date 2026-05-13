@@ -468,13 +468,13 @@
     <ClCompile Include="src\UI.cpp">
       <Filter>ソース ファイル\ui</Filter>
     </ClCompile>
-    <ClCompile Include="src\MovingPiece.cpp">
+    <ClCompile Include="src\MovingPieceScene.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
     <ClCompile Include="src\SelectingPieceScene.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
-    <ClCompile Include="src\TitleMenu.cpp">
+    <ClCompile Include="src\TitleScene.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
     <ClCompile Include="src\ContinueStartButton.cpp">
@@ -683,7 +683,7 @@
     <ClInclude Include="header\BasicTexType.h">
       <Filter>ヘッダー ファイル\enum</Filter>
     </ClInclude>
-    <ClInclude Include="header\ButtonType.h">
+    <ClInclude Include="header\TextButtonType.h">
       <Filter>ヘッダー ファイル\enum</Filter>
     </ClInclude>
     <ClInclude Include="header\UIType.h">
@@ -815,13 +815,13 @@
     <ClInclude Include="header\I_SceneState.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
-    <ClInclude Include="header\MovingPiece.h">
+    <ClInclude Include="header\MovingPieceScene.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
     <ClInclude Include="header\SelectingPieceScene.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
-    <ClInclude Include="header\TitleMenu.h">
+    <ClInclude Include="header\TitleScene.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
     <ClInclude Include="header\I_SelectingButtonScene.h">
@@ -859,6 +859,9 @@
     </ClInclude>
     <ClInclude Include="header\SelectPieceButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PieceButtonType.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@
 #include"Camera.h"
 #include"I_Button.h"
 
-class TitleMenu : public I_SelectingButtonScene
+class TitleScene : public I_SelectingButtonScene
 {
 private:
     Camera* _mainCamera;  // メインカメラ
@@ -12,6 +12,7 @@ private:
     
     void SetTextUI();          // テキストUIセット
     void SetButton() override; // ボタンUIセット
+
 
     // ボタン選択シーン動作
     std::unique_ptr<I_SceneState> ExeSelectingButtonSceneOperation(
@@ -21,9 +22,8 @@ private:
         int cursorXMove,
         int cursorYMove) override;
 
-    std::unique_ptr<I_SceneState> ExeDecisionButton(); // 決定ボタン処理
     std::unique_ptr<I_SceneState> ExeCancelButton();   // キャンセルボタン処理
 
 public:
-    TitleMenu();
+    TitleScene();
 };

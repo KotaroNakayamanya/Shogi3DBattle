@@ -7,4 +7,6 @@ class SelectPieceButton : public I_PieceButton
 public:
     void                          ExeSelectedStateProcess() override; // 選択状態に合わせた処理実行
     std::unique_ptr<I_SceneState> ExePushButtonProcess   () override; // ボタン押下処理実行
+
+    SelectPieceButton(D2D1_RECT_F rect, I_Piece* piece);
 };

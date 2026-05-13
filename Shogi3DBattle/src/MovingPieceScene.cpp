@@ -1,10 +1,10 @@
-#include"MovingPiece.h"
+#include"MovingPieceScene.h"
 #include"Application.h"
 #include"SelectingPieceScene.h"
 #include<cmath>
 
 // 駒操作シーン動作
-std::unique_ptr<I_SceneState> MovingPiece::ExeSceneOperation(
+std::unique_ptr<I_SceneState> MovingPieceScene::ExeSceneProcess(
     UCHAR inputMemory,
     int cursorX,
     int cursorY,
@@ -65,13 +65,13 @@ std::unique_ptr<I_SceneState> MovingPiece::ExeSceneOperation(
 
 
 // 決定ボタン
-std::unique_ptr<I_SceneState> MovingPiece::ExeDecisionButton()
+std::unique_ptr<I_SceneState> MovingPieceScene::ExeDecisionButton()
 {
     return nullptr;
 }
 
 // キャンセルボタン処理
-std::unique_ptr<I_SceneState> MovingPiece::ExeCancelButton()
+std::unique_ptr<I_SceneState> MovingPieceScene::ExeCancelButton()
 {
     std::unique_ptr<I_SceneState> newSceneState;
     if (_isMoved) // 駒を動かしていたら駒を初期位置に戻し、カメラとフォーカスを平行移動する
@@ -115,7 +115,7 @@ std::unique_ptr<I_SceneState> MovingPiece::ExeCancelButton()
 }
 
 // 駒とカメラを動かす
-void MovingPiece::MovePieceAndCamera(DirectX::XMFLOAT3 vec)
+void MovingPieceScene::MovePieceAndCamera(DirectX::XMFLOAT3 vec)
 {
     _piece->Move(vec);
     _mainCamera->MoveCameraPos(vec);
@@ -124,7 +124,7 @@ void MovingPiece::MovePieceAndCamera(DirectX::XMFLOAT3 vec)
 }
 
 // マウス移動処理
-void MovingPiece::ExeMouseMove(int xMove, int yMove)
+void MovingPieceScene::ExeMouseMove(int xMove, int yMove)
 {
     float fx = xMove / 1000.0f;
     float fy = yMove / 1000.0f;
@@ -137,7 +137,7 @@ void MovingPiece::ExeMouseMove(int xMove, int yMove)
 
 
 
-MovingPiece::MovingPiece(I_Piece* piece)
+MovingPieceScene::MovingPieceScene(I_Piece* piece)
 {
     _piece = piece; // 操作対象の駒を取得
     _mainCamera = Application::GetInstance().GetMainCamera(); // メインカメラ取得
@@ -176,4 +176,4 @@ MovingPiece::MovingPiece(I_Piece* piece)
     Application::GetInstance().SetIsDrawMap(true);
 }
 
-MovingPiece::~MovingPiece(){}
+MovingPieceScene::~MovingPieceScene(){}

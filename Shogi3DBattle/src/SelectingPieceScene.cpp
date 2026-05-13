@@ -1,64 +1,93 @@
 #include"SelectingPieceScene.h"
 #include"Application.h"
-#include"MovingPiece.h"
-#include"TitleMenu.h"
+#include"MovingPieceScene.h"
+#include"TitleScene.h"
 #include"PersProjMat.h"
 #include"NonePersProjMat.h"
 
+// ボタンUIセット
+void SelectingPieceScene::SetButton()
+{
+    auto& app = Application::GetInstance();
+
+    auto board     = app.GetBoard();
+    auto squareNum = board->GetBoardSquareNum();
+
+    auto gameWindow   = app.GetGameWindow();
+    auto windowWidth  = gameWindow->GetWindowWidth();
+    auto windowHeight = gameWindow->GetWindowHeight();
+
+    auto squareSize     = windowHeight / static_cast<float>(squareNum + 2); // マス１辺のサイズ
+    auto halfSquareSize = squareSize / 2.0f;                                // マス半分のサイズ
+
+    auto boardSize = (squareSize*squareNum) + (halfSquareSize*2); // 将棋盤サイズ
+
+    auto boardRightTopX = windowWidth - ((windowWidth-boardSize)/2.0f);
+    auto boardRightTopY = halfSquareSize;
+    auto square1x1LeftTopX = boardRightTopX - halfSquareSize - squareSize;
+    auto square1x1LeftTopY = boardRightTopY + halfSquareSize;
+
+    auto piecePosManager = Application::GetInstance().GetPiecePosManager(); // 駒の位置マネージャ取得
+    for (unsigned int row = 1; row <= squareNum; row++)
+    {
+        for (unsigned int column = 1; column<= squareNum; column++)
+        {
+            auto piece = piecePosManager->GetPlacedPiece(row, column); // 対象マスに位置する駒を取得
+            if(!piece) continue; // 駒がいなければスキップ
+
+            auto squareLeftTopX = square1x1LeftTopX - (column-1)*squareSize; // マス左上X座標
+            auto squareLeftTopY = square1x1LeftTopY + (row   -1)*squareSize; // マス左上Y座標
+            auto squareRightBottomX = squareLeftTopX + squareSize;
+            auto squareRightBottomY = squareLeftTopY + squareSize;
+
+            D2D1_RECT_F rect = {
+                squareLeftTopX,
+                squareLeftTopY,
+                squareRightBottomX,
+                squareRightBottomY
+            };
+            
+            app.PushPieceButton(PieceButtonType::SELECT_PIECE_BUTTON, rect, piece);
+        }
+    }
+
+    //auto squareLeftTopX = boardLeftBottomX + halfSquareSize;
+    //auto squareLeftTopY = boardLeftBottomY - halfSquareSize - squareSize;
+    //auto squareRightBottomX = squareLeftTopX + squareSize;
+    //auto squareRightBottomY = squareLeftTopY + squareSize;
+
+    //auto piecePosManager = Application::GetInstance().GetPiecePosManager(); // 駒の位置マネージャ取得
+    //auto piece = piecePosManager->GetPlacedPiece(9, 5);
+
+
+}
+
 // 駒選択シーン動作
-std::unique_ptr<I_SceneState> SelectingPieceScene::ExeSceneOperation(
+std::unique_ptr<I_SceneState> SelectingPieceScene::ExeSelectingButtonSceneOperation(
     UCHAR inputMemory,
     int cursorX,
     int cursorY,
     int cursorXMove,
     int cursorYMove)
 {
-    // 選択されている駒をチェック
-    _selectedPiece = nullptr;
-    auto piecePosManager = Application::GetInstance().GetPiecePosManager(); // 駒の位置マネージャ取得
-    _selectedPiece = piecePosManager->GetPlacedPiece(9, 5);
-
     if(inputMemory & InputHandler::DECISION)
-        return ExeDecisionButton();
+        return ExeDecisionButtonProcess();
     if(inputMemory & InputHandler::CANCEL)
         return ExeCancelButton();
 
     return nullptr;
 }
 
-// 決定ボタン
-std::unique_ptr<I_SceneState> SelectingPieceScene::ExeDecisionButton()
-{
-
-    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<MovingPiece>(_selectedPiece); // 駒操作シーンに遷移する
-    ReversProjMat(); // メインカメラをパース付きに戻す
-
-    auto inputHandler = Application::GetInstance().GetInputHandler();
-    inputHandler->RemoveLClick();
-
-    return newSceneState;
-}
-
 // キャンセルボタン処理
 std::unique_ptr<I_SceneState> SelectingPieceScene::ExeCancelButton()
 {
-    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<TitleMenu>(); // スタートメニューに遷移する
-    ReversProjMat(); // メインカメラをパース付きに戻す
+    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<TitleScene>(); // スタートメニューに遷移する
 
     auto inputHandler = Application::GetInstance().GetInputHandler();
     inputHandler->RemoveRClick();
 
     return newSceneState;
 }
-
-// パース付きプロジェクション行列に戻す
-void SelectingPieceScene::ReversProjMat()
-{
-    PersProjMat* persProjMat = new PersProjMat;
-    *persProjMat = _oldPersProjMat;
-    _mainCamera->SetProjMat(persProjMat);
-}
-
 
 
 
@@ -85,4 +114,10 @@ SelectingPieceScene::SelectingPieceScene()
     _mainCamera->SetProjMat(nonePersProjMat);
 }
 
-SelectingPieceScene::~SelectingPieceScene(){}
+SelectingPieceScene::~SelectingPieceScene()
+{
+    // カメラをパース付きプロジェクション行列に戻す
+    PersProjMat* persProjMat = new PersProjMat;
+    *persProjMat = _oldPersProjMat;
+    _mainCamera->SetProjMat(persProjMat);
+}

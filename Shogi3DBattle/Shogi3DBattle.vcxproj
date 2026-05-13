@@ -77,11 +77,11 @@
     <ClCompile Include="src\SelectPieceButton.cpp" />
     <ClCompile Include="src\Silver.cpp" />
     <ClCompile Include="src\TextUI.cpp" />
-    <ClCompile Include="src\TitleMenu.cpp" />
+    <ClCompile Include="src\TitleScene.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyMap.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MovingPiece.cpp" />
+    <ClCompile Include="src\MovingPieceScene.cpp" />
     <ClCompile Include="src\PShaderResourceStates.cpp" />
     <ClCompile Include="src\ReadResourceStates.cpp" />
     <ClCompile Include="src\RenderTexBuffFactory.cpp" />
@@ -130,6 +130,7 @@
     <ClInclude Include="header\I_ProjMat.h" />
     <ClInclude Include="header\I_SelectingButtonScene.h" />
     <ClInclude Include="header\I_PieceButton.h" />
+    <ClInclude Include="header\PieceButtonType.h" />
     <ClInclude Include="header\PiecePosManager.h" />
     <ClInclude Include="header\PlayerSide.h" />
     <ClInclude Include="header\I_TextButton.h" />
@@ -177,7 +178,7 @@
     <ClInclude Include="header\Rook.h" />
     <ClInclude Include="header\SelectingPieceScene.h" />
     <ClInclude Include="header\Silver.h" />
-    <ClInclude Include="header\TitleMenu.h" />
+    <ClInclude Include="header\TitleScene.h" />
     <ClInclude Include="header\Text2D.h" />
     <ClInclude Include="header\IResourceDesc.h" />
     <ClInclude Include="header\IResourceStates.h" />
@@ -187,7 +188,7 @@
     <ClInclude Include="header\CSUHeap.h" />
     <ClInclude Include="header\InputHandler.h" />
     <ClInclude Include="header\KeyMap.h" />
-    <ClInclude Include="header\MovingPiece.h" />
+    <ClInclude Include="header\MovingPieceScene.h" />
     <ClInclude Include="header\PShaderResourceStates.h" />
     <ClInclude Include="header\ReadResourceStates.h" />
     <ClInclude Include="header\RenderTexBuffFactory.h" />
@@ -203,7 +204,7 @@
     <ClInclude Include="header\TexBuffFactory.h" />
     <ClInclude Include="header\TexHeapProp.h" />
     <ClInclude Include="header\TexResourceDesc.h" />
-    <ClInclude Include="header\ButtonType.h" />
+    <ClInclude Include="header\TextButtonType.h" />
     <ClInclude Include="header\UI.h" />
     <ClInclude Include="header\UIType.h" />
     <ClInclude Include="header\UploadHeapProp.h" />

@@ -4,7 +4,7 @@
 #include"I_Piece.h"
 #include"Camera.h"
 
-class MovingPiece : public I_SceneState
+class MovingPieceScene : public I_SceneState
 {
 private:
     I_Piece* _piece;     // ‘€ì‚µ‚Ä‚¢‚é‹î
@@ -20,17 +20,17 @@ private:
 
     void MovePieceAndCamera(DirectX::XMFLOAT3 vec); // ‹î‚ÆƒJƒƒ‰‚ğ“®‚©‚·
 
-    MovingPiece(){}
+    MovingPieceScene(){}
 
 public:
     // ‹î‘€ìƒV[ƒ““®ì
-    std::unique_ptr<I_SceneState> ExeSceneOperation(
+    std::unique_ptr<I_SceneState> ExeSceneProcess(
         unsigned char inputMemory,
         int cursorX,
         int cursorY,
         int cursorXMove,
         int cursorYMove) override;
 
-    MovingPiece(I_Piece* piece);
-    ~MovingPiece();
+    MovingPieceScene(I_Piece* piece);
+    ~MovingPieceScene();
 };

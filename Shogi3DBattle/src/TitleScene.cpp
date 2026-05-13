@@ -1,8 +1,8 @@
-#include"TitleMenu.h"
+#include"TitleScene.h"
 #include"Application.h"
 
 // テキストUIセット
-void TitleMenu::SetTextUI()
+void TitleScene::SetTextUI()
 {
     auto& app = Application::GetInstance();
 
@@ -41,7 +41,7 @@ void TitleMenu::SetTextUI()
 }
 
 // ボタンUIセット
-void TitleMenu::SetButton()
+void TitleScene::SetButton()
 {
     auto& app = Application::GetInstance();
 
@@ -64,26 +64,26 @@ void TitleMenu::SetButton()
 
     // はじめからボタン
     rect = {left, top, right, bottom};
-    app.PushButton(ButtonType::NEW_START_BUTTON, rect);
+    app.PushTextButton(TextButtonType::NEW_START_BUTTON, rect);
 
     // つづきからボタン
     rect.top    += heightOffset;
     rect.bottom += heightOffset;
-    app.PushButton(ButtonType::CONTINUE_START_BUTTON, rect);
+    app.PushTextButton(TextButtonType::CONTINUE_START_BUTTON, rect);
 
     // オプションボタン
     rect.top    += heightOffset;
     rect.bottom += heightOffset;
-    app.PushButton(ButtonType::OPTION_BUTTON, rect);
+    app.PushTextButton(TextButtonType::OPTION_BUTTON, rect);
 
     // ゲーム終了ボタン
     rect.top    += heightOffset;
     rect.bottom += heightOffset;
-    app.PushButton(ButtonType::EXIT_GAME_BUTTON, rect);
+    app.PushTextButton(TextButtonType::EXIT_GAME_BUTTON, rect);
 }
 
 // タイトル画面シーン動作
-std::unique_ptr<I_SceneState> TitleMenu::ExeSelectingButtonSceneOperation(
+std::unique_ptr<I_SceneState> TitleScene::ExeSelectingButtonSceneOperation(
     unsigned char inputMemory,
     int cursorX,
     int cursorY,
@@ -104,30 +104,22 @@ std::unique_ptr<I_SceneState> TitleMenu::ExeSelectingButtonSceneOperation(
     std::unique_ptr<I_SceneState> newSceneState = nullptr;
 
     if (inputMemory & InputHandler::DECISION)  // 決定ボタン処理
-        newSceneState = ExeDecisionButton();
+        newSceneState = ExeDecisionButtonProcess();
     if(inputMemory & InputHandler::CANCEL)    // キャンセルボタン処理
         newSceneState = ExeCancelButton();
 
     return newSceneState;
 }
 
-// 決定ボタン
-std::unique_ptr<I_SceneState> TitleMenu::ExeDecisionButton()
-{
-    // ボタンUIが選択されていればボタン処理実行、選択されていなければ何もしない
-    return _selectingButton ?
-        _selectingButton->ExePushButtonProcess() : nullptr;
-}
-
 // キャンセルボタン処理
-std::unique_ptr<I_SceneState> TitleMenu::ExeCancelButton()
+std::unique_ptr<I_SceneState> TitleScene::ExeCancelButton()
 {
     auto gameWindow = Application::GetInstance().GetGameWindow();
     DestroyWindow(gameWindow->GetHWND());
     return nullptr;
 }
 
-TitleMenu::TitleMenu() : _isSetTextUI(false)
+TitleScene::TitleScene() : _isSetTextUI(false)
 {
     auto& app = Application::GetInstance();
 
