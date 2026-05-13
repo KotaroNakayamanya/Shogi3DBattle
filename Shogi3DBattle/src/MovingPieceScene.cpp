@@ -1,6 +1,7 @@
 #include"MovingPieceScene.h"
 #include"Application.h"
 #include"SelectingPieceScene.h"
+#include"VecCalc.h"
 #include<cmath>
 
 // 駒操作シーン動作
@@ -51,7 +52,7 @@ std::unique_ptr<I_SceneState> MovingPieceScene::ExeSceneProcess(
     }
 
     if(inputMemory & InputHandler::DECISION)  // 決定ボタン処理
-        return ExeDecisionButton();
+        return ExeDecisionButtonProcess();
     if(inputMemory & InputHandler::CANCEL)    // キャンセルボタン処理
         return ExeCancelButton();
 
@@ -61,13 +62,46 @@ std::unique_ptr<I_SceneState> MovingPieceScene::ExeSceneProcess(
     return newSceneState;
 }
 
+// ワールド行列から行位置を返す
+unsigned int MovingPieceScene::GetRowFromWorldMat(WorldMat worldMat)
+{
+    auto float4x4 = VecCalc::GetFoloat4x4FromMat(worldMat.GetMat());
+    auto y        = float4x4._42;
+    auto row      = static_cast<unsigned int>(std::round(y/10.0f));
 
+    return row;
+}
+
+// ワールド行列から列位置を返す
+unsigned int MovingPieceScene::GetColumnFromWorldMat(WorldMat worldMat)
+{
+    auto float4x4 = VecCalc::GetFoloat4x4FromMat(worldMat.GetMat());
+    auto x        = float4x4._41;
+    auto column   = static_cast<unsigned int>(std::round(x/10.0f));
+
+    return column;
+}
 
 
 // 決定ボタン
-std::unique_ptr<I_SceneState> MovingPieceScene::ExeDecisionButton()
+std::unique_ptr<I_SceneState> MovingPieceScene::ExeDecisionButtonProcess()
 {
-    return nullptr;
+    auto oldRow      = GetRowFromWorldMat   (_startWorldMat);
+    auto oldColumn   = GetColumnFromWorldMat(_startWorldMat);
+
+    auto newWorldMat = _piece->GetWorldMat();
+    auto newRow      = GetRowFromWorldMat   (*newWorldMat);
+    auto newColumn   = GetColumnFromWorldMat(*newWorldMat);
+
+    auto isChangedRow    = oldRow    != newRow;
+    auto isChangedColumn = oldColumn != newColumn;
+
+    if(!isChangedRow && !isChangedColumn) return nullptr; // 移動がなければ何もしない
+
+    auto piecePosManager = Application::GetInstance().GetPiecePosManager();
+    piecePosManager->PlacePiece(_piece, newRow, newColumn);
+
+    return std::make_unique<SelectingPieceScene>();
 }
 
 // キャンセルボタン処理
@@ -108,9 +142,6 @@ std::unique_ptr<I_SceneState> MovingPieceScene::ExeCancelButton()
         newSceneState = std::make_unique<SelectingPieceScene>();
     }
 
-    auto inputHandler = Application::GetInstance().GetInputHandler();
-    inputHandler->RemoveRClick();
-        
     return newSceneState;
 }
 
@@ -176,4 +207,9 @@ MovingPieceScene::MovingPieceScene(I_Piece* piece)
     Application::GetInstance().SetIsDrawMap(true);
 }
 
-MovingPieceScene::~MovingPieceScene(){}
+MovingPieceScene::~MovingPieceScene()
+{
+    // カーソル表示
+    auto gameWindow = Application::GetInstance().GetGameWindow();
+    gameWindow->ShowCursor();
+}

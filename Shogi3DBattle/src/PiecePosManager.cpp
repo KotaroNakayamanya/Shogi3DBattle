@@ -97,12 +97,12 @@ void PiecePosManager::InitPiecesPosBoard9x9(std::vector<I_Piece*> pieces)
         {
             if (_placedPiece[row-1][column-1] == nullptr) // 配置を試みる
             {
-                MovePiecePos(piece, row, column);
+                PlacePiece(piece, row, column);
                 isSet = true;
             }
             else if (_placedPiece[row-1][9 - column] == nullptr) // 既に配置されていたら、反対側の列に配置を試みる
             {
-                MovePiecePos(piece, row, 10-column);
+                PlacePiece(piece, row, 10-column);
                 isSet = true;
             }
             else // 反対側の列もすでに配置されているなら、配置場所の列を外側に1つ分ずらしてループに戻る
@@ -115,8 +115,13 @@ void PiecePosManager::InitPiecesPosBoard9x9(std::vector<I_Piece*> pieces)
 }
 
 // 駒を指定のマスへ移動
-void PiecePosManager::MovePiecePos(I_Piece* piece, unsigned int row, unsigned int column)
+void PiecePosManager::PlacePiece(I_Piece* piece, unsigned int row, unsigned int column)
 {
+    // 駒が位置していたマスを空にし、新しい場所に位置させる
+    for(auto& placedPiecesInRow : _placedPiece)
+        for(auto& placedPiece : placedPiecesInRow) 
+            if(placedPiece == piece)
+                placedPiece = nullptr;
     _placedPiece[row-1][column-1] = piece;
 
     auto worldMat = DirectX::XMMatrixIdentity();
@@ -131,9 +136,6 @@ void PiecePosManager::MovePiecePos(I_Piece* piece, unsigned int row, unsigned in
     auto worldMatObj = piece->GetWorldMat();
     worldMatObj->SetMat(worldMat);
 }
-
-
-
 
 // マスに位置している駒を返す
 I_Piece* PiecePosManager::GetPlacedPiece(unsigned int row, unsigned int column)

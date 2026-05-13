@@ -177,7 +177,13 @@ void Application::Run()
                 _inputHandler->GetCursorXMove(),
                 _inputHandler->GetCursorYMove());
             // シーン更新処理
-            if (newSceneState) _sceneState.swap(newSceneState);
+            if (newSceneState)
+            {
+                RemoveAllUI();                   // UI削除
+                _inputHandler->RemoveLClick();   // 決定ボタン長押し連続押下を回避
+                _inputHandler->RemoveRClick();   // キャンセルボタン長押し連続押下を回避
+                _sceneState.swap(newSceneState); // シーン更新
+            }
 
             // マウス移動操作を削除
             _inputHandler->RemoveMouseMove();

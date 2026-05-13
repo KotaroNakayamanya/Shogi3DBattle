@@ -9,18 +9,17 @@ class MovingPieceScene : public I_SceneState
 private:
     I_Piece* _piece;     // 操作している駒
     Camera* _mainCamera; // メインカメラ
-
     WorldMat _startWorldMat; // 初期ワールド行列
-
     bool _isMoved; // 駒が動いたかどうか確認
 
-    std::unique_ptr<I_SceneState> ExeDecisionButton(); // 決定ボタン処理
+    unsigned int GetRowFromWorldMat   (WorldMat worldMat); // ワールド行列から行位置を返す
+    unsigned int GetColumnFromWorldMat(WorldMat worldMat); // ワールド行列から列位置を返す
+
+    std::unique_ptr<I_SceneState> ExeDecisionButtonProcess(); // 決定ボタン処理
     std::unique_ptr<I_SceneState> ExeCancelButton(); // キャンセルボタン処理
     void ExeMouseMove(int xMove, int yMove); // カーソル操作処理
 
     void MovePieceAndCamera(DirectX::XMFLOAT3 vec); // 駒とカメラを動かす
-
-    MovingPieceScene(){}
 
 public:
     // 駒操作シーン動作
