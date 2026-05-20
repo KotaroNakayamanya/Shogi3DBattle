@@ -8,10 +8,10 @@ private:
     float _boardSize; // 将棋盤1辺の長さ
 
 public:
-    virtual unsigned int GetBoardSquareNum() = 0; // 将棋盤のマス数
+    virtual unsigned int GetBoardSquareNum() = 0; // 将棋盤のマス数を返す
 
     float GetBoardSize(); // 将棋盤1辺の長さを返す
 
-    I_Board(float size);
+    I_Board(GameObjType gameObjType, float size);
     virtual ~I_Board() = default;
 };

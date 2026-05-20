@@ -5,7 +5,8 @@
 float I_Board::GetBoardSize(){return _boardSize;} // 将棋盤1辺の長さを返す
 
 // 指定されたサイズの将棋盤頂点集合作成
-I_Board::I_Board(float boardSize) : _boardSize(boardSize)
+I_Board::I_Board(GameObjType gameObjType, float boardSize)
+    :I_GameObj(gameObjType), _boardSize(boardSize)
 {
     float thickness = boardSize * 0.8f;
 
@@ -50,4 +51,5 @@ I_Board::I_Board(float boardSize) : _boardSize(boardSize)
     verticesPtr->SetDatas(vertices);
     verticesPtr->SetGameObjId(GameObjIdManager::GetId());
     verticesPtr->SetBasicTexId    (static_cast<unsigned char>(BasicTexType::YELLOW_WOOD));
+    verticesPtr->SetMulDesignTexId(static_cast<unsigned char>(gameObjType));
 }

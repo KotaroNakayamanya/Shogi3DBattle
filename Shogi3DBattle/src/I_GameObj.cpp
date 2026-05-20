@@ -5,16 +5,9 @@ Vertices* I_GameObj::GetVertices()                    {return _vertices.get();} 
 
 WorldMat* I_GameObj::GetWorldMat()                    {return _worldMat.get();}    // ワールド行列セット 
 
-// ゲームオブジェクトタイプセット
-void I_GameObj::SetGameObjType(GameObjType type) 
-{
-    _gameObjType = type;
-    _vertices->SetMulDesignTexId(static_cast<unsigned char>(type));
-
-} 
 GameObjType I_GameObj::GetGameObjType(){return _gameObjType;} // ゲームオブジェクトタイプを返す
 
-I_GameObj::I_GameObj()
+I_GameObj::I_GameObj(GameObjType gameObjType) : _gameObjType(gameObjType)
 {
     _worldMat = std::make_unique<WorldMat>();
 }

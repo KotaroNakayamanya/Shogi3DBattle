@@ -127,7 +127,7 @@ TitleScene::TitleScene() : _isSetTextUI(false)
     _mainCamera = app.GetMainCamera();
     // フォーカス位置セット
     float focusX, focusY;
-    auto board = app.GetBoard();
+    auto board = app.GetGameObjects()->GetBoard();
     switch (board->GetGameObjType())
     {
         case GameObjType::BOARD_55:

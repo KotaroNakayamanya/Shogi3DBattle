@@ -10,7 +10,7 @@ void SelectingPieceScene::SetButton()
 {
     auto& app = Application::GetInstance();
 
-    auto board     = app.GetBoard();
+    auto board     = app.GetGameObjects()->GetBoard();
     auto squareNum = board->GetBoardSquareNum();
 
     auto gameWindow   = app.GetGameWindow();

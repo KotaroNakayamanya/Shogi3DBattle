@@ -77,15 +77,10 @@ void DX12::CreateBuff()
 {
     auto& app = Application::GetInstance();
     
-    
-    auto shogiObjects   = app.GetGameObjects();
-    auto allVertIndices = app.GetAllVertIndices();
+    auto gameObjects = app.GetGameObjects();
+    auto allGameObjects   = gameObjects->GetAllGameObjects();
+    auto allVertIndices = gameObjects->GetAllVertIndices();
 
-    std::vector<GameObjType> boardType =
-    {
-        GameObjType::BOARD_55,
-        GameObjType::BOARD_99
-    };
 
 
     // バックバッファ作成
@@ -108,7 +103,7 @@ void DX12::CreateBuff()
 
     // コンスタントバッファ作成
     unsigned int worldMatNum, viewProjNum, totalMatNum;
-    worldMatNum = static_cast<unsigned int>(shogiObjects.size());
+    worldMatNum = static_cast<unsigned int>(allGameObjects.size());
     viewProjNum = 1;
     totalMatNum = worldMatNum + viewProjNum;
     widthSize  = (sizeof(DirectX::XMMATRIX)*totalMatNum + 0xff) & ~0xff; // 256アラインメント
@@ -117,7 +112,7 @@ void DX12::CreateBuff()
 
     // 頂点バッファ作成
     widthSize = 0;
-    for(auto& shogiObj : shogiObjects) widthSize += sizeof(Vert) * static_cast<unsigned int>(shogiObj->GetVertices()->GetDatas().size());
+    for(auto& shogiObj : allGameObjects) widthSize += sizeof(Vert) * static_cast<unsigned int>(shogiObj->GetVertices()->GetDatas().size());
     heightSize = 1;
     _vertBuff = _device->CreateBuff(widthSize, heightSize, BuffType::VERTEX);
 
@@ -138,6 +133,11 @@ void DX12::CreateBuff()
     }
 
     // 将棋オブジェクト種類ごとのテクスチャバッファ作成
+    std::vector<GameObjType> boardType =
+    {
+        GameObjType::BOARD_55,
+        GameObjType::BOARD_99
+    };
     unsigned int gameObjTexNum;
     gameObjTexNum = static_cast<unsigned int>(GameObjType::TYPE_NUM);
     _shogiObjTexBuffs.resize(gameObjTexNum);
@@ -337,9 +337,7 @@ void DX12::CreateD2D()
     }
 
     // ラップされた駒テクスチャバッファ作成
-    unsigned int boardBuffNum, pieceBuffNum;
-    boardBuffNum = 2;
-    pieceBuffNum = static_cast<unsigned int>(_shogiObjTexBuffs.size()) - boardBuffNum;
+    unsigned int pieceBuffNum = 8;
     _wrappedPieceTexBuffs.resize(pieceBuffNum);
     for (UINT i = 0; i < pieceBuffNum; i++)
         _wrappedPieceTexBuffs[i] = _device11->CreateWrappedTexBuff(_shogiObjTexBuffs[i].Get());
@@ -432,13 +430,14 @@ std::unique_ptr<Direct2DFactory> DX12::CreateDirect2DFactory()
 void DX12::WriteToBuff()
 {
     auto& app    = Application::GetInstance();
-    auto  board  = app.GetBoard();
-    auto pieces = app.GetPieces();
+    auto  gameObjects = app.GetGameObjects();
+    auto  board  = gameObjects->GetBoard();
+    auto  pieces = gameObjects->GetPieces();
     auto woodTexs = app.GetWoodTexs();
 
     auto boardLineTexs = app.GetBoardLineTexs();
-    auto boardVertIndices = app.GetBoardVertIndices();
-    auto pieceVertIndices = app.GetPieceVertIndices();
+    auto boardVertIndices = gameObjects->GetBoardVertIndices();
+    auto pieceVertIndices = gameObjects->GetPieceVertIndices();
 
     auto mainCamera = app.GetMainCamera();
     auto mapCamera  = app.GetMapCamera();
@@ -645,8 +644,9 @@ void DX12::InitRenderTarget()
 void DX12::ExeD3D()
 {
     auto& app    = Application::GetInstance();
-    auto  board  = app.GetBoard();
-    auto pieces = app.GetPieces();
+    auto  gameObjects = app.GetGameObjects();
+    auto  board  = gameObjects->GetBoard();
+    auto pieces = gameObjects->GetPieces();
 
     auto mainCamera = app.GetMainCamera();
     auto mapCamera = app.GetMapCamera();
@@ -709,9 +709,11 @@ void DX12::ExeD3D()
 // ゲームオブジェクト描画コマンドセット
 void DX12::SetCommandDrawGameObj()
 {
+    auto gameObjects = Application::GetInstance().GetGameObjects();
+
     // 将棋盤描画コマンドセット
-    auto board  = Application::GetInstance().GetBoard();
-    auto boardVertIndices = Application::GetInstance().GetBoardVertIndices();
+    auto board  = gameObjects->GetBoard();
+    auto boardVertIndices = gameObjects->GetBoardVertIndices();
     auto idxBuffView = GetIdxBuffView(boardVertIndices);
     _cmdList->IASetIndexBuffer(&idxBuffView);
     auto vertBuffView = GetVertBuffView(static_cast<Vertices*>(board->GetVertices()));
@@ -720,8 +722,8 @@ void DX12::SetCommandDrawGameObj()
     _cmdList->DrawIndexedInstanced(static_cast<unsigned int>(boardVertIndices->GetDatas().size()), 1, 0, 0, 0);
 
     // 駒描画コマンドセット
-    auto pieces = Application::GetInstance().GetPieces();
-    auto  pieceVertIndices = Application::GetInstance().GetPieceVertIndices();
+    auto pieces = gameObjects->GetPieces();
+    auto  pieceVertIndices = gameObjects->GetPieceVertIndices();
     idxBuffView = GetIdxBuffView(pieceVertIndices);
     _cmdList->IASetIndexBuffer(&idxBuffView);
     for (UINT i = 0; i < pieces.size(); i++)

@@ -14,12 +14,11 @@ private:
 
 protected:
     void SetVertices   (std::unique_ptr<Vertices> uniquePtr); // 頂点集合セット
-    void SetGameObjType(GameObjType type);                    // ゲームオブジェクトタイプセット
     
 public:
     Vertices*   GetVertices();    // 頂点集合を返す
     WorldMat*   GetWorldMat();    // ワールド行列を返す 
     GameObjType GetGameObjType(); // ゲームオブジェクトタイプを返す
 
-    I_GameObj();
+    I_GameObj(GameObjType gameObjType);
 };

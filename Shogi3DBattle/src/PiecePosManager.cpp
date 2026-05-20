@@ -1,15 +1,19 @@
 #include"PiecePosManager.h"
+#include"Application.h"
 #include<cassert>
 #include<functional>
 
 // 駒の位置を初期化
-void PiecePosManager::InitPiecesPos(std::vector<I_Piece*> pieces, I_Board* board)
+void PiecePosManager::InitPiecesPos()
 {
+    // 将棋盤取得
+    auto board = Application::GetInstance().GetGameObjects()->GetBoard();
+
     switch (board->GetGameObjType())
     {
         case GameObjType::BOARD_99:
             ResizePlacedPieceVec(9);
-            InitPiecesPosBoard9x9(pieces);
+            InitPiecesPosBoard9x9();
             break;
 
         default:
@@ -20,17 +24,20 @@ void PiecePosManager::InitPiecesPos(std::vector<I_Piece*> pieces, I_Board* board
 // 駒位置記録用の変数のサイズを変更
 void PiecePosManager::ResizePlacedPieceVec(unsigned int squareNum)
 {
-    _placedPiece.clear();
-    _placedPiece.resize(squareNum);
-    for(auto& piecePosOnRow : _placedPiece) piecePosOnRow.resize(squareNum);
+    _piecePlacedOnBoard.clear();
+    _piecePlacedOnBoard.resize(squareNum);
+    for(auto& piecePosOnRow : _piecePlacedOnBoard) piecePosOnRow.resize(squareNum);
 }
 
 
 
 
 // 9x9将棋盤の初期位置へ駒を移動
-void PiecePosManager::InitPiecesPosBoard9x9(std::vector<I_Piece*> pieces)
+void PiecePosManager::InitPiecesPosBoard9x9()
 {
+    // 駒取得
+    auto pieces = Application::GetInstance().GetGameObjects()->GetPieces();
+
     for (auto piece : pieces)
     {
         // 中央（5五...vectorでは[4][4]）からずらして配置させる
@@ -95,14 +102,14 @@ void PiecePosManager::InitPiecesPosBoard9x9(std::vector<I_Piece*> pieces)
         auto isSet = false;
         while (!isSet)
         {
-            if (_placedPiece[row-1][column-1] == nullptr) // 配置を試みる
+            if (_piecePlacedOnBoard[row-1][column-1] == nullptr) // 配置を試みる
             {
-                PlacePiece(piece, row, column);
+                PlacePieceOnBoard(piece, row, column);
                 isSet = true;
             }
-            else if (_placedPiece[row-1][9 - column] == nullptr) // 既に配置されていたら、反対側の列に配置を試みる
+            else if (_piecePlacedOnBoard[row-1][9 - column] == nullptr) // 既に配置されていたら、反対側の列に配置を試みる
             {
-                PlacePiece(piece, row, 10-column);
+                PlacePieceOnBoard(piece, row, 10-column);
                 isSet = true;
             }
             else // 反対側の列もすでに配置されているなら、配置場所の列を外側に1つ分ずらしてループに戻る
@@ -115,14 +122,14 @@ void PiecePosManager::InitPiecesPosBoard9x9(std::vector<I_Piece*> pieces)
 }
 
 // 駒を指定のマスへ移動
-void PiecePosManager::PlacePiece(I_Piece* piece, unsigned int row, unsigned int column)
+void PiecePosManager::PlacePieceOnBoard(I_Piece* piece, unsigned int row, unsigned int column)
 {
     // 駒が位置していたマスを空にし、新しい場所に位置させる
-    for(auto& placedPiecesInRow : _placedPiece)
+    for(auto& placedPiecesInRow : _piecePlacedOnBoard)
         for(auto& placedPiece : placedPiecesInRow) 
             if(placedPiece == piece)
                 placedPiece = nullptr;
-    _placedPiece[row-1][column-1] = piece;
+    _piecePlacedOnBoard[row-1][column-1] = piece;
 
     auto worldMat = DirectX::XMMatrixIdentity();
 
@@ -140,5 +147,5 @@ void PiecePosManager::PlacePiece(I_Piece* piece, unsigned int row, unsigned int 
 // マスに位置している駒を返す
 I_Piece* PiecePosManager::GetPlacedPiece(unsigned int row, unsigned int column)
 {
-    return _placedPiece[row-1][column-1];
+    return _piecePlacedOnBoard[row-1][column-1];
 }

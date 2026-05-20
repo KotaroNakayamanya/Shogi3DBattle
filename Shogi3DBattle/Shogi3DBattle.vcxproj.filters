@@ -507,29 +507,35 @@
     <ClCompile Include="src\TextUI.cpp">
       <Filter>ソース ファイル\ui</Filter>
     </ClCompile>
-    <ClCompile Include="src\I_GameObj.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\PiecePosManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\I_ProjMat.cpp">
       <Filter>ソース ファイル\buffered_data\mat\proj_mat</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\I_TextButton.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\I_PieceButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
+    <ClCompile Include="src\I_GameObj.cpp">
+      <Filter>ソース ファイル\buffered_data</Filter>
+    </ClCompile>
     <ClCompile Include="src\SelectPieceButton.cpp">
+      <Filter>ソース ファイル\ui\button</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\I_TextButton.cpp">
+      <Filter>ソース ファイル\ui\button</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CubeVertIndices.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SideBoard.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObjects.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="header\Application.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="header\DX12.h">
       <Filter>ヘッダー ファイル\dx12</Filter>
     </ClInclude>
@@ -860,7 +866,19 @@
     <ClInclude Include="header\SelectPieceButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
+    <ClInclude Include="header\Application.h">
+      <Filter>ソース ファイル\buffered_data</Filter>
+    </ClInclude>
     <ClInclude Include="header\PieceButtonType.h">
+      <Filter>ヘッダー ファイル\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CubeVertIndices.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\SideBoard.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GameObjects.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

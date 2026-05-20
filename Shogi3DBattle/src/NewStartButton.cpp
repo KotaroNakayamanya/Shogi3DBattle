@@ -5,16 +5,12 @@
 // はじめからボタン押下処理
 std::unique_ptr<I_SceneState> NewStartButton::ExePushButtonProcess()
 {
+    // 駒の位置を初期化
+    auto piecePosManager = Application::GetInstance().GetPiecePosManager();
+    piecePosManager->InitPiecesPos();
+
     // 駒選択シーンに遷移
     auto newSceneState = std::make_unique<SelectingPieceScene>();
-
-    // UI削除
-    auto& app = Application::GetInstance();
-    app.RemoveAllUI();
-
-    // 左クリックを解除
-    auto inputHandler = app.GetInputHandler();
-    inputHandler->RemoveLClick();
 
     return newSceneState;
 }

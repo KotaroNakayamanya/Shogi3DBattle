@@ -39,46 +39,16 @@
 // 初期処理
 void Application::Init()
 {   
-    CreateGameObj(); // ゲームオブジェクト作成
+    _gameObjects->CreateGameObjects(); // ゲームオブジェクト作成
     CreateTex();      // テクスチャ作成
     CreateCamera();   // カメラ作成
     InitKeyMap();     // 操作ボタン設定
     InitSceneState(); // シーンステート初期処理
 
-    _gameWindow->InitGameWindow();      // ゲームウインドウ初期処理
+    _gameWindow->InitGameWindow(); // ゲームウインドウ初期処理
     _dx12->InitDX12(); // DirectX12初期処理
 
-    // 駒の初期位置調整
-    _piecePosManager->InitPiecesPos(GetPieces(), GetBoard());
-}
-
-
-
-
-// ゲームオブジェクト作成
-void Application::CreateGameObj()
-{
-    // 将棋盤作成 
-    _board = std::make_unique<Board9x9>();               // 9x9将棋盤作成 
-    _boardIndices = std::make_unique<BoardVertIndices>();// 将棋盤インデックス作成
-
-    // 駒作成 
-    CreatePlayerPieces(PlayerSide::PLAYER_1); // プレイヤー1の駒作成
-    CreatePlayerPieces(PlayerSide::PLAYER_2); // プレイヤー2の駒作成
-    _pieceIndices = std::make_unique<PieceVertIndices>(); // 駒の頂点インデックス集合作成
-}
-
-// プレイヤーごとの駒作成
-void Application::CreatePlayerPieces(PlayerSide playerSide)
-{
-    for (int i = 0; i < 1; i++) _pieces.push_back(std::make_unique<King>  (playerSide)); // 王 作成
-    for (int i = 0; i < 1; i++) _pieces.push_back(std::make_unique<Rook>  (playerSide)); // 飛 作成
-    for (int i = 0; i < 1; i++) _pieces.push_back(std::make_unique<Bishop>(playerSide)); // 角 作成
-    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<Gold>  (playerSide)); // 金 作成
-    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<Silver>(playerSide)); // 銀 作成
-    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<Knight>(playerSide)); // 桂 作成
-    for (int i = 0; i < 2; i++) _pieces.push_back(std::make_unique<Lance> (playerSide)); // 香 作成
-    for (int i = 0; i < 9; i++) _pieces.push_back(std::make_unique<Pawn>  (playerSide)); // 歩 作成 
+    _piecePosManager->InitPiecesPos(); // 駒の位置初期化
 }
 
 // テクスチャ作成
@@ -110,7 +80,8 @@ void Application::CreateCamera()
 
     // マップカメラ
     // ビュー行列作成
-    auto boardSize = _board->GetBoardSize();
+    auto board = _gameObjects->GetBoard();
+    auto boardSize = board->GetBoardSize();
     auto centerPos = boardSize / 2.0f;
     DirectX::XMFLOAT3 eye   = {centerPos, centerPos, -5.0f};
     DirectX::XMFLOAT3 focus = {centerPos, centerPos,  0.0f};
@@ -347,6 +318,7 @@ LRESULT CALLBACK WindowProcedure(
     return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
+GameObjects*     Application::GetGameObjects    (){return _gameObjects.get();}     // ゲームオブジェクトを返す
 DX12*            Application::GetDX12           (){return _dx12.get();}            // DirectX12を返す
 GameWindow*      Application::GetGameWindow     (){return _gameWindow.get();}      // ゲームウインドウオブジェクトを返す
 InputHandler*    Application::GetInputHandler   (){return _inputHandler.get();}    // インプットハンドラを返す
@@ -370,18 +342,7 @@ std::vector<I_Texture*> Application::GetBoardLineTexs()
 
     return vec;
 }
-NaturalBufferedData<unsigned short>* Application::GetBoardVertIndices(){return _boardIndices.get();} // 駒の頂点インデックスを返す
-NaturalBufferedData<unsigned short>* Application::GetPieceVertIndices(){return _pieceIndices.get();} // 駒の頂点インデックスを返す
-I_Board* Application::GetBoard(){return _board.get();} // 将棋盤を返す
-// 駒を返す
-std::vector<I_Piece*> Application::GetPieces()
-{
-    std::vector<I_Piece*> vec;
-    for(auto& ele : _pieces) vec.push_back(ele.get());
-
-    return vec;
-} 
-KeyMap* Application::GetKeyMap(){return _keyMap.get();} // 将棋盤頂点インデックスを返す
+KeyMap* Application::GetKeyMap(){return _keyMap.get();} // キー割り当てを返す
 
 void Application::SetIsDrawMap(bool flag){_isDrawMap = flag;} // マップ描画フラグをセット
 bool Application::IsDrawMap()            {return _isDrawMap;} // マップ描画フラグを返す
@@ -425,31 +386,6 @@ std::vector<I_Button*> Application::GetButtons()
     return vec;
 }
 
-// すべての将棋オブジェクトを返す
-std::vector<I_GameObj*> Application::GetGameObjects()
-{
-    std::vector<I_GameObj*> shogiObjects;
-
-    // 将棋盤を格納
-    shogiObjects.push_back(_board.get());
-    // 駒を格納
-    for(auto& piece : _pieces) shogiObjects.push_back(piece.get());
-
-    return shogiObjects;
-}
-
-// すべての頂点インデックスを返す
-std::vector<NaturalBufferedData<unsigned short>*> Application::GetAllVertIndices()
-{
-    std::vector<NaturalBufferedData<unsigned short>*> allVertIndices;
-
-    // 将棋盤を格納
-    allVertIndices.push_back(_boardIndices.get());
-    // 駒を格納
-    allVertIndices.push_back(_pieceIndices.get());
-
-    return allVertIndices;
-}
 // テキストUIをプッシュ
 void::Application::PushTextUI(Text2D text2D)
 {
@@ -537,6 +473,7 @@ Application::Application()
 {
     _gameWindow = std::make_unique<GameWindow>();
     _dx12 = std::make_unique<DX12>();
+    _gameObjects = std::make_unique<GameObjects>();
     _piecePosManager = std::make_unique<PiecePosManager>();
 
     _keyMap = std::make_unique<KeyMap>();

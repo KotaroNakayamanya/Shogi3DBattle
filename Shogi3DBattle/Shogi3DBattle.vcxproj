@@ -31,9 +31,11 @@
     <ClCompile Include="src\BoardVertIndices.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
+    <ClCompile Include="src\CubeVertIndices.cpp" />
     <ClCompile Include="src\Direct2DDevice.cpp" />
     <ClCompile Include="src\Direct2DFactory.cpp" />
     <ClCompile Include="src\ExitGameButton.cpp" />
+    <ClCompile Include="src\GameObjects.cpp" />
     <ClCompile Include="src\Gold.cpp" />
     <ClCompile Include="src\I_Board.cpp" />
     <ClCompile Include="src\I_Button.cpp" />
@@ -75,6 +77,7 @@
     <ClCompile Include="src\Rook.cpp" />
     <ClCompile Include="src\SelectingPieceScene.cpp" />
     <ClCompile Include="src\SelectPieceButton.cpp" />
+    <ClCompile Include="src\SideBoard.cpp" />
     <ClCompile Include="src\Silver.cpp" />
     <ClCompile Include="src\TextUI.cpp" />
     <ClCompile Include="src\TitleScene.cpp" />
@@ -115,9 +118,11 @@
     <ClInclude Include="header\Board9x9Texture.h" />
     <ClInclude Include="header\BoardTexture.h" />
     <ClInclude Include="header\BoardVertIndices.h" />
+    <ClInclude Include="header\CubeVertIndices.h" />
     <ClInclude Include="header\Device11AndDeviceContext.h" />
     <ClInclude Include="header\Direct2DDevice.h" />
     <ClInclude Include="header\Direct2DFactory.h" />
+    <ClInclude Include="header\GameObjects.h" />
     <ClInclude Include="header\HeapType.h" />
     <ClInclude Include="header\I_Button.h" />
     <ClInclude Include="header\I_Board.h" />
@@ -135,6 +140,7 @@
     <ClInclude Include="header\PlayerSide.h" />
     <ClInclude Include="header\I_TextButton.h" />
     <ClInclude Include="header\SelectPieceButton.h" />
+    <ClInclude Include="header\SideBoard.h" />
     <ClInclude Include="header\TextUI.h" />
     <ClInclude Include="header\NewStartButton.h" />
     <ClInclude Include="header\Camera.h" />

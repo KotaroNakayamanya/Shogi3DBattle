@@ -15,7 +15,7 @@ void I_Piece::Move(DirectX::XMFLOAT3 vec)
 PlayerSide I_Piece::GetPlayerSide(){return _playerSide;} // 駒所有プレイヤーを返す
 
 I_Piece::I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, PlayerSide playerSide)
-    : _playerSide(playerSide)
+    : I_GameObj(pieceType), _playerSide(playerSide)
 {
     // 指定されたサイズの駒の頂点集合作成
 
@@ -147,5 +147,5 @@ I_Piece::I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, Pla
     if(playerSide == PlayerSide::PLAYER_2) worldMat *= DirectX::XMMatrixRotationZ(DirectX::XM_PI);
     worldMatPtr->SetMat(worldMat);
 
-    SetGameObjType(pieceType);
+    verticesPtr->SetMulDesignTexId(static_cast<unsigned char>(pieceType));
 }

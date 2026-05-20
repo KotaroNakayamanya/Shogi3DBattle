@@ -2,6 +2,7 @@
 
 #include"GameWindow.h"
 #include"DX12.h"
+#include"GameObjects.h"
 #include"InputHandler.h"
 #include"I_SceneState.h"
 #include"PiecePosManager.h"
@@ -18,10 +19,13 @@
 #include"KeyMap.h"
 
 #include"I_Texture.h"
-#include"I_Piece.h"
+
+#include"SideBoard.h"
 #include"I_Board.h"
+#include"I_Piece.h"
 
 #include"BoardVertIndices.h"
+#include"CubeVertIndices.h"
 #include"PieceVertIndices.h"
 
 class Application
@@ -29,18 +33,11 @@ class Application
 private:
     bool _isDrawMap = false;
 
-    std::unique_ptr<GameWindow> _gameWindow; // ゲームウインドウ
-    std::unique_ptr<DX12>       _dx12;       // DirectX
+    std::unique_ptr<GameObjects> _gameObjects; // ゲームオブジェクト
+    std::unique_ptr<GameWindow>  _gameWindow;  // ゲームウインドウ
+    std::unique_ptr<DX12>        _dx12;        // DirectX
 
-
-    // 将棋オブジェクト
-    std::unique_ptr<I_Board>          _board;        // 将棋盤
-    std::unique_ptr<BoardVertIndices> _boardIndices; // 将棋盤の頂点インデックス
-    std::vector<std::unique_ptr<I_Piece>> _pieces;       // 駒
-    std::unique_ptr<PieceVertIndices>     _pieceIndices; // 駒の頂点インデックス
     std::unique_ptr<PiecePosManager> _piecePosManager; // 駒の位置マネージャ
-    void CreateGameObj(); // 将棋オブジェクト作成
-    void CreatePlayerPieces(PlayerSide playerSide); // プレイヤーごとの駒作成
 
     // テクスチャ
     std::vector<std::unique_ptr<I_Texture>> _woodTexs; // 木材テクスチャ
@@ -76,21 +73,16 @@ public:
     void Run();  // ゲーム実行処理
     void Exit(); // 終了処理
 
+    GameObjects* GetGameObjects(); // ゲームオブジェクトを返す
     DX12* GetDX12(); // DirectX12を返す
     GameWindow* GetGameWindow(); // ゲームウインドウオブジェクトを返す
     InputHandler* GetInputHandler(); // インプットハンドラを返す
     PiecePosManager* GetPiecePosManager(); // 駒の位置マネージャを返す
 
-    I_Board* GetBoard(); // 将棋盤を返す
-    std::vector<I_Piece*> GetPieces(); // 駒を返す
     std::vector<I_Texture*> GetWoodTexs(); // 木材テクスチャを返す
     std::vector<I_Texture*> GetBoardLineTexs(); // 将棋盤黒線テクスチャを返す
-    NaturalBufferedData<unsigned short>* GetBoardVertIndices(); // 将棋盤頂点インデックスを返す
-    NaturalBufferedData<unsigned short>* GetPieceVertIndices(); // 駒の頂点インデックスを返す
     KeyMap* GetKeyMap(); // 将棋盤頂点インデックスを返す
 
-    std::vector<I_GameObj*> GetGameObjects(); // すべての将棋オブジェクトを返す
-    std::vector<NaturalBufferedData<unsigned short>*> GetAllVertIndices(); // すべての頂点インデックスを返す
 
     
     Camera* GetMainCamera(); // メインカメラを返す
@@ -114,12 +106,11 @@ public:
         D2D1_RECT_F     rect,
         I_Piece*        piece);
 
-    std::vector<UI*>     GetFrameUIs(); // テキスト枠UIを返す
-    std::vector<TextUI*>     GetTextUIs(); // テキストUIを返す
+    std::vector<UI*>       GetFrameUIs(); // テキスト枠UIを返す
+    std::vector<TextUI*>   GetTextUIs(); // テキストUIを返す
     std::vector<I_Button*> GetButtons(); // ボタンUIを返す
 
     bool IsDrawUINotEmpty(); // UIの空状況を返す
-
     void RemoveAllUI();      // UIを全て削除する
 
     void ProcessChangeWindowSize(); // 画面サイズ変更処理

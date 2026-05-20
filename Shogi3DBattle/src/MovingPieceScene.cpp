@@ -99,7 +99,7 @@ std::unique_ptr<I_SceneState> MovingPieceScene::ExeDecisionButtonProcess()
     if(!isChangedRow && !isChangedColumn) return nullptr; // 移動がなければ何もしない
 
     auto piecePosManager = Application::GetInstance().GetPiecePosManager();
-    piecePosManager->PlacePiece(_piece, newRow, newColumn);
+    piecePosManager->PlacePieceOnBoard(_piece, newRow, newColumn);
 
     return std::make_unique<SelectingPieceScene>();
 }
@@ -212,4 +212,7 @@ MovingPieceScene::~MovingPieceScene()
     // カーソル表示
     auto gameWindow = Application::GetInstance().GetGameWindow();
     gameWindow->ShowCursor();
+
+    // マップ描画フラグ解除
+    Application::GetInstance().SetIsDrawMap(false);
 }
