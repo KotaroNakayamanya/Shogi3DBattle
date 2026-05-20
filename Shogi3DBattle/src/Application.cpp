@@ -3,22 +3,11 @@
 #include<array>
 #include<chrono>
 #include<thread>
-#include<functional>
 
 #include"TitleScene.h"
 
 #include"PersProjMat.h"
 #include"NonePersProjMat.h"
-
-#include"King.h"
-#include"Rook.h"
-#include"Bishop.h"
-#include"Gold.h"
-#include"Silver.h"
-#include"Knight.h"
-#include"Lance.h"
-#include"Pawn.h"
-
 
 #include"NewStartButton.h"
 #include"ContinueStartButton.h"
@@ -26,21 +15,11 @@
 #include"ExitGameButton.h"
 #include"SelectPieceButton.h"
 
-#include"Board9x9.h"
-
-#include"PieceVertIndices.h"
-#include"BoardVertIndices.h"
-#include"WoodTexture.h"
-
-#include"Board9x9Texture.h"
-#include"Board5x5Texture.h"
-
-
 // 初期処理
 void Application::Init()
 {   
     _gameObjects->CreateGameObjects(); // ゲームオブジェクト作成
-    CreateTex();      // テクスチャ作成
+    _textures->CreateTextures();       // テクスチャ作成
     CreateCamera();   // カメラ作成
     InitKeyMap();     // 操作ボタン設定
     InitSceneState(); // シーンステート初期処理
@@ -49,18 +28,6 @@ void Application::Init()
     _dx12->InitDX12(); // DirectX12初期処理
 
     _piecePosManager->InitPiecesPos(); // 駒の位置初期化
-}
-
-// テクスチャ作成
-void Application::CreateTex()
-{
-    // 黄色木材テクスチャ作成
-    _woodTexs.push_back(std::make_unique<WoodTexture>(226, 232,  75));
-    _woodTexs.push_back(std::make_unique<WoodTexture>(220, 220, 220));
-
-    // 将棋盤乗算テクスチャ作成
-    _boardLineTexs.push_back(std::make_unique<Board5x5Texture>());
-    _boardLineTexs.push_back(std::make_unique<Board9x9Texture>());
 }
 
 // カメラ作成
@@ -318,30 +285,15 @@ LRESULT CALLBACK WindowProcedure(
     return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-GameObjects*     Application::GetGameObjects    (){return _gameObjects.get();}     // ゲームオブジェクトを返す
-DX12*            Application::GetDX12           (){return _dx12.get();}            // DirectX12を返す
-GameWindow*      Application::GetGameWindow     (){return _gameWindow.get();}      // ゲームウインドウオブジェクトを返す
-InputHandler*    Application::GetInputHandler   (){return _inputHandler.get();}    // インプットハンドラを返す
+GameObjects*     Application::GetGameObjects    (){return _gameObjects.get();    } // ゲームオブジェクトを返す
+Textures*        Application::GetTextures       (){return _textures.get();       } // テクスチャを返す
+DX12*            Application::GetDX12           (){return _dx12.get();           } // DirectX12を返す
+GameWindow*      Application::GetGameWindow     (){return _gameWindow.get();     } // ゲームウインドウオブジェクトを返す
+InputHandler*    Application::GetInputHandler   (){return _inputHandler.get();   } // インプットハンドラを返す
 PiecePosManager* Application::GetPiecePosManager(){return _piecePosManager.get();} // 駒の位置マネージャを返す
 
 Camera* Application::GetMainCamera(){return _mainCamera.get();} // メインカメラを返す
 Camera* Application::GetMapCamera() {return _mapCamera.get();}  // マップカメラを返す
-// 木材テクスチャを返す
-std::vector<I_Texture*> Application::GetWoodTexs()
-{
-    std::vector<I_Texture*> vec;
-    for(auto& ele : _woodTexs) vec.push_back(ele.get());
-
-    return vec;
-} 
-// 将棋盤黒線テクスチャを返す
-std::vector<I_Texture*> Application::GetBoardLineTexs()
-{
-    std::vector<I_Texture*> vec;
-    for(auto& ele : _boardLineTexs) vec.push_back(ele.get());
-
-    return vec;
-}
 KeyMap* Application::GetKeyMap(){return _keyMap.get();} // キー割り当てを返す
 
 void Application::SetIsDrawMap(bool flag){_isDrawMap = flag;} // マップ描画フラグをセット
@@ -472,11 +424,11 @@ Application& Application::GetInstance()
 Application::Application()
 {
     _gameWindow = std::make_unique<GameWindow>();
+    _textures   = std::make_unique<Textures>();
     _dx12 = std::make_unique<DX12>();
     _gameObjects = std::make_unique<GameObjects>();
     _piecePosManager = std::make_unique<PiecePosManager>();
 
     _keyMap = std::make_unique<KeyMap>();
     _inputHandler = std::make_unique<InputHandler>();
-
 }

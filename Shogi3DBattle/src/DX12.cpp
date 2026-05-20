@@ -123,7 +123,7 @@ void DX12::CreateBuff()
     _idxBuff = _device->CreateBuff(widthSize, heightSize, BuffType::INDEX);
 
     // 木材テクスチャバッファ作成
-    auto woodTexs = app.GetWoodTexs();
+    auto woodTexs = app.GetTextures()->GetWoodTextures();
     auto woodTexNum = static_cast<unsigned int>(woodTexs.size());
     for (unsigned int i = 0; i < woodTexNum; i++)
     {
@@ -176,8 +176,9 @@ void DX12::CreateHeap()
     // CSUヒープ作成
     auto& app = Application::GetInstance();
 
-    unsigned int woodTexNum   = static_cast<unsigned int>(app.GetWoodTexs().size());
-    unsigned int boardTexNum  = static_cast<unsigned int>(app.GetBoardLineTexs().size());
+    auto textures = app.GetTextures();
+    unsigned int woodTexNum   = static_cast<unsigned int>(textures->GetWoodTextures().size());
+    unsigned int boardTexNum  = static_cast<unsigned int>(textures->GetBoardLineTextures().size());
     unsigned int pieceTexNum  = 8;
     unsigned int cbvNum = 1;
     unsigned int srvNum = woodTexNum + boardTexNum + pieceTexNum;
@@ -205,7 +206,7 @@ void DX12::CreateView()
 
     // 木材テクスチャ用SRV作成
     unsigned int srvIdx = 0;
-    auto woodTexs = Application::GetInstance().GetWoodTexs();
+    auto woodTexs = Application::GetInstance().GetTextures()->GetWoodTextures();
     auto woodTexNum = static_cast<unsigned int>(woodTexs.size());
     for(unsigned int i = 0; i < woodTexNum; i++, srvIdx++)
         _device->CreateCSUView(_csuHeap.get(), srvIdx, _woodTexBuffs[i].Get(), View::SRV);
@@ -430,12 +431,15 @@ std::unique_ptr<Direct2DFactory> DX12::CreateDirect2DFactory()
 void DX12::WriteToBuff()
 {
     auto& app    = Application::GetInstance();
-    auto  gameObjects = app.GetGameObjects();
-    auto  board  = gameObjects->GetBoard();
-    auto  pieces = gameObjects->GetPieces();
-    auto woodTexs = app.GetWoodTexs();
 
-    auto boardLineTexs = app.GetBoardLineTexs();
+    auto gameObjects = app.GetGameObjects();
+    auto board       = gameObjects->GetBoard();
+    auto pieces      = gameObjects->GetPieces();
+
+    auto textures      = app.GetTextures();
+    auto woodTexs      = textures->GetWoodTextures();
+    auto boardLineTexs = textures->GetBoardLineTextures();
+
     auto boardVertIndices = gameObjects->GetBoardVertIndices();
     auto pieceVertIndices = gameObjects->GetPieceVertIndices();
 

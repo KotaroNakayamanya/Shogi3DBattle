@@ -80,6 +80,7 @@
     <ClCompile Include="src\SideBoard.cpp" />
     <ClCompile Include="src\Silver.cpp" />
     <ClCompile Include="src\TextUI.cpp" />
+    <ClCompile Include="src\Textures.cpp" />
     <ClCompile Include="src\TitleScene.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\KeyMap.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="header\Rook.h" />
     <ClInclude Include="header\SelectingPieceScene.h" />
     <ClInclude Include="header\Silver.h" />
+    <ClInclude Include="header\Textures.h" />
     <ClInclude Include="header\TitleScene.h" />
     <ClInclude Include="header\Text2D.h" />
     <ClInclude Include="header\IResourceDesc.h" />

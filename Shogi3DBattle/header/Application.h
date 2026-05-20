@@ -3,6 +3,7 @@
 #include"GameWindow.h"
 #include"DX12.h"
 #include"GameObjects.h"
+#include"Textures.h"
 #include"InputHandler.h"
 #include"I_SceneState.h"
 #include"PiecePosManager.h"
@@ -24,9 +25,6 @@
 #include"I_Board.h"
 #include"I_Piece.h"
 
-#include"BoardVertIndices.h"
-#include"CubeVertIndices.h"
-#include"PieceVertIndices.h"
 
 class Application
 {
@@ -34,19 +32,15 @@ private:
     bool _isDrawMap = false;
 
     std::unique_ptr<GameObjects> _gameObjects; // ゲームオブジェクト
+    std::unique_ptr<Textures>    _textures;    // テクスチャ
     std::unique_ptr<GameWindow>  _gameWindow;  // ゲームウインドウ
     std::unique_ptr<DX12>        _dx12;        // DirectX
 
     std::unique_ptr<PiecePosManager> _piecePosManager; // 駒の位置マネージャ
 
-    // テクスチャ
-    std::vector<std::unique_ptr<I_Texture>> _woodTexs; // 木材テクスチャ
-    std::vector<std::unique_ptr<I_Texture>> _boardLineTexs; // 将棋盤黒線テクスチャ
-    void CreateTex(); // テクスチャ作成
-
     // UI 
-    std::vector<std::unique_ptr<UI>>     _frameUIs; // テキスト枠UI
-    std::vector<std::unique_ptr<TextUI>> _textUIs;  // テキストUI
+    std::vector<std::unique_ptr<UI>>       _frameUIs; // テキスト枠UI
+    std::vector<std::unique_ptr<TextUI>>   _textUIs;  // テキストUI
     std::vector<std::unique_ptr<I_Button>> _buttonUIs; // ボタンUI
     
 
@@ -73,14 +67,13 @@ public:
     void Run();  // ゲーム実行処理
     void Exit(); // 終了処理
 
-    GameObjects* GetGameObjects(); // ゲームオブジェクトを返す
-    DX12* GetDX12(); // DirectX12を返す
-    GameWindow* GetGameWindow(); // ゲームウインドウオブジェクトを返す
-    InputHandler* GetInputHandler(); // インプットハンドラを返す
+    GameObjects*     GetGameObjects();     // ゲームオブジェクトを返す
+    Textures*        GetTextures();        // テクスチャを返す
+    DX12*            GetDX12();            // DirectX12を返す
+    GameWindow*      GetGameWindow();      // ゲームウインドウオブジェクトを返す
+    InputHandler*    GetInputHandler();    // インプットハンドラを返す
     PiecePosManager* GetPiecePosManager(); // 駒の位置マネージャを返す
 
-    std::vector<I_Texture*> GetWoodTexs(); // 木材テクスチャを返す
-    std::vector<I_Texture*> GetBoardLineTexs(); // 将棋盤黒線テクスチャを返す
     KeyMap* GetKeyMap(); // 将棋盤頂点インデックスを返す
 
 
