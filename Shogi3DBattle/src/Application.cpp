@@ -18,13 +18,13 @@
 // 初期処理
 void Application::Init()
 {   
+    _gameWindow->InitGameWindow(); // ゲームウインドウ初期処理
     _gameObjects->CreateGameObjects(); // ゲームオブジェクト作成
     _textures->CreateTextures();       // テクスチャ作成
     CreateCamera();   // カメラ作成
     InitKeyMap();     // 操作ボタン設定
     InitSceneState(); // シーンステート初期処理
 
-    _gameWindow->InitGameWindow(); // ゲームウインドウ初期処理
     _dx12->InitDX12(); // DirectX12初期処理
 
     _piecePosManager->InitPiecesPos(); // 駒の位置初期化

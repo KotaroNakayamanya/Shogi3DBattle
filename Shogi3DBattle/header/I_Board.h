@@ -5,7 +5,7 @@
 class I_Board : public I_GameObj
 {
 private:
-    float _boardSize; // «Šû”Õ1•Ó‚Ì’·‚³
+    float _sideLength; // «Šû”Õ1•Ó‚Ì’·‚³
 
 public:
     virtual unsigned int GetBoardSquareNum() = 0; // «Šû”Õ‚Ìƒ}ƒX”‚ğ•Ô‚·

@@ -1,7 +1,7 @@
 #include"I_GameObj.h"
 
-void      I_GameObj::SetVertices(std::unique_ptr<Vertices> uniquePtr){_vertices.swap(uniquePtr);} // 頂点集合セット
-Vertices* I_GameObj::GetVertices()                    {return _vertices.get();}    // 頂点集合を返す
+void        I_GameObj::SetVertices(std::unique_ptr<I_Vertices> uniquePtr){_vertices.swap(uniquePtr);} // 頂点集合セット
+I_Vertices* I_GameObj::GetVertices()                                     {return _vertices.get();}    // 頂点集合を返す
 
 WorldMat* I_GameObj::GetWorldMat()                    {return _worldMat.get();}    // ワールド行列セット 
 

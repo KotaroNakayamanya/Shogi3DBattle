@@ -134,7 +134,7 @@ I_Piece::I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, Pla
         {{           0,       height, -thickness}, {-cornerNormalX,  cornerNormalY,  1.0f}, {0, 0}}, // ç∂è„  
     };
 
-    SetVertices(std::make_unique<Vertices>());
+    SetVertices(std::make_unique<I_Vertices>());
     // í∏ì_èWçá
     auto verticesPtr = GetVertices();
     verticesPtr->SetDatas(vertices);

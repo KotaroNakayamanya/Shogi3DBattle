@@ -5,8 +5,8 @@ BoardVertIndices::BoardVertIndices()
     // 将棋盤のインデックス集合作成
     std::vector<unsigned short> vertIndices;
 
-    // (0 1 2) (2 3 0)を５面で作れる
-    for (int i = 0; i < 5; i++)
+    // (0 1 2) (2 3 0)を6面で作れる
+    for (int i = 0; i < 6; i++)
     {
         unsigned int offset = 4 * i;
 

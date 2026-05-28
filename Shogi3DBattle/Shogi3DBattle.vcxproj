@@ -31,6 +31,7 @@
     <ClCompile Include="src\BoardVertIndices.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
+    <ClCompile Include="src\CubeVertices.cpp" />
     <ClCompile Include="src\CubeVertIndices.cpp" />
     <ClCompile Include="src\Direct2DDevice.cpp" />
     <ClCompile Include="src\Direct2DFactory.cpp" />
@@ -103,7 +104,7 @@
     <ClCompile Include="src\UploadHeapProp.cpp" />
     <ClCompile Include="src\VecCalc.cpp" />
     <ClCompile Include="src\VertBuffFactory.cpp" />
-    <ClCompile Include="src\Vertices.cpp" />
+    <ClCompile Include="src\I_Vertices.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
     <ClCompile Include="src\WoodTexture.cpp" />
     <ClCompile Include="src\WorldMat.cpp" />
@@ -120,6 +121,7 @@
     <ClInclude Include="header\BoardTexture.h" />
     <ClInclude Include="header\BoardVertIndices.h" />
     <ClInclude Include="header\CubeVertIndices.h" />
+    <ClInclude Include="header\CubeVertices.h" />
     <ClInclude Include="header\Device11AndDeviceContext.h" />
     <ClInclude Include="header\Direct2DDevice.h" />
     <ClInclude Include="header\Direct2DFactory.h" />
@@ -219,7 +221,7 @@
     <ClInclude Include="header\VecCalc.h" />
     <ClInclude Include="header\Vert.h" />
     <ClInclude Include="header\VertBuffFactory.h" />
-    <ClInclude Include="header\Vertices.h" />
+    <ClInclude Include="header\I_Vertices.h" />
     <ClInclude Include="header\View.h" />
     <ClInclude Include="header\IViewFactory.h" />
     <ClInclude Include="header\ViewMat.h" />

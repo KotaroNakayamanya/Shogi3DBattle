@@ -411,7 +411,7 @@
     <ClCompile Include="src\PersProjMat.cpp">
       <Filter>ソース ファイル\buffered_data\mat\proj_mat</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vertices.cpp">
+    <ClCompile Include="src\I_Vertices.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj</Filter>
     </ClCompile>
     <ClCompile Include="src\Bishop.cpp">
@@ -535,6 +535,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\Textures.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CubeVertices.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -665,7 +668,7 @@
     <ClInclude Include="header\InputHandler.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="header\Vertices.h">
+    <ClInclude Include="header\I_Vertices.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
     </ClInclude>
     <ClInclude Include="header\WorldMat.h">
@@ -885,6 +888,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\Textures.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CubeVertices.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

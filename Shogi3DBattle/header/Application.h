@@ -44,7 +44,7 @@ private:
     std::vector<std::unique_ptr<I_Button>> _buttonUIs; // ボタンUI
     
 
-    std::unique_ptr<I_SceneState>  _sceneState;   // シーンステート
+    std::unique_ptr<I_SceneState> _sceneState;   // シーンステート
     std::unique_ptr<InputHandler> _inputHandler; // インプットハンドラ
     std::unique_ptr<KeyMap>       _keyMap;       // キーマップ
     void InitKeyMap(); // 操作ボタン初期処理

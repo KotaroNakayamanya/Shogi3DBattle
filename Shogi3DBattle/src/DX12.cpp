@@ -3,8 +3,8 @@
 #include"Application.h"
 #include<algorithm>
 #include<cassert>
-#include"Vertices.h"
 #include"WorldMat.h"
+#include"I_Vertices.h"
 #include<d3dcompiler.h>
 #include"BasicTexType.h"
 
@@ -451,12 +451,12 @@ void DX12::WriteToBuff()
 
 
     // 頂点集合の書き込み位置をセット
-    static_cast<Vertices*>(board->GetVertices())->SetStartDataIdx(idx);
+    static_cast<I_Vertices*>(board->GetVertices())->SetStartDataIdx(idx);
     idx += static_cast<unsigned int>(board->GetVertices()->GetDatas().size());
-    Vertices* vertices;
+    I_Vertices* vertices;
     for (auto& piece : pieces)
     {
-        vertices = static_cast<Vertices*>(piece->GetVertices());
+        vertices = static_cast<I_Vertices*>(piece->GetVertices());
         vertices->SetStartDataIdx(idx);
         idx += static_cast<unsigned int>(vertices->GetDatas().size());
     }
@@ -720,7 +720,7 @@ void DX12::SetCommandDrawGameObj()
     auto boardVertIndices = gameObjects->GetBoardVertIndices();
     auto idxBuffView = GetIdxBuffView(boardVertIndices);
     _cmdList->IASetIndexBuffer(&idxBuffView);
-    auto vertBuffView = GetVertBuffView(static_cast<Vertices*>(board->GetVertices()));
+    auto vertBuffView = GetVertBuffView(static_cast<I_Vertices*>(board->GetVertices()));
     _cmdList->IASetVertexBuffers(0, 1, &vertBuffView);
 
     _cmdList->DrawIndexedInstanced(static_cast<unsigned int>(boardVertIndices->GetDatas().size()), 1, 0, 0, 0);
@@ -732,7 +732,7 @@ void DX12::SetCommandDrawGameObj()
     _cmdList->IASetIndexBuffer(&idxBuffView);
     for (UINT i = 0; i < pieces.size(); i++)
     { 
-        auto vertBuffView = GetVertBuffView(static_cast<Vertices*>(pieces[i]->GetVertices()));
+        auto vertBuffView = GetVertBuffView(static_cast<I_Vertices*>(pieces[i]->GetVertices()));
         _cmdList->IASetVertexBuffers(0, 1, &vertBuffView);
 
         _cmdList->DrawIndexedInstanced(static_cast<unsigned int>(pieceVertIndices->GetDatas().size()), 1, 0, 0, 0);
