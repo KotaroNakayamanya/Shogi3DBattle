@@ -1,9 +1,11 @@
 #pragma once
 
 #include"I_Vertices.h"
+#include"GameObjType.h"
+#include"BasicTexType.h"
 
 class CubeVertices : public I_Vertices
 {
 public:
-    CubeVertices(float sideLength);
+    CubeVertices(GameObjType gameObjType, BasicTexType basicTexType, float sideLength);
 };

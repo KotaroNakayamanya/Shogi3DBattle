@@ -3,19 +3,15 @@
 #include"GameObjIdManager.h"
 #include"BasicTexType.h"
 
-float I_Board::GetBoardSize(){return _sideLength;} // 将棋盤1辺の長さを返す
+float I_Board::GetSideLength(){return _sideLength;} // 将棋盤1辺の長さを返す
 
-// 指定されたサイズの将棋盤頂点集合作成
 I_Board::I_Board(GameObjType gameObjType, float sideLength)
     :I_GameObj(gameObjType), _sideLength(sideLength)
 {
-    SetVertices(std::make_unique<CubeVertices>(sideLength));
+    // 箱型の頂点集合を作成
+    SetVertices(std::make_unique<CubeVertices>(gameObjType, BasicTexType::YELLOW_WOOD, sideLength));
 
-    auto verticesPtr = GetVertices();
-    verticesPtr->SetGameObjId(GameObjIdManager::GetId());
-    verticesPtr->SetBasicTexId    (static_cast<unsigned char>(BasicTexType::YELLOW_WOOD));
-    verticesPtr->SetMulDesignTexId(static_cast<unsigned char>(gameObjType));
-
+    // ワールド行列を将棋盤のマス位置(x,y)の中心点が座標(10x,10y,0)に対応するように調整する
     auto worldMatPtr = GetWorldMat();
     auto worldMat = worldMatPtr->GetMat();
     auto halfSideLength = sideLength / 2.0f;

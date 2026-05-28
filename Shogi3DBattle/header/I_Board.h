@@ -10,7 +10,7 @@ private:
 public:
     virtual unsigned int GetBoardSquareNum() = 0; // «Šû”Õ‚Ìƒ}ƒX”‚ğ•Ô‚·
 
-    float GetBoardSize(); // «Šû”Õ1•Ó‚Ì’·‚³‚ğ•Ô‚·
+    float GetSideLength(); // «Šû”Õ1•Ó‚Ì’·‚³‚ğ•Ô‚·
 
     I_Board(GameObjType gameObjType, float size);
     virtual ~I_Board() = default;

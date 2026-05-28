@@ -48,16 +48,16 @@ void Application::CreateCamera()
     // マップカメラ
     // ビュー行列作成
     auto board = _gameObjects->GetBoard();
-    auto boardSize = board->GetBoardSize();
-    auto centerPos = boardSize / 2.0f;
+    auto boardSideLength = board->GetSideLength();
+    auto centerPos = boardSideLength / 2.0f;
     DirectX::XMFLOAT3 eye   = {centerPos, centerPos, -5.0f};
     DirectX::XMFLOAT3 focus = {centerPos, centerPos,  0.0f};
     DirectX::XMFLOAT3 up    = {     0.0f,     -1.0f,  0.0f};
     auto mapViewMat = std::make_unique<ViewMat>(eye, focus, up);
     // パースではないプロジェクション行列作成
     auto margin = 10.0f;
-    auto width  = boardSize + margin;
-    auto height = boardSize + margin;
+    auto width  = boardSideLength + margin;
+    auto height = boardSideLength + margin;
          nearZ  =  1.0f;
          farZ   = 10.0f;
     auto mapProjMat = std::make_unique<NonePersProjMat>(width, height, nearZ, farZ);
