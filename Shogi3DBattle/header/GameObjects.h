@@ -19,9 +19,9 @@ private:
     std::unique_ptr<CubeVertIndices>      _sideBoardVertIndices; // 駒置き台の頂点インデックス
     std::unique_ptr<PieceVertIndices>     _pieceVertIndices;     // 駒の頂点インデックス
 
-    void CreateBoard();     // 将棋盤作成
-    void CreateSideBoard(); // 駒置き台作成
-    void CreatePieces();    // 駒作成
+    void CreateBoard();      // 将棋盤作成
+    void CreateSideBoards(); // 駒置き台作成
+    void CreatePieces();     // 駒作成
 
 public:
     void CreateGameObjects(); // ゲームオブジェクト作成

@@ -133,10 +133,16 @@ void DX12::CreateBuff()
     }
 
     // 将棋オブジェクト種類ごとのテクスチャバッファ作成
-    std::vector<GameObjType> boardType =
+    std::vector<GameObjType> pieceTypes =
     {
-        GameObjType::BOARD_55,
-        GameObjType::BOARD_99
+        GameObjType::KING,
+        GameObjType::ROOK,
+        GameObjType::BISHOP,
+        GameObjType::GOLD,
+        GameObjType::SILVER,
+        GameObjType::KNIGHT,
+        GameObjType::LANCE,
+        GameObjType::PAWN
     };
     unsigned int gameObjTexNum;
     gameObjTexNum = static_cast<unsigned int>(GameObjType::TYPE_NUM);
@@ -148,13 +154,13 @@ void DX12::CreateBuff()
         // テクスチャのIDが将棋盤用のものかどうか調べる
         GameObjType shogiObjType;
         shogiObjType = static_cast<GameObjType>(i);
-        auto it = std::find(boardType.begin(), boardType.end(), shogiObjType);
+        auto it = std::find(pieceTypes.begin(), pieceTypes.end(), shogiObjType);
 
         BuffType buffType;
-        if(it != boardType.end()) // 将棋盤用のテクスチャであれば前準備で用意したテクスチャを使用する
-            buffType = BuffType::TEXTURE;
-        else                      // それ以外は駒のテクスチャで、レンダリングして作成する
+        if(it != pieceTypes.end()) // 駒のテクスチャはレンダリングにより作成
             buffType = BuffType::RENDER_TEX;
+        else                       // それ以外は前処理で作成したテクスチャを利用
+            buffType = BuffType::TEXTURE;
 
         _shogiObjTexBuffs[i] = _device->CreateBuff(widthSize, heightSize, buffType);
     }
@@ -433,8 +439,6 @@ void DX12::WriteToBuff()
     auto& app    = Application::GetInstance();
 
     auto gameObjects = app.GetGameObjects();
-    auto board       = gameObjects->GetBoard();
-    auto pieces      = gameObjects->GetPieces();
 
     auto textures      = app.GetTextures();
     auto woodTexs      = textures->GetWoodTextures();
@@ -446,24 +450,25 @@ void DX12::WriteToBuff()
     auto mainCamera = app.GetMainCamera();
     auto mapCamera  = app.GetMapCamera();
 
-    unsigned int idx = 0;
     auto address = _vertBuff->GetGPUVirtualAddress();
 
 
     // 頂点集合の書き込み位置をセット
-    static_cast<I_Vertices*>(board->GetVertices())->SetStartDataIdx(idx);
-    idx += static_cast<unsigned int>(board->GetVertices()->GetDatas().size());
-    I_Vertices* vertices;
-    for (auto& piece : pieces)
+    auto allGameObjects = gameObjects->GetAllGameObjects();
+    unsigned int idx = 0;
+    for (auto& gameObject : allGameObjects)
     {
-        vertices = static_cast<I_Vertices*>(piece->GetVertices());
+        auto vertices = gameObject->GetVertices();
         vertices->SetStartDataIdx(idx);
         idx += static_cast<unsigned int>(vertices->GetDatas().size());
     }
-    board->GetVertices()->WriteToBuff(_vertBuff.Get()); // 将棋盤頂点集合をバッファに書き込み
-    for (auto& piece : pieces)
-        piece->GetVertices()->WriteToBuff(_vertBuff.Get()); // 駒の頂点集合をバッファに書き込み
 
+    // 頂点集合をバッファに書き込み
+    for (auto& gameObject : allGameObjects)
+    {
+        auto vertices = gameObject->GetVertices();
+        vertices->WriteToBuff(_vertBuff.Get());
+    }
 
     // インデックス集合の書き込み位置をセット
     idx = 0;
@@ -474,15 +479,15 @@ void DX12::WriteToBuff()
     pieceVertIndices->WriteToBuff(_idxBuff.Get()); // 駒のインデックス集合をバッファに書き込み
 
     // 定数データの書き込み位置をセット（後に書き込む）
+    auto board  = gameObjects->GetBoard();
+    auto pieces = gameObjects->GetPieces();
     idx = 0;
-    static_cast<WorldMat*>(board->GetWorldMat())->SetStartDataIdx(idx); // 将棋盤
-    idx += 1;
-    WorldMat* worldMat;
-    for (auto& piece : pieces)
+    for (auto& gameObject : allGameObjects)
     {
-        worldMat = static_cast<WorldMat*>(piece->GetWorldMat());
-        worldMat->SetStartDataIdx(idx); // 駒
-        idx += 1;
+        auto worldMat = gameObject->GetWorldMat();
+        worldMat->SetStartDataIdx(idx);
+
+        idx++;
     }
     mainCamera->SetStartDataIdx(idx);
     mapCamera ->SetStartDataIdx(idx);
@@ -668,9 +673,12 @@ void DX12::ExeD3D()
     SetCommandDrawGameObj(); // ゲームオブジェクト描画コマンドセット
 
     // 定数バッファに書き込み
-    board->GetWorldMat()->WriteToBuff(_constBuff.Get()); // 将棋盤書き込み
-    for(auto& piece : pieces)
-        piece->GetWorldMat()->WriteToBuff(_constBuff.Get()); // 駒書き込み
+    auto allGameObjects = gameObjects->GetAllGameObjects();
+    for (auto& gameObject : allGameObjects)
+    {
+        auto worldMat = gameObject->GetWorldMat();
+        worldMat->WriteToBuff(_constBuff.Get());
+    }
     mainCamera->WriteToBuff(_constBuff.Get()); // メインカメラ書き込み
     
     ExeCmd(); // コマンド実行

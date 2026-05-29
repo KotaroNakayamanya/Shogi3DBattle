@@ -18,7 +18,7 @@ void GameObjects::CreateBoard()
 }
 
 // ‹î’u‚«‘äì¬
-void GameObjects::CreateSideBoard()
+void GameObjects::CreateSideBoards()
 {
     _sideBoard1           = std::make_unique<SideBoard>();
     _sideBoard2           = std::make_unique<SideBoard>();
@@ -49,7 +49,7 @@ void GameObjects::CreatePieces()
 void GameObjects::CreateGameObjects()
 {
     CreateBoard();
-    CreateSideBoard();
+    //CreateSideBoards();
     CreatePieces();
 }
 
@@ -62,8 +62,10 @@ std::vector<I_GameObj*> GameObjects::GetAllGameObjects()
 
     std::vector<I_GameObj*> allGameObjects;
 
-    allGameObjects.push_back(_board.get());
-    for(auto& piece : _pieces) allGameObjects.push_back(piece.get());
+    allGameObjects.push_back(_board.get());                           // «Šû”Õ
+    //allGameObjects.push_back(_sideBoard1.get());                      // ‹î’u‚«‘ä‚P
+    //allGameObjects.push_back(_sideBoard2.get());                      // ‹î’u‚«‘ä‚Q
+    for(auto& piece : _pieces) allGameObjects.push_back(piece.get()); // ‹î
 
     return allGameObjects;
 }
