@@ -8,9 +8,10 @@
 class I_GameObj
 {
 private:
-    std::unique_ptr<I_Vertices> _vertices;    // 頂点集合
-    std::unique_ptr<WorldMat> _worldMat;    // ワールド行列
-    GameObjType               _gameObjType; // ゲームオブジェクトタイプ
+    std::unique_ptr<I_Vertices>         _vertices;    // 頂点集合
+    NaturalBufferedData<unsigned short> _vertIndices; // 頂点インデックス
+    std::unique_ptr<WorldMat>           _worldMat;    // ワールド行列
+    GameObjType                         _gameObjType; // ゲームオブジェクトタイプ
 
 protected:
     void SetVertices   (std::unique_ptr<I_Vertices> uniquePtr); // 頂点集合セット

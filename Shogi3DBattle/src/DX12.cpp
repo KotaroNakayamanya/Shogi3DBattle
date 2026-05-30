@@ -78,21 +78,19 @@ void DX12::CreateBuff()
     auto& app = Application::GetInstance();
     
     auto gameObjects = app.GetGameObjects();
-    auto allGameObjects   = gameObjects->GetAllGameObjects();
     auto allVertIndices = gameObjects->GetAllVertIndices();
-
-
 
     // バックバッファ作成
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
     _swapChain->GetDesc(&swapChainDesc);
     auto backBuffNum = swapChainDesc.BufferCount;
-
     _backBuffs.resize(backBuffNum);
     for (unsigned int i = 0; i < backBuffNum; i++)
+    {
         _swapChain->GetBuffer(
             i,
             IID_PPV_ARGS(_backBuffs[i].ReleaseAndGetAddressOf()));
+    }
 
     // デプスステンシルバッファ作成
     D3D12_RESOURCE_DESC backBuffDesc;
@@ -102,6 +100,7 @@ void DX12::CreateBuff()
     _dsBuff = _device->CreateBuff(widthSize, heightSize, BuffType::DEPTH_STENCIL);
 
     // コンスタントバッファ作成
+    auto allGameObjects = gameObjects->GetAllGameObjects();
     unsigned int worldMatNum, viewProjNum, totalMatNum;
     worldMatNum = static_cast<unsigned int>(allGameObjects.size());
     viewProjNum = 1;
@@ -133,37 +132,21 @@ void DX12::CreateBuff()
     }
 
     // 将棋オブジェクト種類ごとのテクスチャバッファ作成
-    std::vector<GameObjType> pieceTypes =
+    widthSize  = 256;
+    heightSize = 256;
+    unsigned int pieceTextureNum = 8;
+    for (unsigned int i = 0; i < pieceTextureNum; i++)
     {
-        GameObjType::KING,
-        GameObjType::ROOK,
-        GameObjType::BISHOP,
-        GameObjType::GOLD,
-        GameObjType::SILVER,
-        GameObjType::KNIGHT,
-        GameObjType::LANCE,
-        GameObjType::PAWN
-    };
-    unsigned int gameObjTexNum;
-    gameObjTexNum = static_cast<unsigned int>(GameObjType::TYPE_NUM);
-    _shogiObjTexBuffs.resize(gameObjTexNum);
-    widthSize = 256;
-    widthSize = 256;
-    for (unsigned int i = 0; i < gameObjTexNum; i++)
-    {
-        // テクスチャのIDが将棋盤用のものかどうか調べる
-        GameObjType shogiObjType;
-        shogiObjType = static_cast<GameObjType>(i);
-        auto it = std::find(pieceTypes.begin(), pieceTypes.end(), shogiObjType);
-
-        BuffType buffType;
-        if(it != pieceTypes.end()) // 駒のテクスチャはレンダリングにより作成
-            buffType = BuffType::RENDER_TEX;
-        else                       // それ以外は前処理で作成したテクスチャを利用
-            buffType = BuffType::TEXTURE;
-
-        _shogiObjTexBuffs[i] = _device->CreateBuff(widthSize, heightSize, buffType);
+        _shogiObjTexBuffs.push_back(_device->CreateBuff(widthSize, heightSize, BuffType::RENDER_TEX));
     }
+    auto textures          = app.GetTextures();
+    auto boardLineTextures = textures->GetBoardLineTextures();
+    auto boardTextureNum = static_cast<unsigned int>(boardLineTextures.size());
+    for (unsigned int i = 0; i < boardTextureNum; i++)
+    {
+        _shogiObjTexBuffs.push_back(_device->CreateBuff(widthSize, heightSize, BuffType::TEXTURE));
+    }
+    
 }
 
 // ヒープ作成
@@ -181,7 +164,6 @@ void DX12::CreateHeap()
 
     // CSUヒープ作成
     auto& app = Application::GetInstance();
-
     auto textures = app.GetTextures();
     unsigned int woodTexNum   = static_cast<unsigned int>(textures->GetWoodTextures().size());
     unsigned int boardTexNum  = static_cast<unsigned int>(textures->GetBoardLineTextures().size());
@@ -218,12 +200,16 @@ void DX12::CreateView()
         _device->CreateCSUView(_csuHeap.get(), srvIdx, _woodTexBuffs[i].Get(), View::SRV);
 
     // 将棋オブジェクト用SRV作成
-    unsigned int shogiObjTexNum = 10;
-    for (unsigned int i = 0; i < shogiObjTexNum; i++, srvIdx++)
+    unsigned int pieceTextureNum = 8;
+    auto textures = Application::GetInstance().GetTextures();
+    auto boardLineTextures = textures->GetBoardLineTextures();
+    auto boardLineTextureNum = static_cast<unsigned int>(boardLineTextures.size());
+    unsigned int shogiObjTextureNum = pieceTextureNum + boardLineTextureNum;
+    for (unsigned int i = 0; i < shogiObjTextureNum; i++, srvIdx++)
         _device->CreateCSUView(_csuHeap.get(), srvIdx, _shogiObjTexBuffs[i].Get(), View::SRV);
 
     // レンダーによるテクスチャ作成用RTV作成
-    for(UINT i = 0; i < 8; i++)
+    for(UINT i = 0; i < pieceTextureNum; i++)
         _device->CreateView(_texRTVHeap.get(), i, _shogiObjTexBuffs[i].Get(), View::RTV);
 }
 
@@ -345,9 +331,8 @@ void DX12::CreateD2D()
 
     // ラップされた駒テクスチャバッファ作成
     unsigned int pieceBuffNum = 8;
-    _wrappedPieceTexBuffs.resize(pieceBuffNum);
     for (UINT i = 0; i < pieceBuffNum; i++)
-        _wrappedPieceTexBuffs[i] = _device11->CreateWrappedTexBuff(_shogiObjTexBuffs[i].Get());
+        _wrappedPieceTexBuffs.push_back(_device11->CreateWrappedTexBuff(_shogiObjTexBuffs[i].Get()));
 
     // Direct2Dレンダーターゲット作成
     _d2dPieceTexRenderTargets.resize(pieceBuffNum);

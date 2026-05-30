@@ -49,7 +49,7 @@ void GameObjects::CreatePieces()
 void GameObjects::CreateGameObjects()
 {
     CreateBoard();
-    //CreateSideBoards();
+    CreateSideBoards();
     CreatePieces();
 }
 
@@ -63,8 +63,8 @@ std::vector<I_GameObj*> GameObjects::GetAllGameObjects()
     std::vector<I_GameObj*> allGameObjects;
 
     allGameObjects.push_back(_board.get());                           // «Šû”Õ
-    //allGameObjects.push_back(_sideBoard1.get());                      // ‹î’u‚«‘ä‚P
-    //allGameObjects.push_back(_sideBoard2.get());                      // ‹î’u‚«‘ä‚Q
+    allGameObjects.push_back(_sideBoard1.get());                      // ‹î’u‚«‘ä‚P
+    allGameObjects.push_back(_sideBoard2.get());                      // ‹î’u‚«‘ä‚Q
     for(auto& piece : _pieces) allGameObjects.push_back(piece.get()); // ‹î
 
     return allGameObjects;

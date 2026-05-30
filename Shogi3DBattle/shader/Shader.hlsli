@@ -24,7 +24,7 @@ SamplerState samp : register(s0); // 0番　サンプラー
 
 cbuffer cbuff : register(b0) // 0番　定数バッファ
 {
-    matrix worldMat[41];
+    matrix worldMat[43];
     matrix viewProjMat;
 }
 
