@@ -14,7 +14,7 @@
 void GameObjects::CreateBoard()
 {
     _board            = std::make_unique<Board9x9>();
-    _boardVertIndices = std::make_unique<BoardVertIndices>();
+    //_boardVertIndices = std::make_unique<BoardVertIndices>();
 }
 
 // 駒置き台作成
@@ -22,7 +22,7 @@ void GameObjects::CreateSideBoards()
 {
     _sideBoard1           = std::make_unique<SideBoard>();
     _sideBoard2           = std::make_unique<SideBoard>();
-    _sideBoardVertIndices = std::make_unique<CubeVertIndices>();
+    //_sideBoardVertIndices = std::make_unique<CubeVertIndices>();
 }
 
 // 駒作成
@@ -42,7 +42,14 @@ void GameObjects::CreatePieces()
 
     createPlayerPieces(PlayerSide::PLAYER_1); // プレイヤー１の駒作成
     createPlayerPieces(PlayerSide::PLAYER_2); // プレイヤー２の駒作成
-    _pieceVertIndices = std::make_unique<PieceVertIndices>(); // 駒の頂点インデックス集合作成
+    //_pieceVertIndices = std::make_unique<PieceVertIndices>(); // 駒の頂点インデックス集合作成
+}
+
+// 頂点インデックス作成
+void GameObjects::CreateVertIndices()
+{
+    _cubeVertIndices  = std::make_unique<CubeVertIndices>();
+    _pieceVertIndices = std::make_unique<PieceVertIndices>();
 }
 
 // ゲームオブジェクト作成
@@ -51,6 +58,8 @@ void GameObjects::CreateGameObjects()
     CreateBoard();
     CreateSideBoards();
     CreatePieces();
+
+    CreateVertIndices();
 }
 
 
@@ -90,11 +99,11 @@ std::vector<NaturalBufferedData<unsigned short>*> GameObjects::GetAllVertIndices
 {
     std::vector<NaturalBufferedData<unsigned short>*> allVertIndices;
 
-    allVertIndices.push_back(_boardVertIndices.get());
+    allVertIndices.push_back(_cubeVertIndices.get());
     allVertIndices.push_back(_pieceVertIndices.get());
 
     return allVertIndices;
 }
 
-BoardVertIndices* GameObjects::GetBoardVertIndices(){return _boardVertIndices.get();} // 将棋盤の頂点インデックスを返す
+CubeVertIndices*  GameObjects::GetBoardVertIndices(){return _cubeVertIndices.get();} // 将棋盤の頂点インデックスを返す
 PieceVertIndices* GameObjects::GetPieceVertIndices(){return _pieceVertIndices.get();} // 駒の頂点インデックスを返す

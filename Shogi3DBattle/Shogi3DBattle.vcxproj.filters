@@ -459,9 +459,6 @@
     <ClCompile Include="src\Board9x9Texture.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\texture</Filter>
     </ClCompile>
-    <ClCompile Include="src\BoardVertIndices.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
-    </ClCompile>
     <ClCompile Include="src\PieceVertIndices.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
     </ClCompile>
@@ -795,9 +792,6 @@
       <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
     </ClInclude>
     <ClInclude Include="header\BoardTexture.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
-    </ClInclude>
-    <ClInclude Include="header\BoardVertIndices.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
     </ClInclude>
     <ClInclude Include="header\I_Texture.h">

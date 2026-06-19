@@ -9,6 +9,6 @@ SideBoard::SideBoard() : I_GameObj(GameObjType::SIDEBOARD)
     // ワールド行列を将棋盤のマス位置(x,y)の中心点が座標(10x,10y,0)に対応するように調整する
     auto worldMatPtr = GetWorldMat();
     auto worldMat = worldMatPtr->GetMat();
-    auto newWorldMat = worldMat * DirectX::XMMatrixTranslation(500.0f, 500.0f, 500.0f);
+    auto newWorldMat = worldMat * DirectX::XMMatrixTranslation(50.0f, 50.0f, 50.0f);
     worldMatPtr->SetMat(newWorldMat);
 }

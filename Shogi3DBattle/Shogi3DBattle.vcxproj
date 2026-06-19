@@ -28,7 +28,6 @@
     <ClCompile Include="src\Board9x9.cpp" />
     <ClCompile Include="src\Board9x9Texture.cpp" />
     <ClCompile Include="src\BoardTexture.cpp" />
-    <ClCompile Include="src\BoardVertIndices.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
     <ClCompile Include="src\CubeVertices.cpp" />
@@ -119,7 +118,6 @@
     <ClInclude Include="header\Board9x9.h" />
     <ClInclude Include="header\Board9x9Texture.h" />
     <ClInclude Include="header\BoardTexture.h" />
-    <ClInclude Include="header\BoardVertIndices.h" />
     <ClInclude Include="header\CubeVertIndices.h" />
     <ClInclude Include="header\CubeVertices.h" />
     <ClInclude Include="header\Device11AndDeviceContext.h" />
