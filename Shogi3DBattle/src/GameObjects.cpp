@@ -13,8 +13,7 @@
 // 将棋盤作成
 void GameObjects::CreateBoard()
 {
-    _board            = std::make_unique<Board9x9>();
-    //_boardVertIndices = std::make_unique<BoardVertIndices>();
+    _board = std::make_unique<Board9x9>();
 }
 
 // 駒置き台作成
@@ -22,7 +21,6 @@ void GameObjects::CreateSideBoards()
 {
     _sideBoard1           = std::make_unique<SideBoard>();
     _sideBoard2           = std::make_unique<SideBoard>();
-    //_sideBoardVertIndices = std::make_unique<CubeVertIndices>();
 }
 
 // 駒作成
@@ -42,7 +40,6 @@ void GameObjects::CreatePieces()
 
     createPlayerPieces(PlayerSide::PLAYER_1); // プレイヤー１の駒作成
     createPlayerPieces(PlayerSide::PLAYER_2); // プレイヤー２の駒作成
-    //_pieceVertIndices = std::make_unique<PieceVertIndices>(); // 駒の頂点インデックス集合作成
 }
 
 // 頂点インデックス作成
@@ -51,6 +48,8 @@ void GameObjects::CreateVertIndices()
     _cubeVertIndices  = std::make_unique<CubeVertIndices>();
     _pieceVertIndices = std::make_unique<PieceVertIndices>();
 }
+
+
 
 // ゲームオブジェクト作成
 void GameObjects::CreateGameObjects()
@@ -64,22 +63,23 @@ void GameObjects::CreateGameObjects()
 
 
 
-
-// 全てのゲームオブジェクトを返す
-std::vector<I_GameObj*> GameObjects::GetAllGameObjects()
+// 将棋盤を返す
+I_Board* GameObjects::GetBoard()
 {
-
-    std::vector<I_GameObj*> allGameObjects;
-
-    allGameObjects.push_back(_board.get());                           // 将棋盤
-    allGameObjects.push_back(_sideBoard1.get());                      // 駒置き台１
-    allGameObjects.push_back(_sideBoard2.get());                      // 駒置き台２
-    for(auto& piece : _pieces) allGameObjects.push_back(piece.get()); // 駒
-
-    return allGameObjects;
+    return _board.get();
 }
 
-I_Board* GameObjects::GetBoard(){return _board.get();} // 将棋盤を返す
+// 駒置き台を返す
+std::vector<SideBoard*> GameObjects::GetSideBoards()
+{
+
+    std::vector<SideBoard*> sideBoards;
+
+    sideBoards.push_back(_sideBoard1.get());
+    sideBoards.push_back(_sideBoard2.get());
+
+    return sideBoards;
+}
 
 // 駒を返す
 std::vector<I_Piece*> GameObjects::GetPieces()
@@ -91,19 +91,40 @@ std::vector<I_Piece*> GameObjects::GetPieces()
     return pieces;
 }
 
+// 全てのゲームオブジェクトを返す
+std::vector<I_GameObj*> GameObjects::GetAllGameObjects()
+{
+
+    std::vector<I_GameObj*> allGameObjects;
+
+    allGameObjects.push_back(GetBoard());
+    for(auto& sideBoard : GetSideBoards()) allGameObjects.push_back(sideBoard);
+    for(auto& piece     : GetPieces())     allGameObjects.push_back(piece);
+
+    return allGameObjects;
+}
 
 
+
+// 箱型の頂点インデックスを返す
+CubeVertIndices*  GameObjects::GetBoardVertIndices()
+{
+    return _cubeVertIndices.get();
+} 
+
+// 駒の頂点インデックスを返す
+PieceVertIndices* GameObjects::GetPieceVertIndices()
+{
+    return _pieceVertIndices.get();
+} 
 
 // 全ての頂点インデックスを返す
 std::vector<NaturalBufferedData<unsigned short>*> GameObjects::GetAllVertIndices()
 {
     std::vector<NaturalBufferedData<unsigned short>*> allVertIndices;
 
-    allVertIndices.push_back(_cubeVertIndices.get());
-    allVertIndices.push_back(_pieceVertIndices.get());
+    allVertIndices.push_back(GetBoardVertIndices());
+    allVertIndices.push_back(GetPieceVertIndices());
 
     return allVertIndices;
 }
-
-CubeVertIndices*  GameObjects::GetBoardVertIndices(){return _cubeVertIndices.get();} // 将棋盤の頂点インデックスを返す
-PieceVertIndices* GameObjects::GetPieceVertIndices(){return _pieceVertIndices.get();} // 駒の頂点インデックスを返す

@@ -74,7 +74,7 @@ void BoardTexture::SetBoardTexture(unsigned int squareNum)
         }
     }
 
-    _pixels = pixels;
-    _width = width;
-    _height = height;
+    SetPixels(pixels);
+    SetWidth(width);
+    SetHeight(height);
 }

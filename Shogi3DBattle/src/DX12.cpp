@@ -137,13 +137,15 @@ void DX12::CreateBuff()
     unsigned int pieceTextureNum = 8;
     for (unsigned int i = 0; i < pieceTextureNum; i++)
     {
+        // 駒用テクスチャバッファ作成
         _shogiObjTexBuffs.push_back(_device->CreateBuff(widthSize, heightSize, BuffType::RENDER_TEX));
     }
     auto textures          = app.GetTextures();
-    auto boardLineTextures = textures->GetBoardLineTextures();
-    auto boardTextureNum = static_cast<unsigned int>(boardLineTextures.size());
-    for (unsigned int i = 0; i < boardTextureNum; i++)
+    auto designTextures = textures->GetDesignTextures();
+    auto designTextureNum   = static_cast<unsigned int>(designTextures.size());
+    for (unsigned int i = 0; i < designTextureNum; i++)
     {
+        // 駒以外のオブジェクトごとのテクスチャバッファ作成
         _shogiObjTexBuffs.push_back(_device->CreateBuff(widthSize, heightSize, BuffType::TEXTURE));
     }
     
@@ -165,11 +167,11 @@ void DX12::CreateHeap()
     // CSUヒープ作成
     auto& app = Application::GetInstance();
     auto textures = app.GetTextures();
-    unsigned int woodTexNum   = static_cast<unsigned int>(textures->GetWoodTextures().size());
-    unsigned int boardTexNum  = static_cast<unsigned int>(textures->GetBoardLineTextures().size());
-    unsigned int pieceTexNum  = 8;
+    unsigned int woodTexNum      = static_cast<unsigned int>(textures->GetWoodTextures().size());
+    unsigned int designTexNum    = static_cast<unsigned int>(textures->GetDesignTextures().size());
+    unsigned int pieceTexNum     = 8;
     unsigned int cbvNum = 1;
-    unsigned int srvNum = woodTexNum + boardTexNum + pieceTexNum;
+    unsigned int srvNum = woodTexNum + designTexNum + pieceTexNum;
     unsigned int uavNum = 0;
     _csuHeap = _device->CreateCSUHeap(cbvNum, srvNum, uavNum, HeapType::CSU);
 
@@ -202,9 +204,9 @@ void DX12::CreateView()
     // 将棋オブジェクト用SRV作成
     unsigned int pieceTextureNum = 8;
     auto textures = Application::GetInstance().GetTextures();
-    auto boardLineTextures = textures->GetBoardLineTextures();
-    auto boardLineTextureNum = static_cast<unsigned int>(boardLineTextures.size());
-    unsigned int shogiObjTextureNum = pieceTextureNum + boardLineTextureNum;
+    auto designTextures = textures->GetDesignTextures();
+    auto designTextureNum = static_cast<unsigned int>(designTextures.size());
+    unsigned int shogiObjTextureNum = pieceTextureNum + designTextureNum;
     for (unsigned int i = 0; i < shogiObjTextureNum; i++, srvIdx++)
         _device->CreateCSUView(_csuHeap.get(), srvIdx, _shogiObjTexBuffs[i].Get(), View::SRV);
 
@@ -427,7 +429,7 @@ void DX12::WriteToBuff()
 
     auto textures      = app.GetTextures();
     auto woodTexs      = textures->GetWoodTextures();
-    auto boardLineTexs = textures->GetBoardLineTextures();
+    auto designTexs = textures->GetDesignTextures();
 
     auto boardVertIndices = gameObjects->GetBoardVertIndices();
     auto pieceVertIndices = gameObjects->GetPieceVertIndices();
@@ -482,10 +484,11 @@ void DX12::WriteToBuff()
     for(unsigned int i = 0; i < woodTexNum; i++)
         woodTexs[i]->WriteToBuff(_woodTexBuffs[i].Get()); 
 
-    // 将棋盤黒線テクスチャをバッファに書き込み
-    auto boardLineTexNum = static_cast<unsigned int>(boardLineTexs.size());
-    for(unsigned int i = 0; i < boardLineTexNum; i++)
-        boardLineTexs[i]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_55) + i].Get()); 
+    // オブジェクトごとのテクスチャをバッファに書き込み
+    auto designTexNum = static_cast<unsigned int>(designTexs.size());
+    for(unsigned int i = 0; i < designTexNum; i++)
+        designTexs[i]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_55) + i].Get()); 
+
 }
 
 // レンダーテクスチャ作成
@@ -707,27 +710,35 @@ void DX12::ExeD3D()
 void DX12::SetCommandDrawGameObj()
 {
     auto gameObjects = Application::GetInstance().GetGameObjects();
+    auto cubeVertIndices  = gameObjects->GetBoardVertIndices();
+    auto pieceVertIndices = gameObjects->GetPieceVertIndices();
 
     // 将棋盤描画コマンドセット
     auto board  = gameObjects->GetBoard();
-    auto boardVertIndices = gameObjects->GetBoardVertIndices();
-    auto idxBuffView = GetIdxBuffView(boardVertIndices);
+    auto idxBuffView = GetIdxBuffView(cubeVertIndices);
     _cmdList->IASetIndexBuffer(&idxBuffView);
-    auto vertBuffView = GetVertBuffView(static_cast<I_Vertices*>(board->GetVertices()));
+    auto vertBuffView = GetVertBuffView(board->GetVertices());
     _cmdList->IASetVertexBuffers(0, 1, &vertBuffView);
+    _cmdList->DrawIndexedInstanced(static_cast<unsigned int>(cubeVertIndices->GetDatas().size()), 1, 0, 0, 0);
 
-    _cmdList->DrawIndexedInstanced(static_cast<unsigned int>(boardVertIndices->GetDatas().size()), 1, 0, 0, 0);
+    // 駒置き台描画コマンドセット
+    auto sideBoards = gameObjects->GetSideBoards();
+    _cmdList->IASetIndexBuffer(&idxBuffView);
+    for (auto& sideBoard : sideBoards)
+    {
+        auto vertBuffView = GetVertBuffView(sideBoard->GetVertices());
+        _cmdList->IASetVertexBuffers(0, 1, &vertBuffView);
+        _cmdList->DrawIndexedInstanced(static_cast<unsigned int>(cubeVertIndices->GetDatas().size()), 1, 0, 0, 0);
+    }
 
     // 駒描画コマンドセット
     auto pieces = gameObjects->GetPieces();
-    auto  pieceVertIndices = gameObjects->GetPieceVertIndices();
     idxBuffView = GetIdxBuffView(pieceVertIndices);
     _cmdList->IASetIndexBuffer(&idxBuffView);
-    for (UINT i = 0; i < pieces.size(); i++)
+    for (auto& piece : pieces)
     { 
-        auto vertBuffView = GetVertBuffView(static_cast<I_Vertices*>(pieces[i]->GetVertices()));
+        auto vertBuffView = GetVertBuffView(piece->GetVertices());
         _cmdList->IASetVertexBuffers(0, 1, &vertBuffView);
-
         _cmdList->DrawIndexedInstanced(static_cast<unsigned int>(pieceVertIndices->GetDatas().size()), 1, 0, 0, 0);
     }
 }

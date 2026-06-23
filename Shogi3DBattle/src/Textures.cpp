@@ -10,11 +10,12 @@ void Textures::CreateWoodTextures()
     _woodTextures.push_back(std::make_unique<WoodTexture>(220, 220, 220)); // 灰色
 }
 
-// 将棋盤黒線テクスチャ作成
-void Textures::CreateBoardLineTextures()
+// オブジェクトごとのテクスチャ作成
+void Textures::CreateDesignTextures()
 {
-    _boardLineTextures.push_back(std::make_unique<Board5x5Texture>());
-    _boardLineTextures.push_back(std::make_unique<Board9x9Texture>());
+    _designTextures.push_back(std::make_unique<Board5x5Texture>());
+    _designTextures.push_back(std::make_unique<Board9x9Texture>());
+    _designTextures.push_back(std::make_unique<I_Texture>());
 }
 
 
@@ -24,7 +25,7 @@ void Textures::CreateBoardLineTextures()
 void Textures::CreateTextures()
 {
     CreateWoodTextures();
-    CreateBoardLineTextures();
+    CreateDesignTextures();
 }
 
 
@@ -38,11 +39,11 @@ std::vector<I_Texture*> Textures::GetWoodTextures()
     return woodTextures;
 }
 
-// 将棋盤黒線テクスチャを返す
-std::vector<I_Texture*> Textures::GetBoardLineTextures()
+// オブジェクトごとのテクスチャを返す
+std::vector<I_Texture*> Textures::GetDesignTextures()
 {
     std::vector<I_Texture*> boardLineTextures;
-    for(auto& boardLineTexture : _boardLineTextures) boardLineTextures.push_back(boardLineTexture.get());
+    for(auto& boardLineTexture : _designTextures) boardLineTextures.push_back(boardLineTexture.get());
 
     return boardLineTextures;
 }

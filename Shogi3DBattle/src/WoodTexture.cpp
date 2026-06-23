@@ -42,7 +42,7 @@ WoodTexture::WoodTexture(unsigned char r, unsigned char g, unsigned char b)
             x = 0;
         }
     }
-    _pixels = pixels;
-    _width  = width;
-    _height = height;
+    SetPixels(pixels);
+    SetWidth(width);
+    SetHeight(height);
 }
