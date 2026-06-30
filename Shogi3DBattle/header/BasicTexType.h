@@ -3,5 +3,6 @@
 enum class BasicTexType
 {
     YELLOW_WOOD, // 黄色木材
-    GRAY_WOOD    // 灰色木材
+    GRAY_WOOD,   // 灰色木材
+    BROWN_WOOD   // 茶色木材
 };

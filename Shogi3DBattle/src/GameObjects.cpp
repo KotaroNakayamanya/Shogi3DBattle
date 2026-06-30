@@ -19,8 +19,14 @@ void GameObjects::CreateBoard()
 // ‹î’u‚«‘äì¬
 void GameObjects::CreateSideBoards()
 {
-    _sideBoard1           = std::make_unique<SideBoard>();
-    _sideBoard2           = std::make_unique<SideBoard>();
+    _sideBoard1 = std::make_unique<SideBoard>();
+    _sideBoard2 = std::make_unique<SideBoard>();
+
+    // ‘Šè‚Ì‹î’u‚«‘ä‚ÌˆÊ’u‚ğ’²®
+    auto worldMat = _sideBoard2->GetWorldMat();
+    auto oldMat   = worldMat->GetMat();
+    auto newMat   = oldMat * DirectX::XMMatrixTranslation(130.0f, -70.0f, 0.0f);
+    worldMat->SetMat(newMat);
 }
 
 // ‹îì¬

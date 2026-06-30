@@ -40,7 +40,7 @@ void Application::CreateCamera()
     auto fov   = DirectX::XM_PIDIV2;
     auto ar    =  16.0f / 9.0f;
     auto nearZ =   1.0f;
-    auto farZ  = 150.0f;
+    auto farZ  = 200.0f;
     auto mainProjMat = std::make_unique<PersProjMat>(fov, ar, nearZ, farZ);
 
     _mainCamera = std::make_unique<Camera>(std::move(mainViewMat), std::move(mainProjMat));

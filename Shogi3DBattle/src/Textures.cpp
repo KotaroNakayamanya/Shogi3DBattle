@@ -8,6 +8,7 @@ void Textures::CreateWoodTextures()
 {
     _woodTextures.push_back(std::make_unique<WoodTexture>(226, 232,  75)); // 黄色
     _woodTextures.push_back(std::make_unique<WoodTexture>(220, 220, 220)); // 灰色
+    _woodTextures.push_back(std::make_unique<WoodTexture>(140,  80,  36)); // 茶色
 }
 
 // オブジェクトごとのテクスチャ作成
