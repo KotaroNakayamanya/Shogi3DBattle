@@ -643,7 +643,6 @@ void DX12::ExeD3D()
     auto& app    = Application::GetInstance();
     auto  gameObjects = app.GetGameObjects();
     auto  board  = gameObjects->GetBoard();
-    auto pieces = gameObjects->GetPieces();
 
     auto mainCamera = app.GetMainCamera();
     auto mapCamera = app.GetMapCamera();
@@ -660,6 +659,13 @@ void DX12::ExeD3D()
 
     SetCommandDrawGameObj(); // ゲームオブジェクト描画コマンドセット
 
+    // 駒の頂点集合をバッファに書き込み
+    auto pieces = gameObjects->GetPieces();
+    for (auto& piece : pieces)
+    {
+        auto vertices = piece->GetVertices();
+        vertices->WriteToBuff(_vertBuff.Get());
+    }
     // 定数バッファに書き込み
     auto allGameObjects = gameObjects->GetAllGameObjects();
     for (auto& gameObject : allGameObjects)
