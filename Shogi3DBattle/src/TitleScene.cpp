@@ -54,7 +54,7 @@ void TitleScene::SetButton()
     
     
     float left = (windowWidth - uiWidth) / 2; // UI左位置　中央揃えのため調整
-    float top  = windowHeight / 2;            // UI上位置　真ん中
+    float top  = windowHeight / 1.9f;         // UI上位置　真ん中よりちょっと下
     float right = left + uiWidth;             // UI右位置　UI左位置に横の長さを足す
     float bottom = top + uiHeight;            // UI下位置　UI上位置に縦の長さを足す
 
@@ -71,10 +71,10 @@ void TitleScene::SetButton()
     rect.bottom += heightOffset;
     app.PushTextButton(TextButtonType::CONTINUE_START_BUTTON, rect);
 
-    // オプションボタン
-    rect.top    += heightOffset;
-    rect.bottom += heightOffset;
-    app.PushTextButton(TextButtonType::OPTION_BUTTON, rect);
+    //// オプションボタン
+    //rect.top    += heightOffset;
+    //rect.bottom += heightOffset;
+    //app.PushTextButton(TextButtonType::OPTION_BUTTON, rect);
 
     // ゲーム終了ボタン
     rect.top    += heightOffset;
