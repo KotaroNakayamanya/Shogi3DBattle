@@ -27,6 +27,7 @@ void SelectingPieceScene::SetButton()
     auto square1x1LeftTopX = boardRightTopX - halfSquareSize - squareSize;
     auto square1x1LeftTopY = boardRightTopY + halfSquareSize;
 
+    // 駒を選択できるよう配置する
     auto piecePosManager = Application::GetInstance().GetPiecePosManager(); // 駒の位置マネージャ取得
     for (unsigned int row = 1; row <= squareNum; row++)
     {

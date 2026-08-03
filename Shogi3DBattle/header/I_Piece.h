@@ -15,6 +15,8 @@ public:
     void       SetPlayerSide(PlayerSide playerSide); // 駒所有プレイヤーセット
     PlayerSide GetPlayerSide();                      // 駒所有プレイヤーを返す
 
+    virtual unsigned short GetMovementBits() = 0; // 移動出来る範囲をビット列で返す
+
     I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, PlayerSide playerSide);
     virtual ~I_Piece() = default;
 };

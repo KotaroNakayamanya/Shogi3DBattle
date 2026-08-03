@@ -3,6 +3,7 @@
 #include"SelectingPieceScene.h"
 #include"VecCalc.h"
 #include<cmath>
+#include"RuleManager.h"
 
 // 駒操作シーン動作
 std::unique_ptr<I_SceneState> MovingPieceScene::ExeSceneProcess(
@@ -86,6 +87,7 @@ unsigned int MovingPieceScene::GetColumnFromWorldMat(WorldMat worldMat)
 // 決定ボタン
 std::unique_ptr<I_SceneState> MovingPieceScene::ExeDecisionButtonProcess()
 {
+    // 動かし始めの位置から移動しているか確認する
     auto oldRow      = GetRowFromWorldMat   (_startWorldMat);
     auto oldColumn   = GetColumnFromWorldMat(_startWorldMat);
 
@@ -98,9 +100,15 @@ std::unique_ptr<I_SceneState> MovingPieceScene::ExeDecisionButtonProcess()
 
     if(!isChangedRow && !isChangedColumn) return nullptr; // 移動がなければ何もしない
 
+
+    // 駒を移動後の位置に記録する
     auto piecePosManager = Application::GetInstance().GetPiecePosManager();
     piecePosManager->PlacePieceOnBoard(_piece, newRow, newColumn);
 
+    // 勝利条件を満たしているかどうか確認する
+    auto isWinning = RuleManager::IsWinning(PlayerSide::PLAYER_1);
+
+    // 勝利していなければゲーム続行
     return std::make_unique<SelectingPieceScene>();
 }
 
