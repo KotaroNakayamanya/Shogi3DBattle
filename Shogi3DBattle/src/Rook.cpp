@@ -13,6 +13,15 @@ unsigned short Rook::GetMovementBits()
 
     movementBits += PieceMovementBit::GetStraightVHBit(); // c‰¡’¼i
 
+    // ¬‚Á‚Ä‚¢‚½‚çc‰¡‚Ì“®‚«‚ğ’Ç‰Á
+    if (GetIsPromotion())
+    {
+        movementBits |= PieceMovementBit::GetLeftBottomBit();  // ¶‰º
+        movementBits |= PieceMovementBit::GetRightBottomBit(); // ‰E‰º
+        movementBits |= PieceMovementBit::GetLeftTopBit();     // ¶ã
+        movementBits |= PieceMovementBit::GetRightTopBit();    // ‰Eã
+    }
+
     return movementBits;
 }
 

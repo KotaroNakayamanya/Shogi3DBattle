@@ -19,8 +19,11 @@ void I_Piece::SetPlayerSide(PlayerSide playerSide) // 駒所有プレイヤーセット
 } 
 PlayerSide I_Piece::GetPlayerSide(){return _playerSide;} // 駒所有プレイヤーを返す
 
+void I_Piece::SetIsPromotion(bool b){_isPromotion = b;   } // 成っているかどうかセット
+bool I_Piece::GetIsPromotion()      {return _isPromotion;} // 成っているかどうか返す
+
 I_Piece::I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, PlayerSide playerSide)
-    : I_GameObj(pieceType), _playerSide(playerSide)
+    : I_GameObj(pieceType), _playerSide(playerSide), _isPromotion(false)
 {
     // 指定されたサイズの駒の頂点集合作成
 

@@ -7,13 +7,17 @@
 class I_Piece : public I_GameObj
 {
 private:
-    PlayerSide _playerSide; // 駒所有プレイヤー
+    PlayerSide _playerSide;  // 駒所有プレイヤー
+    bool       _isPromotion; // 成っているかどうか
 
 public:
     void Move(DirectX::XMFLOAT3 vec); // 移動
 
     void       SetPlayerSide(PlayerSide playerSide); // 駒所有プレイヤーセット
     PlayerSide GetPlayerSide();                      // 駒所有プレイヤーを返す
+
+    void SetIsPromotion(bool b); // 成っているかどうかセット
+    bool GetIsPromotion();       // 成っているかどうか返す
 
     virtual unsigned short GetMovementBits() = 0; // 移動出来る範囲をビット列で返す
 
