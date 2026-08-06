@@ -8,8 +8,7 @@ unsigned short Pawn::GetMovementBits()
     if(GetIsPromotion()) return PieceMovementBit::GetGoldMovementBits();
 
     unsigned short movementBits = 0;
-
-    movementBits += PieceMovementBit::GetTopBit(); // è„
+    movementBits += PieceMovementBit::GetUpBit(); // è„
 
     return movementBits;
 }

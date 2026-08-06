@@ -8,9 +8,7 @@ unsigned short Lance::GetMovementBits()
     if(GetIsPromotion()) return PieceMovementBit::GetGoldMovementBits();
 
     unsigned short movementBits = 0;
-
-    movementBits += PieceMovementBit::GetTopBit();        // è„
-    movementBits += PieceMovementBit::GetStraightVHBit(); // ècâ°íºêi
+    movementBits += PieceMovementBit::GetStraightUpBit(); // è„íºêi
 
     return movementBits;
 }

@@ -6,20 +6,18 @@ unsigned short Rook::GetMovementBits()
 {
     unsigned short movementBits = 0;
 
-    movementBits += PieceMovementBit::GetBottomBit();     // 下
-    movementBits += PieceMovementBit::GetLeftBit();       // 左
-    movementBits += PieceMovementBit::GetRightBit();      // 右
-    movementBits += PieceMovementBit::GetTopBit();        // 上
+    movementBits += PieceMovementBit::GetStraightDownBit();  // 下
+    movementBits += PieceMovementBit::GetStraightLeftBit();  // 左
+    movementBits += PieceMovementBit::GetStraightRightBit(); // 右
+    movementBits += PieceMovementBit::GetStraightUpBit();    // 上
 
-    movementBits += PieceMovementBit::GetStraightVHBit(); // 縦横直進
-
-    // 成っていたら縦横の動きを追加
+    // 成っていたら斜めの動きを追加
     if (GetIsPromotion())
     {
-        movementBits |= PieceMovementBit::GetLeftBottomBit();  // 左下
-        movementBits |= PieceMovementBit::GetRightBottomBit(); // 右下
-        movementBits |= PieceMovementBit::GetLeftTopBit();     // 左上
-        movementBits |= PieceMovementBit::GetRightTopBit();    // 右上
+        movementBits |= PieceMovementBit::GetLeftDownBit();  // 左下
+        movementBits |= PieceMovementBit::GetRightDownBit(); // 右下
+        movementBits |= PieceMovementBit::GetLeftUpBit();    // 左上
+        movementBits |= PieceMovementBit::GetRightUpBit();   // 右上
     }
 
     return movementBits;

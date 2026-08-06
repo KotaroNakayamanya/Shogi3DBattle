@@ -84,6 +84,9 @@ void PiecePosManager::InitPiecesPosBoard9x9()
 
     for (auto piece : pieces)
     {
+        // 駒を成っていない状態にする
+        piece->SetIsPromotion(false);
+
         // 中央（5五...vectorでは[4][4]）からずらして配置させる
         int rowOffset, columnOffset;
         switch (piece->GetGameObjType())

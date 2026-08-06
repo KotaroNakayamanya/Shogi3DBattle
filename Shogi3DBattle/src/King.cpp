@@ -5,17 +5,14 @@
 unsigned short King::GetMovementBits()
 {
     unsigned short movementBits = 0;
-
-    movementBits += PieceMovementBit::GetLeftBottomBit();  // 左下
-    movementBits += PieceMovementBit::GetBottomBit();      // 左下
-    movementBits += PieceMovementBit::GetRightBottomBit(); // 右下
-
-    movementBits += PieceMovementBit::GetLeftBit();        // 左
-    movementBits += PieceMovementBit::GetRightBit();       // 右
-
-    movementBits += PieceMovementBit::GetLeftTopBit();     // 左上
-    movementBits += PieceMovementBit::GetTopBit();         // 上
-    movementBits += PieceMovementBit::GetRightTopBit();    // 右上
+    movementBits += PieceMovementBit::GetDownBit();      // 左
+    movementBits += PieceMovementBit::GetLeftBit();      // 左
+    movementBits += PieceMovementBit::GetRightBit();     // 右
+    movementBits += PieceMovementBit::GetUpBit();        // 上
+    movementBits += PieceMovementBit::GetLeftDownBit();  // 左下
+    movementBits += PieceMovementBit::GetRightDownBit(); // 右下
+    movementBits += PieceMovementBit::GetLeftUpBit();    // 左上
+    movementBits += PieceMovementBit::GetRightUpBit();   // 右上
 
     return movementBits;
 ;

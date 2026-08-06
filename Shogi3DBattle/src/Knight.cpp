@@ -8,9 +8,8 @@ unsigned short Knight::GetMovementBits()
     if(GetIsPromotion()) return PieceMovementBit::GetGoldMovementBits();
 
     unsigned short movementBits = 0;
-
-    movementBits += PieceMovementBit::GetLeftTwoTopBit();  // ç∂è„è„
-    movementBits += PieceMovementBit::GetRightTwoTopBit(); // âEè„è„
+    movementBits += PieceMovementBit::GetLeftDoubleUpBit();  // ç∂è„è„
+    movementBits += PieceMovementBit::GetRightDoubleUpBit(); // âEè„è„
 
     return movementBits;
 }

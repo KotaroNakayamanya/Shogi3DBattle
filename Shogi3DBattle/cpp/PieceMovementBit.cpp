@@ -1,31 +1,35 @@
 #include"PieceMovementBit.h"
 
-unsigned short PieceMovementBit::GetLeftBottomBit (){return 1 <<  0;} // 左下
-unsigned short PieceMovementBit::GetBottomBit     (){return 1 <<  1;} // 下
-unsigned short PieceMovementBit::GetRightBottomBit(){return 1 <<  2;} // 右下
-unsigned short PieceMovementBit::GetLeftBit       (){return 1 <<  3;} // 左
-unsigned short PieceMovementBit::GetRightBit      (){return 1 <<  4;} // 右
-unsigned short PieceMovementBit::GetLeftTopBit    (){return 1 <<  5;} // 左上
-unsigned short PieceMovementBit::GetTopBit        (){return 1 <<  6;} // 上
-unsigned short PieceMovementBit::GetRightTopBit   (){return 1 <<  7;} // 右上
-unsigned short PieceMovementBit::GetLeftTwoTopBit (){return 1 <<  8;} // 左上上
-unsigned short PieceMovementBit::GetRightTwoTopBit(){return 1 <<  9;} // 右上上
-unsigned short PieceMovementBit::GetStraightVHBit (){return 1 << 10;} // 縦横直進
-unsigned short PieceMovementBit::GetStraightDBit  (){return 1 << 11;} // 斜め直進
+unsigned int PieceMovementBit::GetDownBit             (){return 1 <<  0;} // 下
+unsigned int PieceMovementBit::GetLeftBit             (){return 1 <<  1;} // 左
+unsigned int PieceMovementBit::GetRightBit            (){return 1 <<  2;} // 右
+unsigned int PieceMovementBit::GetUpBit               (){return 1 <<  3;} // 上
+unsigned int PieceMovementBit::GetLeftDownBit         (){return 1 <<  4;} // 左下
+unsigned int PieceMovementBit::GetRightDownBit        (){return 1 <<  5;} // 右下
+unsigned int PieceMovementBit::GetLeftUpBit           (){return 1 <<  6;} // 左上
+unsigned int PieceMovementBit::GetRightUpBit          (){return 1 <<  7;} // 右上
+unsigned int PieceMovementBit::GetStraightDownBit     (){return 1 <<  8;} // 下直進
+unsigned int PieceMovementBit::GetStraightLeftBit     (){return 1 <<  9;} // 左直進
+unsigned int PieceMovementBit::GetStraightRightBit    (){return 1 << 10;} // 右直進
+unsigned int PieceMovementBit::GetStraightUpBit       (){return 1 << 11;} // 上直進
+unsigned int PieceMovementBit::GetStraightLeftDownBit (){return 1 << 12;} // 左下直進
+unsigned int PieceMovementBit::GetStraightRightDownBit(){return 1 << 13;} // 右下直進
+unsigned int PieceMovementBit::GetStraightLeftUpBit   (){return 1 << 14;} // 左上直進
+unsigned int PieceMovementBit::GetStraightRightUpBit  (){return 1 << 15;} // 右上直進
+unsigned int PieceMovementBit::GetLeftDoubleUpBit     (){return 1 << 16;} // 左上上
+unsigned int PieceMovementBit::GetRightDoubleUpBit    (){return 1 << 17;} // 右上上
 
 // 金の動きのビット列
-unsigned short PieceMovementBit::GetGoldMovementBits()
+unsigned int PieceMovementBit::GetGoldMovementBits()
 {
-    unsigned short movementBits = 0;
+    unsigned int movementBits = 0;
 
-    movementBits |= GetBottomBit();   // 下
-
-    movementBits |= GetLeftBit();     // 左
-    movementBits |= GetRightBit();    // 右
-
-    movementBits |= GetLeftTopBit();  // 左上
-    movementBits |= GetTopBit();      // 上
-    movementBits |= GetRightTopBit(); // 右上
+    movementBits |= GetDownBit();    // 下
+    movementBits |= GetLeftBit();    // 左
+    movementBits |= GetRightBit();   // 右
+    movementBits |= GetUpBit();      // 上
+    movementBits |= GetLeftUpBit();  // 左上
+    movementBits |= GetRightUpBit(); // 右上
 
     return movementBits;
 }

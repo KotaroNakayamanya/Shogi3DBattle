@@ -268,19 +268,19 @@ void DX12::CreateDrawArea()
 
     // マップ
     // ビューポート
+    unsigned int offset = 10;
     auto length = windowHeight / 2;
     auto topY   = windowHeight - length;
-    unsigned int offset = 10;
-    _mapViewport->TopLeftX = static_cast<float>(offset); // 左上横位置
+    _mapViewport->TopLeftX = static_cast<float>(offset);        // 左上横位置
     _mapViewport->TopLeftY = static_cast<float>(topY - offset); // 左上縦位置
-    _mapViewport->Width    = static_cast<float>(length);  // 横
-    _mapViewport->Height   = static_cast<float>(length); // 縦
+    _mapViewport->Width    = static_cast<float>(length);        // 横
+    _mapViewport->Height   = static_cast<float>(length);        // 縦
     _mapViewport->MaxDepth = 1.0f; // 深度最大値
     _mapViewport->MinDepth = 0.0f; // 深度最小値
     // シザー矩形
-    _mapScissorRect->left   = offset;                        // 左
-    _mapScissorRect->right  = length;         // 右
-    _mapScissorRect->top    = topY - offset;                 // 上
+    _mapScissorRect->left   = 26;                    // 左
+    _mapScissorRect->right  = length - 10;           // 右
+    _mapScissorRect->top    = topY - offset;         // 上
     _mapScissorRect->bottom = windowHeight - offset; // 下
 
 
