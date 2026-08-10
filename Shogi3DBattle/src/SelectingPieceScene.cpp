@@ -35,6 +35,8 @@ void SelectingPieceScene::SetButton()
         {
             auto piece = piecePosManager->GetPlacedPiece(row, column); // 対象マスに位置する駒を取得
             if(!piece) continue; // 駒がいなければスキップ
+            auto isCurrentPlayerTurnPiece = piece->GetPlayerSide() != app.GetCurrentPlayerTurn();
+            if(isCurrentPlayerTurnPiece) continue; // 操作プレイヤーの駒でなければスキップ
 
             auto squareLeftTopX = square1x1LeftTopX - (column-1)*squareSize; // マス左上X座標
             auto squareLeftTopY = square1x1LeftTopY + (row   -1)*squareSize; // マス左上Y座標
@@ -71,8 +73,19 @@ std::unique_ptr<I_SceneState> SelectingPieceScene::ExeSelectingButtonSceneOperat
     int cursorXMove,
     int cursorYMove)
 {
-    if(inputMemory & InputHandler::DECISION)
-        return ExeDecisionButtonProcess();
+    if (inputMemory & InputHandler::DECISION)
+    {
+        // カーソルが駒の上で決定ボタンを押したら
+        // カメラをパース付きプロジェクション行列に戻す
+        auto buttonProcess = ExeDecisionButtonProcess();
+        if (buttonProcess != nullptr)
+        {
+            PersProjMat* persProjMat = new PersProjMat;
+            *persProjMat = _oldPersProjMat;
+            _mainCamera->SetProjMat(persProjMat);
+        }
+        return buttonProcess;
+    }
     if(inputMemory & InputHandler::CANCEL)
         return ExeCancelButton();
 
@@ -82,7 +95,13 @@ std::unique_ptr<I_SceneState> SelectingPieceScene::ExeSelectingButtonSceneOperat
 // キャンセルボタン処理
 std::unique_ptr<I_SceneState> SelectingPieceScene::ExeCancelButton()
 {
-    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<TitleScene>(); // スタートメニューに遷移する
+    // カメラをパース付きプロジェクション行列に戻す
+    PersProjMat* persProjMat = new PersProjMat;
+    *persProjMat = _oldPersProjMat;
+    _mainCamera->SetProjMat(persProjMat);
+
+    // スタートメニューに遷移する
+    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<TitleScene>(); 
 
     auto inputHandler = Application::GetInstance().GetInputHandler();
     inputHandler->RemoveRClick();
@@ -95,12 +114,19 @@ std::unique_ptr<I_SceneState> SelectingPieceScene::ExeCancelButton()
 
 SelectingPieceScene::SelectingPieceScene()
 {
-    _mainCamera     = Application::GetInstance().GetMainCamera();
-    auto mapCamera  = Application::GetInstance().GetMapCamera();
+    auto& app       = Application::GetInstance();
+    _mainCamera     = app.GetMainCamera();
+    auto mapCamera  = app.GetMapCamera();
 
     // 現在のメインカメラのパース付きプロジェクション行列を保存する
     auto mainPersProjMat = static_cast<PersProjMat*>(_mainCamera->GetProjMat());
     _oldPersProjMat = *mainPersProjMat;
+
+    //// マップカメラの向きを現在のターンのプレイヤーの向きにする
+    //auto yVec = app.GetCurrentPlayerTurn() == PlayerSide::PLAYER_1 ?
+    //    -1.0f : 1.0f;
+    //DirectX::XMFLOAT3 up = {0.0f, yVec, 0.0f};
+    //mapCamera->SetCameraUpVec(up);
     
     // メインカメラをマップカメラを基準にしたカメラにする
     // ビュー行列
@@ -113,12 +139,4 @@ SelectingPieceScene::SelectingPieceScene()
     *nonePersProjMat = *mapNonePersProjMat;
     nonePersProjMat->SetWidth (mapNonePersProjMat->GetWidth() * 16.0f / 9.0f); // 横サイズは拡張
     _mainCamera->SetProjMat(nonePersProjMat);
-}
-
-SelectingPieceScene::~SelectingPieceScene()
-{
-    // カメラをパース付きプロジェクション行列に戻す
-    PersProjMat* persProjMat = new PersProjMat;
-    *persProjMat = _oldPersProjMat;
-    _mainCamera->SetProjMat(persProjMat);
 }

@@ -296,8 +296,10 @@ Camera* Application::GetMainCamera(){return _mainCamera.get();} // メインカ�
 Camera* Application::GetMapCamera() {return _mapCamera.get();}  // マップカメラを返す
 KeyMap* Application::GetKeyMap(){return _keyMap.get();} // キー割り当てを返す
 
-void Application::SetIsDrawMap(bool flag){_isDrawMap = flag;} // マップ描画フラグをセット
-bool Application::IsDrawMap()            {return _isDrawMap;} // マップ描画フラグを返す
+void       Application::SetIsDrawMap        (bool flag)            {_isDrawMap = flag;}                // マップ描画フラグをセット
+bool       Application::IsDrawMap           ()                     {return _isDrawMap;}                // マップ描画フラグを返す
+void       Application::SetCurrentPlayerTurn(PlayerSide playerSide){_currentPlayerTurn = playerSide;}; // 現在の操作プレイヤーを返す
+PlayerSide Application::GetCurrentPlayerTurn()                     {return _currentPlayerTurn;}        // 現在の操作プレイヤーを返す
 
 
 bool Application::IsDrawUINotEmpty(){return _buttonUIs.size() > 0;} // UIの空状況を返す
@@ -409,6 +411,7 @@ void Application::PushPieceButton(
             return;
     }
 }
+
 
 
 

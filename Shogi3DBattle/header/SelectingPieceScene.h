@@ -26,5 +26,4 @@ private:
 
 public:
     SelectingPieceScene();
-    ~SelectingPieceScene();
 };

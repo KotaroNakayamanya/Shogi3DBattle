@@ -29,7 +29,13 @@
 class Application
 {
 private:
-    bool _isDrawMap = false;
+    bool _isDrawMap = false; // マップを表示する画面かどうか
+
+    PlayerSide _currentPlayerTurn   = PlayerSide::PLAYER_1; // 現在のプレイヤーのターン
+    bool _isPlayer1Checked          = false; // プレイヤー１が王手されているかどうか
+    bool _isPlayer2Checked          = false; // プレイヤー２が王手されているかどうか
+    bool _isPlayer1Win              = false; // プレイヤー１が勝っているかどうか
+    bool _isPlayer2Win              = false; // プレイヤー２が勝っているかどうか
 
     std::unique_ptr<GameObjects> _gameObjects; // ゲームオブジェクト
     std::unique_ptr<Textures>    _textures;    // テクスチャ
@@ -81,8 +87,10 @@ public:
     Camera* GetMainCamera(); // メインカメラを返す
     Camera* GetMapCamera();  // マップカメラを返す
 
-    void SetIsDrawMap(bool flag); // マップ描画フラグをセット
-    bool IsDrawMap();             // マップ描画フラグを返す
+    void       SetIsDrawMap        (bool flag);             // マップ描画フラグをセット
+    bool       IsDrawMap           ();                      // マップ描画フラグを返す
+    void       SetCurrentPlayerTurn(PlayerSide playerSide); // 現在の操作プレイヤーを返す
+    PlayerSide GetCurrentPlayerTurn();                      // 現在の操作プレイヤーを返す
 
 
     // テキストUIをプッシュ
@@ -107,6 +115,7 @@ public:
     void RemoveAllUI();      // UIを全て削除する
 
     void ProcessChangeWindowSize(); // 画面サイズ変更処理
+
 
     ~Application() = default;
 };

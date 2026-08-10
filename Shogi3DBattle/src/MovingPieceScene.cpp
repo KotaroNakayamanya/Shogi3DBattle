@@ -87,28 +87,45 @@ unsigned int MovingPieceScene::GetColumnFromWorldMat(WorldMat worldMat)
 // 決定ボタン
 std::unique_ptr<I_SceneState> MovingPieceScene::ExeDecisionButtonProcess()
 {
-    // 動かし始めの位置から移動しているか確認する
-    auto oldRow      = GetRowFromWorldMat   (_startWorldMat);
-    auto oldColumn   = GetColumnFromWorldMat(_startWorldMat);
+    //// 動かし始めの位置から移動しているか確認する
+    //auto oldRow      = GetRowFromWorldMat   (_startWorldMat);
+    //auto oldColumn   = GetColumnFromWorldMat(_startWorldMat);
 
-    auto newWorldMat = _piece->GetWorldMat();
-    auto newRow      = GetRowFromWorldMat   (*newWorldMat);
-    auto newColumn   = GetColumnFromWorldMat(*newWorldMat);
+    //auto newWorldMat = _piece->GetWorldMat();
+    //auto newRow      = GetRowFromWorldMat   (*newWorldMat);
+    //auto newColumn   = GetColumnFromWorldMat(*newWorldMat);
 
-    auto isChangedRow    = oldRow    != newRow;
-    auto isChangedColumn = oldColumn != newColumn;
+    //auto isChangedRow    = oldRow    != newRow;
+    //auto isChangedColumn = oldColumn != newColumn;
 
-    if(!isChangedRow && !isChangedColumn) return nullptr; // 移動がなければ何もしない
+    //if(!isChangedRow && !isChangedColumn) return nullptr; // 移動がなければ何もしない
 
+    // その位置に駒が移動可能かどうか確認し、可能でなければ何もしない
+    auto worldMat = _piece->GetWorldMat();
+    auto row      = GetRowFromWorldMat   (*worldMat);
+    auto column   = GetColumnFromWorldMat(*worldMat);
+    if (!RuleManager::GetCanThisPlacedPiece(_piece, row, column)) return nullptr;
 
-    // 駒を移動後の位置に記録する
+    // 新しい位置に記録する
     auto piecePosManager = Application::GetInstance().GetPiecePosManager();
-    piecePosManager->PlacePieceOnBoard(_piece, newRow, newColumn);
+    piecePosManager->PlacePieceOnBoard(_piece, row, column);
+
+    //// 可能であれば、駒を移動後の位置に記録する
+    //if (isThisPosOK)
+    //{
+    //    auto piecePosManager = Application::GetInstance().GetPiecePosManager();
+    //    piecePosManager->PlacePieceOnBoard(_piece, newRow, newColumn);
+    //}
 
     // 勝利条件を満たしているかどうか確認する
     auto isWinning = RuleManager::IsWinning(PlayerSide::PLAYER_1);
 
-    // 勝利していなければゲーム続行
+    // 勝利していなければ相手にターンを渡してゲーム続行
+    auto opponentPlayer = _piece->GetPlayerSide() == PlayerSide::PLAYER_1 ?
+        PlayerSide::PLAYER_2 : PlayerSide::PLAYER_1;
+    auto& app = Application::GetInstance();
+    app.SetCurrentPlayerTurn(opponentPlayer);
+    
     return std::make_unique<SelectingPieceScene>();
 }
 
@@ -178,12 +195,16 @@ void MovingPieceScene::ExeMouseMove(int xMove, int yMove)
 
 MovingPieceScene::MovingPieceScene(I_Piece* piece)
 {
+    auto& app = Application::GetInstance();
+
     _piece = piece; // 操作対象の駒を取得
-    _mainCamera = Application::GetInstance().GetMainCamera(); // メインカメラ取得
+    _mainCamera = app.GetMainCamera(); // メインカメラ取得
     
     auto worldMat = piece->GetWorldMat()->GetMat(); // 駒のワールド行列取得
     _startWorldMat = *piece->GetWorldMat(); // ワールド行列初期値として取得しておく
-    
+
+    // 駒が移動可能な位置を取得する
+    _canPlaced = RuleManager::GetCanPlaced(piece);
     
     // カメラのフォーカス位置を駒の位置を基準にセット
     auto worldFloat4x4 = VecCalc::GetFoloat4x4FromMat(worldMat);

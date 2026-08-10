@@ -2,6 +2,615 @@
 #include"Application.h"
 #include"PieceMovementBit.h"
 
+// 対象の位置が将棋盤上にあるかどうか返す
+bool RuleManager::GetIsRowAndColumnCorrect(unsigned char row, unsigned char column)
+{
+    auto board = Application::GetInstance().GetGameObjects()->GetBoard();
+
+    auto isRowCorrect    = false;
+    auto isColumnCorrect = false;
+    switch (board->GetGameObjType())
+    {
+        case GameObjType::BOARD_99:
+            isRowCorrect    = (1<=row   ) && (row   <=9);
+            isColumnCorrect = (1<=column) && (column<=9);
+            break;
+
+        default:
+            break;
+    }
+
+    return isRowCorrect && isColumnCorrect;
+}
+
+// プレイヤーにとっての上下左右のプラスマイナス1を返す
+RuleManager::Move RuleManager::GetMoveForPlayer(PlayerSide playerSide)
+{
+    Move move;
+    
+    switch (playerSide)
+    {
+        // プレイヤー1は右上がマイナス
+        case PlayerSide::PLAYER_1:
+            move.right = -1;
+            move.up    = -1;
+            move.left  =  1;
+            move.down  =  1;
+            break;
+
+        // プレイヤー2は右上がプラス
+        case PlayerSide::PLAYER_2:
+            move.right =  1;
+            move.up    =  1;
+            move.left  = -1;
+            move.down  = -1;
+            break;
+
+        default:
+            break;
+    }
+
+    return move;
+}
+
+
+
+// 駒が移動できる位置を行列で返す
+std::vector<std::vector<bool>> RuleManager::GetCanPlaced(I_Piece* piece)
+{
+    // 空の行列を作る
+    std::vector<std::vector<bool>> canPlaced;
+
+    // 将棋盤のサイズに合わせる
+    unsigned char rowSquareNum;
+    auto board = Application::GetInstance().GetGameObjects()->GetBoard();
+    switch (board->GetGameObjType())
+    {
+        case GameObjType::BOARD_99:
+            rowSquareNum = 9;
+            canPlaced.resize(rowSquareNum);
+            for(auto& column : canPlaced) column.resize(rowSquareNum);
+            break;
+
+        default:
+            break;
+    }
+
+    // 一旦、全てfalseを入れる
+    for (auto& column : canPlaced)
+    {
+        for(auto square : column) square = false;
+    }
+   
+    // 駒がどこにいるのか探す
+    auto& app             = Application::GetInstance();
+    auto  piecePosManager = app.GetPiecePosManager();
+    unsigned char placedRow;
+    unsigned char placedColumn;
+    bool          isFound = false;
+    for (unsigned int i = 1; i <= rowSquareNum; i++)
+    {
+        for (unsigned int j = 1; j <= rowSquareNum; j++)
+        {
+            // 駒を走査する　nullではなく、対象の駒であれば位置を記録して処理を抜ける
+            auto targetPiece = piecePosManager->GetPlacedPiece(i, j);
+            if(targetPiece == nullptr) continue;
+            if (targetPiece == piece)
+            {
+                placedRow    = i;
+                placedColumn = j;
+                isFound      = true;
+                break;
+            }
+        }
+
+        // 見つかったら処理を抜ける
+        if(isFound) break;
+    }
+
+    // 以下、動ける範囲をtrueにする
+    // 駒の移動可能ビットを取得
+    auto movementBits = piece->GetMovementBits();
+
+    // 将棋盤上で見つかった場合は現在の位置から動ける範囲をtrueにする
+    if (isFound)
+    {
+        unsigned char tempRow;
+        unsigned char tempColumn;
+
+        // プレイヤーにとっての上下左右のプラスマイナスを取得
+        auto move = GetMoveForPlayer(piece->GetPlayerSide());
+
+        // 下に移動可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetDownBit()) > 0)
+        {
+            tempRow    = placedRow    + move.down;
+            tempColumn = placedColumn;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにする
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+            }
+        }
+
+        // 左に移動可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetLeftBit()) > 0)
+        {
+            tempRow    = placedRow;
+            tempColumn = placedColumn + move.left;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにする
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+            }
+        }
+        // 右に移動可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetRightBit()) > 0)
+        {
+            tempRow    = placedRow;
+            tempColumn = placedColumn + move.right;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにする
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+            }
+        }
+        // 上に移動可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetUpBit()) > 0)
+        {
+            tempRow    = placedRow    + move.up;
+            tempColumn = placedColumn;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにする
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+            }
+        }
+        // 左下に移動可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetLeftDownBit()) > 0)
+        {
+            tempRow    = placedRow    + move.down;
+            tempColumn = placedColumn + move.left;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにする
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+            }
+        }
+        // 右下に移動可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetRightDownBit()) > 0)
+        {
+            tempRow    = placedRow    + move.down;
+            tempColumn = placedColumn + move.right;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにする
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+            }
+        }
+        // 左上に移動可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetLeftUpBit()) > 0)
+        {
+            tempRow    = placedRow    + move.up;
+            tempColumn = placedColumn + move.left;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにする
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+            }
+        }
+        // 右上に移動可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetRightUpBit()) > 0)
+        {
+            tempRow    = placedRow    + move.up;
+            tempColumn = placedColumn + move.right;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにする
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+            }
+        }
+        // 左上上に移動可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetLeftDoubleUpBit()) > 0)
+        {
+            tempRow    = placedRow    + move.up*2;
+            tempColumn = placedColumn + move.left;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにする
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+            }
+        }
+        // 右上上に移動可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetRightDoubleUpBit()) > 0)
+        {
+            tempRow    = placedRow    + move.up*2;
+            tempColumn = placedColumn + move.right;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにする
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+            }
+        }
+        // 下直進が可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetStraightDownBit()) > 0)
+        {
+            tempRow    = placedRow    + move.down;
+            tempColumn = placedColumn;
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにし、処理を抜ける
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                    break;
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+
+                // 次を走査する
+                tempRow += move.down;
+            }
+        }
+        // 左直進が可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetStraightLeftBit()) > 0)
+        {
+            tempRow    = placedRow;
+            tempColumn = placedColumn + move.left;
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにし、処理を抜ける
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                    break;
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+
+                // 次を走査する
+                tempColumn += move.left;
+            }
+        }
+        // 右直進が可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetStraightRightBit()) > 0)
+        {
+            tempRow    = placedRow;
+            tempColumn = placedColumn + move.right;
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにし、処理を抜ける
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                    break;
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+
+                // 次を走査する
+                tempColumn += move.right;
+            }
+        }
+        // 上直進が可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetStraightUpBit()) > 0)
+        {
+            tempRow    = placedRow    + move.up;
+            tempColumn = placedColumn;
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにし、処理を抜ける
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                    break;
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+
+                // 次を走査する
+                tempRow += move.up;
+            }
+        }
+        // 左下直進が可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetStraightLeftDownBit()) > 0)
+        {
+            tempRow    = placedRow    + move.down;
+            tempColumn = placedColumn + move.left;
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにし、処理を抜ける
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                    break;
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+
+                // 次を走査する
+                tempRow    += move.down;
+                tempColumn += move.left;
+            }
+        }
+        // 右下直進が可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetStraightRightDownBit()) > 0)
+        {
+            tempRow    = placedRow    + move.down;
+            tempColumn = placedColumn + move.right;
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにし、処理を抜ける
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                    break;
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+
+                // 次を走査する
+                tempRow    += move.down;
+                tempColumn += move.right;
+            }
+        }
+        // 左上直進が可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetStraightLeftUpBit()) > 0)
+        {
+            tempRow    = placedRow    + move.up;
+            tempColumn = placedColumn + move.left;
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにし、処理を抜ける
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                    break;
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+
+                // 次を走査する
+                tempRow    += move.up;
+                tempColumn += move.left;
+            }
+        }
+        // 右上直進が可能かどうか確認
+        if ((movementBits & PieceMovementBit::GetStraightRightUpBit()) > 0)
+        {
+            tempRow    = placedRow    + move.up;
+            tempColumn = placedColumn + move.right;
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分の駒であればtrueにし、処理を抜ける
+                {
+                    if (targetPiece->GetPlayerSide() != piece->GetPlayerSide())
+                    {
+                        canPlaced[tempRow - 1][tempColumn - 1] = true;
+                    }
+                    break;
+                } 
+                else // 駒がいなければ移動可能につき、trueにする
+                {
+                    canPlaced[tempRow - 1][tempColumn - 1] = true;
+                }
+
+                // 次を走査する
+                tempRow    += move.up;
+                tempColumn += move.right;
+            }
+        }
+    }
+    else // 将棋盤上にいなければ駒がいない範囲を基本、trueとする
+    {
+
+    }
+
+    return canPlaced;
+}
+
+// その位置に駒を動かせるかどうか返す
+bool RuleManager::GetCanThisPlacedPiece(I_Piece* piece, unsigned char row, unsigned char column)
+{
+    // 行と列が正当かどうか確認し、正当でなければfalseを返す
+    auto isRowAndColumnCorrect = GetIsRowAndColumnCorrect(row, column);
+    if(!isRowAndColumnCorrect) return false;
+
+    // その駒が移動できる範囲を取得し、対象の位置の真偽を返す
+    auto canPlaced = GetCanPlaced(piece);
+    return canPlaced[row - 1][column - 1];
+}
+
 // プレイヤーが勝利しているか確認
 bool RuleManager::IsWinning(PlayerSide playerSide)
 {
@@ -51,32 +660,8 @@ unsigned int RuleManager::GetAttackedBits(
     unsigned char row,
     unsigned char column)
 {
-    // プレイヤー１なら右上が1一(マイナス)、プレイヤー２なら右上が9九(プラス)
-    char right = 0;
-    char up    = 0;
-    char left  = 0;
-    char down  = 0;
-    if (playerSide == PlayerSide::PLAYER_1)
-    {
-        right = -1;
-        up    = -1;
-        left  =  1;
-        down  =  1;
-    }
-    else
-    {
-        right =  1;
-        up    =  1;
-        left  = -1;
-        down  = -1;
-    }
-
-
-    // 値が1~9の値に収まってるかチェックする関数
-    auto Is1to9 = [](char n)
-    {
-        return (1 <= n) && (n <= 9);
-    };
+    // プレイヤーにとっての上下左右のプラスマイナスを取得する
+    auto move = GetMoveForPlayer(playerSide);
 
     // 駒が可能な動きであればtrueを返す関数
     auto IsPossibleMovement = [](I_Piece* piece, unsigned short movementBit)
@@ -95,9 +680,9 @@ unsigned int RuleManager::GetAttackedBits(
 
 
     // 下から攻撃されているか確認
-    tempRow    = row    + down;
+    tempRow    = row    + move.down;
     tempColumn = column;
-    if (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -114,8 +699,8 @@ unsigned int RuleManager::GetAttackedBits(
 
     // 左から攻撃されているか確認
     tempRow    = row;
-    tempColumn = column + left;
-    if (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    tempColumn = column + move.left;
+    if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -132,8 +717,8 @@ unsigned int RuleManager::GetAttackedBits(
 
     // 右から攻撃されているか確認
     tempRow    = row;
-    tempColumn = column + right;
-    if (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    tempColumn = column + move.right;
+    if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -149,9 +734,9 @@ unsigned int RuleManager::GetAttackedBits(
     }
 
     // 上から攻撃されているか確認
-    tempRow    = row    + up;
+    tempRow    = row    + move.up;
     tempColumn = column;
-    if (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -167,9 +752,9 @@ unsigned int RuleManager::GetAttackedBits(
     }
 
     // 左下から攻撃されているか確認
-    tempRow    = row    + down;
-    tempColumn = column + left;
-    if (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    tempRow    = row    + move.down;
+    tempColumn = column + move.left;
+    if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -185,9 +770,9 @@ unsigned int RuleManager::GetAttackedBits(
     }
 
     // 右下から攻撃されているか確認
-    tempRow    = row    + down;
-    tempColumn = column + right;
-    if (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    tempRow    = row    + move.down;
+    tempColumn = column + move.right;
+    if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -204,9 +789,9 @@ unsigned int RuleManager::GetAttackedBits(
 
 
     // 左上から攻撃されているか確認
-    tempRow    = row    + up;
-    tempColumn = column + left;
-    if (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    tempRow    = row    + move.up;
+    tempColumn = column + move.left;
+    if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -223,9 +808,9 @@ unsigned int RuleManager::GetAttackedBits(
 
 
     // 右上から攻撃されているか確認
-    tempRow    = row    + up;
-    tempColumn = column + right;
-    if (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    tempRow    = row    + move.up;
+    tempColumn = column + move.right;
+    if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -241,9 +826,9 @@ unsigned int RuleManager::GetAttackedBits(
     }
 
     // 左上上から攻撃されているか確認
-    tempRow    = row    + up*2;
-    tempColumn = column + left;
-    if (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    tempRow    = row    + move.up*2;
+    tempColumn = column + move.left;
+    if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -259,9 +844,9 @@ unsigned int RuleManager::GetAttackedBits(
     }
 
     // 右上上から攻撃されているか確認 
-    tempRow    = row    + up*2;
-    tempColumn = column + right;
-    if (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    tempRow    = row    + move.up*2;
+    tempColumn = column + move.right;
+    if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -277,9 +862,9 @@ unsigned int RuleManager::GetAttackedBits(
     }
 
     // 下から直進攻撃をされているか確認
-    tempRow    = row    + down;
+    tempRow    = row    + move.down;
     tempColumn = column;
-    while (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -297,13 +882,13 @@ unsigned int RuleManager::GetAttackedBits(
         }
 
         // 次のマスを走査する
-        tempRow += down;
+        tempRow += move.down;
     }
 
     // 左から直進攻撃をされているか確認
     tempRow    = row;
-    tempColumn = column + left;
-    while (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    tempColumn = column + move.left;
+    while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -321,13 +906,13 @@ unsigned int RuleManager::GetAttackedBits(
         }
 
         // 次のマスを走査する
-        tempColumn += left;
+        tempColumn += move.left;
     }
 
     // 右から直進攻撃をされているか確認
     tempRow    = row;
-    tempColumn = column + right;
-    while (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    tempColumn = column + move.right;
+    while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -345,13 +930,13 @@ unsigned int RuleManager::GetAttackedBits(
         }
 
         // 次のマスを走査する
-        tempColumn += right;
+        tempColumn += move.right;
     }
 
     // 上から直進攻撃をされているか確認
-    tempRow    = row    + up;
+    tempRow    = row    + move.up;
     tempColumn = column;
-    while (Is1to9(tempRow) && Is1to9(tempColumn)) // 9×9マスに収まっているか確認
+    while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
     {
         // 駒がいるか確認する
         auto piece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
@@ -369,7 +954,7 @@ unsigned int RuleManager::GetAttackedBits(
         }
 
         // 次のマスを走査する
-        tempRow += up;
+        tempRow += move.up;
     }
 
     return attackedBits;

@@ -12,6 +12,8 @@ private:
     WorldMat _startWorldMat; // 初期ワールド行列
     bool _isMoved; // 駒が動いたかどうか確認
 
+    std::vector<std::vector<bool>> _canPlaced; // 将棋盤上の移動可能な位置
+
     unsigned int GetRowFromWorldMat   (WorldMat worldMat); // ワールド行列から行位置を返す
     unsigned int GetColumnFromWorldMat(WorldMat worldMat); // ワールド行列から列位置を返す
 
