@@ -31,11 +31,11 @@ class Application
 private:
     bool _isDrawMap = false; // マップを表示する画面かどうか
 
-    PlayerSide _currentPlayerTurn   = PlayerSide::PLAYER_1; // 現在のプレイヤーのターン
-    bool _isPlayer1Checked          = false; // プレイヤー１が王手されているかどうか
-    bool _isPlayer2Checked          = false; // プレイヤー２が王手されているかどうか
-    bool _isPlayer1Win              = false; // プレイヤー１が勝っているかどうか
-    bool _isPlayer2Win              = false; // プレイヤー２が勝っているかどうか
+    PlayerSide _currentPlayerTurn = PlayerSide::PLAYER_1; // 現在のプレイヤーのターン
+    bool _isPlayer1Checked        = false; // プレイヤー１が王手されているかどうか
+    bool _isPlayer2Checked        = false; // プレイヤー２が王手されているかどうか
+    bool _isPlayer1Winning        = false; // プレイヤー１が勝っているかどうか
+    bool _isPlayer2Winning        = false; // プレイヤー２が勝っているかどうか
 
     std::unique_ptr<GameObjects> _gameObjects; // ゲームオブジェクト
     std::unique_ptr<Textures>    _textures;    // テクスチャ
@@ -91,6 +91,10 @@ public:
     bool       IsDrawMap           ();                      // マップ描画フラグを返す
     void       SetCurrentPlayerTurn(PlayerSide playerSide); // 現在の操作プレイヤーを返す
     PlayerSide GetCurrentPlayerTurn();                      // 現在の操作プレイヤーを返す
+    void       SetIsPlayerChecked(PlayerSide playerSide, bool isChecked); // プレイヤーの王手フラグをセット
+    bool       GetIsPlayerChecked(PlayerSide playerSide);                 // プレイヤーの王手フラグを返す
+    void       SetIsPlayerWinning(PlayerSide playerSide, bool isWinning); // プレイヤーの勝利フラグをセット
+    bool       GetIsPlayerWinning(PlayerSide playerSide);                 // プレイヤーの勝利フラグを返す
 
 
     // テキストUIをプッシュ

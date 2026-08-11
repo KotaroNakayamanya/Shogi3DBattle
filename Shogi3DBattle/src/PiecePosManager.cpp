@@ -11,12 +11,13 @@ void PiecePosManager::InitPiecesPos()
 
     // 駒を初期化
     auto pieces = app.GetGameObjects()->GetPieces();
-    auto pieceNum = static_cast<unsigned int>(pieces.size());
-    for (unsigned int i = 0; i < pieceNum; i++)
+    auto piecenum = static_cast<unsigned int>(pieces.size());
+    for (unsigned int i = 0; i < piecenum; i++)
     {
-        auto playerSide = i < (pieceNum/2) ?
+        // 駒を半分にプレイヤーを分ける
+        auto playerside = i < (piecenum/2) ?
             PlayerSide::PLAYER_1 : PlayerSide::PLAYER_2;
-        pieces[i]->SetPlayerSide(playerSide);
+        pieces[i]->SetPlayerSide(playerside);
     }
     
     // 将棋盤取得
@@ -35,6 +36,40 @@ void PiecePosManager::InitPiecesPos()
             return;
     }
 }
+
+// 王の位置を返す
+PiecePosManager::Place PiecePosManager::GetKingPlace(PlayerSide playerSide)
+{
+    // 行の数を取得する
+    unsigned char rowSquareNum = _piecePlacedOnBoard.size();
+
+    // 王を探す
+    Place place;
+    for (int i = 1; i <= rowSquareNum; i++)
+    {
+        bool isFound = false;
+
+        for (int j = 1; j <= rowSquareNum; j++)
+        {
+            auto piece = GetPlacedPiece(i, j);
+
+            if(piece == nullptr)                             continue; // 何もいなければ次へ
+            if(piece->GetGameObjType() != GameObjType::KING) continue; // 王でなければ次へ
+            if(piece->GetPlayerSide()  != playerSide)        continue; // 自分側の駒でなければ次へ
+
+            // 王の位置を記録
+            place.row    = i;
+            place.column = j;
+            isFound            = true;
+            break;
+        }
+
+        if(isFound) break;
+    }
+
+    return place;
+}
+
 // 駒位置記録用の変数のサイズを変更
 void PiecePosManager::ResizePlacedPieceVec(unsigned int squareNum)
 {
@@ -257,6 +292,20 @@ void PiecePosManager::PlacePieceOnSideBoard(std::vector<std::vector<I_Piece*>>& 
     piece->GetWorldMat()->SetMat(newWorldMat);
 
     int aaa = 3;
+}
+
+// 将棋盤上に指定の駒が存在するか確認する
+bool PiecePosManager::GetIsPiecePlacedOnBoard(I_Piece* piece)
+{
+    for (auto& column : _piecePlacedOnBoard)
+    {
+        for (auto& square : column)
+        {
+            if(square == piece) return true;
+        }
+    }
+
+    return false;
 }
 
 // マスに位置している駒を返す

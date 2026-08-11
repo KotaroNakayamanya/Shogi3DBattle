@@ -19,7 +19,7 @@ public:
     void SetIsPromotion(bool b); // 成っているかどうかセット
     bool GetIsPromotion();       // 成っているかどうか返す
 
-    virtual unsigned short GetMovementBits() = 0; // 移動出来る範囲をビット列で返す
+    virtual unsigned int GetMovementBits() = 0; // 移動出来る範囲をビット列で返す
 
     I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, PlayerSide playerSide);
     virtual ~I_Piece() = default;

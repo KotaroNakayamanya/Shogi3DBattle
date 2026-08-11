@@ -2,14 +2,14 @@
 #include"PieceMovementBit.h"
 
 // 移動出来る範囲をビット列で返す
-unsigned short Rook::GetMovementBits()
+unsigned int Rook::GetMovementBits()
 {
-    unsigned short movementBits = 0;
+    unsigned int movementBits = 0;
 
-    movementBits += PieceMovementBit::GetStraightDownBit();  // 下
-    movementBits += PieceMovementBit::GetStraightLeftBit();  // 左
-    movementBits += PieceMovementBit::GetStraightRightBit(); // 右
-    movementBits += PieceMovementBit::GetStraightUpBit();    // 上
+    movementBits |= PieceMovementBit::GetStraightDownBit();  // 下
+    movementBits |= PieceMovementBit::GetStraightLeftBit();  // 左
+    movementBits |= PieceMovementBit::GetStraightRightBit(); // 右
+    movementBits |= PieceMovementBit::GetStraightUpBit();    // 上
 
     // 成っていたら斜めの動きを追加
     if (GetIsPromotion())

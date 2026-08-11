@@ -298,8 +298,79 @@ KeyMap* Application::GetKeyMap(){return _keyMap.get();} // キー割り当てを
 
 void       Application::SetIsDrawMap        (bool flag)            {_isDrawMap = flag;}                // マップ描画フラグをセット
 bool       Application::IsDrawMap           ()                     {return _isDrawMap;}                // マップ描画フラグを返す
+
 void       Application::SetCurrentPlayerTurn(PlayerSide playerSide){_currentPlayerTurn = playerSide;}; // 現在の操作プレイヤーを返す
 PlayerSide Application::GetCurrentPlayerTurn()                     {return _currentPlayerTurn;}        // 現在の操作プレイヤーを返す
+
+// プレイヤーの王手フラグをセット
+void Application::SetIsPlayerChecked(PlayerSide playerSide, bool isChecked)
+{
+    switch (playerSide)
+    {
+        case PlayerSide::PLAYER_1:
+            _isPlayer1Checked = isChecked;
+            break;
+
+        case PlayerSide::PLAYER_2:
+            _isPlayer2Checked = isChecked;
+            break;
+
+        default:
+            break;
+    }
+}; 
+// プレイヤーの王手フラグを返す
+bool Application::GetIsPlayerChecked(PlayerSide playerSide)
+{
+    switch (playerSide)
+    {
+        case PlayerSide::PLAYER_1:
+            return _isPlayer1Checked;
+            break;
+
+        case PlayerSide::PLAYER_2:
+            return _isPlayer2Checked;
+            break;
+
+        default:
+            break;
+    }
+}
+
+// プレイヤーの勝利フラグをセット
+void Application::SetIsPlayerWinning(PlayerSide playerSide, bool isWinning)
+{
+    switch (playerSide)
+    {
+        case PlayerSide::PLAYER_1:
+            _isPlayer1Winning = isWinning;
+            break;
+
+        case PlayerSide::PLAYER_2:
+            _isPlayer2Winning = isWinning;
+            break;
+
+        default:
+            break;
+    }
+}; 
+// プレイヤーの勝利フラグを返す
+bool Application::GetIsPlayerWinning(PlayerSide playerSide)
+{
+    switch (playerSide)
+    {
+        case PlayerSide::PLAYER_1:
+            return _isPlayer1Winning;
+            break;
+
+        case PlayerSide::PLAYER_2:
+            return _isPlayer2Winning;
+            break;
+
+        default:
+            break;
+    }
+}
 
 
 bool Application::IsDrawUINotEmpty(){return _buttonUIs.size() > 0;} // UIの空状況を返す

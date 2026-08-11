@@ -543,6 +543,9 @@
     <ClCompile Include="cpp\PieceMovementBit.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="cpp\PromotionScene.cpp">
+      <Filter>ソース ファイル\scene_state</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\DX12.h">
@@ -897,6 +900,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\PieceMovementBit.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PromotionScene.h">
+      <Filter>ヘッダー ファイル\scene_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\SetMovingPieceScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

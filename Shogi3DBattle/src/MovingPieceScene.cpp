@@ -4,6 +4,7 @@
 #include"VecCalc.h"
 #include<cmath>
 #include"RuleManager.h"
+#include"PromotionScene.h"
 
 // 駒操作シーン動作
 std::unique_ptr<I_SceneState> MovingPieceScene::ExeSceneProcess(
@@ -87,19 +88,6 @@ unsigned int MovingPieceScene::GetColumnFromWorldMat(WorldMat worldMat)
 // 決定ボタン
 std::unique_ptr<I_SceneState> MovingPieceScene::ExeDecisionButtonProcess()
 {
-    //// 動かし始めの位置から移動しているか確認する
-    //auto oldRow      = GetRowFromWorldMat   (_startWorldMat);
-    //auto oldColumn   = GetColumnFromWorldMat(_startWorldMat);
-
-    //auto newWorldMat = _piece->GetWorldMat();
-    //auto newRow      = GetRowFromWorldMat   (*newWorldMat);
-    //auto newColumn   = GetColumnFromWorldMat(*newWorldMat);
-
-    //auto isChangedRow    = oldRow    != newRow;
-    //auto isChangedColumn = oldColumn != newColumn;
-
-    //if(!isChangedRow && !isChangedColumn) return nullptr; // 移動がなければ何もしない
-
     // その位置に駒が移動可能かどうか確認し、可能でなければ何もしない
     auto worldMat = _piece->GetWorldMat();
     auto row      = GetRowFromWorldMat   (*worldMat);
@@ -107,24 +95,33 @@ std::unique_ptr<I_SceneState> MovingPieceScene::ExeDecisionButtonProcess()
     if (!RuleManager::GetCanThisPlacedPiece(_piece, row, column)) return nullptr;
 
     // 新しい位置に記録する
-    auto piecePosManager = Application::GetInstance().GetPiecePosManager();
+    auto& app             = Application::GetInstance();
+    auto  piecePosManager = app.GetPiecePosManager();
     piecePosManager->PlacePieceOnBoard(_piece, row, column);
 
-    //// 可能であれば、駒を移動後の位置に記録する
-    //if (isThisPosOK)
+    //// 成るかどうか確認する
+    //if (RuleManager::GetCanPromotion(_piece, row, column))
     //{
-    //    auto piecePosManager = Application::GetInstance().GetPiecePosManager();
-    //    piecePosManager->PlacePieceOnBoard(_piece, newRow, newColumn);
+    //    return std::make_unique<PromotionScene>(_piece, false);
     //}
 
+    // 自分の王が攻撃されているか確認する
+    auto playerSide = _piece->GetPlayerSide();
+    auto isChecked = RuleManager::GetIsChecked(playerSide);
+    app.SetIsPlayerChecked(playerSide, isChecked);
+
+    // 相手の王が攻撃されているか確認する
+    auto opponentPlayerSide = playerSide == PlayerSide::PLAYER_1 ?
+        PlayerSide::PLAYER_2 : PlayerSide::PLAYER_1;
+    isChecked = RuleManager::GetIsChecked(opponentPlayerSide);
+    app.SetIsPlayerChecked(opponentPlayerSide, isChecked);
+
     // 勝利条件を満たしているかどうか確認する
-    auto isWinning = RuleManager::IsWinning(PlayerSide::PLAYER_1);
+    auto isWinning = RuleManager::GetIsWinning(playerSide);
+    if(isWinning) app.SetIsPlayerWinning(playerSide, isWinning);
 
     // 勝利していなければ相手にターンを渡してゲーム続行
-    auto opponentPlayer = _piece->GetPlayerSide() == PlayerSide::PLAYER_1 ?
-        PlayerSide::PLAYER_2 : PlayerSide::PLAYER_1;
-    auto& app = Application::GetInstance();
-    app.SetCurrentPlayerTurn(opponentPlayer);
+    app.SetCurrentPlayerTurn(opponentPlayerSide);
     
     return std::make_unique<SelectingPieceScene>();
 }

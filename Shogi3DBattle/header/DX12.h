@@ -95,7 +95,7 @@ private:
     
     // テキストフォーマット
     std::unique_ptr<DirectWriteFactory> _directWriteFactory;    // DirectWriteファクトリー
-    ComPtr<IDWriteTextFormat> _pieceTextFormat; // 駒のテキストフォーマット
+    ComPtr<IDWriteTextFormat> _pieceTextFormat;  // 駒のテキストフォーマット
     ComPtr<IDWriteTextFormat> _normalTextFormat; // 通常テキストフォーマット
     ComPtr<IDWriteTextFormat> _titleTextFormat;     // タイトルテキストフォーマット
     ComPtr<IDWriteTextFormat> _titleFrameTextFormat; // タイトル枠テキストフォーマット

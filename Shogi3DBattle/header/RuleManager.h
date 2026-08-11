@@ -15,14 +15,16 @@ public:
     };
 
 private:
-    static Move GetMoveForPlayer(PlayerSide playerSide); // プレイヤーにとっての上下左右のプラスマイナス1を返す
-    static bool GetIsRowAndColumnCorrect(unsigned char row, unsigned char column); // 対象の位置が将棋盤上にあるかどうか返す
+    static Move  GetMoveForPlayer(PlayerSide playerSide); // プレイヤーにとっての上下左右のプラスマイナス1を返す
+    static bool  GetIsRowAndColumnCorrect(unsigned char row, unsigned char column); // 対象の位置が将棋盤上にあるかどうか返す
+    //static unsigned int GetAllowedMovementBits(I_Piece* piece, unsigned char row, unsigned char column); // その駒がルール上、移動可能なビットを返す
     
 public:
     static std::vector<std::vector<bool>> GetCanPlaced(I_Piece* piece); // 駒が移動できる位置を行列で返す
     static bool GetCanThisPlacedPiece(I_Piece* piece, unsigned char row, unsigned char column); // その位置に駒を動かせるかどうか返す
-
-    static bool IsWinning(PlayerSide playerSide); // プレイヤーが勝利しているか確認
+    static bool GetIsChecked(PlayerSide playerSide); // プレイヤーが王手されているか確認
+    static bool GetIsWinning(PlayerSide playerSide); // プレイヤーが勝利しているか確認
+    static bool GetCanPromotion(I_Piece* piece, unsigned char row, unsigned char column); // 成りが可能かどうか確認する
 
     static unsigned int GetAttackedBits( // 指定の位置がプレイヤーにとってどのように攻撃されているかをビットで返す
         PlayerSide playerSide,

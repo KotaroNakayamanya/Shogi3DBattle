@@ -11,6 +11,8 @@ private:
     Camera*     _mainCamera;       // メインカメラ
     PersProjMat _oldPersProjMat; // プロジェクション行列保存
     I_Button* _selectedButton; // 選択されているボタン
+    
+    bool _isSetText; // テキストがセットされたかどうか
 
     std::unique_ptr<I_SceneState> ExeCancelButton();   // キャンセルボタン処理
 

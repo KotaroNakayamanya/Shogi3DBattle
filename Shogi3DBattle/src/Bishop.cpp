@@ -2,9 +2,9 @@
 #include"PieceMovementBit.h"
 
 // 移動出来る範囲をビット列で返す
-unsigned short Bishop::GetMovementBits()
+unsigned int Bishop::GetMovementBits()
 {
-    unsigned short movementBits = 0;
+    unsigned int movementBits = 0;
 
     movementBits |= PieceMovementBit::GetStraightLeftDownBit();  // 左下直進 
     movementBits |= PieceMovementBit::GetStraightRightDownBit(); // 右下直進 
@@ -14,10 +14,10 @@ unsigned short Bishop::GetMovementBits()
     // 成っていたら縦横の動きを追加
     if (GetIsPromotion())
     {
-        movementBits += PieceMovementBit::GetDownBit();  // 下
-        movementBits += PieceMovementBit::GetLeftBit();  // 左
-        movementBits += PieceMovementBit::GetRightBit(); // 右
-        movementBits += PieceMovementBit::GetUpBit();    // 上
+        movementBits |= PieceMovementBit::GetDownBit();  // 下
+        movementBits |= PieceMovementBit::GetLeftBit();  // 左
+        movementBits |= PieceMovementBit::GetRightBit(); // 右
+        movementBits |= PieceMovementBit::GetUpBit();    // 上
     }
 
     return movementBits;

@@ -2,7 +2,7 @@
 #include"PieceMovementBit.h"
 
 // 移動出来る範囲をビット列で返す
-unsigned short Gold::GetMovementBits()
+unsigned int Gold::GetMovementBits()
 {
     return PieceMovementBit::GetGoldMovementBits();
 }
