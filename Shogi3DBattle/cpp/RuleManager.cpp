@@ -927,6 +927,437 @@ std::vector<std::vector<bool>> RuleManager::GetCanPlaced(I_Piece* piece)
         }
 
         // 移動することで王が攻撃される移動をfalseにする
+        // 直進攻撃を受けているか確認する
+        auto attackedBits = GetAttackedBits(playerSide, placedRow, placedColumn);
+
+        // 直進攻撃の先に王がいるか確認し、位置に応じて動けない範囲を禁止する
+        bool isCanMoveVertical          = true;
+        bool isCanMoveHorizontal        = true;
+        bool isCanMoveDiagonalRightUp   = true;
+        bool isCanMoveDiagonalRightDown = true;
+
+        // 下から直進攻撃を受けているなら、上側に自分側の王がいるか確認
+        if ((attackedBits & PieceMovementBit::GetStraightDownBit()) > 0)
+        {
+            unsigned char tempRow    = placedRow    + move.up;
+            unsigned char tempColumn = placedColumn;
+
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull   = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分側の王か確認し、処理を抜ける
+                {
+                    auto isKing = targetPiece->GetGameObjType() == GameObjType::KING;
+                    auto isAlly = targetPiece->GetPlayerSide()  == playerSide;
+                    
+                    // 自分側の王であれば、縦以外をfalseに
+                    if (isKing && isAlly)
+                    {
+                        isCanMoveHorizontal        = false;
+                        isCanMoveDiagonalRightUp   = false;
+                        isCanMoveDiagonalRightDown = false;
+                    }
+
+                    break;
+                } 
+
+                // 次を走査する
+                tempRow += move.up;
+            }
+        }
+
+        // 左から直進攻撃を受けているなら、右側に自分側の王がいるか確認
+        if ((attackedBits & PieceMovementBit::GetStraightLeftBit()) > 0)
+        {
+            unsigned char tempRow    = placedRow;
+            unsigned char tempColumn = placedColumn + move.right;
+
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull   = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分側の王か確認し、処理を抜ける
+                {
+                    auto isKing = targetPiece->GetGameObjType() == GameObjType::KING;
+                    auto isAlly = targetPiece->GetPlayerSide()  == playerSide;
+                    
+                    // 自分側の王であれば、横以外をfalseに
+                    if (isKing && isAlly)
+                    {
+                        isCanMoveVertical          = false;
+                        isCanMoveDiagonalRightUp   = false;
+                        isCanMoveDiagonalRightDown = false;
+                    }
+
+                    break;
+                } 
+
+                // 次を走査する
+                tempColumn += move.right;
+            }
+        }
+
+        // 右から直進攻撃を受けているなら、左側に自分側の王がいるか確認
+        if ((attackedBits & PieceMovementBit::GetStraightRightBit()) > 0)
+        {
+            unsigned char tempRow    = placedRow;
+            unsigned char tempColumn = placedColumn + move.left;
+
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull   = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分側の王か確認し、処理を抜ける
+                {
+                    auto isKing = targetPiece->GetGameObjType() == GameObjType::KING;
+                    auto isAlly = targetPiece->GetPlayerSide()  == playerSide;
+                    
+                    // 自分側の王であれば、横以外をfalseに
+                    if (isKing && isAlly)
+                    {
+                        isCanMoveVertical          = false;
+                        isCanMoveDiagonalRightUp   = false;
+                        isCanMoveDiagonalRightDown = false;
+                    }
+
+                    break;
+                } 
+
+                // 次を走査する
+                tempColumn += move.left;
+            }
+        }
+
+        // 上から直進攻撃を受けているなら、下側に自分側の王がいるか確認
+        if ((attackedBits & PieceMovementBit::GetStraightUpBit()) > 0)
+        {
+            unsigned char tempRow    = placedRow    + move.down;
+            unsigned char tempColumn = placedColumn;
+
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull   = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分側の王か確認し、処理を抜ける
+                {
+                    auto isKing = targetPiece->GetGameObjType() == GameObjType::KING;
+                    auto isAlly = targetPiece->GetPlayerSide()  == playerSide;
+                    
+                    // 自分側の王であれば、縦以外をfalseに
+                    if (isKing && isAlly)
+                    {
+                        isCanMoveHorizontal        = false;
+                        isCanMoveDiagonalRightUp   = false;
+                        isCanMoveDiagonalRightDown = false;
+                    }
+
+                    break;
+                } 
+
+                // 次を走査する
+                tempRow += move.down;
+            }
+        }
+
+        // 左下から直進攻撃を受けているなら、右上側に自分側の王がいるか確認
+        if ((attackedBits & PieceMovementBit::GetStraightLeftDownBit()) > 0)
+        {
+            unsigned char tempRow    = placedRow    + move.up;
+            unsigned char tempColumn = placedColumn + move.right;
+
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull   = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分側の王か確認し、処理を抜ける
+                {
+                    auto isKing = targetPiece->GetGameObjType() == GameObjType::KING;
+                    auto isAlly = targetPiece->GetPlayerSide()  == playerSide;
+                    
+                    // 自分側の王であれば、右上（左下）以外をfalseに
+                    if (isKing && isAlly)
+                    {
+                        isCanMoveVertical          = false;
+                        isCanMoveHorizontal        = false;
+                        isCanMoveDiagonalRightDown = false;
+                    }
+
+                    break;
+                } 
+
+                // 次を走査する
+                tempRow    += move.up;
+                tempColumn += move.right;
+            }
+        }
+
+        // 右下から直進攻撃を受けているなら、左上側に自分側の王がいるか確認
+        if ((attackedBits & PieceMovementBit::GetStraightRightDownBit()) > 0)
+        {
+            unsigned char tempRow    = placedRow    + move.up;
+            unsigned char tempColumn = placedColumn + move.left;
+
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull   = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分側の王か確認し、処理を抜ける
+                {
+                    auto isKing = targetPiece->GetGameObjType() == GameObjType::KING;
+                    auto isAlly = targetPiece->GetPlayerSide()  == playerSide;
+                    
+                    // 自分側の王であれば、右上（左下）以外をfalseに
+                    if (isKing && isAlly)
+                    {
+                        isCanMoveVertical        = false;
+                        isCanMoveHorizontal      = false;
+                        isCanMoveDiagonalRightUp = false;
+                    }
+
+                    break;
+                } 
+
+                // 次を走査する
+                tempRow    += move.up;
+                tempColumn += move.left;
+            }
+        }
+
+        // 左上から直進攻撃を受けているなら、右下側に自分側の王がいるか確認
+        if ((attackedBits & PieceMovementBit::GetStraightLeftUpBit()) > 0)
+        {
+            unsigned char tempRow    = placedRow    + move.down;
+            unsigned char tempColumn = placedColumn + move.right;
+
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull   = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分側の王か確認し、処理を抜ける
+                {
+                    auto isKing = targetPiece->GetGameObjType() == GameObjType::KING;
+                    auto isAlly = targetPiece->GetPlayerSide()  == playerSide;
+                    
+                    // 自分側の王であれば、右上（左下）以外をfalseに
+                    if (isKing && isAlly)
+                    {
+                        isCanMoveVertical        = false;
+                        isCanMoveHorizontal      = false;
+                        isCanMoveDiagonalRightUp = false;
+                    }
+
+                    break;
+                } 
+
+                // 次を走査する
+                tempRow    += move.down;
+                tempColumn += move.right;
+            }
+        }
+
+        // 右上から直進攻撃を受けているなら、左下側に自分側の王がいるか確認
+        if ((attackedBits & PieceMovementBit::GetStraightRightUpBit()) > 0)
+        {
+            unsigned char tempRow    = placedRow    + move.down;
+            unsigned char tempColumn = placedColumn + move.left;
+
+            while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+            {
+                // 駒がいるか確認する
+                auto targetPiece = piecePosManager->GetPlacedPiece(tempRow, tempColumn);
+                auto isNotNull   = targetPiece != nullptr;
+
+                if (isNotNull) // 駒がいるなら、その駒が自分側の王か確認し、処理を抜ける
+                {
+                    auto isKing = targetPiece->GetGameObjType() == GameObjType::KING;
+                    auto isAlly = targetPiece->GetPlayerSide()  == playerSide;
+                    
+                    // 自分側の王であれば、右上（左下）以外をfalseに
+                    if (isKing && isAlly)
+                    {
+                        isCanMoveVertical          = false;
+                        isCanMoveHorizontal        = false;
+                        isCanMoveDiagonalRightDown = false;
+                    }
+
+                    break;
+                } 
+
+                // 次を走査する
+                tempRow    += move.down;
+                tempColumn += move.left;
+            }
+        }
+
+        // 移動禁止の範囲をfalseにする
+        
+        // 縦移動禁止
+        if (!isCanMoveVertical)
+        {
+            for (unsigned char row = 1; row <= rowSquareNum; row++)
+            {
+                for (unsigned char column = 1; column <= rowSquareNum; column++)
+                {
+                    char          offsetRow    = move.up;
+                    char          offsetColumn = 0;
+                    unsigned char tempRow      = placedRow    + offsetRow;
+                    unsigned char tempColumn   = placedColumn + offsetColumn;
+                    while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+                    {
+                        // 対象のマスをfalseにする
+                        if((row == tempRow) && (column == tempColumn)) canPlaced[row - 1][column - 1] = false;
+
+                        // 次を操作 
+                        tempRow    += offsetRow;
+                        tempColumn += offsetColumn;
+                    }
+
+                    offsetRow    = move.down;
+                    offsetColumn = 0;
+                    tempRow      = placedRow    + offsetRow;
+                    tempColumn   = placedColumn + offsetColumn;
+                    while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+                    {
+                        // 対象のマスをfalseにする
+                        if((row == tempRow) && (column == tempColumn)) canPlaced[row - 1][column - 1] = false;
+
+                        // 次を操作 
+                        tempRow    += offsetRow;
+                        tempColumn += offsetColumn;
+                    }
+                }
+            }
+        }
+
+        // 横移動禁止
+        if (!isCanMoveHorizontal)
+        {
+            for (unsigned char row = 1; row <= rowSquareNum; row++)
+            {
+                for (unsigned char column = 1; column <= rowSquareNum; column++)
+                {
+                    char          offsetRow    = 0;
+                    char          offsetColumn = move.right;
+                    unsigned char tempRow      = placedRow    + offsetRow;
+                    unsigned char tempColumn   = placedColumn + offsetColumn;
+                    while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+                    {
+                        // 対象のマスをfalseにする
+                        if((row == tempRow) && (column == tempColumn)) canPlaced[row - 1][column - 1] = false;
+
+                        // 次を操作 
+                        tempRow    += offsetRow;
+                        tempColumn += offsetColumn;
+                    }
+
+                    offsetRow    = 0;
+                    offsetColumn = move.left;
+                    tempRow      = placedRow    + offsetRow;
+                    tempColumn   = placedColumn + offsetColumn;
+                    while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+                    {
+                        // 対象のマスをfalseにする
+                        if((row == tempRow) && (column == tempColumn)) canPlaced[row - 1][column - 1] = false;
+
+                        // 次を操作 
+                        tempRow    += offsetRow;
+                        tempColumn += offsetColumn;
+                    }
+                }
+            }
+        }
+
+        // 右上(右下)移動禁止
+        if (!isCanMoveDiagonalRightUp)
+        {
+            for (unsigned char row = 1; row <= rowSquareNum; row++)
+            {
+                for (unsigned char column = 1; column <= rowSquareNum; column++)
+                {
+                    char          offsetRow    = move.up;
+                    char          offsetColumn = move.right;
+                    unsigned char tempRow      = placedRow    + offsetRow;
+                    unsigned char tempColumn   = placedColumn + offsetColumn;
+                    while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+                    {
+                        // 対象のマスをfalseにする
+                        if((row == tempRow) && (column == tempColumn)) canPlaced[row - 1][column - 1] = false;
+
+                        // 次を操作 
+                        tempRow    += offsetRow;
+                        tempColumn += offsetColumn;
+                    }
+
+                    offsetRow    = move.down;
+                    offsetColumn = move.left;
+                    tempRow      = placedRow    + offsetRow;
+                    tempColumn   = placedColumn + offsetColumn;
+                    while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+                    {
+                        // 対象のマスをfalseにする
+                        if((row == tempRow) && (column == tempColumn)) canPlaced[row - 1][column - 1] = false;
+
+                        // 次を操作 
+                        tempRow    += offsetRow;
+                        tempColumn += offsetColumn;
+                    }
+                }
+            }
+        }
+
+        // 右下(左上)移動禁止
+        if (!isCanMoveDiagonalRightDown)
+        {
+            for (unsigned char row = 1; row <= rowSquareNum; row++)
+            {
+                for (unsigned char column = 1; column <= rowSquareNum; column++)
+                {
+                    char          offsetRow    = move.down;
+                    char          offsetColumn = move.right;
+                    unsigned char tempRow      = placedRow    + offsetRow;
+                    unsigned char tempColumn   = placedColumn + offsetColumn;
+                    while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+                    {
+                        // 対象のマスをfalseにする
+                        if((row == tempRow) && (column == tempColumn)) canPlaced[row - 1][column - 1] = false;
+
+                        // 次を操作 
+                        tempRow    += offsetRow;
+                        tempColumn += offsetColumn;
+                    }
+
+                    offsetRow    = move.up;
+                    offsetColumn = move.left;
+                    tempRow      = placedRow    + offsetRow;
+                    tempColumn   = placedColumn + offsetColumn;
+                    while (GetIsRowAndColumnCorrect(tempRow, tempColumn)) // 将棋盤上に収まっているか確認
+                    {
+                        // 対象のマスをfalseにする
+                        if((row == tempRow) && (column == tempColumn)) canPlaced[row - 1][column - 1] = false;
+
+                        // 次を操作 
+                        tempRow    += offsetRow;
+                        tempColumn += offsetColumn;
+                    }
+                }
+            }
+        }
+
     }
     
 
