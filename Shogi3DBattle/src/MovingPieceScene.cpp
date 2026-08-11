@@ -5,6 +5,7 @@
 #include<cmath>
 #include"RuleManager.h"
 #include"PromotionScene.h"
+#include"SetMovingPieceScene.h"
 
 // 駒操作シーン動作
 std::unique_ptr<I_SceneState> MovingPieceScene::ExeSceneProcess(
@@ -94,36 +95,42 @@ std::unique_ptr<I_SceneState> MovingPieceScene::ExeDecisionButtonProcess()
     auto column   = GetColumnFromWorldMat(*worldMat);
     if (!RuleManager::GetCanThisPlacedPiece(_piece, row, column)) return nullptr;
 
-    // 新しい位置に記録する
-    auto& app             = Application::GetInstance();
-    auto  piecePosManager = app.GetPiecePosManager();
-    piecePosManager->PlacePieceOnBoard(_piece, row, column);
+    //// 新しい位置に記録する
+    //auto& app             = Application::GetInstance();
+    //auto  piecePosManager = app.GetPiecePosManager();
+    //piecePosManager->PlacePieceOnBoard(_piece, row, column);
 
-    //// 成るかどうか確認する
-    //if (RuleManager::GetCanPromotion(_piece, row, column))
-    //{
-    //    return std::make_unique<PromotionScene>(_piece, false);
-    //}
+    // 成るかどうか確認し、成り確認シーンに遷移
+    if (RuleManager::GetCanPromotion(_piece, row, column))
+    {
+        return std::make_unique<PromotionScene>(_piece, row, column, false);
+    }
+    else
+    // 成らなければ直接、駒を新しい位置に動かすシーンに遷移
+    {
+        return std::make_unique<SetMovingPieceScene>(_piece, row, column);
+    }
 
-    // 自分の王が攻撃されているか確認する
-    auto playerSide = _piece->GetPlayerSide();
-    auto isChecked = RuleManager::GetIsChecked(playerSide);
-    app.SetIsPlayerChecked(playerSide, isChecked);
 
-    // 相手の王が攻撃されているか確認する
-    auto opponentPlayerSide = playerSide == PlayerSide::PLAYER_1 ?
-        PlayerSide::PLAYER_2 : PlayerSide::PLAYER_1;
-    isChecked = RuleManager::GetIsChecked(opponentPlayerSide);
-    app.SetIsPlayerChecked(opponentPlayerSide, isChecked);
+    //// 自分の王が攻撃されているか確認する
+    //auto playerSide = _piece->GetPlayerSide();
+    //auto isChecked = RuleManager::GetIsChecked(playerSide);
+    //app.SetIsPlayerChecked(playerSide, isChecked);
 
-    // 勝利条件を満たしているかどうか確認する
-    auto isWinning = RuleManager::GetIsWinning(playerSide);
-    if(isWinning) app.SetIsPlayerWinning(playerSide, isWinning);
+    //// 相手の王が攻撃されているか確認する
+    //auto opponentPlayerSide = playerSide == PlayerSide::PLAYER_1 ?
+    //    PlayerSide::PLAYER_2 : PlayerSide::PLAYER_1;
+    //isChecked = RuleManager::GetIsChecked(opponentPlayerSide);
+    //app.SetIsPlayerChecked(opponentPlayerSide, isChecked);
 
-    // 勝利していなければ相手にターンを渡してゲーム続行
-    app.SetCurrentPlayerTurn(opponentPlayerSide);
-    
-    return std::make_unique<SelectingPieceScene>();
+    //// 勝利条件を満たしているかどうか確認する
+    //auto isWinning = RuleManager::GetIsWinning(playerSide);
+    //if(isWinning) app.SetIsPlayerWinning(playerSide, isWinning);
+
+    //// 勝利していなければ相手にターンを渡してゲーム続行
+    //app.SetCurrentPlayerTurn(opponentPlayerSide);
+    //
+    //return std::make_unique<SelectingPieceScene>();
 }
 
 // キャンセルボタン処理

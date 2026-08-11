@@ -103,7 +103,10 @@ public:
     // テキスト付きボタンを作成プッシュ
     void PushTextButton(
         TextButtonType textButtonType,
-        D2D1_RECT_F    rect);
+        D2D1_RECT_F    rect,
+        I_Piece*       piece  = nullptr,
+        unsigned char  row    = 0,
+        unsigned char  column = 0);
 
     // 駒ボタンを作成プッシュ
     void PushPieceButton(

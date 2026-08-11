@@ -970,6 +970,10 @@ bool RuleManager::GetCanPromotion(I_Piece* piece, unsigned char row, unsigned ch
     auto isKingOrGold = (pieceType == GameObjType::KING) || (pieceType == GameObjType::GOLD);
     if(isKingOrGold) return false;
 
+    // 既に成っているのなら成りは不可
+    auto isPromotioned = piece->GetIsPromotion();
+    if(isPromotioned) return false;
+
     // 駒が将棋盤上に無い場所から動かされたのなら、成りは不可能
     auto& app             = Application::GetInstance();
     auto  piecePosManager = app.GetPiecePosManager();

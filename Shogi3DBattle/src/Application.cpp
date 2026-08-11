@@ -14,6 +14,7 @@
 #include"OptionButton.h"
 #include"ExitGameButton.h"
 #include"SelectPieceButton.h"
+#include"PromotionButton.h"
 
 // 初期処理
 void Application::Init()
@@ -420,7 +421,10 @@ void::Application::PushTextUI(Text2D text2D)
 // テキスト付きボタンを作成プッシュ
 void Application::PushTextButton(
     TextButtonType textButtonType,
-    D2D1_RECT_F    rect)
+    D2D1_RECT_F    rect,
+    I_Piece*       piece,
+    unsigned char  row,
+    unsigned char  column)
 {
     Text2D text2D;
     text2D.rect = rect;
@@ -457,6 +461,13 @@ void Application::PushTextButton(
             PushTextUI(text2D);
             textUIs.push_back(_textUIs.back().get());
             _buttonUIs.push_back(std::make_unique<ExitGameButton>(rect, textUIs));
+            break;
+
+        case TextButtonType::PIECE_PROMOTION_BUTTON: // 駒を成る
+            text2D.text = L"成る";
+            PushTextUI(text2D);
+            textUIs.push_back(_textUIs.back().get());
+            _buttonUIs.push_back(std::make_unique<PromotionButton>(rect, textUIs, piece, row, column));
             break;
 
         default:

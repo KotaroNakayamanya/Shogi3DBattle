@@ -19,8 +19,9 @@ void I_Piece::SetPlayerSide(PlayerSide playerSide) // 駒所有プレイヤーセット
 } 
 PlayerSide I_Piece::GetPlayerSide(){return _playerSide;} // 駒所有プレイヤーを返す
 
-void I_Piece::SetIsPromotion(bool b){_isPromotion = b;   } // 成っているかどうかセット
-bool I_Piece::GetIsPromotion()      {return _isPromotion;} // 成っているかどうか返す
+void  I_Piece::SetIsPromotion  (bool b){_isPromotion = b;   }   // 成っているかどうかセット
+bool  I_Piece::GetIsPromotion  ()      {return _isPromotion;}   // 成っているかどうか返す
+float I_Piece::GetHalfThickness()      {return _halfThickness;} // 駒の厚みの半分のサイズを返す
 
 I_Piece::I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, PlayerSide playerSide)
     : I_GameObj(pieceType), _playerSide(playerSide), _isPromotion(false)
@@ -40,6 +41,7 @@ I_Piece::I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, Pla
     float cornerWidth  = bottomWidth  * cornerWidthRate;    // 角部分の横の長さ
     float cornerHeight = height * cornerHeightRate;   // 角部分縦の底面からの高さ
     float thickness    = height / 8.0f;  // 駒の厚み
+    _halfThickness = thickness / 2.0f;
 
     // UV座標使用のため、駒の高さを1.0fとした時のそれぞれの頂点のUV座標を取得する
     float quarterCornerWidth = (cornerWidth / height) / 2 / 2;

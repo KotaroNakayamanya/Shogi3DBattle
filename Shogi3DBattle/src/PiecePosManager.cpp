@@ -231,13 +231,22 @@ void PiecePosManager::PlacePieceOnBoard(I_Piece* piece, unsigned int row, unsign
     // ワールド行列等修正
     auto worldMat = DirectX::XMMatrixIdentity();
 
-    if(piece->GetPlayerSide() == PlayerSide::PLAYER_1) // 自身の駒なら向きを変更
+    // プレイヤー１の駒なら向きを変更
+    if(piece->GetPlayerSide() == PlayerSide::PLAYER_1) 
         worldMat *= DirectX::XMMatrixRotationZ(DirectX::XM_PI);
 
+    // 駒の厚みの半分だけずらし、成っているなら裏返す
+    float halfThickness = piece->GetHalfThickness();
+    worldMat *= DirectX::XMMatrixTranslation(0.0f, 0.0f, halfThickness);
+    if(piece->GetIsPromotion())
+        worldMat *= DirectX::XMMatrixRotationY(DirectX::XM_PI);
+
+    // 指定のマスの位置に平行移動する
     auto xPos = 10.0f * column;
     auto yPos = 10.0f * row;
-    worldMat *= DirectX::XMMatrixTranslation(xPos, yPos, 0.0f);
+    worldMat *= DirectX::XMMatrixTranslation(xPos, yPos, -halfThickness);
 
+    // ワールド行列を格納する
     auto worldMatObj = piece->GetWorldMat();
     worldMatObj->SetMat(worldMat);
 
@@ -286,12 +295,14 @@ void PiecePosManager::PlacePieceOnSideBoard(std::vector<std::vector<I_Piece*>>& 
     auto xPos = baseX + offsetX*(insertEle%3);
     auto yPos = baseY + offsetY*(insertEle/3);
     auto newWorldMat = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+
     // プレイヤー1側の駒なら回転する
     if(playerSide == PlayerSide::PLAYER_1) newWorldMat *= DirectX::XMMatrixRotationZ(DirectX::XM_PI);
+
+
+    // 平行移動し、ワールド行列としてセットする
     newWorldMat *= DirectX::XMMatrixTranslation(xPos, yPos, 0.0f);
     piece->GetWorldMat()->SetMat(newWorldMat);
-
-    int aaa = 3;
 }
 
 // 将棋盤上に指定の駒が存在するか確認する

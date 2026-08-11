@@ -21,8 +21,10 @@
   <ItemGroup>
     <ClCompile Include="cpp\I_TextButton.cpp" />
     <ClCompile Include="cpp\PieceMovementBit.cpp" />
+    <ClCompile Include="cpp\PromotionButton.cpp" />
     <ClCompile Include="cpp\PromotionScene.cpp" />
     <ClCompile Include="cpp\RuleManager.cpp" />
+    <ClCompile Include="cpp\SetMovingPieceScene.cpp" />
     <ClCompile Include="header\DefaultHeapProp.cpp" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -144,6 +146,7 @@
     <ClInclude Include="header\PiecePosManager.h" />
     <ClInclude Include="header\PlayerSide.h" />
     <ClInclude Include="header\I_TextButton.h" />
+    <ClInclude Include="header\PromotionButton.h" />
     <ClInclude Include="header\PromotionScene.h" />
     <ClInclude Include="header\RuleManager.h" />
     <ClInclude Include="header\SelectPieceButton.h" />
