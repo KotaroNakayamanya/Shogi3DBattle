@@ -53,6 +53,7 @@ CubeVertices::CubeVertices(GameObjType gameObjType, BasicTexType basicTexType, f
         vert.gameObjId      = gameObjId;
         vert.basicTexId     = static_cast<unsigned char>(basicTexType);
         vert.mulDesignTexId = static_cast<unsigned char>(gameObjType);
+        vert.mulEffectTexId = 0;
     }
 
     SetDatas(vertices);

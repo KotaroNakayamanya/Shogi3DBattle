@@ -48,8 +48,9 @@ private:
     ComPtr<ID3D12Resource>              _idxBuff;   // インデックスバッファ
     ComPtr<ID3D12Resource>              _constBuff; // コンスタントバッファ
 
-    std::vector<ComPtr<ID3D12Resource>> _woodTexBuffs; // 木材テクスチャバッファ
+    std::vector<ComPtr<ID3D12Resource>> _woodTexBuffs;     // 木材テクスチャバッファ
     std::vector<ComPtr<ID3D12Resource>> _shogiObjTexBuffs; // 将棋オブジェクト種類ごとのテクスチャバッファ
+    std::vector<ComPtr<ID3D12Resource>> _effectTexBuffs;   // エフェクトのテクスチャバッファ
 
     std::vector<ComPtr<ID3D11Resource>> _wrappedPieceTexBuffs; // ラップされた駒テクスチャバッファ
     std::vector<ComPtr<ID2D1Bitmap1>> _d2dPieceTexRenderTargets; // 駒テクスチャ作成用レンダーターゲット

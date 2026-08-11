@@ -150,6 +150,7 @@ I_Piece::I_Piece(float mmBottomWidth, float mmHeight, GameObjType pieceType, Pla
     verticesPtr->SetDatas(vertices);
     verticesPtr->SetGameObjId(GameObjIdManager::GetId());
     verticesPtr->SetBasicTexId(static_cast<unsigned char>(playerSide));
+    verticesPtr->SetMulEffectTexId(0);
 
     // ƒ[ƒ‹ƒhs—ñ
     auto worldMatPtr = GetWorldMat();

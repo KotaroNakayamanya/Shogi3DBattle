@@ -24,8 +24,8 @@ void Textures::CreateDesignTextures()
 // エフェクトのテクスチャ作成
 void Textures::CreateEffectTextures()
 {
-    _designTextures.push_back(std::make_unique<WhiteTexture>());
-    _designTextures.push_back(std::make_unique<CanMoveSquareEffectTexture>(nullptr));
+    _effectTextures.push_back(std::make_unique<WhiteTexture>());
+    _effectTextures.push_back(std::make_unique<CanMoveSquareEffectTexture>(nullptr));
 }
 
 

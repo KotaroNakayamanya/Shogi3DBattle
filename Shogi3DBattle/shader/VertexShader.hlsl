@@ -4,9 +4,10 @@ Output VShader(
     float4 pos    : POSITION,
     float4 normal : NORMAL,
     float2 uv     : TEXCOORD,
-    uint   objId  : OBJECT_INDEX,
+    uint   objId       : OBJECT_INDEX,
     uint   basicTexId  : BASIC_TEXTURE_INDEX,
-    uint   designTexId : DESIGN_TEXTURE_INDEX)
+    uint   designTexId : DESIGN_TEXTURE_INDEX,
+    uint   effectTexId : EFFECT_TEXTURE_INDEX)
 {
     Output output;
     
@@ -22,6 +23,7 @@ Output VShader(
     output.uv     = uv;
     output.basicTexId   = basicTexId;
     output.designTexId  = designTexId;
+    output.effectTexId = effectTexId;
     
     return output;
 }

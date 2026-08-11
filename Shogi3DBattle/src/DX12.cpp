@@ -122,7 +122,8 @@ void DX12::CreateBuff()
     _idxBuff = _device->CreateBuff(widthSize, heightSize, BuffType::INDEX);
 
     // 木材テクスチャバッファ作成
-    auto woodTexs = app.GetTextures()->GetWoodTextures();
+    auto textures = app.GetTextures();
+    auto woodTexs = textures->GetWoodTextures();
     auto woodTexNum = static_cast<unsigned int>(woodTexs.size());
     for (unsigned int i = 0; i < woodTexNum; i++)
     {
@@ -140,13 +141,21 @@ void DX12::CreateBuff()
         // 駒用テクスチャバッファ作成
         _shogiObjTexBuffs.push_back(_device->CreateBuff(widthSize, heightSize, BuffType::RENDER_TEX));
     }
-    auto textures          = app.GetTextures();
     auto designTextures = textures->GetDesignTextures();
     auto designTextureNum   = static_cast<unsigned int>(designTextures.size());
     for (unsigned int i = 0; i < designTextureNum; i++)
     {
         // 駒以外のオブジェクトごとのテクスチャバッファ作成
         _shogiObjTexBuffs.push_back(_device->CreateBuff(widthSize, heightSize, BuffType::TEXTURE));
+    }
+
+    // エフェクト用テクスチャバッファ作成
+    auto effectTexs = textures->GetEffectTextures();
+    widthSize  = 256;
+    heightSize = 256;
+    for (auto& effectTex : effectTexs)
+    {
+        _effectTexBuffs.push_back(_device->CreateBuff(widthSize, heightSize, BuffType::TEXTURE));
     }
     
 }
@@ -170,8 +179,9 @@ void DX12::CreateHeap()
     unsigned int woodTexNum      = static_cast<unsigned int>(textures->GetWoodTextures().size());
     unsigned int designTexNum    = static_cast<unsigned int>(textures->GetDesignTextures().size());
     unsigned int pieceTexNum     = 8;
+    unsigned int effectTexNum    = static_cast<unsigned int>(textures->GetEffectTextures().size());
     unsigned int cbvNum = 1;
-    unsigned int srvNum = woodTexNum + designTexNum + pieceTexNum;
+    unsigned int srvNum = woodTexNum + designTexNum + pieceTexNum + effectTexNum;
     unsigned int uavNum = 0;
     _csuHeap = _device->CreateCSUHeap(cbvNum, srvNum, uavNum, HeapType::CSU);
 
@@ -194,25 +204,35 @@ void DX12::CreateView()
     for (UINT i = 0; i < _csuHeap->GetCBVNum(); i++)
         _device->CreateCSUView(_csuHeap.get(), i, _constBuff.Get(), View::CBV);
 
-    // 木材テクスチャ用SRV作成
+    // 以下、テクスチャのSRVを作成する
+    auto textures = Application::GetInstance().GetTextures();
     unsigned int srvIdx = 0;
-    auto woodTexs = Application::GetInstance().GetTextures()->GetWoodTextures();
+
+    // 木材テクスチャ用SRV作成
+    auto woodTexs = textures->GetWoodTextures();
     auto woodTexNum = static_cast<unsigned int>(woodTexs.size());
     for(unsigned int i = 0; i < woodTexNum; i++, srvIdx++)
         _device->CreateCSUView(_csuHeap.get(), srvIdx, _woodTexBuffs[i].Get(), View::SRV);
 
     // 将棋オブジェクト用SRV作成
     unsigned int pieceTextureNum = 8;
-    auto textures = Application::GetInstance().GetTextures();
     auto designTextures = textures->GetDesignTextures();
     auto designTextureNum = static_cast<unsigned int>(designTextures.size());
     unsigned int shogiObjTextureNum = pieceTextureNum + designTextureNum;
     for (unsigned int i = 0; i < shogiObjTextureNum; i++, srvIdx++)
         _device->CreateCSUView(_csuHeap.get(), srvIdx, _shogiObjTexBuffs[i].Get(), View::SRV);
 
+    // エフェクトテクスチャ用SRV作成
+    auto effectTexs = textures->GetEffectTextures();
+    auto effectTexNum = static_cast<unsigned int>(effectTexs.size());
+    for(unsigned int i = 0; i < effectTexNum; i++, srvIdx++)
+        _device->CreateCSUView(_csuHeap.get(), srvIdx, _effectTexBuffs[i].Get(), View::SRV);
+
+
     // レンダーによるテクスチャ作成用RTV作成
     for(UINT i = 0; i < pieceTextureNum; i++)
         _device->CreateView(_texRTVHeap.get(), i, _shogiObjTexBuffs[i].Get(), View::RTV);
+
 }
 
 // シェーダー系作成
@@ -427,9 +447,6 @@ void DX12::WriteToBuff()
 
     auto gameObjects = app.GetGameObjects();
 
-    auto textures      = app.GetTextures();
-    auto woodTexs      = textures->GetWoodTextures();
-    auto designTexs = textures->GetDesignTextures();
 
     auto boardVertIndices = gameObjects->GetBoardVertIndices();
     auto pieceVertIndices = gameObjects->GetPieceVertIndices();
@@ -479,15 +496,26 @@ void DX12::WriteToBuff()
     mainCamera->SetStartDataIdx(idx);
     mapCamera ->SetStartDataIdx(idx);
 
+    // 以下、テクスチャを書き込む
+    auto textures      = app.GetTextures();
+
     // 木材テクスチャをバッファに書き込み
+    auto woodTexs      = textures->GetWoodTextures();
     auto woodTexNum = static_cast<unsigned int>(woodTexs.size());
     for(unsigned int i = 0; i < woodTexNum; i++)
         woodTexs[i]->WriteToBuff(_woodTexBuffs[i].Get()); 
 
     // オブジェクトごとのテクスチャをバッファに書き込み
+    auto designTexs = textures->GetDesignTextures();
     auto designTexNum = static_cast<unsigned int>(designTexs.size());
     for(unsigned int i = 0; i < designTexNum; i++)
         designTexs[i]->WriteToBuff(_shogiObjTexBuffs[static_cast<unsigned int>(GameObjType::BOARD_55) + i].Get()); 
+
+    // エフェクトのテクスチャをバッファに書き込み
+    auto effectTexs = textures->GetEffectTextures();
+    auto effectTexNum = static_cast<unsigned int>(effectTexs.size());
+    for(unsigned int i = 0; i < effectTexNum; i++)
+        effectTexs[i]->WriteToBuff(_effectTexBuffs[i].Get()); 
 
 }
 

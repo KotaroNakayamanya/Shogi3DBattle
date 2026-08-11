@@ -17,6 +17,7 @@ tbuffer tbuff : register(t0)
 {
     Texture2D<float4> basicTexs [3];
     Texture2D<float4> designTexs[11];
+    Texture2D<float4> effectTexs[2];
 }
 
 
