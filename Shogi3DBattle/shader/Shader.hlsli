@@ -5,6 +5,7 @@ struct Output
     float2 uv           : TEXCOORD;
     uint   basicTexId   : BASIC_TEXTURE_INDEX;
     uint   designTexId  : DESIGN_TEXTURE_INDEX;
+    uint   effectTexId  : EFFECT_TEXTURE_INDEX;
 };
 
 

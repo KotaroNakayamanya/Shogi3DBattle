@@ -479,7 +479,7 @@ std::vector<D3D12_INPUT_ELEMENT_DESC> Device::CreateInputLayout()
 {
     std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;
 
-    inputLayout.resize(6);
+    inputLayout.resize(7);
 
     inputLayout[0] =
     { // 頂点
@@ -534,6 +534,17 @@ std::vector<D3D12_INPUT_ELEMENT_DESC> Device::CreateInputLayout()
     inputLayout[5] =
     { // デザインテクスチャインデックス
         "DESIGN_TEXTURE_INDEX",
+        0,
+        DXGI_FORMAT_R8_UINT,
+        0,
+        D3D12_APPEND_ALIGNED_ELEMENT,
+        D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+        0
+    };
+
+    inputLayout[6] =
+    { // エフェクトテクスチャインデックス
+        "EFFECT_TEXTURE_INDEX",
         0,
         DXGI_FORMAT_R8_UINT,
         0,

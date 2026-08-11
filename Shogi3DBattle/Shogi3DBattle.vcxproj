@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cpp\CanMoveSquareEffectTexture.cpp" />
     <ClCompile Include="cpp\I_TextButton.cpp" />
     <ClCompile Include="cpp\NotPromotionButton.cpp" />
     <ClCompile Include="cpp\PieceMovementBit.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="cpp\PromotionScene.cpp" />
     <ClCompile Include="cpp\RuleManager.cpp" />
     <ClCompile Include="cpp\SetMovingPieceScene.cpp" />
+    <ClCompile Include="cpp\WhiteTexture.cpp" />
     <ClCompile Include="header\DefaultHeapProp.cpp" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -124,6 +126,7 @@
     <ClInclude Include="header\Board9x9.h" />
     <ClInclude Include="header\Board9x9Texture.h" />
     <ClInclude Include="header\BoardTexture.h" />
+    <ClInclude Include="header\CanMoveSquareEffectTexture.h" />
     <ClInclude Include="header\CubeVertIndices.h" />
     <ClInclude Include="header\CubeVertices.h" />
     <ClInclude Include="header\Device11AndDeviceContext.h" />
@@ -235,6 +238,7 @@
     <ClInclude Include="header\View.h" />
     <ClInclude Include="header\IViewFactory.h" />
     <ClInclude Include="header\ViewMat.h" />
+    <ClInclude Include="header\WhiteTexture.h" />
     <ClInclude Include="header\WoodTexture.h" />
     <ClInclude Include="header\WorldMat.h" />
     <ClInclude Include="header\DepthWriteResourceStates.h" />

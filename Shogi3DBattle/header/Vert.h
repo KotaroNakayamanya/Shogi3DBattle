@@ -10,4 +10,5 @@ struct Vert
     unsigned char gameObjId;       // ゲームオブジェクトID　 (ワールド座標区別に使用)
     unsigned char basicTexId;      // 基本テクスチャID　　（木材等）
     unsigned char mulDesignTexId;  // 乗算デザインテクスチャID（文字、黒線等）
+    unsigned char mulEffectTexId;  // 乗算エフェクトテクスチャID（色を変える等）
 };

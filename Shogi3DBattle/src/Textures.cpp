@@ -2,6 +2,8 @@
 #include"WoodTexture.h"
 #include"Board5x5Texture.h"
 #include"Board9x9Texture.h"
+#include"WhiteTexture.h"
+#include"CanMoveSquareEffectTexture.h"
 
 // 木材テクスチャ作成
 void Textures::CreateWoodTextures()
@@ -19,6 +21,14 @@ void Textures::CreateDesignTextures()
     _designTextures.push_back(std::make_unique<I_Texture>());
 }
 
+// エフェクトのテクスチャ作成
+void Textures::CreateEffectTextures()
+{
+    _designTextures.push_back(std::make_unique<WhiteTexture>());
+    _designTextures.push_back(std::make_unique<CanMoveSquareEffectTexture>(nullptr));
+}
+
+
 
 
 
@@ -27,6 +37,7 @@ void Textures::CreateTextures()
 {
     CreateWoodTextures();
     CreateDesignTextures();
+    CreateEffectTextures();
 }
 
 
@@ -47,4 +58,13 @@ std::vector<I_Texture*> Textures::GetDesignTextures()
     for(auto& boardLineTexture : _designTextures) boardLineTextures.push_back(boardLineTexture.get());
 
     return boardLineTextures;
+}
+
+// エフェクトのテクスチャを返す
+std::vector<I_Texture*> Textures::GetEffectTextures()
+{
+    std::vector<I_Texture*> effectTextures;
+    for(auto& effectTexture : _effectTextures) effectTextures.push_back(effectTexture.get());
+
+    return effectTextures;
 }
