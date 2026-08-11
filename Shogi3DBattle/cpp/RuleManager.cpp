@@ -53,31 +53,6 @@ RuleManager::Move RuleManager::GetMoveForPlayer(PlayerSide playerSide)
     return move;
 }
 
-//// その駒がルール上、移動可能なビットを返す
-//unsigned int RuleManager::GetAllowedMovementBits(I_Piece* piece, unsigned char row, unsigned char column)
-//{
-//    // 駒の動きを取得する
-//    auto movementBits = piece->GetMovementBits();
-//
-//    // 自軍の王の位置を取得する
-//    auto piecePosManager = Application::GetInstance().GetPiecePosManager();
-//    auto playerSide = piece->GetPlayerSide();
-//    auto kingPlace = piecePosManager->GetKingPlace(playerSide);
-//
-//    // 王がどのような攻撃をされているか確認する
-//    auto kingAttackedBits = GetAttackedBits(playerSide, kingPlace.row, kingPlace.column);
-//
-//    // 王がいくつの駒から攻撃されているか調べる
-//    unsigned char attackedCount = 0;
-//    for (unsigned int i = 1; i < (1 << 32); i << 1)
-//    {
-//        auto andBits = kingAttackedBits & i;
-//        if(i > 0) attackedCount++;
-//    }
-//
-//    return movementBits;
-//}
-
 // 駒が移動できる位置を行列で返す
 std::vector<std::vector<bool>> RuleManager::GetCanPlaced(I_Piece* piece)
 {

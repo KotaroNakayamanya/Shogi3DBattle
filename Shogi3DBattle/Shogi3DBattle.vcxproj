@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpp\I_TextButton.cpp" />
+    <ClCompile Include="cpp\NotPromotionButton.cpp" />
     <ClCompile Include="cpp\PieceMovementBit.cpp" />
     <ClCompile Include="cpp\PromotionButton.cpp" />
     <ClCompile Include="cpp\PromotionScene.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="header\I_ProjMat.h" />
     <ClInclude Include="header\I_SelectingButtonScene.h" />
     <ClInclude Include="header\I_PieceButton.h" />
+    <ClInclude Include="header\NotPromotionButton.h" />
     <ClInclude Include="header\PieceButtonType.h" />
     <ClInclude Include="header\PieceMovementBit.h" />
     <ClInclude Include="header\PiecePosManager.h" />

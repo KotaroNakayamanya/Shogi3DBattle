@@ -11,7 +11,7 @@ void PromotionScene::SetButton()
     auto windowWidth  = gameWindow->GetWindowWidth();
     auto windowHeight = gameWindow->GetWindowHeight();
 
-    auto uiWidth  = windowWidth  / 3; // UIの横の長さ
+    auto uiWidth  = windowWidth  / 5; // UIの横の長さ
     auto uiHeight = windowHeight / 9; // UIの縦の長さ
     
     
@@ -27,6 +27,12 @@ void PromotionScene::SetButton()
     // 駒成りボタン
     rect = {left, top, right, bottom};
     app.PushTextButton(TextButtonType::PIECE_PROMOTION_BUTTON, rect, _piece, _row, _column);
+
+    // 駒成らずボタン
+    top    += uiHeight;
+    bottom += uiHeight;
+    rect = {left, top, right, bottom};
+    app.PushTextButton(TextButtonType::PIECE_NOT_PROMOTION_BUTTON, rect, _piece, _row, _column);
 
 
 }

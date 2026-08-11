@@ -15,6 +15,7 @@
 #include"ExitGameButton.h"
 #include"SelectPieceButton.h"
 #include"PromotionButton.h"
+#include"NotPromotionButton.h"
 
 // 初期処理
 void Application::Init()
@@ -468,6 +469,13 @@ void Application::PushTextButton(
             PushTextUI(text2D);
             textUIs.push_back(_textUIs.back().get());
             _buttonUIs.push_back(std::make_unique<PromotionButton>(rect, textUIs, piece, row, column));
+            break;
+
+        case TextButtonType::PIECE_NOT_PROMOTION_BUTTON: // 駒成らず
+            text2D.text = L"成らず";
+            PushTextUI(text2D);
+            textUIs.push_back(_textUIs.back().get());
+            _buttonUIs.push_back(std::make_unique<NotPromotionButton>(rect, textUIs, piece, row, column));
             break;
 
         default:

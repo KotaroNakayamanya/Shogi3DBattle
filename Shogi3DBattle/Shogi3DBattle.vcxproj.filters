@@ -552,6 +552,9 @@
     <ClCompile Include="cpp\PromotionButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
+    <ClCompile Include="cpp\NotPromotionButton.cpp">
+      <Filter>ソース ファイル\ui\button</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\DX12.h">
@@ -915,6 +918,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\PromotionButton.h">
+      <Filter>ヘッダー ファイル\ui\button</Filter>
+    </ClInclude>
+    <ClInclude Include="header\NotPromotionButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
   </ItemGroup>

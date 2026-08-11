@@ -1,17 +1,14 @@
-#include"PromotionButton.h"
+#include"NotPromotionButton.h"
 #include"SetMovingPieceScene.h"
 
-// 成り実行ボタンの処理実行
-std::unique_ptr<I_SceneState> PromotionButton::ExePushButtonProcess()
+// 成らずボタンの処理実行
+std::unique_ptr<I_SceneState> NotPromotionButton::ExePushButtonProcess()
 {
-    // 駒を成り状態にする
-    _piece->SetIsPromotion(true);
-
     // 駒の動きをセットするシーンに遷移
     return std::make_unique<SetMovingPieceScene>(_piece, _row, _column);
 }
 
-PromotionButton::PromotionButton(
+NotPromotionButton::NotPromotionButton(
     D2D1_RECT_F          rect,
     std::vector<TextUI*> textUIs,
     I_Piece*             piece,
