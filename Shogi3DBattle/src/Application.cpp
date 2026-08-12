@@ -304,6 +304,9 @@ bool       Application::IsDrawMap           ()                     {return _isDr
 void       Application::SetCurrentPlayerTurn(PlayerSide playerSide){_currentPlayerTurn = playerSide;}; // 現在の操作プレイヤーを返す
 PlayerSide Application::GetCurrentPlayerTurn()                     {return _currentPlayerTurn;}        // 現在の操作プレイヤーを返す
 
+void       Application::SetIsProgress(bool progress){_isProgress = progress;} // ゲーム途中かどうかセット
+bool       Application::GetIsProgress()             {return _isProgress;}     // ゲーム途中かどうか返す
+
 // プレイヤーの王手フラグをセット
 void Application::SetIsPlayerChecked(PlayerSide playerSide, bool isChecked)
 {
@@ -374,6 +377,22 @@ bool Application::GetIsPlayerWinning(PlayerSide playerSide)
     }
 }
 
+// ゲームの状態を初期化する
+void Application::InitGameState()
+{
+    // 駒の位置を初期化
+    _piecePosManager->InitPiecesPos();
+
+    // プレイヤー側の初期処理
+    SetCurrentPlayerTurn(PlayerSide::PLAYER_1);
+    SetIsPlayerWinning(PlayerSide::PLAYER_1, false);
+    SetIsPlayerWinning(PlayerSide::PLAYER_2, false);
+    SetIsPlayerChecked(PlayerSide::PLAYER_1, false);
+    SetIsPlayerChecked(PlayerSide::PLAYER_2, false);
+
+    // エフェクトテクスチャを初期化
+    _textures->CreateCanMoveEffectTextures(nullptr);
+}
 
 bool Application::IsDrawUINotEmpty(){return _buttonUIs.size() > 0;} // UIの空状況を返す
 
@@ -432,6 +451,8 @@ void Application::PushTextButton(
     text2D.textFormat = GetDX12()->GetNormalTextFormat();
     text2D.brush = GetDX12()->GetBlackBrush();
 
+    bool isActive = true;
+
     std::vector<TextUI*> textUIs;
     
     switch (textButtonType)
@@ -448,6 +469,7 @@ void Application::PushTextButton(
             PushTextUI(text2D);
             textUIs.push_back(_textUIs.back().get());
             _buttonUIs.push_back(std::make_unique<ContinueStartButton>(rect, textUIs));
+            if(!GetIsProgress()) isActive = false; // ゲームの途中でなければ非活性
             break;
 
         case TextButtonType::OPTION_BUTTON: // オプション
@@ -480,9 +502,9 @@ void Application::PushTextButton(
 
         default:
             return;
-  }
+    }
 
-  _frameUIs.push_back(std::make_unique<UI>(rect));
+    _frameUIs.push_back(std::make_unique<UI>(rect, isActive));
 }
 
 // 駒ボタンを作成プッシュ

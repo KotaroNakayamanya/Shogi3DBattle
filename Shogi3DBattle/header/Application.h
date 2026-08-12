@@ -36,6 +36,7 @@ private:
     bool _isPlayer2Checked        = false; // プレイヤー２が王手されているかどうか
     bool _isPlayer1Winning        = false; // プレイヤー１が勝っているかどうか
     bool _isPlayer2Winning        = false; // プレイヤー２が勝っているかどうか
+    bool _isProgress              = false; // ゲームの途中経過かどうか
 
     std::unique_ptr<GameObjects> _gameObjects; // ゲームオブジェクト
     std::unique_ptr<Textures>    _textures;    // テクスチャ
@@ -95,6 +96,9 @@ public:
     bool       GetIsPlayerChecked(PlayerSide playerSide);                 // プレイヤーの王手フラグを返す
     void       SetIsPlayerWinning(PlayerSide playerSide, bool isWinning); // プレイヤーの勝利フラグをセット
     bool       GetIsPlayerWinning(PlayerSide playerSide);                 // プレイヤーの勝利フラグを返す
+    void       SetIsProgress(bool progress); // ゲーム途中かどうかセット
+    bool       GetIsProgress();              // ゲーム途中かどうか返す
+
 
 
     // テキストUIをプッシュ
@@ -117,6 +121,8 @@ public:
     std::vector<UI*>       GetFrameUIs(); // テキスト枠UIを返す
     std::vector<TextUI*>   GetTextUIs(); // テキストUIを返す
     std::vector<I_Button*> GetButtons(); // ボタンUIを返す
+
+    void InitGameState(); // ゲームの状態を初期化する
 
     bool IsDrawUINotEmpty(); // UIの空状況を返す
     void RemoveAllUI();      // UIを全て削除する

@@ -31,7 +31,10 @@ std::unique_ptr<I_SceneState> SetMovingPieceScene::ExeSceneProcess(
 
     // 勝利条件を満たしているかどうか確認する
     auto isWinning = RuleManager::GetIsWinning(playerSide);
-    if(isWinning) app.SetIsPlayerWinning(playerSide, isWinning);
+    if(isWinning)
+    {
+        app.SetIsPlayerWinning(playerSide, isWinning);
+    }
 
     // 勝利していなければ相手にターンを渡してゲーム続行
     app.SetCurrentPlayerTurn(opponentPlayerSide);

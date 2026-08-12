@@ -11,4 +11,4 @@ std::unique_ptr<I_SceneState> ExitGameButton::ExePushButtonProcess()
 }
 
 ExitGameButton::ExitGameButton(D2D1_RECT_F rect, std::vector<TextUI*> textUIs)
-    : I_TextButton(rect, textUIs){}
+    : I_TextButton(rect, textUIs, true){}

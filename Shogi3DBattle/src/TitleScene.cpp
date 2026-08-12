@@ -114,8 +114,8 @@ std::unique_ptr<I_SceneState> TitleScene::ExeSelectingButtonSceneOperation(
 // キャンセルボタン処理
 std::unique_ptr<I_SceneState> TitleScene::ExeCancelButton()
 {
-    auto gameWindow = Application::GetInstance().GetGameWindow();
-    DestroyWindow(gameWindow->GetHWND());
+    /*auto gameWindow = Application::GetInstance().GetGameWindow();
+    DestroyWindow(gameWindow->GetHWND());*/
     return nullptr;
 }
 

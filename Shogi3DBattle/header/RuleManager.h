@@ -25,6 +25,7 @@ public:
     static bool GetIsWinning(PlayerSide playerSide); // プレイヤーが勝利しているか確認
     static bool GetCanPromotion(I_Piece* piece, unsigned char row, unsigned char column); // 成りが可能かどうか確認する
     static bool GetIsForcedPromotion(I_Piece* piece, unsigned char row, unsigned char column); // 成りが強制かどうか確認する
+    static bool GetCanMove(I_Piece* piece); // 駒を動かすことが出来るかどうか返す
 
     static unsigned int GetAttackedBits( // 指定の位置がプレイヤーにとってどのように攻撃されているかをビットで返す
         PlayerSide playerSide,

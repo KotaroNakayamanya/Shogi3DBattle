@@ -375,10 +375,11 @@ void DX12::CreateD2D()
     _titleFrameTextFormat = _directWriteFactory->CreateTitleTextFormat(DWRITE_FONT_WEIGHT_BOLD);   // タイトル枠テキストフォーマット作成
     
     // ブラシ作成
-    _blackBrush        = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Black)); // 黒色ブラシ作成
-    _redBrush          = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Red)); // 赤色ブラシ作成
-    _yellowBrush       = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Yellow)); // 黄色ブラシ作成
-    _buttonUIBackBrush = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::LightYellow, 0.9f)); // UIブラシ作成
+    _blackBrush                 = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Black)); // 黒色ブラシ作成
+    _redBrush                   = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Red)); // 赤色ブラシ作成
+    _yellowBrush                = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Yellow)); // 黄色ブラシ作成
+    _buttonUIBackBrush          = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::LightYellow, 0.9f)); // UIブラシ作成
+    _buttonUIBackBrushNotActive = _direct2DDeviceContext->CreateBrush(D2D1::ColorF(D2D1::ColorF::Gray, 0.9f)); // UI非活性ブラシ作成
 }
 
 // DirectX11系デバイス作成
@@ -869,11 +870,21 @@ void DX12::ExeD2D()
     for (auto& button : buttons) button->ExeSelectedStateProcess();
 
     // テキスト枠UI描画
+
     for (auto& frameUI : frameUIs)
     {
+        ID2D1SolidColorBrush* backBrush;
+        if (frameUI->GetIsActive())
+        {
+            backBrush = _buttonUIBackBrush.Get();
+        }
+        else
+        {
+            backBrush = _buttonUIBackBrushNotActive.Get();
+        }
         _direct2DDeviceContext->DrawRectangle(
             frameUI->GetRect(),
-            _buttonUIBackBrush.Get(),
+            backBrush,
             _blackBrush.Get());
     }
 

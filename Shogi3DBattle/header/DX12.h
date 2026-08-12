@@ -105,7 +105,8 @@ private:
     ComPtr<ID2D1SolidColorBrush> _blackBrush; // 黒色ブラシ
     ComPtr<ID2D1SolidColorBrush> _redBrush;   // 赤色ブラシ
     ComPtr<ID2D1SolidColorBrush> _yellowBrush;   // 黄色ブラシ
-    ComPtr<ID2D1SolidColorBrush> _buttonUIBackBrush;    // ボタンUI背景ブラシ
+    ComPtr<ID2D1SolidColorBrush> _buttonUIBackBrush;             // ボタンUI背景ブラシ
+    ComPtr<ID2D1SolidColorBrush> _buttonUIBackBrushNotActive;    // ボタンUI非活性背景ブラシ
     
 
         

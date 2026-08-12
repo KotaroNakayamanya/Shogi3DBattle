@@ -239,6 +239,7 @@
     <ClInclude Include="header\IViewFactory.h" />
     <ClInclude Include="header\ViewMat.h" />
     <ClInclude Include="header\WhiteTexture.h" />
+    <ClInclude Include="header\WinningScene.h" />
     <ClInclude Include="header\WoodTexture.h" />
     <ClInclude Include="header\WorldMat.h" />
     <ClInclude Include="header\DepthWriteResourceStates.h" />

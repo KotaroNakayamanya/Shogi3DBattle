@@ -14,4 +14,4 @@ NotPromotionButton::NotPromotionButton(
     I_Piece*             piece,
     unsigned char        row,
     unsigned char        column) 
-    : I_TextButton(rect, textUIs), _piece(piece), _row(row), _column(column){}
+    : I_TextButton(rect, textUIs, true), _piece(piece), _row(row), _column(column){}

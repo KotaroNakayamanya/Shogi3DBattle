@@ -1373,18 +1373,45 @@ bool RuleManager::GetCanThisPlacedPiece(I_Piece* piece, unsigned char row, unsig
 // プレイヤーが勝利しているか確認
 bool RuleManager::GetIsWinning(PlayerSide playerSide)
 {
-    //auto& app = Application::GetInstance();
-    //auto piecePosManager = app.GetPiecePosManager();
+    // 相手の駒が全て動かせなくなったら勝利
+    auto& app             = Application::GetInstance();
+    auto  piecePosManager = app.GetPiecePosManager();
+    auto  board           = app.GetGameObjects()->GetBoard();
+    auto  rowSquareNum    = board->GetBoardSquareNum();
 
-    //// 相手の玉を探す
-    //PlayerSide opponentPlayerSide = playerSide == PlayerSide::PLAYER_1 ?
-    //    PlayerSide::PLAYER_2 : PlayerSide::PLAYER_1;
-    //auto opponentKingPlace = piecePosManager->GetKingPlace(opponentPlayerSide);
-    //
-    //// 攻撃されているかどうかを返す
-    //auto attackedBits = GetAttackedBits(opponentPlayerSide, opponentKingPlace.row, opponentKingPlace.column);
+    // 将棋盤上の駒を確認する
+    for (unsigned int row = 1; row <= rowSquareNum; row++)
+    {
+        for (unsigned int column = 1; column <= rowSquareNum; column++)
+        {
+            // 対象の位置に駒がいるか確認する
+            auto piece = piecePosManager->GetPlacedPiece(row, column);
+            if(piece == nullptr) continue;
 
-    return false;
+            // 相手の駒かどうか確認する
+            auto isOpponentPiece = piece->GetPlayerSide() != playerSide;
+            if(!isOpponentPiece) continue;
+
+            // 動かせる範囲があれば勝利ではない
+            if(GetCanMove(piece)) return false;
+        }
+    }
+
+    // 駒置き台を確認する
+    auto opponentPlayer = playerSide == PlayerSide::PLAYER_1 ?
+        PlayerSide::PLAYER_2 : PlayerSide::PLAYER_1;
+    auto sideBoard = piecePosManager->GetPiecePlacedOnSideBoard(opponentPlayer);
+    for (auto& pieces : sideBoard)
+    {
+        for (auto& piece : pieces)
+        {
+            // 動かせる範囲があれば勝利ではない
+            if(GetCanMove(piece)) return false;
+        }
+    }
+
+    // 動かせる範囲がないので、勝利
+    return true;
 }
 
 // 成りが可能かどうか確認する
@@ -1889,4 +1916,21 @@ unsigned int RuleManager::GetAttackedBits(
     }
 
     return attackedBits;
+}
+
+// 駒を動かすことが出来るかどうか返す
+bool RuleManager::GetCanMove(I_Piece* piece)
+{
+    // 動かせる範囲があるか探索する
+    auto canPlaced = GetCanPlaced(piece);
+    for (auto& column : canPlaced)
+    {
+        for (auto square : column)
+        {
+            if(square == true) return true;
+        }
+    }
+
+    // 無ければfalse
+    return false;
 }
