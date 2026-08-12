@@ -29,17 +29,20 @@ void SelectingPieceScene::SetButton()
 
     // 駒を選択できるよう配置する
     auto piecePosManager = Application::GetInstance().GetPiecePosManager(); // 駒の位置マネージャ取得
+    auto currentPlayer = app.GetCurrentPlayerTurn();
+    
+    // 将棋盤上の駒
     for (unsigned int row = 1; row <= squareNum; row++)
     {
         for (unsigned int column = 1; column<= squareNum; column++)
         {
             auto piece = piecePosManager->GetPlacedPiece(row, column); // 対象マスに位置する駒を取得
             if(!piece) continue; // 駒がいなければスキップ
-            auto isCurrentPlayerTurnPiece = piece->GetPlayerSide() != app.GetCurrentPlayerTurn();
+            auto isCurrentPlayerTurnPiece = piece->GetPlayerSide() != currentPlayer;
             if(isCurrentPlayerTurnPiece) continue; // 操作プレイヤーの駒でなければスキップ
 
-            auto squareLeftTopX = square1x1LeftTopX - (column-1)*squareSize; // マス左上X座標
-            auto squareLeftTopY = square1x1LeftTopY + (row   -1)*squareSize; // マス左上Y座標
+            auto squareLeftTopX     = square1x1LeftTopX - (column-1)*squareSize; // マス左上X座標
+            auto squareLeftTopY     = square1x1LeftTopY + (row   -1)*squareSize; // マス左上Y座標
             auto squareRightBottomX = squareLeftTopX + squareSize;
             auto squareRightBottomY = squareLeftTopY + squareSize;
 
@@ -51,6 +54,46 @@ void SelectingPieceScene::SetButton()
             };
             
             app.PushPieceButton(PieceButtonType::SELECT_PIECE_BUTTON, rect, piece);
+        }
+    }
+
+    // プレイヤーの駒置き台の駒
+    auto playerSideBoard = piecePosManager->GetPiecePlacedOnSideBoard(currentPlayer);
+    auto piecesNum = playerSideBoard.size();
+    auto sideBoardLeftTopX = currentPlayer == PlayerSide::PLAYER_1 ?
+        boardRightTopX : boardRightTopX - squareSize*11;
+    auto sideBoardLeftTopY = currentPlayer == PlayerSide::PLAYER_1 ?
+        boardRightTopY + squareSize*7 : boardRightTopY + squareSize*2;
+    //float offsetRight = currentPlayer == PlayerSide::PLAYER_1 ?
+    //    squareSize : -squareSize;
+    //float offsetDown = currentPlayer == PlayerSide::PLAYER_1 ?
+    //    -squareSize : squareSize;
+    
+    for(unsigned int i = 0; i < piecesNum; i++)
+    {
+        // 駒の数を確認し、1つ以上なら最後に追加された駒のボタン設置
+        auto& pieces   = playerSideBoard[i];
+        auto  pieceNum = pieces.size();
+        if (pieceNum > 0)
+        {
+            auto offsetRight = currentPlayer == PlayerSide::PLAYER_1 ?
+                squareSize * (i%3) : -squareSize * (i%3);
+            auto offsetDown = currentPlayer == PlayerSide::PLAYER_1 ?
+                squareSize * (i/3) : -squareSize * (i/3);
+
+            auto squareLeftTopX     = sideBoardLeftTopX + offsetRight;
+            auto squareLeftTopY     = sideBoardLeftTopY + offsetDown;
+            auto squareRightBottomX = squareLeftTopX + squareSize;
+            auto squareRightBottomY = squareLeftTopY + squareSize;
+
+            D2D1_RECT_F rect = {
+                squareLeftTopX,
+                squareLeftTopY,
+                squareRightBottomX,
+                squareRightBottomY
+            };
+
+            app.PushPieceButton(PieceButtonType::SELECT_PIECE_BUTTON, rect, pieces[pieceNum - 1]);
         }
     }
 
@@ -141,7 +184,6 @@ std::unique_ptr<I_SceneState> SelectingPieceScene::ExeSelectingButtonSceneOperat
     }
     else
     {
-        int aaa = 3;
     }
 
 

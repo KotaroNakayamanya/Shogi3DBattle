@@ -588,321 +588,6 @@ std::vector<std::vector<bool>> RuleManager::GetCanPlaced(I_Piece* piece)
                 tempColumn += move.right;
             }
         }
-    }
-    else // 将棋盤上にいないとき
-    {
-        // 駒がいないマスをtrueにする
-        for (unsigned int row = 1; row <= rowSquareNum; row++)
-        {
-            for (unsigned int column = 1; column <= rowSquareNum; column++)
-            {
-                auto targetPiece = piecePosManager->GetPlacedPiece(row, column);
-                if(targetPiece == nullptr) canPlaced[row - 1][column - 1] = true;
-            }
-        }
-
-        // 以下、動くことのできる移動範囲によりルール上置けない位置をfalseにする
-        // 最上段の変数を作る
-        auto topRow = playerSide == PlayerSide::PLAYER_1 ?
-            1 : rowSquareNum;
-
-        // 歩
-        if (piece->GetGameObjType() == GameObjType::PAWN)
-        {
-            // 歩が最上段に置かれるのを禁止する
-            for (unsigned int column = 1; column <= rowSquareNum; column++)
-            {
-                canPlaced[topRow - 1][column - 1] = false;
-            }
-
-            // 二歩になる位置をfalseにする
-            for (unsigned int row = 1; row <= rowSquareNum; row++)
-            {
-                for (unsigned int column = 1; column <= rowSquareNum; column++)
-                {
-                    auto targetPiece = piecePosManager->GetPlacedPiece(row, column);
-                    if(targetPiece == nullptr) continue; // 何もいなければ次へ
-                    auto isNotAlly = piece->GetPlayerSide() != playerSide;
-                    if(isNotAlly) continue; // 味方の駒ではなければ次へ
-                    auto isNotPawn = piece->GetGameObjType() != GameObjType::PAWN;
-                    if(isNotPawn) continue; // 歩でなければ次へ
-                    auto isPromotion = piece->GetIsPromotion();
-                    if(isPromotion) continue; // と金であれば次へ
-                    
-                    // ここまで来たら二歩のため同列をfalseにする
-                    for (unsigned int tempRow = 1; tempRow <= rowSquareNum; tempRow++)
-                    {
-                        canPlaced[tempRow - 1][column - 1] = false;
-                    }
-                }
-            }
-        }
-
-        // 香車
-        if (piece->GetGameObjType() == GameObjType::LANCE)
-        {
-            // 香が最上段に置かれるのを禁止する
-            for (unsigned int column = 1; column <= rowSquareNum; column++)
-            {
-                canPlaced[topRow - 1][column - 1] = false;
-            }
-        }
-
-        // 桂馬
-        if (piece->GetGameObjType() == GameObjType::KNIGHT)
-        {
-            // 桂馬が最上段から2段に置かれるのを禁止する
-            for (unsigned int column = 1; column <= rowSquareNum; column++)
-            {
-                canPlaced[topRow - 1][column - 1] = false;
-                canPlaced[topRow + move.down - 1][column - 1] = false;
-            }
-        }
-    }
-
-    // 以下、王手等のルールを踏まえて修正する
-
-    // 現在の王の位置がどのような攻撃を受けているか取得
-    auto kingPlace        = piecePosManager->GetKingPlace(playerSide);
-    auto kingAttackedBits = GetAttackedBits(piece->GetPlayerSide(), kingPlace.row, kingPlace.column);
-
-    if (piece->GetGameObjType() == GameObjType::KING) // 王の場合
-    {
-        unsigned char tempRow;
-        unsigned char tempColumn;
-
-        // 下直進攻撃を受けている際は、上に移動できない
-        if ((kingAttackedBits & PieceMovementBit::GetStraightDownBit()) > 0)
-        {
-            tempRow =    placedRow    + move.up;
-            tempColumn = placedColumn;
-            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) canPlaced[tempRow - 1][tempColumn - 1] = false;
-        }
-        // 左直進攻撃を受けている際は、右に移動できない
-        if ((kingAttackedBits & PieceMovementBit::GetStraightLeftBit()) > 0)
-        {
-            tempRow =    placedRow;
-            tempColumn = placedColumn + move.right;
-            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) canPlaced[tempRow - 1][tempColumn - 1] = false;
-        }
-        // 右直進攻撃を受けている際は、左に移動できない
-        if ((kingAttackedBits & PieceMovementBit::GetStraightRightBit()) > 0)
-        {
-            tempRow =    placedRow;
-            tempColumn = placedColumn + move.left;
-            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) canPlaced[tempRow - 1][tempColumn - 1] = false;
-        }
-        // 上直進攻撃を受けている際は、下に移動できない
-        if ((kingAttackedBits & PieceMovementBit::GetStraightUpBit()) > 0)
-        {
-            tempRow =    placedRow    + move.down;
-            tempColumn = placedColumn;
-            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) canPlaced[tempRow - 1][tempColumn - 1] = false;
-        }
-
-        // 移動先が攻撃されていた場合は移動出来ない
-        for (unsigned int row = 1; row <= rowSquareNum; row++)
-        {
-            for (unsigned int column = 1; column <= rowSquareNum; column++)
-            {
-                if(!canPlaced[row - 1][column - 1]) continue;
-                auto distinationAttackedBits = GetAttackedBits(playerSide, row, column);
-                if(distinationAttackedBits > 0) canPlaced[row - 1][column - 1] = false;
-            }
-        }
-    }
-    else // 王以外の場合
-    {
-        if (kingAttackedBits > 0) // 王が攻撃されている場合
-        {
-            // 王がいくつの駒から攻撃を受けているか確認
-            unsigned char attackedCount = 0;
-            for (unsigned int i = 0; i < (sizeof(i) * 8); i++)
-            {
-                
-                if((kingAttackedBits & (1 << i)) > 0) attackedCount++;
-            }
-
-            if (attackedCount > 1) // 複数攻撃されていたら、王以外の駒は動けないようにするため全てfalse
-            {
-                for (unsigned int row = 1; row <= rowSquareNum; row++)
-                {
-                    for (unsigned int column = 1; column <= rowSquareNum; column++)
-                    {
-                        canPlaced[row - 1][column - 1] = false;
-                    }
-                }
-            }
-            else // 王への複数攻撃でなければ、王手を防げない動きをfalseにする
-            {
-                // 王への直進攻撃でなければ、その攻撃している駒の位置にのみ動くことを許可する
-                unsigned char targetRow    = kingPlace.row;
-                unsigned char targetColumn = kingPlace.column;
-                bool isNotStraightAttack = false;
-
-                // 下からの攻撃
-                if ((kingAttackedBits & PieceMovementBit::GetDownBit()) > 0)
-                {
-                    targetRow += move.down; 
-                    isNotStraightAttack = true;
-                }
-                // 左からの攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetLeftBit()) > 0)
-                {
-                    targetColumn += move.left; 
-                    isNotStraightAttack = true;
-                }
-                // 右からの攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetRightBit()) > 0)
-                {
-                    targetColumn += move.right; 
-                    isNotStraightAttack = true;
-                }
-                // 上からの攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetUpBit()) > 0)
-                {
-                    targetRow += move.up; 
-                    isNotStraightAttack = true;
-                }
-                // 左下からの攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetLeftDownBit()) > 0)
-                {
-                    targetRow    += move.down; 
-                    targetColumn += move.left; 
-                    isNotStraightAttack = true;
-                }
-                // 右下からの攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetRightDownBit()) > 0)
-                {
-                    targetRow    += move.down; 
-                    targetColumn += move.right; 
-                    isNotStraightAttack = true;
-                }
-                // 左上からの攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetLeftUpBit()) > 0)
-                {
-                    targetRow    += move.up; 
-                    targetColumn += move.left; 
-                    isNotStraightAttack = true;
-                }
-                // 右上からの攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetRightUpBit()) > 0)
-                {
-                    targetRow    += move.up; 
-                    targetColumn += move.right; 
-                    isNotStraightAttack = true;
-                }
-
-                // 対象の位置への動きが可能であれば、trueのまま残す
-                if (isNotStraightAttack)
-                {
-                    for (unsigned int row = 1; row <= rowSquareNum; row++)
-                    {
-                        for (unsigned int column = 1; column <= rowSquareNum; column++)
-                        {
-                            if ((canPlaced[row - 1][column - 1] == true) && (row == targetRow) && (column == targetColumn))
-                            {
-                                // 対象の位置はなにもしない
-                            }
-                            else // 対象の位置以外は全てfalse
-                            {
-                                canPlaced[row - 1][column - 1] = false;
-                            }
-                        }
-                    }
-                }
-
-                // 直進攻撃への対処処理をする
-                char offsetRow    = 0;
-                char offsetColumn = 0;
-                isNotStraightAttack = true;
-                // 下からの直進攻撃
-                if ((kingAttackedBits & PieceMovementBit::GetStraightDownBit()) > 0)
-                {
-                    offsetRow += move.down;
-                }
-                // 左からの直進攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetStraightLeftBit()) > 0)
-                {
-                    offsetColumn += move.left;
-                    isNotStraightAttack = false;
-                }
-                // 右からの直進攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetStraightRightBit()) > 0)
-                {
-                    offsetColumn += move.right;
-                    isNotStraightAttack = false;
-                }
-                // 上からの直進攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetStraightUpBit()) > 0)
-                {
-                    offsetRow += move.up;
-                    isNotStraightAttack = false;
-                }
-                // 左下からの直進攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetStraightLeftDownBit()) > 0)
-                {
-                    offsetRow    += move.down;
-                    offsetColumn += move.left;
-                    isNotStraightAttack = false;
-                }
-                // 右下からの直進攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetStraightRightDownBit()) > 0)
-                {
-                    offsetRow    += move.down;
-                    offsetColumn += move.right;
-                    isNotStraightAttack = false;
-                }
-                // 左上からの直進攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetStraightLeftUpBit()) > 0)
-                {
-                    offsetRow    += move.up;
-                    offsetColumn += move.left;
-                    isNotStraightAttack = false;
-                }
-                // 右上からの直進攻撃
-                else if ((kingAttackedBits & PieceMovementBit::GetStraightRightUpBit()) > 0)
-                {
-                    offsetRow    += move.up;
-                    offsetColumn += move.right;
-                    isNotStraightAttack = false;
-                }
-                // 直進攻撃の経路および攻撃者のマスへの移動をtrueのまま残す
-                if (!isNotStraightAttack)
-                {
-                    for (unsigned int row = 1; row <= rowSquareNum; row++)
-                    {
-                        for (unsigned int column = 1; column <= rowSquareNum; column++)
-                        {
-                            targetRow    = kingPlace.row    + offsetRow;
-                            targetColumn = kingPlace.column + offsetColumn;
-                            bool isTarget = false;
-
-                            while (GetIsRowAndColumnCorrect(targetRow, targetColumn)) // 将棋盤上に収まっているか確認
-                            {
-                                if ((row == targetRow) && (column == targetColumn))
-                                {
-                                    // 対象の位置を発見したらフラグをオンにして処理を抜ける
-                                    isTarget = true;
-                                    break;
-                                }
-
-                                // 駒を見つけらたら処理を抜ける
-                                if(piecePosManager->GetPlacedPiece(targetRow, targetColumn) != nullptr) break;
-
-                                // 次の位置を走査する
-                                targetRow    += offsetRow;
-                                targetColumn += offsetColumn;
-                            }
-
-                            // 対象の位置でなければfalse
-                            if(!isTarget) canPlaced[row - 1][column - 1] = false;
-                        }
-                    }
-                }
-
-            }
-        }
 
         // 移動することで王が攻撃される移動をfalseにする
         // 直進攻撃を受けているか確認する
@@ -1335,7 +1020,338 @@ std::vector<std::vector<bool>> RuleManager::GetCanPlaced(I_Piece* piece)
                 }
             }
         }
+    }
+    else // 将棋盤上にいないとき
+    {
+        // 駒がいないマスをtrueにする
+        for (unsigned int row = 1; row <= rowSquareNum; row++)
+        {
+            for (unsigned int column = 1; column <= rowSquareNum; column++)
+            {
+                auto targetPiece = piecePosManager->GetPlacedPiece(row, column);
+                if(targetPiece == nullptr) canPlaced[row - 1][column - 1] = true;
+            }
+        }
 
+        // 以下、動くことのできる移動範囲によりルール上置けない位置をfalseにする
+        // 最上段の変数を作る
+        auto topRow = playerSide == PlayerSide::PLAYER_1 ?
+            1 : rowSquareNum;
+
+        // 歩
+        if (piece->GetGameObjType() == GameObjType::PAWN)
+        {
+            // 歩が最上段に置かれるのを禁止する
+            for (unsigned int column = 1; column <= rowSquareNum; column++)
+            {
+                canPlaced[topRow - 1][column - 1] = false;
+            }
+
+            // 二歩になる位置をfalseにする
+            for (unsigned int column = 1; column <= rowSquareNum; column++)
+            {
+                for (unsigned int row = 1; row <= rowSquareNum; row++)
+                {
+                    auto targetPiece = piecePosManager->GetPlacedPiece(row, column);
+                    if(targetPiece == nullptr) continue; // 何もいなければ次へ
+                    auto isNotAlly = targetPiece->GetPlayerSide() != playerSide;
+                    if(isNotAlly) continue; // 味方の駒ではなければ次へ
+                    auto isNotPawn = targetPiece->GetGameObjType() != GameObjType::PAWN;
+                    if(isNotPawn) continue; // 歩でなければ次へ
+                    auto isPromotion = targetPiece->GetIsPromotion();
+                    if(isPromotion) continue; // と金であれば次へ
+                    
+                    // ここまで来たら歩が存在するため、二歩のため同列をfalseにする
+                    for (unsigned int tempRow = 1; tempRow <= rowSquareNum; tempRow++)
+                    {
+                        canPlaced[tempRow - 1][column - 1] = false;
+                    }
+                    break;
+                }
+            }
+        }
+
+        // 香車
+        if (piece->GetGameObjType() == GameObjType::LANCE)
+        {
+            // 香が最上段に置かれるのを禁止する
+            for (unsigned int column = 1; column <= rowSquareNum; column++)
+            {
+                canPlaced[topRow - 1][column - 1] = false;
+            }
+        }
+
+        // 桂馬
+        if (piece->GetGameObjType() == GameObjType::KNIGHT)
+        {
+            // 桂馬が最上段から2段に置かれるのを禁止する
+            for (unsigned int column = 1; column <= rowSquareNum; column++)
+            {
+                canPlaced[topRow - 1][column - 1] = false;
+                canPlaced[topRow + move.down - 1][column - 1] = false;
+            }
+        }
+    }
+
+    // 以下、王手されてるときの制限を踏まえて修正する
+
+    // 現在の王の位置がどのような攻撃を受けているか取得
+    auto kingPlace        = piecePosManager->GetKingPlace(playerSide);
+    auto kingAttackedBits = GetAttackedBits(piece->GetPlayerSide(), kingPlace.row, kingPlace.column);
+
+    if (piece->GetGameObjType() == GameObjType::KING) // 王の場合
+    {
+        unsigned char tempRow;
+        unsigned char tempColumn;
+
+        // 下直進攻撃を受けている際は、上に移動できない
+        if ((kingAttackedBits & PieceMovementBit::GetStraightDownBit()) > 0)
+        {
+            tempRow =    placedRow    + move.up;
+            tempColumn = placedColumn;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) canPlaced[tempRow - 1][tempColumn - 1] = false;
+        }
+        // 左直進攻撃を受けている際は、右に移動できない
+        if ((kingAttackedBits & PieceMovementBit::GetStraightLeftBit()) > 0)
+        {
+            tempRow =    placedRow;
+            tempColumn = placedColumn + move.right;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) canPlaced[tempRow - 1][tempColumn - 1] = false;
+        }
+        // 右直進攻撃を受けている際は、左に移動できない
+        if ((kingAttackedBits & PieceMovementBit::GetStraightRightBit()) > 0)
+        {
+            tempRow =    placedRow;
+            tempColumn = placedColumn + move.left;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) canPlaced[tempRow - 1][tempColumn - 1] = false;
+        }
+        // 上直進攻撃を受けている際は、下に移動できない
+        if ((kingAttackedBits & PieceMovementBit::GetStraightUpBit()) > 0)
+        {
+            tempRow =    placedRow    + move.down;
+            tempColumn = placedColumn;
+            if (GetIsRowAndColumnCorrect(tempRow, tempColumn)) canPlaced[tempRow - 1][tempColumn - 1] = false;
+        }
+
+        // 移動先が攻撃されていた場合は移動出来ない
+        for (unsigned int row = 1; row <= rowSquareNum; row++)
+        {
+            for (unsigned int column = 1; column <= rowSquareNum; column++)
+            {
+                if(!canPlaced[row - 1][column - 1]) continue;
+                auto distinationAttackedBits = GetAttackedBits(playerSide, row, column);
+                if(distinationAttackedBits > 0) canPlaced[row - 1][column - 1] = false;
+            }
+        }
+    }
+    else // 王以外の場合
+    {
+        if (kingAttackedBits > 0) // 王が攻撃されている場合
+        {
+            // 王がいくつの駒から攻撃を受けているか確認
+            unsigned char attackedCount = 0;
+            for (unsigned int i = 0; i < (sizeof(i) * 8); i++)
+            {
+                
+                if((kingAttackedBits & (1 << i)) > 0) attackedCount++;
+            }
+
+            if (attackedCount > 1) // 複数攻撃されていたら、王以外の駒は動けないようにするため全てfalse
+            {
+                for (unsigned int row = 1; row <= rowSquareNum; row++)
+                {
+                    for (unsigned int column = 1; column <= rowSquareNum; column++)
+                    {
+                        canPlaced[row - 1][column - 1] = false;
+                    }
+                }
+            }
+            else // 王への複数攻撃でなければ、王手を防げない動きをfalseにする
+            {
+                // 王への直進攻撃でなければ、その攻撃している駒の位置にのみ動くことを許可する
+                unsigned char targetRow    = kingPlace.row;
+                unsigned char targetColumn = kingPlace.column;
+                bool isNotStraightAttack = false;
+
+                // 下からの攻撃
+                if ((kingAttackedBits & PieceMovementBit::GetDownBit()) > 0)
+                {
+                    targetRow += move.down; 
+                    isNotStraightAttack = true;
+                }
+                // 左からの攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetLeftBit()) > 0)
+                {
+                    targetColumn += move.left; 
+                    isNotStraightAttack = true;
+                }
+                // 右からの攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetRightBit()) > 0)
+                {
+                    targetColumn += move.right; 
+                    isNotStraightAttack = true;
+                }
+                // 上からの攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetUpBit()) > 0)
+                {
+                    targetRow += move.up; 
+                    isNotStraightAttack = true;
+                }
+                // 左下からの攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetLeftDownBit()) > 0)
+                {
+                    targetRow    += move.down; 
+                    targetColumn += move.left; 
+                    isNotStraightAttack = true;
+                }
+                // 右下からの攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetRightDownBit()) > 0)
+                {
+                    targetRow    += move.down; 
+                    targetColumn += move.right; 
+                    isNotStraightAttack = true;
+                }
+                // 左上からの攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetLeftUpBit()) > 0)
+                {
+                    targetRow    += move.up; 
+                    targetColumn += move.left; 
+                    isNotStraightAttack = true;
+                }
+                // 右上からの攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetRightUpBit()) > 0)
+                {
+                    targetRow    += move.up; 
+                    targetColumn += move.right; 
+                    isNotStraightAttack = true;
+                }
+                // 左左上からの攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetLeftDoubleUpBit()) > 0)
+                {
+                    targetRow    += move.up*2; 
+                    targetColumn += move.left; 
+                    isNotStraightAttack = true;
+                }
+                // 右右上からの攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetRightDoubleUpBit()) > 0)
+                {
+                    targetRow    += move.up*2; 
+                    targetColumn += move.right; 
+                    isNotStraightAttack = true;
+                }
+
+                // 対象の位置への動きが可能であれば、trueのまま残す
+                if (isNotStraightAttack)
+                {
+                    for (unsigned int row = 1; row <= rowSquareNum; row++)
+                    {
+                        for (unsigned int column = 1; column <= rowSquareNum; column++)
+                        {
+                            if ((canPlaced[row - 1][column - 1] == true) && (row == targetRow) && (column == targetColumn))
+                            {
+                                // 対象の位置はなにもしない
+                            }
+                            else // 対象の位置以外は全てfalse
+                            {
+                                canPlaced[row - 1][column - 1] = false;
+                            }
+                        }
+                    }
+                }
+
+                // 直進攻撃への対処処理をする
+                char offsetRow    = 0;
+                char offsetColumn = 0;
+                isNotStraightAttack = true;
+                // 下からの直進攻撃
+                if ((kingAttackedBits & PieceMovementBit::GetStraightDownBit()) > 0)
+                {
+                    offsetRow += move.down;
+                }
+                // 左からの直進攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetStraightLeftBit()) > 0)
+                {
+                    offsetColumn += move.left;
+                    isNotStraightAttack = false;
+                }
+                // 右からの直進攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetStraightRightBit()) > 0)
+                {
+                    offsetColumn += move.right;
+                    isNotStraightAttack = false;
+                }
+                // 上からの直進攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetStraightUpBit()) > 0)
+                {
+                    offsetRow += move.up;
+                    isNotStraightAttack = false;
+                }
+                // 左下からの直進攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetStraightLeftDownBit()) > 0)
+                {
+                    offsetRow    += move.down;
+                    offsetColumn += move.left;
+                    isNotStraightAttack = false;
+                }
+                // 右下からの直進攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetStraightRightDownBit()) > 0)
+                {
+                    offsetRow    += move.down;
+                    offsetColumn += move.right;
+                    isNotStraightAttack = false;
+                }
+                // 左上からの直進攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetStraightLeftUpBit()) > 0)
+                {
+                    offsetRow    += move.up;
+                    offsetColumn += move.left;
+                    isNotStraightAttack = false;
+                }
+                // 右上からの直進攻撃
+                else if ((kingAttackedBits & PieceMovementBit::GetStraightRightUpBit()) > 0)
+                {
+                    offsetRow    += move.up;
+                    offsetColumn += move.right;
+                    isNotStraightAttack = false;
+                }
+                // 直進攻撃の経路および攻撃者のマスへの移動をtrueのまま残す
+                if (!isNotStraightAttack)
+                {
+                    for (unsigned int row = 1; row <= rowSquareNum; row++)
+                    {
+                        for (unsigned int column = 1; column <= rowSquareNum; column++)
+                        {
+                            targetRow    = kingPlace.row    + offsetRow;
+                            targetColumn = kingPlace.column + offsetColumn;
+                            bool isTarget = false;
+
+                            while (GetIsRowAndColumnCorrect(targetRow, targetColumn)) // 将棋盤上に収まっているか確認
+                            {
+                                if ((row == targetRow) && (column == targetColumn))
+                                {
+                                    // 対象の位置を発見したらフラグをオンにして処理を抜ける
+                                    isTarget = true;
+                                    break;
+                                }
+
+                                // 駒を見つけらたら処理を抜ける
+                                if(piecePosManager->GetPlacedPiece(targetRow, targetColumn) != nullptr) break;
+
+                                // 次の位置を走査する
+                                targetRow    += offsetRow;
+                                targetColumn += offsetColumn;
+                            }
+
+                            // 対象の位置でなければfalse
+                            if(!isTarget) canPlaced[row - 1][column - 1] = false;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        
     }
     
 
@@ -1457,7 +1473,7 @@ bool RuleManager::GetIsForcedPromotion(I_Piece* piece, unsigned char row, unsign
 bool RuleManager::GetIsChecked(PlayerSide playerSide)
 {
     auto& app = Application::GetInstance();
-    auto piecePosManager = app.GetPiecePosManager();
+    auto  piecePosManager = app.GetPiecePosManager();
 
     // 王を探す
     auto kingPlace = piecePosManager->GetKingPlace(playerSide);
@@ -1478,7 +1494,7 @@ unsigned int RuleManager::GetAttackedBits(
     auto move = GetMoveForPlayer(playerSide);
 
     // 駒が可能な動きであればtrueを返す関数
-    auto IsPossibleMovement = [](I_Piece* piece, unsigned short movementBit)
+    auto IsPossibleMovement = [](I_Piece* piece, unsigned int movementBit)
     {
         auto pieceMovement = piece->GetMovementBits();
         auto andBit = pieceMovement & movementBit;
@@ -1667,6 +1683,7 @@ unsigned int RuleManager::GetAttackedBits(
         auto isNotNull = piece != nullptr;
         if (isNotNull)
         {
+        auto aaa = piece->GetMovementBits();
             // その駒が相手の駒であり、右上上への移動が可能であれば、攻撃されていることを記録
             auto isOpponentPiece = piece->GetPlayerSide() != playerSide;
             auto movementBit = PieceMovementBit::GetRightDoubleUpBit();

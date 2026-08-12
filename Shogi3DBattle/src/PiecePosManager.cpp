@@ -95,6 +95,24 @@ void PiecePosManager::DeletePiecePlaced(I_Piece* piece)
     DeleteFromSideBoard(_piecePlacedOnSideBoard2, piece);
 }
 
+// 駒置き台を返す
+std::vector<std::vector<I_Piece*>> PiecePosManager::GetPiecePlacedOnSideBoard(PlayerSide playerSide)
+{
+    switch (playerSide)
+    {
+        case PlayerSide::PLAYER_1:
+            return _piecePlacedOnSideBoard1;
+            break;
+
+        case PlayerSide::PLAYER_2:
+            return _piecePlacedOnSideBoard2;
+            break;
+
+        default:
+            break;
+    }
+}
+
 // 駒置き台から駒の記録を消去する
 void PiecePosManager::DeleteFromSideBoard(std::vector<std::vector<I_Piece*>>& piecePlacedOnSideBoard, I_Piece* piece)
 {
@@ -258,6 +276,9 @@ void PiecePosManager::PlacePieceOnSideBoard(std::vector<std::vector<I_Piece*>>& 
 {
     // 元の駒の場所を削除
     DeletePiecePlaced(piece);
+
+    // 駒を成っていない状態にする
+    piece->SetIsPromotion(false);
 
     // 駒置き台に記録する
     unsigned char insertEle;

@@ -58,7 +58,7 @@ void TitleScene::SetButton()
     float right = left + uiWidth;             // UI右位置　UI左位置に横の長さを足す
     float bottom = top + uiHeight;            // UI下位置　UI上位置に縦の長さを足す
 
-    float heightOffset = uiHeight + 3.0f; // ボタンUIを追加するごとに縦にずらす数値
+    float heightOffset = uiHeight + 10.0f; // ボタンUIを追加するごとに縦にずらす数値
 
     D2D1_RECT_F rect; // ボタンUI範囲
 

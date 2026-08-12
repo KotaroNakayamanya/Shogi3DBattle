@@ -17,6 +17,9 @@ private:
     void DeleteFromSideBoard(std::vector<std::vector<I_Piece*>>& piecePlacedOnSideBoard, I_Piece* piece); // 駒置き台から駒の記録を消去する
 
 public:
+
+    std::vector<std::vector<I_Piece*>> GetPiecePlacedOnSideBoard(PlayerSide playerSide); // 駒置き台を返す
+    
     void InitPiecesPos(); // 駒の位置を初期化
 
     struct Place
@@ -24,6 +27,7 @@ public:
         unsigned char row;
         unsigned char column;
     };
+
     Place GetKingPlace(PlayerSide playerSide); // 王の位置を返す
     void PlacePieceOnBoard     (I_Piece* piece, unsigned int row, unsigned int column); // 駒を指定のマスへ移動
     void PlacePieceOnSideBoard(std::vector<std::vector<I_Piece*>>& piecePlacedOnSideBoard, I_Piece* piece); // 駒を駒置き台へ移動                                    // 駒をプレイヤー1の駒置き台へ移動
