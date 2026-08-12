@@ -64,10 +64,6 @@ void SelectingPieceScene::SetButton()
         boardRightTopX : boardRightTopX - squareSize*11;
     auto sideBoardLeftTopY = currentPlayer == PlayerSide::PLAYER_1 ?
         boardRightTopY + squareSize*7 : boardRightTopY + squareSize*2;
-    //float offsetRight = currentPlayer == PlayerSide::PLAYER_1 ?
-    //    squareSize : -squareSize;
-    //float offsetDown = currentPlayer == PlayerSide::PLAYER_1 ?
-    //    -squareSize : squareSize;
     
     for(unsigned int i = 0; i < piecesNum; i++)
     {
@@ -97,13 +93,16 @@ void SelectingPieceScene::SetButton()
         }
     }
 
-    //auto squareLeftTopX = boardLeftBottomX + halfSquareSize;
-    //auto squareLeftTopY = boardLeftBottomY - halfSquareSize - squareSize;
-    //auto squareRightBottomX = squareLeftTopX + squareSize;
-    //auto squareRightBottomY = squareLeftTopY + squareSize;
-
-    //auto piecePosManager = Application::GetInstance().GetPiecePosManager(); // 駒の位置マネージャ取得
-    //auto piece = piecePosManager->GetPlacedPiece(9, 5);
+    // タイトルに戻るボタンを追加
+    float height = 50.0f;
+    float width  = 280.0f;
+    float offset = 10.0f;
+    float left   = offset;
+    float top    = windowHeight - height - offset;
+    float right  = left + width;
+    float bottom = top  + height;
+    D2D1_RECT_F rect = {left, top, right, bottom};
+    app.PushTextButton(TextButtonType::BACK_TITLE_BUTTON, rect);
 
 
 }
@@ -189,8 +188,7 @@ std::unique_ptr<I_SceneState> SelectingPieceScene::ExeSelectingButtonSceneOperat
 
     if (inputMemory & InputHandler::DECISION)
     {
-        // カーソルが駒の上で決定ボタンを押したら
-        // カメラをパース付きプロジェクション行列に戻す
+        // ボタンによる遷移ができるのならカメラをパース付きプロジェクション行列に戻す
         auto buttonProcess = ExeDecisionButtonProcess();
         if (buttonProcess != nullptr)
         {

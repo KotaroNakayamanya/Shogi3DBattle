@@ -13,6 +13,7 @@
 #include"ContinueStartButton.h"
 #include"OptionButton.h"
 #include"ExitGameButton.h"
+#include"BackTitleButton.h"
 #include"SelectPieceButton.h"
 #include"PromotionButton.h"
 #include"NotPromotionButton.h"
@@ -485,6 +486,14 @@ void Application::PushTextButton(
             textUIs.push_back(_textUIs.back().get());
             _buttonUIs.push_back(std::make_unique<ExitGameButton>(rect, textUIs));
             break;
+
+         case TextButtonType::BACK_TITLE_BUTTON: // タイトルに戻る
+            text2D.text = L"タイトルに戻る";
+            PushTextUI(text2D);
+            textUIs.push_back(_textUIs.back().get());
+            _buttonUIs.push_back(std::make_unique<BackTitleButton>(rect, textUIs));
+            break;
+   break;
 
         case TextButtonType::PIECE_PROMOTION_BUTTON: // 駒を成る
             text2D.text = L"成る";

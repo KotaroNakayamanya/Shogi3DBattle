@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cpp\BackTitleButton.cpp" />
     <ClCompile Include="cpp\CanMoveSquareEffectTexture.cpp" />
     <ClCompile Include="cpp\I_TextButton.cpp" />
     <ClCompile Include="cpp\NotPromotionButton.cpp" />
@@ -120,6 +121,7 @@
   <ItemGroup>
     <ClInclude Include="header\Adapter.h" />
     <ClInclude Include="header\Application.h" />
+    <ClInclude Include="header\BackTitleButton.h" />
     <ClInclude Include="header\BasicTexType.h" />
     <ClInclude Include="header\Bishop.h" />
     <ClInclude Include="header\Board5x5Texture.h" />
