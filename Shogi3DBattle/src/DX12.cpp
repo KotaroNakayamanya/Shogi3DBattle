@@ -702,11 +702,18 @@ void DX12::ExeD3D()
         worldMat->WriteToBuff(_constBuff.Get());
     }
     mainCamera->WriteToBuff(_constBuff.Get()); // メインカメラ書き込み
+
+    // 将棋盤のエフェクトテクスチャをバッファに書き込み
+    // エフェクトのテクスチャをバッファに書き込み
+    auto effectTexs = app.GetTextures()->GetEffectTextures();
+    auto effectTexNum = static_cast<unsigned int>(effectTexs.size());
+    for(unsigned int i = 0; i < effectTexNum; i++)
+        effectTexs[i]->WriteToBuff(_effectTexBuffs[i].Get()); 
     
     ExeCmd(); // コマンド実行
 
 
-
+    // マップ描画フラグがオンならマップ描画
     if (Application::GetInstance().IsDrawMap())
     {
         // バックバッファをレンダーターゲットに設定
@@ -734,10 +741,6 @@ void DX12::ExeD3D()
 
         ExeCmd(); // コマンド実行
     }
-    
-
-
-    
 }
 
 // ゲームオブジェクト描画コマンドセット

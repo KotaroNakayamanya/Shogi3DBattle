@@ -1,5 +1,6 @@
 #include"CanMoveSquareEffectTexture.h"
 #include"Application.h"
+#include"RuleManager.h"
 
 CanMoveSquareEffectTexture::CanMoveSquareEffectTexture(I_Piece* piece)
 {
@@ -26,55 +27,32 @@ CanMoveSquareEffectTexture::CanMoveSquareEffectTexture(I_Piece* piece)
     float squareLength = static_cast<float>(lineSize) / (squareNum + 1);
     float halfSquareLength = squareLength / 2; // マスの半分のサイズ(余白が半分のサイズになっている)
 
-    UINT drawLowerLimit  = halfSquareLength *  1 + 0.5;
-    UINT drawUpperLimit  = halfSquareLength * (1 + squareNum * 2) + 0.5;
-
-
-    // 黒線を描画する対象座標(x, y)に黒色を格納する
-    UINT x = 0;
-    UINT y = 0;
-    UINT lineNum = squareNum + 1; // 横縦それぞれの線の本数
-    for (auto& pixel : pixels)
+    // それぞれのマス目の位置に処理をする
+    if (piece != nullptr)
     {
-        //// xy座標が横縦それぞれの線の上にあれば黒色を格納
-        //for (UINT i = 0; i < lineNum; i++)
-        //{
-        //    // 黒線対象の座標を取得(xとyのどちらにも使える)
-        //    UINT BlackLinePos = halfSquareLength * (1 + i * 2) + 0.5;
+        // 駒の動ける範囲を取得する
+        auto canPlaced = RuleManager::GetCanPlaced(piece);
 
-        //    // x座標が黒線の直線上の値であるかチェック
-        //    bool isXOnBlackLine = x == BlackLinePos;
-        //    // y座標が線を描画する範囲にあるかチェック
-        //    bool isYDrawRange = drawLowerLimit <= y && y <= drawUpperLimit;
-        //    // 縦方向の線分上にあれば黒色
-        //    if (isXOnBlackLine && isYDrawRange)
-        //    {
-                pixel.r = 255;
-                pixel.g = 0;
-                pixel.b = 0;
-        //    }
+        unsigned int pixelNum = pixels.size();
+        for(int i = 0; i < pixelNum; i++)
+        {
+            // 対応する行および列の位置を取得する
+            unsigned char row = (i / lineSize) < halfSquareLength ?
+                0 : ((lineSize - (i / lineSize)) + halfSquareLength) / squareLength;
+            unsigned char column = (i % lineSize) < halfSquareLength ?
+                0 : ((i % lineSize) + halfSquareLength) / squareLength;
 
-    
-        //    // y座標が黒線の直線上の値であるかチェック
-        //    bool isYOnBlackLine = y == BlackLinePos;
-        //    // x座標が線を描画する範囲にあるかチェック
-        //    bool isXDrawRange = drawLowerLimit <= x && x <= drawUpperLimit;
-        //    // 横方向の線分上にあれば黒色
-        //    if (isYOnBlackLine && isXDrawRange)
-        //    {
-        //        pixel.r = 0;
-        //        pixel.g = 0;
-        //        pixel.b = 0;
-        //    }
-        //}
+            // マスの位置でなければ何もしない
+            if(!RuleManager::GetIsRowAndColumnCorrect(row, column)) continue;
 
-        //// xとyの次の座標を取得
-        //x++;            // xを足す
-        //if (x >= width) // xが端を超えたらyを足してxを0に戻す
-        //{
-        //    y++;
-        //    x = 0;
-        //}
+            // 動ける範囲であれば色を付ける
+            if (canPlaced[row - 1][column - 1])
+            {
+                pixels[i].r = 0;
+                pixels[i].g = 255;
+                pixels[i].b = 0;
+            }
+        }
     }
 
     SetPixels(pixels);

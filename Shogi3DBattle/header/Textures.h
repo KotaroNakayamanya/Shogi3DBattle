@@ -2,6 +2,7 @@
 
 #include"I_Texture.h"
 #include<memory>
+#include"I_Piece.h"
 
 class Textures
 {
@@ -16,6 +17,7 @@ private:
 
 public:
     void CreateTextures(); // テクスチャ作成
+    void CreateCanMoveEffectTextures(I_Piece* piece); // 駒の動く範囲を色付けするテクスチャを作成
 
     std::vector<I_Texture*> GetWoodTextures();   // 木材テクスチャを返す
     std::vector<I_Texture*> GetDesignTextures(); // オブジェクトごとのテクスチャを返す

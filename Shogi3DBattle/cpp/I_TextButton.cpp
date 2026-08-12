@@ -6,6 +6,7 @@ void I_TextButton::ExeSelectedStateProcess()
 {
     auto dx12 = Application::GetInstance().GetDX12();
     
+    // 選択されていたら赤色に、されていなければ黒色に
     ID2D1SolidColorBrush* brush;
     if(IsSelected()) brush = dx12->GetRedBrush();
     else             brush = dx12->GetBlackBrush();

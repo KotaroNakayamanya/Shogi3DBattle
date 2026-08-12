@@ -95,10 +95,16 @@ std::unique_ptr<I_SceneState> MovingPieceScene::ExeDecisionButtonProcess()
     auto column   = GetColumnFromWorldMat(*worldMat);
     if (!RuleManager::GetCanThisPlacedPiece(_piece, row, column)) return nullptr;
 
-    // 成るかどうか確認し、成り確認シーンに遷移
-    if (RuleManager::GetCanPromotion(_piece, row, column))
+    // 成りが強制であれば成り、駒を新しい位置に動かすシーンに遷移
+    if (RuleManager::GetIsForcedPromotion(_piece, row, column))
     {
-        return std::make_unique<PromotionScene>(_piece, row, column, false);
+        _piece->SetIsPromotion(true);
+        return std::make_unique<SetMovingPieceScene>(_piece, row, column);
+    }
+    // 成るかどうか確認し、成り確認シーンに遷移
+    else if (RuleManager::GetCanPromotion(_piece, row, column))
+    {
+        return std::make_unique<PromotionScene>(_piece, row, column);
     }
     else
     // 成れなければ直接、駒を新しい位置に動かすシーンに遷移

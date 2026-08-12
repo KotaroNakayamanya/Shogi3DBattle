@@ -5,8 +5,15 @@
 // 選択状態に合わせた処理実行
 void SelectPieceButton::ExeSelectedStateProcess()
 {
-    if(IsSelected()) ;
-    else             ;
+    if(IsSelected())
+    {
+        auto textures = Application::GetInstance().GetTextures();
+        textures->CreateCanMoveEffectTextures(GetPiece());
+    }
+    else
+    {
+
+    }
 }
 
 // ボタン押下処理実行

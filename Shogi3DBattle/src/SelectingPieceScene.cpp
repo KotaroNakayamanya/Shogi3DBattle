@@ -73,71 +73,75 @@ std::unique_ptr<I_SceneState> SelectingPieceScene::ExeSelectingButtonSceneOperat
     int cursorXMove,
     int cursorYMove)
 {
+    auto& app = Application::GetInstance();
+
     // テキストセット
     if (!_isSetText)
     {
-    auto& app = Application::GetInstance();
+        auto gameWindow   = app.GetGameWindow();
+        auto windowWidth  = gameWindow->GetWindowWidth();
+        auto windowHeight = gameWindow->GetWindowHeight();
+        auto dx12 = app.GetDX12();
+        
+        Text2D text2D;
+        text2D.brush = dx12->GetBlackBrush();
+        text2D.textFormat = dx12->GetNormalTextFormat();
 
-    auto gameWindow   = app.GetGameWindow();
-    auto windowWidth  = gameWindow->GetWindowWidth();
-    auto windowHeight = gameWindow->GetWindowHeight();
-    auto dx12 = app.GetDX12();
-    
-    Text2D text2D;
-    text2D.brush = dx12->GetBlackBrush();
-    text2D.textFormat = dx12->GetNormalTextFormat();
+        float centerXPos;
+        float centerYPos;
 
-    float centerXPos;
-    float centerYPos;
+        auto playerTurn = app.GetCurrentPlayerTurn();
+        switch (playerTurn)
+        {
+            case PlayerSide::PLAYER_1:
+                text2D.text = L"先手のターン";
+                centerXPos = windowWidth  / 8 * 1;
+                centerYPos = windowHeight / 8 * 5;
+                break;
 
-    auto playerTurn = app.GetCurrentPlayerTurn();
-    switch (playerTurn)
-    {
-        case PlayerSide::PLAYER_1:
-            text2D.text = L"先手のターン";
-            centerXPos = windowWidth  / 8 * 1;
-            centerYPos = windowHeight / 8 * 5;
-            break;
+            case PlayerSide::PLAYER_2:
+                text2D.text = L"後手のターン";
+                centerXPos = windowWidth  / 8 * 7;
+                centerYPos = windowHeight / 8 * 1;
+                break;
 
-        case PlayerSide::PLAYER_2:
-            text2D.text = L"後手のターン";
-            centerXPos = windowWidth  / 8 * 7;
-            centerYPos = windowHeight / 8 * 1;
-            break;
+            default:
+                text2D.text = L"???のターン";
+                break;
+        }
 
-        default:
-            text2D.text = L"???のターン";
-            break;
-    }
+        auto width  = windowWidth  * 0.5f;
+        auto height = windowHeight * 0.1f;
 
-    auto width  = windowWidth  * 0.5f;
-    auto height = windowHeight * 0.1f;
-
-    // テキスト追加
-    auto left   = centerXPos - (width / 2.0f);
-    auto right  = left + width;
-    auto top    = centerYPos - (height / 2.0f);
-    auto bottom = top + height;
-    text2D.rect = {left, top, right, bottom};
-    app.PushTextUI(text2D);
-
-    if (app.GetIsPlayerChecked(playerTurn))
-    {
-        text2D.text = L"王手されてます";
-        top    += height;
-        bottom += height;
+        // テキスト追加
+        auto left   = centerXPos - (width / 2.0f);
+        auto right  = left + width;
+        auto top    = centerYPos - (height / 2.0f);
+        auto bottom = top + height;
         text2D.rect = {left, top, right, bottom};
         app.PushTextUI(text2D);
+
+        if (app.GetIsPlayerChecked(playerTurn))
+        {
+            text2D.text = L"王手されてます";
+            top    += height;
+            bottom += height;
+            text2D.rect = {left, top, right, bottom};
+            app.PushTextUI(text2D);
+        }
+
+            _isSetText = true;
     }
 
-
-    //auto offset = -5.0f;
-    //text2D.rect = {left+offset, top+offset, right+offset, bottom+offset};
-    //text2D.textFormat = dx12->GetTitleTextFormat();
-    //text2D.brush = dx12->GetYellowBrush();
-    //app.PushTextUI(text2D);
-
-        _isSetText = true;
+    // ボタンが選択されていなければエフェクト削除
+    if (GetSelectedButton() == nullptr)
+    {
+        auto textures = app.GetTextures();
+        textures->CreateCanMoveEffectTextures(nullptr);
+    }
+    else
+    {
+        int aaa = 3;
     }
 
 

@@ -40,6 +40,12 @@ void Textures::CreateTextures()
     CreateEffectTextures();
 }
 
+// 駒の動く範囲を色付けするテクスチャを作成
+void Textures::CreateCanMoveEffectTextures(I_Piece* piece)
+{
+    _effectTextures.pop_back();
+    _effectTextures.push_back(std::make_unique<CanMoveSquareEffectTexture>(piece));
+}
 
 
 // 木材テクスチャを返す

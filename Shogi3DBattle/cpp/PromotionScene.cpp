@@ -1,5 +1,6 @@
 #include"PromotionScene.h"
 #include"Application.h"
+#include"RuleManager.h"
 #include"SetMovingPieceScene.h"
 
 // ボタンUIセット
@@ -33,8 +34,6 @@ void PromotionScene::SetButton()
     bottom += uiHeight;
     rect = {left, top, right, bottom};
     app.PushTextButton(TextButtonType::PIECE_NOT_PROMOTION_BUTTON, rect, _piece, _row, _column);
-
-
 }
 
 // ボタン選択シーン動作
@@ -53,5 +52,5 @@ std::unique_ptr<I_SceneState> PromotionScene::ExeSelectingButtonSceneOperation(
     return newSceneState;
 }
 
-PromotionScene::PromotionScene(I_Piece* piece, unsigned char row, unsigned char column, bool forced)
-    : _piece(piece), _row(row), _column(column), _isForced(forced){}
+PromotionScene::PromotionScene(I_Piece* piece, unsigned char row, unsigned char column)
+    : _piece(piece), _row(row), _column(column){}

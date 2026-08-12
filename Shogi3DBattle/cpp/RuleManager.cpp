@@ -813,8 +813,8 @@ std::vector<std::vector<bool>> RuleManager::GetCanPlaced(I_Piece* piece)
                 }
 
                 // 直進攻撃への対処処理をする
-                unsigned char offsetRow    = 0;
-                unsigned char offsetColumn = 0;
+                char offsetRow    = 0;
+                char offsetColumn = 0;
                 isNotStraightAttack = true;
                 // 下からの直進攻撃
                 if ((kingAttackedBits & PieceMovementBit::GetStraightDownBit()) > 0)
@@ -882,10 +882,13 @@ std::vector<std::vector<bool>> RuleManager::GetCanPlaced(I_Piece* piece)
                             {
                                 if ((row == targetRow) && (column == targetColumn))
                                 {
-                                    // 対象の位置を発見したらフラグをオン
+                                    // 対象の位置を発見したらフラグをオンにして処理を抜ける
                                     isTarget = true;
                                     break;
                                 }
+
+                                // 駒を見つけらたら処理を抜ける
+                                if(piecePosManager->GetPlacedPiece(targetRow, targetColumn) != nullptr) break;
 
                                 // 次の位置を走査する
                                 targetRow    += offsetRow;
@@ -1409,6 +1412,45 @@ bool RuleManager::GetCanPromotion(I_Piece* piece, unsigned char row, unsigned ch
 
     // ここまで来たら成り可能
     return true;
+}
+
+// 成りが強制かどうか確認する
+bool RuleManager::GetIsForcedPromotion(I_Piece* piece, unsigned char row, unsigned char column)
+{
+    // 成りができなければfalse
+    if(!GetCanPromotion(piece, row, column)) return false;
+
+    // 最上段の変数を作る
+    auto playerSide = piece->GetPlayerSide();
+    auto board      = Application::GetInstance().GetGameObjects()->GetBoard();
+    auto rowNum     = board->GetBoardSquareNum();
+    auto topRow     = playerSide == PlayerSide::PLAYER_1 ?
+        1 : rowNum;
+
+    // プレイヤーにとっての上下左右のプラスマイナスを取得
+    auto move = GetMoveForPlayer(playerSide);
+
+    // 以下、駒に応じて強制かどうか確認
+    auto pieceType = piece->GetGameObjType();
+
+    switch (pieceType)
+    {
+        case GameObjType::PAWN:
+        case GameObjType::LANCE:
+            // 最上段であれば強制
+            if(row == topRow) return true;
+            break;
+
+        case GameObjType::KNIGHT:
+            // 最上段から2行であれば強制
+            if(row == topRow || row == topRow + move.down) return true;
+            break;
+
+        default:
+            break;
+    }
+
+    return false;
 }
 
 // プレイヤーが王手されているか確認

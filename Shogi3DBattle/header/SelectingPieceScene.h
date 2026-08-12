@@ -10,7 +10,6 @@ class SelectingPieceScene : public I_SelectingButtonScene
 private:
     Camera*     _mainCamera;       // メインカメラ
     PersProjMat _oldPersProjMat; // プロジェクション行列保存
-    I_Button* _selectedButton; // 選択されているボタン
     
     bool _isSetText; // テキストがセットされたかどうか
 
