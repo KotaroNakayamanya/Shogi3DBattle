@@ -1069,6 +1069,32 @@ std::vector<std::vector<bool>> RuleManager::GetCanPlaced(I_Piece* piece)
                     break;
                 }
             }
+
+            // 打ち歩詰めを禁止する
+            auto isIllegalPossibility = true;
+            // 相手の王の目の前が将棋盤上にあるか（はみ出していないか）確認する
+            auto opponentPlayer = playerSide == PlayerSide::PLAYER_1 ?
+                PlayerSide::PLAYER_2 : PlayerSide::PLAYER_1;
+            auto opponentKingPlace = piecePosManager->GetKingPlace(opponentPlayer);
+            auto targetRow    = opponentKingPlace.row    + move.down;
+            auto targetColumn = opponentKingPlace.column;
+            // 将棋盤上になければ、打ち歩詰めにならない
+            if (!GetIsRowAndColumnCorrect(targetRow, targetColumn))
+            {
+                isIllegalPossibility = false;
+            }
+            // 将棋盤上であれば、上攻撃（相手の王による）以外の攻撃をされていれば、打ち歩詰めにならない
+            {
+                auto attackedBit = GetAttackedBits(playerSide, targetRow, targetColumn);
+                if((attackedBit ^ PieceMovementBit::GetUpBit()) > 0) isIllegalPossibility = false;
+            }
+            // 相手の王が動ける状態かどうか確認する
+            auto opponentKing = piecePosManager->GetPlacedPiece(opponentKingPlace.row, opponentKingPlace.column);
+            // 動けるのであれば、打ち歩詰めにならない
+            if(GetCanMove(opponentKing)) isIllegalPossibility = false;
+
+            // ここまでフラグがオンだと打ち歩詰めの可能性があるため、指定の場所をfalseにする
+            if(isIllegalPossibility) canPlaced[targetRow - 1][targetColumn - 1] = false;
         }
 
         // 香車

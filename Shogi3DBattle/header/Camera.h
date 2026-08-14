@@ -10,6 +10,8 @@ class Camera : public I_BufferedData
 private:
     std::unique_ptr<ViewMat>   _viewMat; // ビュー行列
     std::unique_ptr<I_ProjMat> _projMat; // プロジェクション行列
+    
+    bool CheckCorrectCameraPos(DirectX::XMFLOAT3 cameraPos); // カメラの位置が正しいかどうか確認する
 
 public:
     void SetCameraPos(DirectX::XMFLOAT3 pos);   // カメラ位置セット
@@ -20,7 +22,7 @@ public:
     DirectX::XMFLOAT3 GetCameraUpVec();         // カメラ上側ベクトルを返す
     
     void MoveCameraPos(DirectX::XMFLOAT3 vec); // カメラ移動
-    void MoveFocusPos (DirectX::XMFLOAT3 vec); // フォーカス位置移動メラ上側ベクトルを返す
+    void MoveFocusPos (DirectX::XMFLOAT3 vec); // カメラ上側ベクトルを返す
 
     void RotationH(float x); // 水平方向に視点を回す
     void RotationV(float y); // 垂直方向に視点を回す

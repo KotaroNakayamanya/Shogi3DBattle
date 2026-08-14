@@ -29,6 +29,7 @@
     <ClCompile Include="cpp\RuleManager.cpp" />
     <ClCompile Include="cpp\SetMovingPieceScene.cpp" />
     <ClCompile Include="cpp\WhiteTexture.cpp" />
+    <ClCompile Include="cpp\WinningScene.cpp" />
     <ClCompile Include="header\DefaultHeapProp.cpp" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />

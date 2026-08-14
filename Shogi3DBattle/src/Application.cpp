@@ -384,6 +384,9 @@ void Application::InitGameState()
     // 駒の位置を初期化
     _piecePosManager->InitPiecesPos();
 
+    // 途中経過フラグをオフ
+    _isProgress = false;
+
     // プレイヤー側の初期処理
     SetCurrentPlayerTurn(PlayerSide::PLAYER_1);
     SetIsPlayerWinning(PlayerSide::PLAYER_1, false);

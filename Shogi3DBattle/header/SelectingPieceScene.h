@@ -16,6 +16,7 @@ private:
     std::unique_ptr<I_SceneState> ExeCancelButton();   // キャンセルボタン処理
 
     void SetButton() override; // ボタンUIセット
+    void SetTextUI();          // テキストUIセット
 
     // 駒選択シーン動作
     std::unique_ptr<I_SceneState> ExeSelectingButtonSceneOperation(

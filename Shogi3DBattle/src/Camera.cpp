@@ -10,6 +10,20 @@ DirectX::XMFLOAT3 Camera::GetFocusPos()           {return _viewMat->GetFocus();}
 void Camera::SetCameraUpVec(DirectX::XMFLOAT3 vec){_viewMat->SetUp(vec);}        // カメラ上側ベクトルセット
 DirectX::XMFLOAT3 Camera::GetCameraUpVec()        {return _viewMat->GetUp();}    // カメラ上側ベクトルを返す
 
+// カメラの位置が正しいかどうか確認する
+bool Camera::CheckCorrectCameraPos(DirectX::XMFLOAT3 cameraPos)
+{
+    // 正規化した視線ベクトルのZ成分を取り出す
+    auto lookVec     = VecCalc::GetFloat3SubFloat3(_viewMat->GetFocus(), cameraPos);
+    auto normLookVec = VecCalc::GetNormFloat(lookVec);
+    auto z           = normLookVec.z;
+
+    if(z >=  0.98f) return false; // 下に向きすぎたらfalse
+    if(z <= -0.4f ) return false; // 上に向きすぎたらfalse
+    
+    return true;
+}
+
 // カメラ移動
 void Camera::MoveCameraPos(DirectX::XMFLOAT3 vec)
 {
@@ -37,7 +51,6 @@ void Camera::RotationH(float x)
     auto newCameraVec = VecCalc::GetFloat3MulMat(cameraVec, rotationHMat);    // Z軸を中心に回転した新しいベクトルを取得
     auto newCameraPos = VecCalc::GetFloat3AddFloat3(originPos, newCameraVec); // 原点からベクトルを足して新しい座標を取得
 
-    //CheckUpdateEye(newEye); // 視点位置チェック
     SetCameraPos(newCameraPos);
     
 }
@@ -74,8 +87,10 @@ void Camera::RotationV(float y)
     newCameraVec = VecCalc::GetFloat3MulMat(newCameraVec, rotationHReverseMat); // ベクトルの水平方向の回転を戻す
     auto newCameraPos = VecCalc::GetFloat3AddFloat3(originPos, newCameraVec);   // 原点からベクトルを足して新しい座標を取得
 
-    //CheckUpdateEye(newEye); // 視点位置チェック
-    _viewMat->SetEye(newCameraPos);
+    auto isCanUpdate = CheckCorrectCameraPos(newCameraPos); // 視点位置チェック
+    if (isCanUpdate) {
+        _viewMat->SetEye(newCameraPos);
+    }
 }
 
 

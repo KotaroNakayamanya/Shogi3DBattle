@@ -94,7 +94,7 @@ void SelectingPieceScene::SetButton()
     }
 
     // タイトルに戻るボタンを追加
-    float height = 50.0f;
+    float height = 60.0f;
     float width  = 280.0f;
     float offset = 10.0f;
     float left   = offset;
@@ -104,6 +104,112 @@ void SelectingPieceScene::SetButton()
     D2D1_RECT_F rect = {left, top, right, bottom};
     app.PushTextButton(TextButtonType::BACK_TITLE_BUTTON, rect);
 
+
+}
+
+// テキストUIセット
+void SelectingPieceScene::SetTextUI()
+{
+    auto& app = Application::GetInstance();
+
+    auto gameWindow   = app.GetGameWindow();
+    auto windowWidth  = gameWindow->GetWindowWidth();
+    auto windowHeight = gameWindow->GetWindowHeight();
+    auto dx12 = app.GetDX12();
+    
+    // 現在のプレイヤーのターンをテキスト表示
+    float centerXPos;
+    float centerYPos;
+    Text2D text2D;
+    text2D.brush = dx12->GetBlackBrush();
+    text2D.textFormat = dx12->GetNormalTextFormat();
+    auto playerTurn = app.GetCurrentPlayerTurn();
+    switch (playerTurn)
+    {
+        case PlayerSide::PLAYER_1:
+            text2D.text = L"先手のターン";
+            centerXPos = windowWidth  / 8 * 1;
+            centerYPos = windowHeight / 8 * 5;
+            break;
+
+        case PlayerSide::PLAYER_2:
+            text2D.text = L"後手のターン";
+            centerXPos = windowWidth  / 8 * 7;
+            centerYPos = windowHeight / 8 * 1;
+            break;
+
+        default:
+            text2D.text = L"???のターン";
+            break;
+    }
+
+    auto width  = windowWidth  * 0.5f;
+    auto height = windowHeight * 0.1f;
+
+    auto left   = centerXPos - (width / 2.0f);
+    auto right  = left + width;
+    auto top    = centerYPos - (height / 2.0f);
+    auto bottom = top + height;
+    text2D.rect = {left, top, right, bottom};
+    app.PushTextUI(text2D);
+
+    // 王手されていたらテキスト追加
+    if (app.GetIsPlayerChecked(playerTurn))
+    {
+        text2D.text = L"王手されてます";
+        top    += height;
+        bottom += height;
+        text2D.rect = {left, top, right, bottom};
+        text2D.brush = dx12->GetRedBrush();
+        app.PushTextUI(text2D);
+    }
+
+    // 駒置き台の駒数を表示
+    auto board     = app.GetGameObjects()->GetBoard();
+    auto squareNum = board->GetBoardSquareNum();
+
+    auto squareSize     = windowHeight / static_cast<float>(squareNum + 2); // マス１辺のサイズ
+    auto halfSquareSize = squareSize / 2.0f;                                // マス半分のサイズ
+
+    auto boardSize = (squareSize*squareNum) + (halfSquareSize*2); // 将棋盤サイズ
+
+    auto boardRightTopX = windowWidth - ((windowWidth-boardSize)/2.0f);
+    auto boardRightTopY = halfSquareSize;
+
+    auto piecePosManager = app.GetPiecePosManager();
+
+    text2D.brush = dx12->GetBlackBrush();
+
+    auto player1SideBoard = piecePosManager->GetPiecePlacedOnSideBoard(PlayerSide::PLAYER_1);
+    for (int i = 0; i < player1SideBoard.size(); i++)
+    {
+        int pieceNum = player1SideBoard[i].size();
+        if (pieceNum > 0)
+        {
+            text2D.text = std::to_wstring(pieceNum);
+            left   = boardRightTopX +                squareSize*(i%3);
+            top    = boardRightTopY + squareSize*7 + squareSize*(i/3);
+            right  = left + halfSquareSize;
+            bottom = top + halfSquareSize;
+            text2D.rect = {left, top, right, bottom};
+            app.PushTextUI(text2D);
+        }
+    }
+    auto player2SideBoard = piecePosManager->GetPiecePlacedOnSideBoard(PlayerSide::PLAYER_2);
+    for (int i = 0; i < player2SideBoard.size(); i++)
+    {
+        int pieceNum = player2SideBoard[i].size();
+        if (pieceNum > 0)
+        {
+            text2D.text = std::to_wstring(pieceNum);
+            left   = boardRightTopX - squareSize*11 - squareSize*(i%3);
+            top    = boardRightTopY + squareSize* 2 - squareSize*(i/3);
+            right  = left + halfSquareSize;
+            bottom = top + halfSquareSize;
+            text2D.rect = {left, top, right, bottom};
+            app.PushTextUI(text2D);
+        }
+    }
 
 }
 
@@ -120,57 +226,7 @@ std::unique_ptr<I_SceneState> SelectingPieceScene::ExeSelectingButtonSceneOperat
     // テキストセット
     if (!_isSetText)
     {
-        auto gameWindow   = app.GetGameWindow();
-        auto windowWidth  = gameWindow->GetWindowWidth();
-        auto windowHeight = gameWindow->GetWindowHeight();
-        auto dx12 = app.GetDX12();
-        
-        Text2D text2D;
-        text2D.brush = dx12->GetBlackBrush();
-        text2D.textFormat = dx12->GetNormalTextFormat();
-
-        float centerXPos;
-        float centerYPos;
-
-        auto playerTurn = app.GetCurrentPlayerTurn();
-        switch (playerTurn)
-        {
-            case PlayerSide::PLAYER_1:
-                text2D.text = L"先手のターン";
-                centerXPos = windowWidth  / 8 * 1;
-                centerYPos = windowHeight / 8 * 5;
-                break;
-
-            case PlayerSide::PLAYER_2:
-                text2D.text = L"後手のターン";
-                centerXPos = windowWidth  / 8 * 7;
-                centerYPos = windowHeight / 8 * 1;
-                break;
-
-            default:
-                text2D.text = L"???のターン";
-                break;
-        }
-
-        auto width  = windowWidth  * 0.5f;
-        auto height = windowHeight * 0.1f;
-
-        // テキスト追加
-        auto left   = centerXPos - (width / 2.0f);
-        auto right  = left + width;
-        auto top    = centerYPos - (height / 2.0f);
-        auto bottom = top + height;
-        text2D.rect = {left, top, right, bottom};
-        app.PushTextUI(text2D);
-
-        if (app.GetIsPlayerChecked(playerTurn))
-        {
-            text2D.text = L"王手されてます";
-            top    += height;
-            bottom += height;
-            text2D.rect = {left, top, right, bottom};
-            app.PushTextUI(text2D);
-        }
+        SetTextUI();
 
             _isSetText = true;
     }
@@ -207,18 +263,20 @@ std::unique_ptr<I_SceneState> SelectingPieceScene::ExeSelectingButtonSceneOperat
 // キャンセルボタン処理
 std::unique_ptr<I_SceneState> SelectingPieceScene::ExeCancelButton()
 {
-    // カメラをパース付きプロジェクション行列に戻す
-    PersProjMat* persProjMat = new PersProjMat;
-    *persProjMat = _oldPersProjMat;
-    _mainCamera->SetProjMat(persProjMat);
+    //// カメラをパース付きプロジェクション行列に戻す
+    //PersProjMat* persProjMat = new PersProjMat;
+    //*persProjMat = _oldPersProjMat;
+    //_mainCamera->SetProjMat(persProjMat);
 
-    // スタートメニューに遷移する
-    std::unique_ptr<I_SceneState> newSceneState = std::make_unique<TitleScene>(); 
+    //// スタートメニューに遷移する
+    //std::unique_ptr<I_SceneState> newSceneState = std::make_unique<TitleScene>(); 
 
-    auto inputHandler = Application::GetInstance().GetInputHandler();
-    inputHandler->RemoveRClick();
+    //auto inputHandler = Application::GetInstance().GetInputHandler();
+    //inputHandler->RemoveRClick();
 
-    return newSceneState;
+    //return newSceneState;
+
+    return nullptr;
 }
 
 

@@ -21,13 +21,17 @@ std::unique_ptr<I_SceneState> MovingPieceScene::ExeSceneProcess(
         ExeMouseMove(cursorXMove, cursorYMove);
 
     float moveX = 0.0f, moveY = 0.0f;
-    if(inputMemory & InputHandler::RIGHT) moveX += 1.0f;
-    if(inputMemory & InputHandler::LEFT)  moveX -= 1.0f;
-    if(inputMemory & InputHandler::UP)    moveY += 1.0f;
-    if(inputMemory & InputHandler::DOWN)  moveY -= 1.0f;
+    float vec = 1.0f;
+    if(inputMemory & InputHandler::RIGHT)  moveX += vec;
+    if(inputMemory & InputHandler::LEFT)   moveX -= vec;
+    if(inputMemory & InputHandler::UP)     moveY += vec;
+    if(inputMemory & InputHandler::DOWN)   moveY -= vec;
 
     if (moveX != 0.0f || moveY != 0.0f)
     {
+        // 動いたことを記録
+        _isMoved = true;
+
         DirectX::XMFLOAT3 moveXYVec = {moveX, moveY, 0};
         auto normMoveXYVec = VecCalc::GetNormFloat(moveXYVec);
 
@@ -50,8 +54,14 @@ std::unique_ptr<I_SceneState> MovingPieceScene::ExeSceneProcess(
         // xy座標での動きをカメラを正面とした動きに変換
         auto normMoveVec = VecCalc::GetFloat3MulMat(normMoveXYVec, rotationZ);
 
+        // スピード調節
+        auto moveVec = normMoveVec;
+        auto magnif  = 0.7;
+        moveVec.x *= magnif;
+        moveVec.y *= magnif;
+
         // 駒とカメラを動かす
-        MovePieceAndCamera(normMoveVec);
+        MovePieceAndCamera(moveVec);
     }
 
     if(inputMemory & InputHandler::DECISION)  // 決定ボタン処理
@@ -136,6 +146,10 @@ std::unique_ptr<I_SceneState> MovingPieceScene::ExeCancelButton()
         // 駒は動いてない状態に
         _isMoved = false;
         newSceneState = nullptr;
+
+        // キャンセルボタン長押しを回避
+        auto inputHandler = Application::GetInstance().GetInputHandler();
+        inputHandler->RemoveRClick();
     }   
     else // 駒を動かしていなければメニュー画面に戻す
     {
@@ -191,15 +205,16 @@ MovingPieceScene::MovingPieceScene(I_Piece* piece)
     _canPlaced = RuleManager::GetCanPlaced(piece);
     
     // カメラのフォーカス位置を駒の位置を基準にセット
+    auto focusUpOffset = -9.0f;
     auto worldFloat4x4 = VecCalc::GetFoloat4x4FromMat(worldMat);
     auto focusX = worldFloat4x4._41;
     auto focusY = worldFloat4x4._42;
-    auto focusZ = worldFloat4x4._43 - 8.0f;
+    auto focusZ = worldFloat4x4._43 + focusUpOffset;
     DirectX::XMFLOAT3 focusPos = {focusX, focusY, focusZ};
     _mainCamera->SetFocusPos(focusPos);
 
     // カメラの位置をフォーカス位置に合わせてセット
-    float offsetY = -10.0f;
+    float offsetY = -12.0f;
     float offsetZ = -10.0f;
     if(piece->GetPlayerSide() == PlayerSide::PLAYER_1) offsetY = -offsetY;
     DirectX::XMFLOAT3 cameraPos = {focusX, focusY+offsetY, focusZ+offsetZ};
