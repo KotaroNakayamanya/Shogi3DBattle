@@ -1,8 +1,6 @@
 #include"UI.h"
 
-D2D1_RECT_F UI::GetRect() {return _rect;}  // UI範囲を返す
+void        UI::SetRect(D2D1_RECT_F rect){_rect = rect;} // UI範囲セット
+D2D1_RECT_F UI::GetRect()                {return _rect;}  // UI範囲を返す
 
-void   UI::SetIsActive(bool active){_isActive = active;} // 活性状態セット
-bool   UI::GetIsActive()           {return _isActive;  } // 活性状態を返す
-
-UI::UI(D2D1_RECT_F rect, bool active) : _rect(rect), _isActive(active){}
+UI::UI(D2D1_RECT_F rect) : _rect(rect){}
