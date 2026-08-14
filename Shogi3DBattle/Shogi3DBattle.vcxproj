@@ -19,27 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cpp\BackTitleButton.cpp" />
-    <ClCompile Include="cpp\CanMoveSquareEffectTexture.cpp" />
-    <ClCompile Include="cpp\I_TextButton.cpp" />
-    <ClCompile Include="cpp\NotPromotionButton.cpp" />
-    <ClCompile Include="cpp\PieceMovementBit.cpp" />
-    <ClCompile Include="cpp\PromotionButton.cpp" />
-    <ClCompile Include="cpp\PromotionScene.cpp" />
-    <ClCompile Include="cpp\RuleManager.cpp" />
-    <ClCompile Include="cpp\SetMovingPieceScene.cpp" />
-    <ClCompile Include="cpp\UI.cpp" />
-    <ClCompile Include="cpp\WhiteTexture.cpp" />
-    <ClCompile Include="cpp\WinningScene.cpp" />
     <ClCompile Include="header\DefaultHeapProp.cpp" />
     <ClCompile Include="src\Adapter.cpp" />
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\BackTitleButton.cpp" />
     <ClCompile Include="src\Bishop.cpp" />
     <ClCompile Include="src\Board5x5Texture.cpp" />
     <ClCompile Include="src\Board9x9.cpp" />
     <ClCompile Include="src\Board9x9Texture.cpp" />
     <ClCompile Include="src\BoardTexture.cpp" />
     <ClCompile Include="src\BuffResourceDesc.cpp" />
+    <ClCompile Include="src\CanMoveSquareEffectTexture.cpp" />
     <ClCompile Include="src\ContinueStartButton.cpp" />
     <ClCompile Include="src\CubeVertices.cpp" />
     <ClCompile Include="src\CubeVertIndices.cpp" />
@@ -55,6 +45,7 @@
     <ClCompile Include="src\I_ProjMat.cpp" />
     <ClCompile Include="src\I_SelectingButtonScene.cpp" />
     <ClCompile Include="src\I_PieceButton.cpp" />
+    <ClCompile Include="src\I_TextButton.cpp" />
     <ClCompile Include="src\King.cpp" />
     <ClCompile Include="src\Knight.cpp" />
     <ClCompile Include="src\Lance.cpp" />
@@ -80,14 +71,20 @@
     <ClCompile Include="src\I_HeapFactory.cpp" />
     <ClCompile Include="src\IdxBuffFactory.cpp" />
     <ClCompile Include="src\NonePersProjMat.cpp" />
+    <ClCompile Include="src\NotPromotionButton.cpp" />
     <ClCompile Include="src\OptionButton.cpp" />
     <ClCompile Include="src\Pawn.cpp" />
     <ClCompile Include="src\PersProjMat.cpp" />
+    <ClCompile Include="src\PieceMovementBit.cpp" />
     <ClCompile Include="src\PiecePosManager.cpp" />
     <ClCompile Include="src\PieceVertIndices.cpp" />
+    <ClCompile Include="src\PromotionButton.cpp" />
+    <ClCompile Include="src\PromotionScene.cpp" />
     <ClCompile Include="src\Rook.cpp" />
+    <ClCompile Include="src\RuleManager.cpp" />
     <ClCompile Include="src\SelectingPieceScene.cpp" />
     <ClCompile Include="src\SelectPieceButton.cpp" />
+    <ClCompile Include="src\SetMovingPieceScene.cpp" />
     <ClCompile Include="src\SideBoard.cpp" />
     <ClCompile Include="src\Silver.cpp" />
     <ClCompile Include="src\TextUI.cpp" />
@@ -110,11 +107,14 @@
     <ClCompile Include="src\TexBuffFactory.cpp" />
     <ClCompile Include="src\TexHeapProp.cpp" />
     <ClCompile Include="src\TexResourceDesc.cpp" />
+    <ClCompile Include="src\UI.cpp" />
     <ClCompile Include="src\UploadHeapProp.cpp" />
     <ClCompile Include="src\VecCalc.cpp" />
     <ClCompile Include="src\VertBuffFactory.cpp" />
     <ClCompile Include="src\I_Vertices.cpp" />
     <ClCompile Include="src\ViewMat.cpp" />
+    <ClCompile Include="src\WhiteTexture.cpp" />
+    <ClCompile Include="src\WinningScene.cpp" />
     <ClCompile Include="src\WoodTexture.cpp" />
     <ClCompile Include="src\WorldMat.cpp" />
     <ClCompile Include="src\DepthWriteResourceStates.cpp" />

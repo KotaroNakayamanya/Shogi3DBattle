@@ -516,9 +516,6 @@
     <ClCompile Include="src\SelectPieceButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\I_TextButton.cpp">
-      <Filter>ソース ファイル\ui\button</Filter>
-    </ClCompile>
     <ClCompile Include="src\CubeVertIndices.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -534,38 +531,41 @@
     <ClCompile Include="src\CubeVertices.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\RuleManager.cpp">
+    <ClCompile Include="src\BackTitleButton.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\PieceMovementBit.cpp">
+    <ClCompile Include="src\UI.cpp">
+      <Filter>ソース ファイル\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CanMoveSquareEffectTexture.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\PromotionScene.cpp">
+    <ClCompile Include="src\PieceMovementBit.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RuleManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SetMovingPieceScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WhiteTexture.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WinningScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PromotionScene.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\SetMovingPieceScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\PromotionButton.cpp">
+    <ClCompile Include="src\NotPromotionButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\NotPromotionButton.cpp">
+    <ClCompile Include="src\PromotionButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\CanMoveSquareEffectTexture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\WhiteTexture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\BackTitleButton.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\WinningScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp\UI.cpp">
-      <Filter>ソース ファイル\ui</Filter>
+    <ClCompile Include="src\I_TextButton.cpp">
+      <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
