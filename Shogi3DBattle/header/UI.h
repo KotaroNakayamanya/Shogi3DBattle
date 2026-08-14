@@ -5,11 +5,14 @@
 class UI
 {
 protected:
-    D2D1_RECT_F _rect;         // UI範囲
+    D2D1_RECT_F _rect;     // UI範囲
+    bool        _isActive; // 活性かどうか
 
 public:
-    void        SetRect(D2D1_RECT_F rect); // UI範囲セット
-    D2D1_RECT_F GetRect();                 // UI範囲を返す
+    D2D1_RECT_F GetRect(); // UI範囲を返す
 
-    UI(D2D1_RECT_F rect);
+    void   SetIsActive(bool active); // 活性状態セット
+    bool   GetIsActive();            // 活性状態を返す
+
+    UI(D2D1_RECT_F rect, bool active = true);
 };

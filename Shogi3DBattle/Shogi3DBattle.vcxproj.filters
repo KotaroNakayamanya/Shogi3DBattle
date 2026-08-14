@@ -462,9 +462,6 @@
     <ClCompile Include="src\PieceVertIndices.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
     </ClCompile>
-    <ClCompile Include="src\UI.cpp">
-      <Filter>ソース ファイル\ui</Filter>
-    </ClCompile>
     <ClCompile Include="src\MovingPieceScene.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
     </ClCompile>
@@ -566,6 +563,9 @@
     </ClCompile>
     <ClCompile Include="cpp\WinningScene.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\UI.cpp">
+      <Filter>ソース ファイル\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

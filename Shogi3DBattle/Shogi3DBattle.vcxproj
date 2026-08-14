@@ -28,6 +28,7 @@
     <ClCompile Include="cpp\PromotionScene.cpp" />
     <ClCompile Include="cpp\RuleManager.cpp" />
     <ClCompile Include="cpp\SetMovingPieceScene.cpp" />
+    <ClCompile Include="cpp\UI.cpp" />
     <ClCompile Include="cpp\WhiteTexture.cpp" />
     <ClCompile Include="cpp\WinningScene.cpp" />
     <ClCompile Include="header\DefaultHeapProp.cpp" />
@@ -109,7 +110,6 @@
     <ClCompile Include="src\TexBuffFactory.cpp" />
     <ClCompile Include="src\TexHeapProp.cpp" />
     <ClCompile Include="src\TexResourceDesc.cpp" />
-    <ClCompile Include="src\UI.cpp" />
     <ClCompile Include="src\UploadHeapProp.cpp" />
     <ClCompile Include="src\VecCalc.cpp" />
     <ClCompile Include="src\VertBuffFactory.cpp" />
