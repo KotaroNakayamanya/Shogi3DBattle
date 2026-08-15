@@ -16,29 +16,11 @@
     <Filter Include="ソース ファイル\dx12">
       <UniqueIdentifier>{57166d13-f0c8-4ec6-b25f-be519ec0030e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\dx12\csu">
-      <UniqueIdentifier>{e9b92a4c-31a8-488f-ae82-24e612e18f8f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\scene_state">
       <UniqueIdentifier>{78332d16-03d8-4c5d-ba6e-85e4652863a7}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\scene_state">
       <UniqueIdentifier>{147c356d-309b-43f8-ae42-31545dbfb11d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\dx12\csu\const">
-      <UniqueIdentifier>{1973c1c3-8565-48ec-8cc1-d6b5fc9d0e0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\dx12\csu\texture">
-      <UniqueIdentifier>{b1b639c0-1558-47a8-a1db-05be639f2be1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\dx12\shader">
-      <UniqueIdentifier>{b6044eb4-9f10-4e02-bdb3-192f1a5e23b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\dx12\pipeline">
-      <UniqueIdentifier>{4d9136b2-661d-435c-a21a-86a74f92e969}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\dx12\root_signature">
-      <UniqueIdentifier>{1f141b1e-7fb8-4007-b75f-984f0b34ed0a}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\dx12\factory">
       <UniqueIdentifier>{d56446de-5916-40ca-8a50-ebdc1a846640}</UniqueIdentifier>
@@ -75,9 +57,6 @@
     </Filter>
     <Filter Include="ソース ファイル\dx12\resource_barrier">
       <UniqueIdentifier>{dfcae937-daa7-4782-9e5a-a4b4966ef6ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\dx12\shader\hlsl">
-      <UniqueIdentifier>{162b5be9-6f57-4d9c-b2f7-57a516f119d4}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data">
       <UniqueIdentifier>{01903c31-7a31-41e5-92f9-f56d4d7a3b22}</UniqueIdentifier>
@@ -136,9 +115,6 @@
     <Filter Include="ヘッダー ファイル\buffered_data\mat\proj_mat">
       <UniqueIdentifier>{2c192463-bddc-4f6c-8a23-c50ee6c71d2d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\mat\proj_mat\_base">
-      <UniqueIdentifier>{56a39714-becc-4ac1-9740-1a95cd2a048b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\buffered_data\mat\view_mat">
       <UniqueIdentifier>{ba1bef95-f5b9-4850-9b00-aafc8bac17a9}</UniqueIdentifier>
     </Filter>
@@ -163,15 +139,6 @@
     <Filter Include="ヘッダー ファイル\buffered_data\game_object\_interface">
       <UniqueIdentifier>{33bdfe45-47d9-4f18-a160-89edc3e30347}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\texutre">
-      <UniqueIdentifier>{3cdc27ce-8990-4015-94e0-2c5d42ddb6af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\texutre\factory">
-      <UniqueIdentifier>{8829a128-7481-47c4-b6e9-56ea79857d50}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\buffered_data\game_object\yellow_wood">
-      <UniqueIdentifier>{3f258fa0-2f1f-4f59-8389-0ec3b8c5d03d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\buffered_data\game_obj\texture">
       <UniqueIdentifier>{4d1ed946-1c4e-4a10-b348-8f13f5b82e56}</UniqueIdentifier>
     </Filter>
@@ -180,12 +147,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\dx12">
       <UniqueIdentifier>{0e035323-ee1f-4428-9320-4d22a40c736c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\dx12\pipeline">
-      <UniqueIdentifier>{87c311ef-253e-48e6-8df2-56fa598e94c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\dx12\root_signature">
-      <UniqueIdentifier>{736dbbad-e514-4c13-b3b9-dd96f1798c00}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\dx12\factory">
       <UniqueIdentifier>{6d263b71-0dea-41db-9e59-bcba584d3926}</UniqueIdentifier>
@@ -241,9 +202,6 @@
     <Filter Include="ヘッダー ファイル\dx12\view\factory">
       <UniqueIdentifier>{918caae6-4a55-418d-862b-5b920331f49c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\dx12\input_layout">
-      <UniqueIdentifier>{bb23dc31-f1cb-42e6-a856-bc39bea3a353}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\dx12\resource_barrier">
       <UniqueIdentifier>{0f28c504-cd5d-4094-beca-d606b5a4d613}</UniqueIdentifier>
     </Filter>
@@ -265,19 +223,124 @@
     <Filter Include="ソース ファイル\dx12\dx11\factory">
       <UniqueIdentifier>{709a9bf8-c9b0-4675-952a-1017ed069b32}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\dx12\dx11\context">
-      <UniqueIdentifier>{88cb8675-fd2f-445a-b2e1-67939eb7790d}</UniqueIdentifier>
+    <Filter Include="ヘッダー ファイル\static">
+      <UniqueIdentifier>{591770d4-fb3e-4c40-bab6-84c7414d9e37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\static">
+      <UniqueIdentifier>{9dad6f4d-09e7-4d87-9478-9f58c5d39c67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\camera">
+      <UniqueIdentifier>{1ce1f644-394c-44b5-8624-ea2494a108cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\scene_state\_interface">
+      <UniqueIdentifier>{83ab0522-9cb0-415a-a155-3ee1fb57f659}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ui\text">
+      <UniqueIdentifier>{fbdfcfe7-e055-4566-b3b4-38d595847074}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ui\button\_interface">
+      <UniqueIdentifier>{bf923c72-6b47-442c-b5e2-725aeb1d0843}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\main">
+      <UniqueIdentifier>{37ab79dc-fccb-488b-bb22-20b4fc6247b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\application">
+      <UniqueIdentifier>{a35ab260-8671-4faf-94ef-1932ef5da5bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\game_window">
+      <UniqueIdentifier>{cfe0e978-46a5-4dc1-adeb-14d770194477}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\input">
+      <UniqueIdentifier>{6673fb5e-f570-477f-b34d-52f8e8a43c3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\application">
+      <UniqueIdentifier>{82a6059e-fb31-4dfa-a697-a7b8d6cea123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\game_window">
+      <UniqueIdentifier>{4725c001-28c0-48d0-8fbd-6a98284a1ba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\input">
+      <UniqueIdentifier>{91e2dd5d-17cf-41b4-9d6f-83da3934e9d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\scene_state\_interface">
+      <UniqueIdentifier>{f18ee67d-7f31-4a0f-a865-fd84760c0686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\mat\proj_mat\_interface">
+      <UniqueIdentifier>{7e023c9f-a197-476a-af93-0fc8adea6b40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\side_board">
+      <UniqueIdentifier>{15f5b8f7-a2d7-42ba-8230-f5e62195ede0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\texture">
+      <UniqueIdentifier>{9712ee1b-7cdb-4f81-9109-5eb6c31f9e80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\_vertices">
+      <UniqueIdentifier>{480d3b38-8965-4af5-a165-d0d6c32a148f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\_vertices\_interface">
+      <UniqueIdentifier>{d2df36e7-4a66-4b0a-a477-71ff5a6e78ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\_vert_indices">
+      <UniqueIdentifier>{d9ae565c-8fc3-4fb3-9356-238ac9621f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\_interface">
+      <UniqueIdentifier>{83b08c2b-543f-428a-b71a-fdcbd8192093}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\side_board">
+      <UniqueIdentifier>{563d1809-101a-4d48-a32e-8aec4d046776}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\texture\_interface">
+      <UniqueIdentifier>{d2afed2f-35db-466e-b880-5410fcd3eeb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\texture\board_tex">
+      <UniqueIdentifier>{3f1c1bf9-8925-4668-9664-9301b3384c5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\texture\board_tex\_base">
+      <UniqueIdentifier>{5881002b-bdc9-4c6e-81b0-fe8117ff9f85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\texture\effect">
+      <UniqueIdentifier>{a99a925b-8808-4db1-97c7-6acd0bb94534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\texture\wood">
+      <UniqueIdentifier>{2bc57e2e-8033-476a-a139-0b091acfe5c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\piece\_interface">
+      <UniqueIdentifier>{9b85fded-2578-49ff-a783-67179b33f96b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\game_obj\board\_interface">
+      <UniqueIdentifier>{804c5027-41d9-43ef-b21b-0c00ccd27296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\buffered_data\mat\proj_mat\_interface">
+      <UniqueIdentifier>{03dc6a4f-6e1a-4f14-95d3-d483eb01e508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\_vertices">
+      <UniqueIdentifier>{ab8edbeb-ce41-46c4-8b09-d689ed8199f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\_vert_indices">
+      <UniqueIdentifier>{5c5af1dd-f067-4208-a406-38e0caf9b8c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\_vertices\_interface">
+      <UniqueIdentifier>{2606bad6-fb08-48d1-b189-c3d01833a67c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\texture\board_tex">
+      <UniqueIdentifier>{2432b12d-970d-4695-bdc3-7319b9cb32b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\texture\effect">
+      <UniqueIdentifier>{2c42e1cc-7efa-44c3-a4e2-bd962d9a5506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\texture\wood">
+      <UniqueIdentifier>{afb724bc-68a4-483d-8c3c-450505684c7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\buffered_data\game_object\piece\_interface">
+      <UniqueIdentifier>{d52662ca-6616-418a-8b01-d732956dac75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\dx12\heap\factory\_interface">
+      <UniqueIdentifier>{d61ef422-9d6e-4a6c-9cdd-f12a3729f555}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Application.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\DX12.cpp">
       <Filter>ソース ファイル\dx12</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\Device.cpp">
       <Filter>ソース ファイル\dx12\factory</Filter>
@@ -381,24 +444,6 @@
     <ClCompile Include="src\RenderTexBuffFactory.cpp">
       <Filter>ソース ファイル\dx12\buff\factory</Filter>
     </ClCompile>
-    <ClCompile Include="src\VecCalc.cpp">
-      <Filter>ソース ファイル\buffered_data\mat</Filter>
-    </ClCompile>
-    <ClCompile Include="src\I_Texture.cpp">
-      <Filter>ソース ファイル\texutre</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KeyMap.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InputHandler.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameWindow.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Camera.cpp">
-      <Filter>ソース ファイル\buffered_data</Filter>
-    </ClCompile>
     <ClCompile Include="src\WorldMat.cpp">
       <Filter>ソース ファイル\buffered_data\mat\world_mat</Filter>
     </ClCompile>
@@ -410,9 +455,6 @@
     </ClCompile>
     <ClCompile Include="src\PersProjMat.cpp">
       <Filter>ソース ファイル\buffered_data\mat\proj_mat</Filter>
-    </ClCompile>
-    <ClCompile Include="src\I_Vertices.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj</Filter>
     </ClCompile>
     <ClCompile Include="src\Bishop.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
@@ -438,29 +480,8 @@
     <ClCompile Include="src\Silver.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
     </ClCompile>
-    <ClCompile Include="src\WoodTexture.cpp">
-      <Filter>ソース ファイル\buffered_data</Filter>
-    </ClCompile>
-    <ClCompile Include="src\I_Piece.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
-    </ClCompile>
-    <ClCompile Include="src\I_Board.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
-    </ClCompile>
     <ClCompile Include="src\Board9x9.cpp">
       <Filter>ソース ファイル\buffered_data\game_obj\board</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Board5x5Texture.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BoardTexture.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Board9x9Texture.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PieceVertIndices.cpp">
-      <Filter>ソース ファイル\buffered_data\game_obj\piece</Filter>
     </ClCompile>
     <ClCompile Include="src\MovingPieceScene.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
@@ -483,12 +504,6 @@
     <ClCompile Include="src\OptionButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
-    <ClCompile Include="src\I_Button.cpp">
-      <Filter>ソース ファイル\ui\button</Filter>
-    </ClCompile>
-    <ClCompile Include="src\I_SelectingButtonScene.cpp">
-      <Filter>ソース ファイル\scene_state</Filter>
-    </ClCompile>
     <ClCompile Include="src\DirectWriteFactory.cpp">
       <Filter>ソース ファイル\dx12\dx11</Filter>
     </ClCompile>
@@ -498,62 +513,11 @@
     <ClCompile Include="src\Direct2DFactory.cpp">
       <Filter>ソース ファイル\dx12\dx11</Filter>
     </ClCompile>
-    <ClCompile Include="src\TextUI.cpp">
-      <Filter>ソース ファイル\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PiecePosManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\I_ProjMat.cpp">
-      <Filter>ソース ファイル\buffered_data\mat\proj_mat</Filter>
-    </ClCompile>
-    <ClCompile Include="src\I_PieceButton.cpp">
-      <Filter>ソース ファイル\ui\button</Filter>
-    </ClCompile>
-    <ClCompile Include="src\I_GameObj.cpp">
-      <Filter>ソース ファイル\buffered_data</Filter>
-    </ClCompile>
     <ClCompile Include="src\SelectPieceButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
-    <ClCompile Include="src\CubeVertIndices.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SideBoard.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameObjects.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Textures.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CubeVertices.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BackTitleButton.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\UI.cpp">
       <Filter>ソース ファイル\ui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CanMoveSquareEffectTexture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PieceMovementBit.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RuleManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SetMovingPieceScene.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WhiteTexture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WinningScene.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\PromotionScene.cpp">
       <Filter>ソース ファイル\scene_state</Filter>
@@ -564,8 +528,113 @@
     <ClCompile Include="src\PromotionButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
     </ClCompile>
-    <ClCompile Include="src\I_TextButton.cpp">
+    <ClCompile Include="src\SetMovingPieceScene.cpp">
+      <Filter>ソース ファイル\scene_state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WinningScene.cpp">
+      <Filter>ソース ファイル\scene_state</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BackTitleButton.cpp">
       <Filter>ソース ファイル\ui\button</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Textures.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RuleManager.cpp">
+      <Filter>ソース ファイル\static</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PiecePosManager.cpp">
+      <Filter>ソース ファイル\static</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObjects.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PieceMovementBit.cpp">
+      <Filter>ソース ファイル\static</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>ソース ファイル\buffered_data\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VecCalc.cpp">
+      <Filter>ソース ファイル\static</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_SelectingButtonScene.cpp">
+      <Filter>ソース ファイル\scene_state\_interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextUI.cpp">
+      <Filter>ソース ファイル\ui\text</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_Button.cpp">
+      <Filter>ソース ファイル\ui\button\_interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_PieceButton.cpp">
+      <Filter>ソース ファイル\ui\button\_interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_TextButton.cpp">
+      <Filter>ソース ファイル\ui\button\_interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application.cpp">
+      <Filter>ソース ファイル\application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>ソース ファイル\main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameWindow.cpp">
+      <Filter>ソース ファイル\game_window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputHandler.cpp">
+      <Filter>ソース ファイル\input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KeyMap.cpp">
+      <Filter>ソース ファイル\input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CubeVertices.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\_vertices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_Vertices.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\_vertices\_interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CubeVertIndices.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\_vert_indices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_GameObj.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\_interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SideBoard.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\side_board</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_Texture.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\texture\_interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board5x5Texture.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\texture\board_tex</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Board9x9Texture.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\texture\board_tex</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoardTexture.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\texture\board_tex\_base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CanMoveSquareEffectTexture.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\texture\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WoodTexture.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\texture\wood</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WhiteTexture.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\texture\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_Piece.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\piece\_interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PieceVertIndices.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\_vert_indices</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_Board.cpp">
+      <Filter>ソース ファイル\buffered_data\game_obj\board\_interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_ProjMat.cpp">
+      <Filter>ソース ファイル\buffered_data\mat\proj_mat\_interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -603,9 +672,6 @@
       <Filter>ヘッダー ファイル\dx12\heap</Filter>
     </ClInclude>
     <ClInclude Include="header\RTVHeapFactory.h">
-      <Filter>ヘッダー ファイル\dx12\heap\factory</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_HeapFactory.h">
       <Filter>ヘッダー ファイル\dx12\heap\factory</Filter>
     </ClInclude>
     <ClInclude Include="header\DSVHeapFactory.h">
@@ -686,18 +752,6 @@
     <ClInclude Include="header\ResourceBarrier.h">
       <Filter>ヘッダー ファイル\dx12\resource_barrier</Filter>
     </ClInclude>
-    <ClInclude Include="header\GameWindow.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\KeyMap.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\InputHandler.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_Vertices.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
-    </ClInclude>
     <ClInclude Include="header\WorldMat.h">
       <Filter>ヘッダー ファイル\buffered_data\mat\world_mat</Filter>
     </ClInclude>
@@ -709,9 +763,6 @@
     </ClInclude>
     <ClInclude Include="header\PersProjMat.h">
       <Filter>ヘッダー ファイル\buffered_data\mat\proj_mat</Filter>
-    </ClInclude>
-    <ClInclude Include="header\VecCalc.h">
-      <Filter>ヘッダー ファイル\buffered_data</Filter>
     </ClInclude>
     <ClInclude Include="header\Camera.h">
       <Filter>ヘッダー ファイル\buffered_data\camera</Filter>
@@ -770,9 +821,6 @@
     <ClInclude Include="header\Vert.h">
       <Filter>ヘッダー ファイル\struct</Filter>
     </ClInclude>
-    <ClInclude Include="header\GameObjIdManager.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
-    </ClInclude>
     <ClInclude Include="header\Bishop.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
@@ -797,41 +845,17 @@
     <ClInclude Include="header\Silver.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_Piece.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
-    </ClInclude>
     <ClInclude Include="header\I_Board.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
     </ClInclude>
     <ClInclude Include="header\Board9x9.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
     </ClInclude>
-    <ClInclude Include="header\PieceVertIndices.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\piece</Filter>
-    </ClInclude>
     <ClInclude Include="header\Pixel.h">
       <Filter>ヘッダー ファイル\struct</Filter>
     </ClInclude>
-    <ClInclude Include="header\WoodTexture.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Board5x5Texture.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Board9x9Texture.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
-    </ClInclude>
-    <ClInclude Include="header\BoardTexture.h">
-      <Filter>ヘッダー ファイル\buffered_data\game_object\board</Filter>
-    </ClInclude>
     <ClInclude Include="header\I_Texture.h">
       <Filter>ヘッダー ファイル\buffered_data\game_object\_interface</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_ProjMat.h">
-      <Filter>ヘッダー ファイル\buffered_data\mat\proj_mat</Filter>
-    </ClInclude>
-    <ClInclude Include="header\UI.h">
-      <Filter>ヘッダー ファイル\ui</Filter>
     </ClInclude>
     <ClInclude Include="header\ContinueStartButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
@@ -848,9 +872,6 @@
     <ClInclude Include="header\ExitGameButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
-    <ClInclude Include="header\I_SceneState.h">
-      <Filter>ヘッダー ファイル\scene_state</Filter>
-    </ClInclude>
     <ClInclude Include="header\MovingPieceScene.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
@@ -858,9 +879,6 @@
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
     <ClInclude Include="header\TitleScene.h">
-      <Filter>ヘッダー ファイル\scene_state</Filter>
-    </ClInclude>
-    <ClInclude Include="header\I_SelectingButtonScene.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
     <ClInclude Include="header\TextUI.h">
@@ -881,12 +899,6 @@
     <ClInclude Include="header\HeapType.h">
       <Filter>ヘッダー ファイル\dx12\heap</Filter>
     </ClInclude>
-    <ClInclude Include="header\PlayerSide.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PiecePosManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="header\I_TextButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
@@ -896,38 +908,8 @@
     <ClInclude Include="header\SelectPieceButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
-    <ClInclude Include="header\Application.h">
-      <Filter>ソース ファイル\buffered_data</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PieceButtonType.h">
-      <Filter>ヘッダー ファイル\ui</Filter>
-    </ClInclude>
-    <ClInclude Include="header\CubeVertIndices.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\SideBoard.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\GameObjects.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\Textures.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\CubeVertices.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\RuleManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\PieceMovementBit.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="header\PromotionScene.h">
       <Filter>ヘッダー ファイル\scene_state</Filter>
-    </ClInclude>
-    <ClInclude Include="header\SetMovingPieceScene.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="header\PromotionButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
@@ -935,30 +917,117 @@
     <ClInclude Include="header\NotPromotionButton.h">
       <Filter>ヘッダー ファイル\ui\button</Filter>
     </ClInclude>
-    <ClInclude Include="header\CanMoveSquareEffectTexture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="header\WhiteTexture.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="header\SetMovingPieceScene.h">
+      <Filter>ヘッダー ファイル\scene_state</Filter>
     </ClInclude>
     <ClInclude Include="header\WinningScene.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\scene_state</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PieceButtonType.h">
+      <Filter>ヘッダー ファイル\enum</Filter>
     </ClInclude>
     <ClInclude Include="header\BackTitleButton.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\ui\button</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PieceMovementBit.h">
+      <Filter>ヘッダー ファイル\static</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PiecePosManager.h">
+      <Filter>ヘッダー ファイル\static</Filter>
+    </ClInclude>
+    <ClInclude Include="header\RuleManager.h">
+      <Filter>ヘッダー ファイル\static</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PlayerSide.h">
+      <Filter>ヘッダー ファイル\enum</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GameObjects.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object</Filter>
+    </ClInclude>
+    <ClInclude Include="header\VecCalc.h">
+      <Filter>ヘッダー ファイル\static</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Application.h">
+      <Filter>ヘッダー ファイル\application</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GameWindow.h">
+      <Filter>ヘッダー ファイル\game_window</Filter>
+    </ClInclude>
+    <ClInclude Include="header\InputHandler.h">
+      <Filter>ヘッダー ファイル\input</Filter>
+    </ClInclude>
+    <ClInclude Include="header\KeyMap.h">
+      <Filter>ヘッダー ファイル\input</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_SceneState.h">
+      <Filter>ヘッダー ファイル\scene_state\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_SelectingButtonScene.h">
+      <Filter>ヘッダー ファイル\scene_state\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_ProjMat.h">
+      <Filter>ヘッダー ファイル\buffered_data\mat\proj_mat\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\SideBoard.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\side_board</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Textures.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CubeVertices.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\_vertices</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CubeVertIndices.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\_vert_indices</Filter>
+    </ClInclude>
+    <ClInclude Include="header\GameObjIdManager.h">
+      <Filter>ヘッダー ファイル\static</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_Vertices.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\_vertices\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Board5x5Texture.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\texture\board_tex</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Board9x9Texture.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\texture\board_tex</Filter>
+    </ClInclude>
+    <ClInclude Include="header\BoardTexture.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\texture\board_tex</Filter>
+    </ClInclude>
+    <ClInclude Include="header\CanMoveSquareEffectTexture.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\texture\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="header\WhiteTexture.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\texture\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="header\WoodTexture.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\texture\wood</Filter>
+    </ClInclude>
+    <ClInclude Include="header\PieceVertIndices.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\_vert_indices</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_Piece.h">
+      <Filter>ヘッダー ファイル\buffered_data\game_object\piece\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\I_HeapFactory.h">
+      <Filter>ヘッダー ファイル\dx12\heap\factory\_interface</Filter>
+    </ClInclude>
+    <ClInclude Include="header\UI.h">
+      <Filter>ヘッダー ファイル\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\PixelShader.hlsl">
-      <Filter>ソース ファイル\dx12\shader\hlsl</Filter>
+      <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="shader\VertexShader.hlsl">
-      <Filter>ソース ファイル\dx12\shader\hlsl</Filter>
+      <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\Shader.hlsli">
-      <Filter>ソース ファイル\dx12\shader\hlsl</Filter>
+      <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
 </Project>
