@@ -638,7 +638,8 @@ D3D12_RASTERIZER_DESC Device::GetRasterizerDesc()
     desc.CullMode = // カリング　裏側は塗らない
         D3D12_CULL_MODE_BACK;
     desc.FillMode =
-        D3D12_FILL_MODE_SOLID;
+        D3D12_FILL_MODE_SOLID; // 通常表示
+        //D3D12_FILL_MODE_WIREFRAME; // 輪郭表示
     desc.DepthClipEnable =
         true;
 

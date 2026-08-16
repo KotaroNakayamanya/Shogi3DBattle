@@ -2,6 +2,10 @@
 
 float4 PShader(Output input) : SV_Target
 {
+    //return float4(input.normal);
+    
+    //return float4(input.uv, 1, 1);
+    
     float4 basicTex  = basicTexs [input.basicTexId] .Sample(samp, input.uv);
     float4 designTex = designTexs[input.designTexId].Sample(samp, input.uv);
     float4 effectTex = effectTexs[input.effectTexId].Sample(samp, input.uv);
@@ -12,11 +16,8 @@ float4 PShader(Output input) : SV_Target
     float1 finalLight = max(lightEffect, 0.6f);
     
     
+    //float4 shogiObjTex = drawTex[8].Sample(samp, input.uv);
     
-    // return basicTex; // 基本色のみ
-    // return designTex; // オブジェクトごとの文字等のみ
-    // return effectTex; // エフェクトのみ
-    // return finalLight; // 光のみ
-
-    return basicTex * designTex * effectTex * finalLight; // 全部
+    return basicTex * designTex * effectTex * finalLight;
+    //return basicTex * designTex  * finalLight;
 }
