@@ -187,10 +187,10 @@ void SelectingPieceScene::SetTextUI()
         if (pieceNum > 0)
         {
             text2D.text = std::to_wstring(pieceNum);
-            left   = boardRightTopX +                squareSize*(i%3);
-            top    = boardRightTopY + squareSize*7 + squareSize*(i/3);
-            right  = left + halfSquareSize;
-            bottom = top + halfSquareSize;
+            left   = boardRightTopX                - halfSquareSize*0.5f + squareSize*(i%3);
+            top    = boardRightTopY + squareSize*7                       + squareSize*(i/3);
+            right  = left + squareSize;
+            bottom = top  + halfSquareSize;
             text2D.rect = {left, top, right, bottom};
             app.PushTextUI(text2D);
         }
@@ -202,10 +202,10 @@ void SelectingPieceScene::SetTextUI()
         if (pieceNum > 0)
         {
             text2D.text = std::to_wstring(pieceNum);
-            left   = boardRightTopX - squareSize*11 - squareSize*(i%3);
-            top    = boardRightTopY + squareSize* 2 - squareSize*(i/3);
-            right  = left + halfSquareSize;
-            bottom = top + halfSquareSize;
+            left   = boardRightTopX - squareSize*11 - halfSquareSize*0.5f - squareSize*(i%3);
+            top    = boardRightTopY + squareSize* 2                       - squareSize*(i/3);
+            right  = left + squareSize;
+            bottom = top  + halfSquareSize;
             text2D.rect = {left, top, right, bottom};
             app.PushTextUI(text2D);
         }
