@@ -280,6 +280,9 @@
     <Text Include="..\readme.txt" />
     <Text Include="..\将棋大戦３D\readme.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\将棋大戦３D\将棋大戦３D_プレイ・解説動画.mp4" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
