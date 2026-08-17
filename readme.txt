@@ -9,6 +9,6 @@
 　●Shogi3DBattle.sln
 　　「Visual Studio Community」で作成されたソリューションファイルです。
 
-　●将棋大戦３D.zip
+　●将棋大戦３D
 　　ゲーム起動が可能なファイルが入っています。
 //////////1//////////
